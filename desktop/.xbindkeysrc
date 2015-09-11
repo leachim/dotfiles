@@ -1,0 +1,135 @@
+# For the benefit of emacs users: -*- shell-script -*-
+###########################
+# xbindkeys configuration #
+###########################
+#
+# Version: 1.8.6
+#
+# If you edit this file, do not forget to uncomment any lines
+# that you change.
+# The pound(#) symbol may be used anywhere for comments.
+#
+# To specify a key, you can use 'xbindkeys --key' or
+# 'xbindkeys --multikey' and put one of the two lines in this file.
+#
+# The format of a command line is:
+#    "command to start"
+#       associated key
+#
+#
+# A list of keys is in /usr/include/X11/keysym.h and in
+# /usr/include/X11/keysymdef.h
+# The XK_ is not needed.
+#
+# List of modifier:
+#   Release, Control, Shift, Mod1 (Alt), Mod2 (NumLock),
+#   Mod3 (CapsLock), Mod4, Mod5 (Scroll).
+#
+
+# The release modifier is not a standard X modifier, but you can
+# use it if you want to catch release events instead of press events
+
+# By defaults, xbindkeys does not pay attention with the modifiers
+# NumLock, CapsLock and ScrollLock.
+# Uncomment the lines above if you want to pay attention to them.
+
+#keystate_numlock = enable
+#keystate_capslock = enable
+#keystate_scrolllock= enable
+
+###################################
+###################################
+
+## keyboard setting for Thinkpad T440s
+
+
+
+# Increase backlight by 10% 
+# <Fn-Up>
+#"sudo /usr/bin/light -aq 10"
+#    m:0x0 + c:233
+#    XF86MonBrightnessUp
+
+# Decrease backlight by 10% 
+# <Fn-Down>
+#"sudo /usr/bin/light -sq 10"
+#    m:0x0 + c:232
+#    XF86MonBrightnessDown
+
+# Use setpci to set the backlight to a full 100%
+# <Fn-F5>
+#"sudo /usr/sbin/setpci -s 00:02.1 F4.B=FF && sudo /usr/bin/light -q 100"
+#    m:0x0 + c:156
+#    XF86Launch1
+
+# Set the backlight to 30%
+# <Fn-F4>
+#"sudo /usr/sbin/setpci -s 00:02.1 F4.B=FF && sudo /usr/bin/light -q 30"
+#    m:0x0 + c:235
+#    XF86Display
+
+
+#increase volume
+"amixer set Master playback 1+"
+   m:0x0 + c:123
+   XF86AudioRaiseVolume
+
+#decrase volume
+"amixer set Master playback 1-"
+   m:0x0 + c:122
+   XF86AudioLowerVolume
+
+# Toggle mute
+"amixer set Speaker toggle"
+   m:0x0 + c:121
+   XF86AudioMute
+
+# Toggle wifi on/off
+# <Fn-F8>
+"sleep 0.1 && bash $HOME/.scripts/toggleWifi.sh"
+    m:0x0 + c:246
+    XF86WLAN
+#
+# Note: rfkill can stop wifi, but on kernel 3.6.2 at least, it can't bring it
+#       back up (it becomes hardware blocked when you try to unblock it), so
+#       you have to reboot.
+
+
+# Toggle the Touchpad on|off
+#"synclient TouchpadOff=$(synclient -l | grep -ce TouchpadOff.*0)"
+#   m:0x0 + c:199
+#   XF86TouchpadToggle
+
+
+###################################
+# Example commands
+
+#"xbindkeys_show" 
+#  control+shift + q
+
+# set directly keycode (here control + f with my keyboard)
+#"xterm"
+#  c:41 + m:0x4
+
+# specify a mouse button
+#"xterm"
+#  control + b:2
+
+#"xterm -geom 50x20+20+20"
+#   Shift+Mod2+alt + s
+#
+## set directly keycode (here control+alt+mod2 + f with my keyboard)
+#"xterm"
+#  alt + c:0x29 + m:4 + mod2
+#
+## Control+Shift+a  release event starts rxvt
+#"rxvt"
+#  release+control+shift + a
+#
+## Control + mouse button 2 release event starts rxvt
+#"rxvt"
+#  Control + b:2 + Release
+
+##################################
+# End of xbindkeys configuration #
+##################################

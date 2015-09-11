@@ -1,0 +1,230 @@
+#########################################
+###              ALIASES              ###
+#########################################
+
+
+#########################################
+### Shortcuts                         ###
+#########################################
+
+## SYSTEM
+alias logoff="pkill -KILL -u michael"
+alias upac="sudo apt-get update && sudo apt-get upgrade"
+alias timestamp="date +%Y_%m_%d-%H_%M"
+alias c="clear"
+
+## Latex & PDF viewer
+alias lat="latexmk"
+alias lac="latexmk -c"
+alias vw="evince"
+alias vd="evince *.pdf"
+alias arw="arara *.tex && evince *(.om[1])"
+alias ara="arara *.tex"
+
+## Ipython
+alias i="ipython3 -i -c \"import numpy as np;from math import *;\" --colors=lightbg"
+
+## Julia
+alias j="julia"
+
+## VIM
+alias vim="vim --servername VIM"
+
+## TMUX
+# connect to running tmux session on ssh host
+ssht () { ssh "$1" -t tmux a; }
+alias tma='tmux attach -d -t'
+alias tmd='tmux new -s $(basename $(pwd))'
+alias tmn='tmux new -s $(basename $(pwd))'
+alias tml='tmux list-sessions'
+
+## Shortcuts
+alias dun="du -ach | sort -h"
+alias dfn="df -Tha --total"
+alias webify="mogrify -resize 690\> *.png"
+alias myip="curl http://ipecho.net/plain; echo"
+alias wget="wget -c"
+alias mkdir="mkdir -pv"
+alias psn="ps auxf"
+alias free="free -mt"
+alias psg="ps aux | grep -v grep | grep -i -e VSZ -e"
+alias fhere="find . -name "
+alias cd..="cd .."
+# make shell alert if running finished
+alias alertify='PS1="$PS1\a"'
+
+## Latex stuff
+alias latex-duplicate-labels="zsh -c \"perl -nE 'say $1 if /(\\label[^}]*})/' **/*.tex | sort | uniq -c | sort -n\""
+
+
+#########################################
+### Helper functions                  ###
+#########################################
+
+function extract {
+ if [ -z "$1" ]; then
+    # display usage if no parameters given
+    echo "Usage: extract <path/file_name>.<zip|rar|bz2|gz|tar|tbz2|tgz|Z|7z|xz|ex|tar.bz2|tar.gz|tar.xz>"
+ else
+    if [ -f $1 ] ; then
+        # NAME=${1%.*}
+        # mkdir $NAME && cd $NAME
+        case $1 in
+          *.tar.bz2)   tar xvjf ../$1    ;;
+          *.tar.gz)    tar xvzf ../$1    ;;
+          *.tar.xz)    tar xvJf ../$1    ;;
+          *.lzma)      unlzma ../$1      ;;
+          *.bz2)       bunzip2 ../$1     ;;
+          *.rar)       unrar x -ad ../$1 ;;
+          *.gz)        gunzip ../$1      ;;
+          *.tar)       tar xvf ../$1     ;;
+          *.tbz2)      tar xvjf ../$1    ;;
+          *.tgz)       tar xvzf ../$1    ;;
+          *.zip)       unzip ../$1       ;;
+          *.Z)         uncompress ../$1  ;;
+          *.7z)        7z x ../$1        ;;
+          *.xz)        unxz ../$1        ;;
+          *.exe)       cabextract ../$1  ;;
+          *)           echo "extract: '$1' - unknown archive method" ;;
+        esac
+    else
+        echo "$1 - file does not exist"
+    fi
+fi
+}
+
+untar () { tar –zxvf $1 ; }
+
+function countdown () {
+   date1=$((`date +%s` + $1));
+   while [ "$date1" -ne `date +%s` ]; do
+     echo -ne "$(date -u --date @$(($date1 - `date +%s`)) +%H:%M:%S)\r";
+     sleep 0.1
+   done
+   beep -f 600 -r 3 -d 500;
+}
+
+function stopwatch () {
+  date1=`date +%s`;
+   while true; do
+    echo -ne "$(date -u --date @$((`date +%s` - $date1)) +%H:%M:%S)\r";
+    sleep 0.1
+   done
+   beep -f 600 -r 3 -d 500;
+}
+
+# fix caps issue
+capsfix () { python -c "from ctypes import *; X11 = cdll.LoadLibrary(\"libX11.so.6\"); display = X11.XOpenDisplay(None); X11.XkbLockModifiers(display, c_uint(0x0100), c_uint(2), c_uint(0)); X11.XCloseDisplay(display)" ; }
+CAPSFIX () { python -c "from ctypes import *; X11 = cdll.LoadLibrary(\"libX11.so.6\"); display = X11.XOpenDisplay(None); X11.XkbLockModifiers(display, c_uint(0x0100), c_uint(2), c_uint(0)); X11.XCloseDisplay(display)" ; }
+
+# remove whitespace from file
+removeWhitespace () { mv "$1" "${1// /_}"; }
+
+# overwrite $1 with random stream
+overwrite () { pv -tpreb /dev/urandom | sudo dd of=$1 bs=4096; }
+
+# find duplicate files
+dupsearch () { find -not -empty -type f -printf "%s\n" | sort -rn | uniq -d | xargs -I{} -n1 find -type f -size {}c -print0 | xargs -0 md5sum | sort | uniq -w32 --all-repeated=separate; }
+
+
+#########################################
+### Helper functions - pdfs           ###
+#########################################
+
+# convert pdf to png
+function mpdf-convertToPNG(){
+    convert -verbose -density 200 -trim $1 -quality 100 ${1%.pdf}.png;
+}
+
+# decrypt pdf
+function mpdf-decrypt () {
+    if [ ! -d $1 ]; then
+        printf "File does not exist\n"
+        exit -1
+    fi
+    mv $1 backup_$file
+    qpdf --password=$2 --decrypt $1 decrypted_$1
+    mv decrypted_$1 $file
+}
+
+# decrease size of pdf - Quality level in dPDFSETTINGS= are "/screen," "/ebook," "/printer" and "/prepress,"
+mpdf-shrink () { mv $1 $1_original && /usr/bin/gs -dPDFSETTINGS=/ebook -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -sOutputFile=${1/_original} $1_original && if [ $(ls -l  $1 | cut -f 5 -d " ") -lt $(ls -l  $1_original | cut -f 5 -d " ") ]; then rm -f $1_original; else mv -f $1_original $1; fi ;}
+
+# print content of file to pdf
+mpdf-printFileToPdf () { cat "$1" | a2ps -=book -B -q --medium=A4dj --borders=no -o out12345678.ps && ps2pdf out12345678.ps printTerm.pdf && rm -f out12345678.ps ; }
+
+
+#########################################
+### Monitor and presentation settings ###
+#########################################
+
+# set dual/single monitors
+dual-dp () {  xrandr --output eDP1 --primary --output DP1 --auto --right-of eDP1;}
+dual-vga (){ xrandr --output eDP1 --primary --output DP2 --auto --right-of eDP1;}
+single () {xrandr --output DP1 --off; xrandr --output DP2 --off ; xrandr --output HDMI1 --off ; xrandr --output HDMI2 --off ;}
+present () {xrandr --output DP1 --auto ; xrandr --output DP2 --auto;}
+
+# set background light
+darken () {xbacklight -set 0 ; }
+lighten () {xbacklight -set 100 ;}
+
+
+#########################################
+### Internet and IP settings          ###
+#########################################
+
+# download pdfs from webpage
+web-wgetPDF () { wget -A pdf -p -E -k -K -np $1 ; }
+
+# investigate IPs
+web-myIP () { curl ifconfig.me }
+web-queryIP () { dig +short myip.opendns.com @resolver1.opendns.com ; }
+web-quHOST () { host $1 | rev | cut -d " " -f1 | rev; }
+web-quCountrybyIP () { curl ipinfo.io/$1 2&>/dev/null | grep -Po '"country":.*?[^\\]",' | perl -pe 's/"country"://; s/^"//; s/",$//; s/"//; s/^\s+//' ; }
+
+# route through glaux-web
+proxy-ssh () { ssh glaux-web -D 8080 -N ; }
+
+
+#########################################
+### Backup and restore files          ###
+#########################################
+
+backup-manager () { bash $HOME/.backup/duplicity.sh; }
+backup-list () { ls $HOME/.backup/ | sort -r | grep backup.tar.gz | head -1; }
+
+function backup-restore-signed {
+    echo -e "Restore from $1 to $2"
+    sleep 5
+    _SIGN_KEY=4FF90AD4
+    if [ ! -d $1 ]; then
+        printf "Backup does not exist\n"
+        return -1
+    fi
+    if [ -d $2 ]; then
+        printf "Do not restore to an existing location\n"
+        return -1
+    fi
+    duplicity --sign-key "$_SIGN_KEY" "file://$1" $2
+}
+
+function backup-restore-unsigned {
+    echo -e "Restore from $1 to $2"
+    sleep 5
+    if [ ! -d $1 ]; then
+        echo "Backup does not exist\n"
+        return -1
+    fi
+    if [ -d $2 ]; then
+        echo "Do not restore to an existing location\n"
+        return -1
+    fi
+    duplicity --gpg-options "--skip-verify" "file://$1" $2
+}
+
+## secure tresor operations
+backup-secure_shredFile () { echo "Are you sure, shredding may not work on SSD? [y/N] "; read response ; if [[ $response =~ ^(yes|y)$ ]]; then shred -n 30 -z -u  $1 ; else echo "exited"; fi ; }
+backup-secure_encrypt-sign () { tar czvpf - $1 | gpg --symmetric --cipher-algo aes256 -o safe.tar.gz.gpg && gpg --armor --detach-sign safe.tar.gz.gpg; }
+backup-secure_encrypt-only () { tar czvpf - $1 | gpg --symmetric --cipher-algo aes256 -o safe.tar.gz.gpg ; }
+backup-secure_decrypt-signed () { gpg --verify $1.asc $1 && gpg -d $1 | tar xzvf - ; }
+backup-secure_decrypt-nocheck () { gpg -d $1 | tar xzvf - ; }

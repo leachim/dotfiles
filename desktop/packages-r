@@ -1,0 +1,75 @@
+#!/usr/bin/Rscript
+## this script is executed by running
+# Rscript --vanilla packages-r --args "/home/michael"
+args <- commandArgs()[length(commandArgs())]
+#print(args)
+chooseCRANmirror(graphics = FALSE, ind = 39)
+
+## Here comes a list of packages
+install.packages("ggplot2", lib=paste(args,"/.R/", sep = ""))
+install.packages("knitr", lib=paste(args,"/.R/", sep = ""))
+# The xtable function takes an R object (like a data frame) and returns the latex or HTML code you need to paste a pretty version of the object into your documents. Copy and paste, or pair up with knitr.
+install.packages("xtable", lib=paste(args,"/.R/", sep = ""))
+
+#install.packages("plyr", lib=paste(args,"/.R/", sep = ""))
+# better to use its successor:
+install.packages("dplyr", lib=paste(args,"/.R/", sep = ""))
+#install.packages("reshape2", lib=paste(args,"/.R/", sep = ""))
+# better to use its successor:
+install.packages("tidyr", lib=paste(args,"/.R/", sep = ""))
+install.packages("stringr", lib=paste(args,"/.R/", sep = ""))
+install.packages("digest", lib=paste(args,"/.R/", sep = ""))
+
+install.packages("Hmisc", lib=paste(args,"/.R/", sep = ""))
+install.packages("psych", lib=paste(args,"/.R/", sep = ""))
+install.packages("MASS", lib=paste(args,"/.R/", sep = ""))
+install.packages("multcomp", lib=paste(args,"/.R/", sep = ""))
+# better date and time support
+install.packages("lubridate", lib=paste(args,"/.R/", sep = ""))
+
+
+install.packages("proto", lib=paste(args,"/.R/", sep = ""))
+install.packages("RColorBrewer", lib=paste(args,"/.R/", sep = ""))
+
+
+# lightning fast code ;)
+install.packages("Rcpp", lib=paste(args,"/.R/", sep = ""))
+install.packages("parallel", lib=paste(args,"/.R/", sep = ""))
+
+# support for SAS data set or SPSS data set
+install.packages("foreign", lib=paste(args,"/.R/", sep = ""))
+
+install.packages("randomForest", lib=paste(args,"/.R/", sep = ""))
+# Tools for training regression and classification models
+install.packages("caret", lib=paste(args,"/.R/", sep = ""))
+install.packages("caTools", lib=paste(args,"/.R/", sep = ""))
+install.packages("glmnet", lib=paste(args,"/.R/", sep = ""))
+install.packages("kernlab", lib=paste(args,"/.R/", sep = ""))
+install.packages("survival", lib=paste(args,"/.R/", sep = ""))
+install.packages("e1071", lib=paste(args,"/.R/", sep = ""))
+install.packages("ROCR", lib=paste(args,"/.R/", sep = ""))
+install.packages("pROC", lib=paste(args,"/.R/", sep = ""))
+# data bases -> RODBC, RMySQL, RPostgresSQL, RSQLite
+# excel -> xlsx
+
+# linear and non-linear mixed effect models:
+install.packages("lme4", lib=paste(args,"/.R/", sep = ""))
+install.packages("nlme", lib=paste(args,"/.R/", sep = ""))
+
+# Provides the most popular format for saving time series objects in R.
+install.packages("zoo", lib=paste(args,"/.R/", sep = ""))
+
+# package development
+install.packages("devtools", lib=paste(args,"/.R/", sep = ""))
+	# unit tests
+install.packages("testthat", lib=paste(args,"/.R/", sep = ""))
+	# documentation
+install.packages("roxygen2", lib=paste(args,"/.R/", sep = ""))
+
+# latex font support
+install.packages("extrafonts", lib=paste(args,"/.R/", sep = ""))
+install.packages("fontcm", lib=paste(args,"/.R/", sep = ""))
+#install.packages("X", lib=paste(args,"/.R/", sep = ""))
+#install.packages("Y", lib=paste(args,"/.R/", sep = ""))
+
+update.packages(instlib=paste(args,"/.R/", sep = ""), ask = FALSE)

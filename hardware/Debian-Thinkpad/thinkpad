@@ -1,0 +1,33 @@
+## Thinpad T440s specfic configuration
+
+## get wifi to work on T440s
+sudo apt-get install firmware-iwlwifi
+
+## support graphics card
+sudo apt-get install 
+# linux, nvidia free
+noveau
+# linux, nvidia, non-free
+nvidia-kernel-dkms
+
+## backlight issues with thinkpad
+# edit /etc/default/grub
+# GRUB_CMDLINE_LINUX_DEFAULT="quiet splash acpi_osi=Linux acpi_backlight=vendor"
+# run update-grub2
+
+## synaptics touchpad
+run dconf-editor and un-check the "active" option in the following settings:
+org.gnome.settings-daemon.plugins.mouse
+then copy the /etc/X11/xorg.conf.d file to the respective repository
+
+## power saving
+sudo apt-get install laptop-mode-tools
+sudo systemctl enable laptop-mode.service
+# take care to deactivate ssd power management
+
+## How can I deactivate Bluetooth on system startup?
+edit /etc/rc.local and add this before line with exit 0:
+rfkill block bluetooth
+
+## update and add the file 99-synaptics-t440s.conf to the folder
+# /etc/X11/xorg.conf.d/

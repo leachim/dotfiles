@@ -1,0 +1,7 @@
+#R_HOME_USER = ~/current/R-programming
+#R_PROFILE_USER = ${HOME}/.config/r/Rprofile.r
+R_LIBS_USER = ~/.R/
+R_HISTFILE = ~/.Rhistory 
+## load some default packages at startup
+R_DEFAULT_PACKAGES = 'datasets,utils,grDevices,graphics,stats,methods,ggplot2'    
+#MYSQL_HOME = /var/lib/mysql   

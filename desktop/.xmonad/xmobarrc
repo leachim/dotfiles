@@ -1,0 +1,40 @@
+Config { font = "-misc-fixed-*-*-*-*-14-*-*-*-*-*-*-*"
+		-- -misc-fixed-*-*-*-*-10-*-*-*-*-*-*-* is default
+       , bgColor = "black"
+       , fgColor = "grey"
+       , position = Bottom
+       , lowerOnStart = True
+       , persistent = True
+       , allDesktops = False
+       , commands = [ -- Run Weather "EFMI" ["-t","<station>: <tempf>F","-L","10","-H","90","--normal","green","--high","red","--low","lightblue"] 36000
+					Run Network "eth0" ["-L","0","-H","32","--normal","white","--high","red"] 6000
+					-- , Run Network "wlan0" ["-L","0","-H","32","--normal","green","--high","red"] 6000
+					, Run Wireless "wlan0" ["-t","<essid> <quality>","-L","50","-H","75","--low","orange","--normal","lightblue","--high","gray"] 60
+                    -- , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 600
+					, Run MultiCpu ["-t","<total0>% <total1>%"] 600
+                    -- , Run Battery ["-t","<left>%<fc=#0000ee>/</fc><timeleft>","-L","25","-H","75","-h","green","-n","#ffff00","-l","red"] 100
+                    -- , Run Battery ["-t","<left>% - <timeleft>","-L","25","-H","70","-h","gray","-n","lightblue","-l","orange"] 100
+                    , Run BatteryP ["BAT0", "BAT1"] ["-t", "<acstatus> <left>% - <timeleft>","-L","25","-H","70","-h","gray","-n","lightblue","-l","orange"] 3600
+                    , Run BatteryN ["BAT0"] ["-t", "<left>%","-L","25","-H","70","-h","gray","-n","lightblue","-l","red"] 6000 "bat0"
+                    , Run BatteryN ["BAT1"] ["-t", "<left>%","-L","25","-H","70","-h","gray","-n","gray","-l","lightblue"] 6000 "bat1"
+                    , Run Memory ["-t","<usedratio>%"] 1200
+                    , Run Swap ["-t","<usedratio>%"] 6000
+                    , Run Uptime ["-t", "<days>d<hours>h"] 12000
+                    , Run CoreTemp ["-t", "<core0>C","-L", "45", "-H", "55","-l", "gray", "-n", "gray10", "-h", "red"] 6000
+                    , Run CpuFreq ["-t", "<cpu0>GHz", "-L", "0", "-H", "2","-l", "lightblue", "-n","gray", "-h", "red"] 600
+                    , Run Locks
+--                    , Run Brightness ["-t", "<percent>"] 60
+-- wait for upgrade					-- , Run Volume "default" "Master" ["-t","Vol: <volume>% <status>","-c","gray","-c","gray"] 10
+                    -- , "-C","gray" ,"-c","gray"] 10
+                    -- , Run Com "/home/michael/.xmonad/getVolume.sh" [] "myVolume" 10
+                    -- , Run Com "uname" ["-r"] "" 36000
+                    -- , Run Date "%a %b %_d %Y %I:%M:%S" "date" 10
+                    , Run Date "%A | %_d %B %Y |<fc=#ee9a00> %I:%M</fc>" "date" 60
+                    , Run Kbd [("us", "US"), ("de", "DE")]
+                    , Run StdinReader
+					]
+       , sepChar = "%"
+       , alignSep = "}{"	      
+       , template = "%StdinReader% }{ %locks% %uptime% <fc=#cd00cd>|</fc> CPU: %multicpu% %coretemp% %cpufreq% <fc=#cd00cd>|</fc> Mem: %memory%|%swap% <fc=#cd00cd>|</fc> %eth0%%wlan0wi% <fc=#cd00cd>|</fc>  %battery% | %bat0% %bat1% <fc=#cd00cd>|</fc> Vol: <fc=#cd00cd>|</fc> %kbd% <fc=#cd00cd>|</fc> %date%                   "
+       -- , template = "%StdinReader% }{ %locks% %uptime% <fc=#cd00cd>|</fc> CPU: %multicpu% %coretemp% %cpufreq% <fc=#cd00cd>|</fc> Mem: %memory%|%swap% <fc=#cd00cd>|</fc> %eth0%%wlan0wi% <fc=#cd00cd>|</fc>  %battery% | %bat0% %bat1% <fc=#cd00cd>|</fc> %default:Master% <fc=#cd00cd>|</fc> %bright% <fc=#cd00cd>|</fc> %kbd% <fc=#cd00cd>|</fc> %date%                   "
+       }

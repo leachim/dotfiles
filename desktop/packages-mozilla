@@ -1,0 +1,43 @@
+##
+##
+## These packages are automatically restored 
+## by the backup functionality
+##
+##
+
+## Thunderbird
+==firetray
+Enigmail
+ImportExportTools
+SOGo Connector // Inverse SOGo Connector
+Lightning Calendar / Iceowl
+==Saved Password Editor
+==Secure Addressing
+==Show Address Only
+==ThreadVis (probably incompatible with Thunderbird Conversations)
+Thunderbird Conversations
+
+## Firefox
+Adblock Edge
+NoScript
+RequestPolicy
+HTTPS Everywhere
+Vimperator
+FoxyProxy Basic
+
+## Zotero plugins and add-ons
+Zotfile 
+Zotero Better Bib(La)Tex
+Zotero Autoexport
+Zotero Scholar Citations
+
+## Chromium
+AdBlock
+Disconnect
+Empty New Tab Page
+HTTPS Everywhere
+PDF Viewer
+Pocket
+The Great Suspender
+Vimium
+Zotero Connector

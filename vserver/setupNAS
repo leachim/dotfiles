@@ -1,0 +1,19 @@
+## Some NAS details
+
+# enable root login from a shell using su
+chmod u+s /bin/busybox
+
+# see sshd_config in backup
+basically allow access only to git and me
+block via Match User a,b,c not via AllowUsers
+DiskStation> vi /etc/ssh/sshd_config
+DiskStation> vi /etc.defaults/ssh/sshd_config
+
+# wol via wol.php script
+#php wol.php
+
+# mount as root via
+synoshare --enc_mount foldername password
+
+# setup WebDav with zotero
+https://myhost:port/Foldername(ends with /zotero)

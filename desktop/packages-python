@@ -1,0 +1,14 @@
+py3status
+httplib2
+python-mpd2
+biopython
+numpy
+gdata
+keyring
+matplotlib
+pandas
+parallel
+scipy
+scikit-learn
+seaborn
+sympy

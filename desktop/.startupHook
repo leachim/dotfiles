@@ -1,0 +1,60 @@
+#! /bin/sh
+
+# DOC
+# ==========
+# Simple autostart file for i3-wm, you can execute it from i3 config
+# file. Put this at the end:
+# exec $HOME/.i3/autostart.sh
+#
+# xdotool and xmessage must be installed. On BSD use jot instead of
+# seq or install seq from ports.
+#
+# Building this layout
+# ____________________________________
+# |             |                    |
+# |             | ding               |
+# |             |--------------------|
+# | emacs       |-STACK chromium    -|
+# |             |-STACK emacs-frame -|
+# |             |-STACK pdf         -|
+# |             |                    |
+# |             |                    |
+# |             |                    |
+# |-------------|                    |
+# |             |                    |
+# | terminal    |                    |
+# |_____________|____________________|
+#
+# Building a layout on another workspace switch to it with:
+# i3-msg Workspace 2
+#
+#
+# It may be usefull to disable mouse pointer and/or touchpad while
+# layouting.
+#
+# Disable mouse:
+# mouseID=`xinput list | grep -Eo 'Mouse\s.*id\=[0-9]{1,2}' | grep -Eo '[0-9]{1,2}'`
+# xinput set-prop $mouseID "Device Enabled" 0
+#
+# Enable mouse:
+# xinput set-prop $mouseID "Device Enabled" 1
+#
+# Disable the touchpad:
+# touchID=`xinput list | grep -Eo 'TouchPad\s*id\=[0-9]{1,2}' | grep -Eo '[0-9]{1,2}'`
+# xinput set-prop $touchID "Device Enabled" 0
+#
+# Enable the touchpad
+# xinput set-prop $touchID "Device Enabled" 1
+#
+#
+# Another solution how to disable/enable
+# https://github.com/deterenkelt/dotfiles/blob/master/.i3/autostart.sh
+
+
+# CODE
+# ==========
+
+## set two possible layouts
+#/usr/bin/setxkbmap -layout us,de
+
+exit 0

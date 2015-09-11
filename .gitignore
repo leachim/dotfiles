@@ -1,0 +1,11 @@
+## keep python compiled files outside
+*.pyc
+
+## keep offlineimap temp files outside
+desktop/.offlineimap/*
+!desktop/.offlineimap/offlineimap.py
+!desktop/.offlineimap/offlineimaprc
+
+## do not include backup information
+desktop/.backup/
+!desktop/.backup/duplicity.sh
