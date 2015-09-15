@@ -16,12 +16,3 @@ if [ -n "$BASH_VERSION" ]; then
     fi
 fi
 
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
-    PATH="/usr/local/MATLAB/R20*/bin:$PATH"
-fi
-
-## set keyboard layout optimal
-#/usr/bin/setxkbmap -layout us,de
-#/usr/bin/setxkbmap -option grp:alt_shift_toggle

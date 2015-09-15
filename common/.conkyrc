@@ -128,7 +128,7 @@ net_avg_samples 2
 TEXT
 ## weather info, but you first need a wunderground account
 # alternative
-${color0}${execi 1200 ~/.conky/scripts/weather.sh "EUR|DE|81673|Munich"}
+${color0}${execi 1200 ~/.conky/scripts/weather.sh "EUR|DE|01234|Frankfurt"}
 # network
 ${color0}Public IP : ${color grey60}${execi 240 curl -s http://checkip.dyndns.org/ | awk '/:/ {print $6}' | cut -d "<" -f1 }
 ${color0}Gateway IP: ${color grey60}$gw_ip

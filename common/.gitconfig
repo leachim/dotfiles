@@ -38,74 +38,57 @@
 [alias]
     # Show all configured aliases
     aliases = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\ \t => \\2/' | sort
-    s = !git status --short
-    logpretty = log --graph --decorate --pretty=oneline --abbrev-commit
-    # View the log and diff for a commit (previous if no SHA1 provided)
-    details = log -n1 -p --format=fuller
+	#amend to commit
+   	amend = !git log -n 1 --pretty=tformat:%s%n%n%b | git commit -F - --amend
 
-	### yet undecided
-    #
-    # amend to commit
-#    amend = !git log -n 1 --pretty=tformat:%s%n%n%b | git commit -F - --amend
-    # Show all branches
-#    br = branch -av
-    # Show the current branch name
-#    brname = !git branch | grep "^*" | awk '{ print $2 }'
-    # Which files are receiving the most "love"
-#    churn = !git log --all -M -C --name-only --format='format:' "$@" | sort | grep -v '^$' | uniq -c | sort | awk 'BEGIN {print "count,file"} {print $1 "," $2}'
+	s = !git status --short
+	# View the log and diff for a commit (previous if no SHA1 provided)
+	d = log -n1 -p --format=fuller
+	#View a pretty git log with branch tree
+	l = !git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
 
-
-    # Save a repo as a tarball
-#    export = archive -o latest.tar.gz -9 --prefix=latest/
-    # View a pretty git log with branch tree
-#    g = !git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-    # Return a list of commit SHA1s
-#    l = "!f() { git log $* | grep '^commit ' | cut -f 2 -d ' '; }; f"
-    # Remove deleted files
-#    r = !git ls-files -z --deleted | xargs -0 git rm
-    # Return the repository's root directory (usefull for shell prompts)
-#    root = rev-parse --show-toplevel
+	# Return the repository's root directory (usefull for shell prompts)
+    root = rev-parse --show-toplevel
     # Update all submodules
-#    subup = submodule update --init
+    usub = submodule update --init
     # Thin out older metadata within the repository, reduceses filesystem footprint
-#    trim = !git reflog expire --expire=now --all && git gc --prune=now
+    utrim = !git reflog expire --expire=now --all && git gc --prune=now
+	#Show all branches
+   	br-all = branch -av
+    #Show the current branch name
+   	br-name = !git branch | grep "^*" | awk '{ print $2 }'
+    #Which files are receiving the most "love"
+   	churn = !git log --all -M -C --name-only --format='format:' "$@" | sort | grep -v '^$' | uniq -c | sort | awk 'BEGIN {print "count,file"} {print $1 "," $2}'
+	# Save a repo as a tarball
+	export = archive -o $1.tar.gz -9 --prefix=latest/
 
-    #s = status
-#    changes = "!f() { git log --pretty=format:'* %s' $1..$2; }; f"
-#	l = log --graph --all --pretty=format:'%C(yellow)%h%C(cyan)%d%Creset %s %C(white)- %an, %ar%Creset'
-#	ll = log --stat --abbrev-commit
-#	d = diff --color-words
-#	dh = diff --color-words head
+	## log stuff
+	ls = log --all --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset' --abbrev-commit
+	la = log --all --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ci) %C(bold blue)<%an>%Creset' --abbrev-commit
+	ll = log --graph --decorate --pretty=oneline --abbrev-commit
+	lla = log --stat --graph --decorate --pretty=oneline --abbrev-commit --numstat
+	#List oneline commits showing dates:
+	lld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
+	#List oneline commits showing relative dates:
+	llr = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
 
-#Being the Branch/Integration manager at my current client, I use these constantly to merge stuff:
-#ours = "!f() { git co --ours $@ && git add $@; }; f"
-#theirs = "!f() { git co --theirs $@ && git add $@; }; f"
+	## diff stuff
+	dh = diff --color-words head
+	#Show a diff last commit:
+	dlc = diff --cached HEAD^
+	# all commits related to a file
+	fl = log -u
 
-#ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
-#List commits showing changed files is invoked with git ll and looks like this:
-#ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
-#List oneline commits showing dates:
-#lds = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
-#List oneline commits showing relative dates:
-#ld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
+	# Being the Branch/Integration manager at my current client, I use these constantly to merge stuff:
+	rev-ours = "!f() { git co --ours $@ && git add $@; }; f"
+	rev-theirs = "!f() { git co --theirs $@ && git add $@; }; f"
 
-#You can see all the commits related to a file, with the diff of the changes with git log -u which i shortened to fl for filelog:
-#filelog = log -u
-#fl = log -u
 
-#Show modified files in last commit:
-#git log --numstat -1
-#dl = "!git ll -1"
-
-#Show a diff last commit:
-#dlc = diff --cached HEAD^
-
-#Grep from root folder:
-#gra = "!f() { A=$(pwd) && TOPLEVEL=$(git rev-parse --show-toplevel) && cd $TOPLEVEL && git grep --full-name -In $1 | xargs -I{} echo $TOPLEVEL/{} && cd $A; }; f"
-
-#git la will output all your aliases:
-#la = "!git config -l | grep alias | cut -c 7-"
-
-#review = "!sh -c 'git log --all --oneline --reverse --date=local --since=\"$0\"'"
-#whois = "!sh -c 'git log -i -1 --pretty=\"format:%an <%ae>\n\" --author=\"$1\"' -"
-#lg = log --all --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ci) %C(bold blue)<%an>%Creset' --abbrev-commit
+    ############################
+	## Using arguments
+	############################
+	# Grep from root folder:
+	grep = "!f() { A=$(pwd) && TOPLEVEL=$(git rev-parse --show-toplevel) && cd $TOPLEVEL && git grep --full-name -In $1 | xargs -I{} echo $TOPLEVEL/{} && cd $A; }; f"
+	# list commits by date or author
+	review = "!sh -c 'git log --all --oneline --reverse --date=local --since=\"$0\"'"
+	whois = "!sh -c 'git log -i -1 --pretty=\"format:%an <%ae>\n\" --author=\"$1\"' -"

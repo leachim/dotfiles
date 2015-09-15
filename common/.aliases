@@ -22,11 +22,14 @@ alias vd="evince *.pdf"
 alias arw="arara *.tex && evince *(.om[1])"
 alias ara="arara *.tex"
 
+## Git
+alias g="git"
+
 ## Ipython
 alias i="ipython3 -i -c \"import numpy as np;from math import *;\" --colors=lightbg"
 
 ## Julia
-alias j="julia"
+alias ju="julia"
 
 ## VIM
 alias vim="vim --servername VIM"

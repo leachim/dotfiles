@@ -3,5 +3,5 @@
 R_LIBS_USER = ~/.R/
 R_HISTFILE = ~/.Rhistory 
 ## load some default packages at startup
-R_DEFAULT_PACKAGES = 'datasets,utils,grDevices,graphics,stats,methods,ggplot2'    
+R_DEFAULT_PACKAGES = 'datasets,utils,grDevices,graphics,stats,methods'    
 #MYSQL_HOME = /var/lib/mysql   

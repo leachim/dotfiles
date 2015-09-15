@@ -29,6 +29,7 @@ zstyle ':prezto:load' pmodule \
   'terminal' \
   'editor' \
   'git' \
+  'syntax-highlighting' \
   'history' \
   'history-substring-search' \
   'directory' \
@@ -37,8 +38,6 @@ zstyle ':prezto:load' pmodule \
   'completion' \
   'dpkg' \
   'fasd' \
-  'haskell' \
-  'syntax-highlighting' \
   'tmux' \
   'utility' \
   'prompt'
