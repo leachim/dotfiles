@@ -1,248 +1,234 @@
-# comments now allowed
-a2ps
-alsa-base
-alsa-utils
-anacron
-ansible
-apt-listbugs
-apt-listchanges
-apt-utils
-arandr
-hunspell
-hunspell-de-de
-hunspell-de-med
-hunspell-en-us
-hunspell-en-med
-atool
-autocutsel
-autojump
-bash-completion
-bbswitch-dkms
-bc
-biber
-bind9-host
-bioperl
-blueman
-bsd-mailx
-bumblebee
-bumblebee-nvidia
-bzip2
-c2hs
-## certificates for ssl key verification
-ca-certificates
-cabextract
-cadaver
-calibre
+## comments now allowed
+#!dzen2
+#!xfce4
+#!pymol
+#!urlview
+#!tree
+#!staden-io-lib-utils
+#!c2hs
+#!dkms
+#!libcanberra-gtk-module
+#!libnss3-tools
+#!libreoffice-l10n-de
+#!libxdg-basedir-dev
+#!libxft-dev
+#!libxinerama
+#!mozilla-plugin-vlc
+#!x2goclient
+
+## basics
 chromium
-cifs-utils
-clamav
-clusterssh
-colordiff
-colorgcc
 conky
-conky-all
-console-setup
-coreutils
-cpufrequtils
-cryptmount
-cryptsetup
-db5.1-util
-dbus
-dc
-diffpdf
-dconf-editor
-dconf-tools
-debian-archive-keyring
-debian-keyring
-detox
-dkms
-dnsutils
-doc-debian
-docker.io
-dos2unix
-dosfstools
-doxygen
-dstat
-dtrx
-dunst
+dropbox
 duplicity
-dzen2
-eclipse
-eclipse-cdt
-eog
+git
+tmux
+vim
+zsh
+
+## Security
+audispd-plugins
+auditd
+logcheck
+# certificates for ssl key verification
+ca-certificates
+rkhunter
+# selinux
+selinux-basics
+selinux-policy-default
+selinux-utils
+setools-gui
+# Forensic tool to find hidden processes and ports
+unhide
+
+## Other
+apt-listbugs
+cpufrequtils
+debian-keyring
+htop
+
+# gui to manage display layout
+arandr
+# atool is a script for managing file archives of various types
+atool
+# Keep the X clipboard and the cutbuffer in sync
+autocutsel
+# shell extension to jump to frequently used directories
+autojump
+# tool to colorize 'diff' output
+colordiff
+# Management of encrypted file systems
+cryptmount
+# utility to replace problematic characters in filenames
+detox
+# versatile resource statistics tool
+dstat
+# tool to send magic Wake-on-LAN packets
 etherwake
-evince
-evolution
+# utilities to create, check, label and dump exFAT filesystem
 exfat-utils
-exuberant-ctags
+# Tools for Flash-Friendly File System
 f2fs-tools
-file-roller
-filezilla
+# userspace virtual filesystem - GIO module
+gvfs
+# Universal source code to formatted text converter
+highlight
+# Tools for manipulating MSDOS files
+mtools
+p7zip
+# hardware sensor information logging daemon
+sensord
+# control and monitor storage systems using S.M.A.R.T.
+smartmontools
+# System call tracer - debugging
+strace
+# summarize the contents of a syslog log file
+syslog-summary
+# system performance tools for Linux
+sysstat
+# tool for network monitoring and data acquisition
+tcpdump
+# hides the mouse cursor in X after a period of inactivity
+unclutter
+# post-processing tool for scanned pages
+unpaper
+
+## Hardware
 firmware-linux
 firmware-linux-nonfree
-freemind
-ftp
-fuse
-gcc
-geany
-gedit
-gimp
-git-core
-gitg
-gksu
-glipper
-gmrun
-gnome-disk-utility
-gnupg
-gnuplot
-## needed for better keyring support
-gnome-keyring
-gource
-gpart
-gparted
-gpaste
-gphoto2
-gphotofs
-graphviz
-grive
-gucharmap
-gvfs
-gvfs-backends
-gvfs-bin
-gvfs-fuse
-haskell-platform
-highlight
-host
-hplip
-htop
-i3
-i3lock
-## has been replaced by evolution
-#icedove
-#iceowl-extension
-iceweasel
-iftop
-imagemagick
-info
-inkscape
+blueman
+# tool for enabling and disabling wireless devices
+rfkill
+# Processor microcode firmware for Intel CPUs
 intel-microcode
-iotop
-ipython3
-ipython3-notebook
-ipython-notebook
-iw
-jabref
-lame
-latexmk
-lftp
-libcanberra-gtk-module
-libreoffice
-libreoffice-l10n-de
-libnss3-tools
-# rofi (dmenu-replacement) dependencies
-libxdg-basedir-dev
-libxinerama
-libxft-dev
-# gdm replacement
+iucode-tool
+
+## Window manager & tools
+# Clipboard management system
+gpaste
+#
 lightdm
-lm-sensors
-lshw
-lsof
-mediainfo
+# rofi (dmenu-replacement) dependencies
+rofi
+# command line screen capture utility
+scrot
+stalonetray
+xbacklight
+xbindkeys
+xclip
+xdotool
+# Screensaver daemon and frontend for X11
+xscreensaver
+# command-line tool to access X clipboard and selection buffers
+xsel
+
+## Tools & programs
+calibre
+filezilla
+gparted
+# displays bandwidth usage information on an network interface
+iftop
+# i/o top
+iotop
 mosh
-## browser plugin for video playback in browser
-mozilla-plugin-vlc
-mpv
-mtools 
+# Full screen ncurses and X11 traceroute tool
 mtr
+# view multiple logfiles windowed on console
 multitail
-nagstamon
-netcat
-nethogs
-network-manager
-network-manager-gnome
-network-manager-openvpn
-network-manager-pptp
-network-manager-vpnc
-network-manager-openvpn-gnome
-network-manager-vpnc-gnome
-nfs-common
-ngrep
-nload
-nmap
-notification-daemon
-ntfs-3g
-ntp
-octave
+# IMAP/Maildir synchronization and reader support
 offlineimap
-openjdk-7-jdk
-openjdk-7-jre
-openjdk-7-jre-headless
-openvpn
-## owncloud
-owncloud-client
-owncloud-client-cmd
-p7zip
+pidgin
+rxvt-unicode
+screenfetch
+
+## PDF management
+diffpdf
 pdfgrep
 pdf-presenter-console
 pdftk
-pidgin
 poppler-utils
-powertop
-psensor
+
+## Programming
+eclipse
+eclipse-cdt
+# automatic annotation
+doxygen
+geany
+graphviz
+haskell-platform
+# Java
+default-jre
+default-jdk
+# Python
 pyhoca-cli
 pyhoca-gui
-pymol
-# python 3
 python3
-python3-pip
-## python 2.7
-python
-python-pip
-python-biopython
-## essential for offlineimap
+ipython3-notebook
 python-gnomekeyring
+python-pip
 python-requests
 python-requests-oauthlib
-rapidsvn
+# R
 r-base
 r-base-dev
-remmina
-rfkill
-rkhunter
-## program manager
-rofi
-rpcbind
-rsnapshot
-rstudio
-rxvt-unicode
-scantailor
-screenfetch
-scrot
-# selinux
-selinux-basics
-selinux-utils
-selinux-policy-default
-auditd
-audispd-plugins
-logcheck
-syslog-summary
-setools-gui
-# 
-slurm
-smartmontools
-ssmtp
-sshfs
-staden-io-lib-utils
-stalonetray
-strace
+bioperl
+octave
 subversion
-suckless-tools
-synaptic
-sysstat
-tcpdump
-telnet
-terminator
+
+## Virtualisation
+docker.io
+virtualbox
+virtualbox-guest-additions-iso
+
+## Media
+mpv
+vlc
+# convert raw to jpg format
+ufraw
+
+## Network tools
+# command line webdav client
+cadaver
+# The SMB/CIFS protocol provides support for cross-platform file sharing with Microsoft Windows, OS X, and other Unix systems.
+cifs-utils
+# Sophisticated command-line FTP/HTTP client programs
+lftp
+# Net top tool grouping bandwidth per process
+nethogs
+network-manager-openvpn
+network-manager-openvpn-gnome
+network-manager-vpnc
+network-manager-vpnc-gnome
+# grep for network traffic
+ngrep
+# Monitor Network Traffic and Bandwidth Usage In Real Time
+nload
+# utility for network exploration or security auditing
+nmap
+openvpn
+# Realtime network interface monitor
+slurm
+sshfs
+ssmtp
+# tunnel traffic via proxy
+tsocks
+vpnc
+wireshark
+
+## Internet
+owncloud-client
+owncloud-client-cmd
+remmina
+tor
+unison
+
+## Writing & Citation management
+biber
+hunspell
+hunspell-de-de
+hunspell-en-med
+jabref
+latexmk
 texlive
 texlive-bibtex-extra
 texlive-extra-utils
@@ -255,38 +241,5 @@ texlive-math-extra
 texlive-science
 texlive-xetex
 texstudio
-tk
-tmux
-tor
-transmission-cli
-tree
-# tunnel traffic via proxy
-tsocks
-# convert raw images to jpg
-ufraw
-unclutter
-unetbootin
-unhide
-unison
-urlview
-vim-gtk
-virtualbox
-virtualbox-guest-additions-iso
-vlc
-vpnc
-wireshark
-x2goclient
-xbacklight
-xbindkeys
-xbindkeys-config
-xclip
-# create default directories for desktop, downloads, documents
-xdg-user-dirs
-xdotool
-xfce4
-xscreensaver
-xsel
 xournal
-xsane
-vagrant
 zotero-standalone

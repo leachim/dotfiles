@@ -51,3 +51,5 @@ sleep 5
 ##
 echo "Installing Vim Plugins .."
 vim +BundleInstall +qall
+
+## echo "Remember to remove git alias file in zprezto"

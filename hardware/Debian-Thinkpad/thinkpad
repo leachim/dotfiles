@@ -4,9 +4,6 @@
 sudo apt-get install firmware-iwlwifi
 
 ## support graphics card
-sudo apt-get install 
-# linux, nvidia free
-noveau
 # linux, nvidia, non-free
 nvidia-kernel-dkms
 
@@ -31,3 +28,8 @@ rfkill block bluetooth
 
 ## update and add the file 99-synaptics-t440s.conf to the folder
 # /etc/X11/xorg.conf.d/
+
+## Graphics card management
+#see https://wiki.debian.org/Bumblebee
+bumblebee-nvidia
+primus

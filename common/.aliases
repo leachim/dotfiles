@@ -13,6 +13,7 @@ alias upac="sudo apt-get update && sudo apt-get upgrade"
 alias timestamp="date +%Y_%m_%d-%H_%M"
 alias c="clear"
 alias pack="tar -zcvf"
+alias list-packages="dpkg-query -f '${binary:Package}\n' -W"
 
 ## Latex & PDF viewer
 alias lat="latexmk"
