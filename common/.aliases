@@ -10,10 +10,11 @@
 ## SYSTEM
 alias logoff="pkill -KILL -u michael"
 alias upac="sudo apt-get update && sudo apt-get upgrade"
+alias ugit="git pull && git submodule update --init --recursive"
 alias timestamp="date +%Y_%m_%d-%H_%M"
 alias c="clear"
 alias pack="tar -zcvf"
-alias list-packages="dpkg-query -f '${binary:Package}\n' -W"
+#alias list-packages="dpkg-query -f ${binary:Package} -W"
 
 ## Latex & PDF viewer
 alias lat="latexmk"
@@ -31,9 +32,6 @@ alias i="ipython3 -i -c \"import numpy as np;from math import *;\" --colors=ligh
 
 ## Julia
 alias ju="julia"
-
-## VIM
-alias vim="vim --servername VIM"
 
 ## TMUX
 # connect to running tmux session on ssh host
@@ -166,12 +164,12 @@ mpdf-printFileToPdf () { cat "$1" | a2ps -=book -B -q --medium=A4dj --borders=no
 # set dual/single monitors
 dual-dp () {  xrandr --output eDP1 --primary --output DP1 --auto --right-of eDP1;}
 dual-vga (){ xrandr --output eDP1 --primary --output DP2 --auto --right-of eDP1;}
-single () {xrandr --output DP1 --off; xrandr --output DP2 --off ; xrandr --output HDMI1 --off ; xrandr --output HDMI2 --off ;}
-present () {xrandr --output DP1 --auto ; xrandr --output DP2 --auto;}
+single () { xrandr --output DP1 --off; xrandr --output DP2 --off ; xrandr --output HDMI1 --off ; xrandr --output HDMI2 --off ;}
+present () { xrandr --output DP1 --auto ; xrandr --output DP2 --auto;}
 
 # set background light
-darken () {xbacklight -set 0 ; }
-lighten () {xbacklight -set 100 ;}
+darken () { xbacklight -set 0 ; }
+lighten () { xbacklight -set 100 ;}
 
 
 #########################################

@@ -25,6 +25,8 @@ sudo systemctl enable laptop-mode.service
 ## How can I deactivate Bluetooth on system startup?
 edit /etc/rc.local and add this before line with exit 0:
 rfkill block bluetooth
+or 
+systemctl disable bluetooth.service
 
 ## update and add the file 99-synaptics-t440s.conf to the folder
 # /etc/X11/xorg.conf.d/

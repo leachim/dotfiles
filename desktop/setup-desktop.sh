@@ -4,14 +4,14 @@
 echo "Installing keys for the hopefully updated packages in /etc/apt/sources.list"
 sleep 10
 echo "virtualbox"
-wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- |  apt-key add -
+sudo sh -c "wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- |  apt-key add -"
 echo "dropbox"
 sudo apt-key adv --keyserver pgp.mit.edu --recv-keys 5044912E
 echo "tor"
 # Secure APT - gpg --keyserver keys.gnupg.net --recv 886DDD89
 gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -
 echo "x2go"
-apt-key adv --recv-keys --keyserver keys.gnupg.net E1F958385BFE2B6E
+sudo apt-key adv --recv-keys --keyserver keys.gnupg.net E1F958385BFE2B6E
 echo "docker.io"
 sudo sh -c "wget -qO- https://get.docker.io/gpg | apt-key add -"
 
@@ -19,7 +19,7 @@ sudo sh -c "wget -qO- https://get.docker.io/gpg | apt-key add -"
 ## Install debian packages
 echo "Installing Software .."
 sudo apt-get update
-sudo apt-get upgrade -y
+#sudo apt-get upgrade -y
 sleep 10
 ##
 echo "Install the following debian packages from sources"
@@ -29,10 +29,13 @@ do
     then
         echo $line
     fi
+    if [[ -z $line ]]
+    then
+        continue
+    fi
 done < ./packages-debian
 
-packages=`cat packages-debian | grep -v \#`
-sudo apt-get install $(< packages)
+cat packages-debian | grep -v -e '^$' | grep -v \# | xargs sudo apt-get install -y
 sleep 10
 # install iceweasel from sid
 #sudo apt-get install -t unstable iceweasel
@@ -51,6 +54,7 @@ echo "symlinking dotfiles for desktop usage..."
 dir="$HOME/.dotfiles/desktop"
 sleep 5
 
+rm -rf $HOME/.config
 for dotfile in .*;
 do
 	echo "creating symlink for $dotfile"

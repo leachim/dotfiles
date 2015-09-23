@@ -49,8 +49,6 @@
 
 	# Return the repository's root directory (usefull for shell prompts)
     root = rev-parse --show-toplevel
-    # Update all submodules
-    usub = submodule update --init
     # Thin out older metadata within the repository, reduceses filesystem footprint
     utrim = !git reflog expire --expire=now --all && git gc --prune=now
 	#Show all branches

@@ -5,7 +5,7 @@ Module showing amount of windows at the scratchpad.
 @license Eclipse Public License
 """
 
-import i3
+#import i3
 from time import time
 
 

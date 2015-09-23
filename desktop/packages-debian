@@ -15,7 +15,7 @@
 #!libxinerama
 #!mozilla-plugin-vlc
 #!x2goclient
-
+#########################################################
 ## basics
 chromium
 conky
@@ -25,7 +25,7 @@ git
 tmux
 vim
 zsh
-
+#########################################################
 ## Security
 audispd-plugins
 auditd
@@ -35,18 +35,17 @@ ca-certificates
 rkhunter
 # selinux
 selinux-basics
-selinux-policy-default
 selinux-utils
 setools-gui
 # Forensic tool to find hidden processes and ports
-unhide
-
+#!unhide
+#########################################################
 ## Other
 apt-listbugs
 cpufrequtils
 debian-keyring
 htop
-
+#########################################################
 # gui to manage display layout
 arandr
 # atool is a script for managing file archives of various types
@@ -71,6 +70,8 @@ exfat-utils
 f2fs-tools
 # userspace virtual filesystem - GIO module
 gvfs
+# change themes using gtk-theme-swith
+gtk2-theme-switch
 # Universal source code to formatted text converter
 highlight
 # Tools for manipulating MSDOS files
@@ -92,7 +93,7 @@ tcpdump
 unclutter
 # post-processing tool for scanned pages
 unpaper
-
+#########################################################
 ## Hardware
 firmware-linux
 firmware-linux-nonfree
@@ -102,7 +103,7 @@ rfkill
 # Processor microcode firmware for Intel CPUs
 intel-microcode
 iucode-tool
-
+#########################################################
 ## Window manager & tools
 # Clipboard management system
 gpaste
@@ -121,16 +122,16 @@ xdotool
 xscreensaver
 # command-line tool to access X clipboard and selection buffers
 xsel
-
+#########################################################
 ## Tools & programs
 calibre
-filezilla
+#!filezilla-common
 gparted
 # displays bandwidth usage information on an network interface
 iftop
 # i/o top
 iotop
-mosh
+#!mosh
 # Full screen ncurses and X11 traceroute tool
 mtr
 # view multiple logfiles windowed on console
@@ -140,14 +141,14 @@ offlineimap
 pidgin
 rxvt-unicode
 screenfetch
-
+#########################################################
 ## PDF management
 diffpdf
 pdfgrep
 pdf-presenter-console
 pdftk
 poppler-utils
-
+#########################################################
 ## Programming
 eclipse
 eclipse-cdt
@@ -174,18 +175,18 @@ r-base-dev
 bioperl
 octave
 subversion
-
+#########################################################
 ## Virtualisation
 docker.io
 virtualbox
 virtualbox-guest-additions-iso
-
+#########################################################
 ## Media
 mpv
 vlc
 # convert raw to jpg format
 ufraw
-
+#########################################################
 ## Network tools
 # command line webdav client
 cadaver
@@ -195,6 +196,8 @@ cifs-utils
 lftp
 # Net top tool grouping bandwidth per process
 nethogs
+network-manager
+network-manager-gnome
 network-manager-openvpn
 network-manager-openvpn-gnome
 network-manager-vpnc
@@ -211,17 +214,17 @@ slurm
 sshfs
 ssmtp
 # tunnel traffic via proxy
-tsocks
+#!tsocks
 vpnc
 wireshark
-
+#########################################################
 ## Internet
 owncloud-client
 owncloud-client-cmd
 remmina
 tor
 unison
-
+#########################################################
 ## Writing & Citation management
 biber
 hunspell
@@ -242,4 +245,4 @@ texlive-science
 texlive-xetex
 texstudio
 xournal
-zotero-standalone
+#!zotero-standalone

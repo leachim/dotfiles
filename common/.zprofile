@@ -46,7 +46,6 @@ path=(
   /usr/local/{bin,sbin}
   $HOME/.cabal/bin
   $HOME/bin
-  /usr/local/MATLAB/R20*/bin
   $path
 )
 

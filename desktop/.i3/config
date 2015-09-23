@@ -28,7 +28,7 @@ floating_modifier $alt
 # start a terminal
 #bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+Return exec $terminal
-bindsym $mod+s exec "rofi -snow -terminal urxvt"
+bindsym $mod+s exec "rofi -show ssh -terminal urxvt"
 
 # background color
 exec --no-startup-id xsetroot -solid "#007799"
@@ -76,8 +76,8 @@ bindsym $mod+Shift+w focus up
 
 ## often changing commands
 # start dmenu or rofi (program launcher)
-bindsym $mod+Shift+Tab exec rofi -i3 -now -font "Inconsolata-10" -fg "#9f9f9f" -bg "#2c2c2e" -hlfg "#2c2c2e" -hlbg "#ccdc90" -o 85
-bindsym $mod+q exec rofi -i3 -rnow -font "Inconsolata-10" -fg "#9f9f9f" -bg "#2c2c2e" -hlfg "#2c2c2e" -hlbg "#ccdc90" -o 85
+bindsym $mod+Shift+Tab exec rofi -i3 -now -show window -font "Inconsolata 16" -fg "#9f9f9f" -bg "#2c2c2e" -hlfg "#2c2c2e" -hlbg "#ccdc90" -o 85
+bindsym $mod+q exec rofi -i3 -rnow -show run -font "Inconsolata 16" -fg "#9f9f9f" -bg "#2c2c2e" -hlfg "#2c2c2e" -hlbg "#ccdc90" -o 85
 bindsym $mod+p exec dmenu_run
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
