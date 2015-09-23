@@ -9,6 +9,8 @@ desktop/.offlineimap/*
 ## do not include backup information
 desktop/.backup/*
 !desktop/.backup/duplicity.sh
+!desktop/.backup/offlineimaprc
+!desktop/.backup/backup-list
 
 ## do not include atom compiled files
 desktop/.atom/*

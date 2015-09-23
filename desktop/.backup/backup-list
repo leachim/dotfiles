@@ -1,0 +1,14 @@
+####################
+## Backup list
+###################
+
+## Email
+
+## Bookmarks
+## Contacts
+## Calendar
+
+## Phone Sync
+
+## dpkg --get-selections > /backup/installed-software.log
+## rsync source dest -aP --exclude '.Synology*'
