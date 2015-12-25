@@ -12,3 +12,8 @@ scipy
 scikit-learn
 seaborn
 sympy
+virtualenv
+virutalenvwrapper
+## atom python syntax checking
+flake8
+flake8-docstring

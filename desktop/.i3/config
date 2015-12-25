@@ -49,8 +49,7 @@ bindsym $mod+Next floating disable
 
 bindsym $alt+c exec /usr/bin/chromium
 bindsym $alt+n exec /usr/bin/nautilus
-bindsym $alt+m exec /usr/bin/icedove
-bindsym $alt+e exec /usr/bin/eclipse
+#bindsym $alt+m exec /usr/bin/icedove
 bindsym $alt+z exec /usr/bin/zotero
 
 # remote desktop

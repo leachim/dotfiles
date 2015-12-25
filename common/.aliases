@@ -9,33 +9,49 @@
 
 ## SYSTEM
 alias logoff="pkill -KILL -u michael"
-alias upac="sudo apt-get update && sudo apt-get upgrade"
+alias upac="sudo apt-get update && sudo apt-get upgrade && apm update"
 alias ugit="git pull && git submodule update --init --recursive"
 alias timestamp="date +%Y_%m_%d-%H_%M"
+alias suspend="systemctl suspend"
+alias vi="vim"
 alias c="clear"
 alias pack="tar -zcvf"
+u-start-virtualenv () {source "$HOME/.virtualenvs/$1/bin/activate"; }
 #alias list-packages="dpkg-query -f ${binary:Package} -W"
 
 ## Latex & PDF viewer
 alias lat="latexmk"
+alias late="latexmk -halt-on-error"
 alias lac="latexmk -c"
 alias vw="evince"
 alias vd="evince *.pdf"
 alias arw="arara *.tex && evince *(.om[1])"
 alias ara="arara *.tex"
 
+## Docker
+docker-stopall () {sudo docker stop $(sudo docker ps -a -q); }
+docker-removeUntagged () { sudo docker rmi -f $(sudo docker images -f "dangling=true" -q); }
+
 ## Git
 alias g="git"
 
-## Ipython
+## Jupyter
+alias jup="jupyter notebook"
+
+## Python
+alias i2="ipython2 -i --colors=lightbg"
 alias i="ipython3 -i -c \"import numpy as np;from math import *;\" --colors=lightbg"
+alias setup-virtualenv="virtualenv --no-site-packages --distribute .virtualenvs && source .virtualenvs/bin/activate && pip install -r requirements.txt – "
+
+alias virt-helmholtz="~/.virtualenvs/helmholtz/bin/activate"
+alias virt-icl="source ~/.virtualenvs/icl/bin/activate"
 
 ## Julia
 alias ju="julia"
 
 ## TMUX
 # connect to running tmux session on ssh host
-ssht () { ssh "$1" -t tmux a; }
+sst () { ssh "$1" -t tmux a; }
 alias tma='tmux attach -d -t'
 alias tmd='tmux new -s $(basename $(pwd))'
 alias tmn='tmux new -s $(basename $(pwd))'
@@ -46,7 +62,7 @@ alias dun="du -ach | sort -h"
 alias dfn="df -Tha --total"
 alias webify="mogrify -resize 690\> *.png"
 alias myip="curl http://ipecho.net/plain; echo"
-alias wget="wget -c"
+alias wgetNice="wget --cut-dirs=100 -nH -np -r -c"
 alias mkdir="mkdir -pv"
 alias psn="ps auxf"
 alias free="free -mt"
@@ -61,10 +77,22 @@ alias latex-duplicate-labels="zsh -c \"perl -nE 'say $1 if /(\\label[^}]*})/' **
 
 
 #########################################
+### Git aliases                       ###
+#########################################
+
+alias gs='git status '
+alias ga='git add '
+alias gb='git branch '
+alias gc='git commit'
+alias gd='git diff'
+alias go='git checkout '
+alias gs='git status '
+
+#########################################
 ### Helper functions                  ###
 #########################################
 
-function extract {
+function extract-helper {
  if [ -z "$1" ]; then
     # display usage if no parameters given
     echo "Usage: extract <path/file_name>.<zip|rar|bz2|gz|tar|tbz2|tgz|Z|7z|xz|ex|tar.bz2|tar.gz|tar.xz>"
@@ -231,3 +259,4 @@ backup-secure_encrypt-sign () { tar czvpf - $1 | gpg --symmetric --cipher-algo a
 backup-secure_encrypt-only () { tar czvpf - $1 | gpg --symmetric --cipher-algo aes256 -o safe.tar.gz.gpg ; }
 backup-secure_decrypt-signed () { gpg --verify $1.asc $1 && gpg -d $1 | tar xzvf - ; }
 backup-secure_decrypt-nocheck () { gpg -d $1 | tar xzvf - ; }
+

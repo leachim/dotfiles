@@ -18,8 +18,10 @@ org.gnome.settings-daemon.plugins.mouse
 then copy the /etc/X11/xorg.conf.d file to the respective repository
 
 ## power saving
-sudo apt-get install laptop-mode-tools
-sudo systemctl enable laptop-mode.service
+#sudo apt-get install laptop-mode-tools
+#sudo systemctl enable laptop-mode.service
+sudo apt-get install tlp tlp-rdw
+To complete TLP's install, you must enable the systemd services tlp.service and tlp-sleep.service. You should also enable RESTORE_DEVICE_STATE_ON_STARTUP in /etc/default/tlp to avoid conflicts with the systemd service systemd-rfkill@.service.
 # take care to deactivate ssd power management
 
 ## How can I deactivate Bluetooth on system startup?

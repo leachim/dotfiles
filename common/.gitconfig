@@ -221,7 +221,9 @@
 	svnr = svn rebase
 	svnd = svn dcommit
 	svnl = svn log --oneline --show-commit
-	#############
+    #############
+    tr = ls-tree -r master --name-only
+    #############
 	w = show
 	wp = show -p
 	wr = show -p --no-color

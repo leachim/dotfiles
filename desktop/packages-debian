@@ -74,6 +74,10 @@ gvfs
 gtk2-theme-switch
 # Universal source code to formatted text converter
 highlight
+# inkscape, draw nice graphics
+inkscape
+# tools for creating jupyter reports
+pandoc
 # Tools for manipulating MSDOS files
 mtools
 p7zip
@@ -175,10 +179,19 @@ r-base-dev
 bioperl
 octave
 subversion
+# R jupyter kernel
+libzmq3-dev
+libcurl4-openssl-dev
 #########################################################
 ## Virtualisation
+# python virtual environments
+virtualenv
+virtualenvwrapper
+# docker
 docker.io
+# virtualbox
 virtualbox
+virtualbox-ext-pack
 virtualbox-guest-additions-iso
 #########################################################
 ## Media
@@ -222,7 +235,7 @@ wireshark
 owncloud-client
 owncloud-client-cmd
 remmina
-tor
+#tor
 unison
 #########################################################
 ## Writing & Citation management

@@ -1,5 +1,10 @@
+## current theme
+iris-light-master
+
+## theme source
 Possible sources for templates:
 https://github.com/rbrito/mediterranean-gtk-themes
 https://github.com/xyl0n/iris-light
 
-see copyright there
+## change theme
+gtk-theme-switch2

@@ -22,8 +22,6 @@ set autoread
 set viminfo='50,\"100,:100,n~/.vim/.viminfo
 set history=1000
 
-set undofile
-set undodir=~/.vimundo
 set nobackup
 set nowritebackup
 set noswapfile
@@ -147,7 +145,17 @@ map <leader>h :HLint<CR>
 map <leader>c :NeoCompleteToggle<CR>
 map <leader>a :Ack 
 map <leader>b :BufExplorer<CR>
-map <eader>z :NarrowRegion<CR>
+map <leader>z :NarrowRegion<CR>
+
+" Copy Paste clipboard
+" Copy to X CLIPBOARD
+map <leader>cc :w !xsel -i -b<CR>
+map <leader>cp :w !xsel -i -p<CR>
+map <leader>cs :w !xsel -i -s<CR>
+" Paste from X CLIPBOARD
+map <leader>pp :r!xsel -p<CR>
+map <leader>ps :r!xsel -s<CR>
+map <leader>pb :r!xsel -b<CR>
 
 " We don't want that kind here
 "nnoremap <up> <nop>

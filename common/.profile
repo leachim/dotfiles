@@ -16,3 +16,5 @@ if [ -n "$BASH_VERSION" ]; then
     fi
 fi
 
+export JAVA_HOME=/usr/lib/jvm/default-java/bin/java
+export PATH=$PATH:/usr/lib/jvm/default-java/bin

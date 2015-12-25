@@ -3,3 +3,22 @@
     userId: "27189852-e9fd-e29d-8dd5-6dde1069e158"
   welcome:
     showOnStartup: false
+  core:
+    projectHome: "/home/michael/"
+    openEmptyEditorOnStart: false
+  editor:
+    invisibles: {}
+    tabLength: 4
+    fontSize: 15
+    preferredLineLength: 160
+  linter:
+    showErrorPanel: false
+  "atom-beautify": {}
+  "linter-flake8":
+    maxLineLength: 120
+".python.text.traceback":
+  editor:
+    softWrap: true
+".console.python.text":
+  editor:
+    softWrap: true

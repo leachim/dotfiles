@@ -102,3 +102,4 @@ RPROMPT="\$(cabal_sandbox_info) $RPROMPT"
 ###   Manual zshrc file configuration       ###
 ################################################
 
+setopt No_Beep

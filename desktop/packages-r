@@ -62,6 +62,7 @@ install.packages("zoo", lib=paste(args,"/.R/", sep = ""))
 # package development
 install.packages("devtools", lib=paste(args,"/.R/", sep = ""))
 	# unit tests
+install.packages("RCurl", lib=paste(args, "/.R/", sep = ""))
 install.packages("testthat", lib=paste(args,"/.R/", sep = ""))
 	# documentation
 install.packages("roxygen2", lib=paste(args,"/.R/", sep = ""))

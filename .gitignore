@@ -9,20 +9,22 @@ desktop/.offlineimap/*
 ## do not include backup information
 desktop/.backup/*
 !desktop/.backup/duplicity.sh
-!desktop/.backup/offlineimaprc
 !desktop/.backup/backup-list
 
 ## do not include atom compiled files
 desktop/.atom/*
 !desktop/.atom/config.cson
+!desktop/.atom/keymap.cson
+!desktop/.atom/atom-packages
 
 ## do not include texstudio stuff
 desktop/.config/texstudio/*
 !desktop/.config/texstudio/texstudioen_US.ign
 !desktop/.config/texstudio/texstudiode_DE.ign
-!desktop/.config/texstudio/texstudio.ini
+#desktop/.config/texstudio/texstudio.ini
 
 ## only include source of themes and current theme
 desktop/.themes/*
 !desktop/.themes/readme
 !desktop/.themes/MediterraneanWhite/*
+!desktop/.themes/iris-light-master/*

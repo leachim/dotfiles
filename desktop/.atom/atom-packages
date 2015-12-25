@@ -1,0 +1,8 @@
+## This is a manual list of atom packages currently in use
+language-julia
+atom-beautify
+linter
+linter-flake8
+merge-conflicts
+minimap
+script

@@ -9,7 +9,7 @@
 
 [general]
 # List of accounts to be synced, separated by a comma.
-accounts = work, personal
+accounts = email
 
 # This specifies where offlineimap is to store its metadata.
 # This directory will be created if it does not already exist.
@@ -20,9 +20,6 @@ metadata = ~/.offlineimap
 # with commas.  Account names should be alphanumeric only.
 # You will need to specify one section per account below.  You may
 # not use "general" for an account name.
-#
-
-#accounts = Test
 
 # Offlineimap can synchronize more the one account at a time.  If you
 # want to enable this feature, set the below value to something
@@ -139,32 +136,40 @@ fsync = true
 # Accounts
 ##################################################
 
-
-[Account personal]
+[Account email]
 # Identifier for the local repository; e.g. the maildir to be synced via IMAP.
-localrepository = personal-local
+localrepository = local
 # Identifier for the remote repository; i.e. the actual IMAP, usually non-local.
-remoterepository = personal-remote
+remoterepository = gmail-remote
 # Status cache. Default is plain, which eventually becomes huge and slow.
 status_backend = sqlite
+readonly = True
 
-[Account work]
-# Identifier for the local repository; e.g. the maildir to be synced via IMAP.
-localrepository = work-local
-# Identifier for the remote repository; i.e. the actual IMAP, usually non-local.
-remoterepository = work-remote
-# Status cache. Default is plain, which eventually becomes huge and slow.
-status_backend = sqlite
 
 ##################################################
 # Mail Accounts Settings
 ##################################################
 
-[Repository personal-local]
+[Repository gmail-remote]
+type = Gmail
+remoteusereval = get_username("personal")
+remotepasseval = get_password("personal")
+nametrans = lambda foldername: re.sub ('^\[gmail\]', 'bak',
+                               re.sub ('sent_mail', 'sent',
+                               re.sub ('starred', 'flagged',
+                               re.sub (' ', '_', foldername.lower()))))
+folderfilter = lambda foldername: foldername not in ['[Gmail]/All Mail']
+# Necessary as of OfflineIMAP 6.5.4
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+
+readonly = True
+ssl=yes
+
+[Repository local]
 # Currently, offlineimap only supports maildir and IMAP for local repositories.
 type = Maildir
 # Where should the mail be placed?
-localfolders = ~/.tresor/backup/mail/maildir/personal
+localfolders = ~/.offlineimap/maildir/
 nametrans = lambda foldername: re.sub('^INBOX\.', '', foldername)
 
 # You can specify the "path separator character" used for your Maildir
@@ -184,69 +189,27 @@ sep = /
 restoreatime = yes
 
 
-[Repository personal-remote]
-# Remote repos can be IMAP or Gmail, the latter being a preconfigured IMAP.
-type = IMAP
-remotehost = posteo.de
-realdelete = no
-#remoteuser = username
-remoteusereval = get_username("personal")
-remotepasseval = get_password("personal")
-nametrans = lambda folder: 'INBOX.' + folder if folder != "INBOX" else "INBOX"
-folderfilter = lambda folder: not re.search('(^Trash$)', folder)
+#[Repository personal-remote]
+## Remote repos can be IMAP or Gmail, the latter being a preconfigured IMAP.
+#type = IMAP
+#remotehost = posteo.de
+#realdelete = no
+##remoteuser = username
+#remoteusereval = get_username("personal")
+#remotepasseval = get_password("personal")
+#nametrans = lambda folder: 'INBOX.' + folder if folder != "INBOX" else "INBOX"
+#folderfilter = lambda folder: not re.search('(^Trash$)', folder)
 
-# Whether or not to use SSL.
-ssl = yes
-cert_fingerprint=80:2B:33:67:66:39:C4:27:27:29:D6:14:11:1E:2B:7F:CF:C1:3D:58:5E:B7:6B:26:A3:63:80:2E:56:77:C6:03
-sslcacertfile = /etc/ssl/certs/ca-certificates.crt
-# Specify the port.  If not specified, use a default port.
-remoteport = 993
+## Whether or not to use SSL.
+#ssl = yes
+#cert_fingerprint=80:2B:33:67:66:39:C4:27:27:29:D6:14:11:1E:2B:7F:CF:C1:3D:58:5E:B7:6B:26:A3:63:80:2E:56:77:C6:03
+#sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+## Specify the port.  If not specified, use a default port.
+#remoteport = 993
 
-# SSL Client certificate (optional)
-#sslclientcert = ~/.ssh/posteo.cert
-readonly = True
-
-[Repository work-local]
-# Currently, offlineimap only supports maildir and IMAP for local repositories.
-type = Maildir
-# Where should the mail be placed?
-localfolders = ~/.tresor/backup/mail/maildir/work
-
-sep = /
-
-# Some users on *nix platforms may not want the atime (last access
-# time) to be modified by OfflineIMAP.  In these cases, they would
-# want to set restoreatime to yes.  OfflineIMAP will make an effort
-# to not touch the atime if you do that.
-#
-# In most cases, the default of no should be sufficient.
-
-restoreatime = yes
-
-
-[Repository work-remote]
-# Remote repos can be IMAP or Gmail, the latter being a preconfigured IMAP.
-type = IMAP
-remotehost = mail.your-server.de
-realdelete = no
-#remoteuser = username
-remoteusereval = get_username("work")
-remotepasseval = get_password("work")
-#nametrans = lambda foldername: re.sub('^INBOX\.', '', foldername) if foldername != 'INBOX' else '..'
-folderfilter = lambda folder: not re.search('(^Trash$)', folder)
-#nametrans = lambda folder: re.sub('\s+', '', re.sub('(.+)(\\.)(.+)', '\\1_\\3', re.sub('(^.{1})', '.\\1', re.sub('^(INBOX)', ' ', folder))))
-
-
-# Whether or not to use SSL.
-ssl = yes
-cert_fingerprint=E1:25:41:6C:6C:87:4F:26:9D:C0:1F:2B:8E:72:02:62:20:66:A3:C6:F8:41:A6:3E:01:D5:26:8D:35:DA:58:01
-sslcacertfile = /etc/ssl/certs/ca-certificates.crt
-# Specify the port.  If not specified, use a default port.
-remoteport = 993
-
-readonly = True
-# SSL Client certificate (optional)
-#sslclientcert = ~/.ssh/yourserver.cert
+## SSL Client certificate (optional)
+##sslclientcert = ~/.ssh/posteo.cert
+#readonly = True
 
 ########## Advanced settings
 
@@ -271,7 +234,7 @@ readonly = True
 # in this case a call to imapfilter to filter mail before the sync process
 # starts and a custom shell script after the sync completes.
 # The pre sync script has to complete before a sync to the account will
-# start. 
+# start.
 
 # presynchook = imapfilter
 # postsynchook = notifysync.sh
@@ -299,7 +262,7 @@ readonly = True
 # not be changed, they will not be deleted etc.  For offlineimap it will be like these
 # messages do not exist.  This will perform an IMAP search in the case of IMAP or Gmail
 # and therefor requires that the server support server side searching.  This will
-# calculate the earliest day that would be included in the search and include all 
+# calculate the earliest day that would be included in the search and include all
 # messages from that day until today.   e.g. maxage = 3 to sync only the last 3 days mail
 
 # maxage = 3
@@ -345,7 +308,7 @@ readonly = True
 # 1. No password at all specified in the config file. If a matching entry is
 #    found in ~/.netrc (see netrc (5) for information) the password from the
 #    matching entry will be used. If there is no ~/.netrc file but there is an
-#    /etc/netrc file, the password will instead be taken from there. Otherwise 
+#    /etc/netrc file, the password will instead be taken from there. Otherwise
 #    you will be prompted for the password when OfflineIMAP starts.
 #
 # 2. The remote password stored in this file with the remotepass
@@ -543,4 +506,3 @@ subscribedonly = no
 # The same is valid for the spam folder
 #
 # spamfolder = [Google Mail]/Spam
-
