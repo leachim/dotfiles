@@ -16,7 +16,9 @@ alias suspend="systemctl suspend"
 alias vi="vim"
 alias c="clear"
 alias pack="tar -zcvf"
-u-start-virtualenv () {source "$HOME/.virtualenvs/$1/bin/activate"; }
+uvir () {source "$HOME/.virtualenvs/$1/bin/activate"; }
+ubak () {bash $HOME/.backup/local-backup.sh; }
+alias uall="upac && ubak"
 #alias list-packages="dpkg-query -f ${binary:Package} -W"
 
 ## Latex & PDF viewer
@@ -34,6 +36,7 @@ docker-removeUntagged () { sudo docker rmi -f $(sudo docker images -f "dangling=
 
 ## Git
 alias g="git"
+source $HOME/.gitalias
 
 ## Jupyter
 alias jup="jupyter notebook"
@@ -58,7 +61,7 @@ alias tmn='tmux new -s $(basename $(pwd))'
 alias tml='tmux list-sessions'
 
 ## Shortcuts
-alias dun="du -ach | sort -h"
+alias dun="du -chs | sort -h"
 alias dfn="df -Tha --total"
 alias webify="mogrify -resize 690\> *.png"
 alias myip="curl http://ipecho.net/plain; echo"
@@ -74,19 +77,6 @@ alias alertify='PS1="$PS1\a"'
 
 ## Latex stuff
 alias latex-duplicate-labels="zsh -c \"perl -nE 'say $1 if /(\\label[^}]*})/' **/*.tex | sort | uniq -c | sort -n\""
-
-
-#########################################
-### Git aliases                       ###
-#########################################
-
-alias gs='git status '
-alias ga='git add '
-alias gb='git branch '
-alias gc='git commit'
-alias gd='git diff'
-alias go='git checkout '
-alias gs='git status '
 
 #########################################
 ### Helper functions                  ###

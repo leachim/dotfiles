@@ -9,9 +9,13 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 " Dependencies for SnipMate
-Bundle "MarcWeber/vim-addon-mw-utils"
-Bundle "tomtom/tlib_vim"
-Bundle "garbas/vim-snipmate"
+Bundle 'MarcWeber/vim-addon-mw-utils'
+Bundle 'tomtom/tlib_vim'
+Bundle 'garbas/vim-snipmate'
+
+Bundle 'tpope/vim-fugitive'
+Bundle 'taglist.vim'
+Bundle 'scrooloose/nerdtree'
 
 " Plugins
 " Bundle 'scrooloose/syntastic'
@@ -19,7 +23,6 @@ Bundle "garbas/vim-snipmate"
 " Bundle 'bling/vim-airline'
 " Bundle 'mileszs/ack.vim'
 " Bundle 'corntrace/bufexplorer'
-"" Bundle 'tpope/vim-fugitive'
 ""Bundle 'tpope/vim-repeat'
 ""Bundle 'tpope/vim-surround'
 ""Bundle 'tpope/vim-unimpaired'
@@ -27,6 +30,7 @@ Bundle "garbas/vim-snipmate"
 ""Bundle 'Vim-R-Plugin'
 " Bundle 'taglist.vim'
 Bundle 'python.vim'
+Bundle 'JuliaLang/julia-vim'
 ""Bundle 'c.vim'
 " Bundle 'sjl/gundo.vim'
 " Bundle 'terryma/vim-multiple-cursors'

@@ -16,9 +16,15 @@
   "atom-beautify": {}
   "linter-flake8":
     maxLineLength: 120
-".python.text.traceback":
+".console.julia.text":
   editor:
-    softWrap: true
+    preferredLineLength: 160
 ".console.python.text":
   editor:
     softWrap: true
+".python.text.traceback":
+  editor:
+    softWrap: true
+".julia.source":
+  editor:
+    preferredLineLength: 160

@@ -5,7 +5,7 @@ Module showing amount of windows at the scratchpad.
 @license Eclipse Public License
 """
 
-#import i3
+import i3
 from time import time
 
 
@@ -21,7 +21,8 @@ def find_scratch(tree):
 
 
 class Py3status:
-
+    """
+    """
     # available configuration parameters
     cache_timeout = 5
     format = "{} ⌫"  # format of indicator. {} replaces with count of windows
@@ -56,6 +57,10 @@ if __name__ == "__main__":
     """
     from time import sleep
     x = Py3status()
+    config = {
+        'color_good': '#00FF00',
+        'color_bad': '#FF0000',
+    }
     while True:
-        print(x.scratchpad_counter([], {}))
+        print(x.scratchpad_counter([], config))
         sleep(1)

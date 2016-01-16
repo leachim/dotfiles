@@ -1,4 +1,6 @@
+## i3 status bar support
 py3status
+i3-py
 httplib2
 python-mpd2
 biopython
@@ -17,3 +19,5 @@ virutalenvwrapper
 ## atom python syntax checking
 flake8
 flake8-docstring
+## docker container command line interace
+sen
