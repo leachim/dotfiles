@@ -137,8 +137,8 @@ URxvt.clipboard.autocopy: true
 !URxvt.secondaryScroll:	true
 !URxvt.skipScroll:		false
 !URxvt.underlineURLs:	true
-!URxvt.urgentOnBell:	true
-!URxvt.url-launcher:	chromium
+URxvt.urgentOnBell:	true
+URxvt.url-launcher:	chromium
 
 XClock.Clock.analog:	True
 XClock.Clock.height:	328
@@ -209,6 +209,3 @@ XTerm*internalBorder:   2
 
 ! Fix <Left><Right> keys in Vim
 XTerm*vt100*allowTcapOps: false
-
-# Setting urgency hints in your terminal emulator
-urxvt*urgentOnBell: true

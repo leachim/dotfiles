@@ -12,10 +12,14 @@ Bundle 'gmarik/vundle'
 Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'tomtom/tlib_vim'
 Bundle 'garbas/vim-snipmate'
+Bundle 'honza/vim-snippets'
 
 Bundle 'tpope/vim-fugitive'
 Bundle 'taglist.vim'
+
 Bundle 'scrooloose/nerdtree'
+Bundle 'Lokaltog/powerline'
+
 
 " Plugins
 " Bundle 'scrooloose/syntastic'

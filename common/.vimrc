@@ -10,13 +10,18 @@ source ~/.vundlerc
 " Sets how many lines of history VIM has to remember
 set history=1000
 
+" When scrolling always center view
+set scrolloff=15
+
+" do not store global and local values in a session
+set ssop-=options    
+
 " Enable filetype plugins
 filetype plugin on
 filetype indent on
 
 " Leave curser at the point where it was before editing (VimTip1142)
 nmap . .`[
-
 
 " Enable line-numbers by default
 set number
@@ -37,26 +42,16 @@ let g:mapleader = ","
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => VIM user interface
+" search
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" Avoid garbled characters in Chinese language windows OS
-let $LANG='en'
-set langmenu=en
-source $VIMRUNTIME/delmenu.vim
-source $VIMRUNTIME/menu.vim
 
 " Turn on the WiLd menu
 set wildmenu
 set wildmode=longest:full,full
 
 " Ignore compiled files
-" set wildignore=*.o,*~,*.pyc,*.class
-" if has("win16") || has("win32")
-"    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
-" else
-"    set wildignore+=.git\*,.hg\*,.svn\*
-" endif
+set wildignore=*.o,*~,*.pyc,*.class
+set wildignore+=.git\*,.hg\*,.svn\*
 
 "Always show current position
 set ruler
@@ -129,9 +124,23 @@ set encoding=utf8
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" language support
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+augroup vimrc_autocmds
+    autocmd!
+    " highlight characters past column 120
+    autocmd FileType python highlight Excess ctermbg=DarkGrey guibg=Black
+    autocmd FileType python match Excess /\%120v.*/
+    autocmd FileType python set nowrap
+    augroup END
+
+" Powerline setup
+set guifont=DejaVu\ Sans\ Mono
+set laststatus=2
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Files, backups and undo
+" backup
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Turn backup off, since most stuff is in SVN, git et.c anyway...
 set nobackup
@@ -140,9 +149,8 @@ set noswapfile
 " If you really need it
 " set directory=~/.vim/
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Text, tab and indent related
+" Text formatting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Use spaces instead of tabs
 set expandtab
@@ -154,18 +162,19 @@ set tabstop=4
 
 " Linebreak on 500 characters
 set lbr
-set tw=500
+set tw=300
 
 " Enable autoindent
 set autoindent
 set smartindent
-set wrap "Wrap lines
+"Wrap lines
+set wrap 
 
 " Show unfinished commands
 set showcmd
 
 """"""""""""""""""""""""""""""
-" => Visual mode related
+" Visual mode
 """"""""""""""""""""""""""""""
 " Visual mode pressing * or # searches for the current selection
 " Super useful! From an idea by Michael Naumann
@@ -173,8 +182,9 @@ vnoremap <silent> * :call VisualSelection('f', '')<CR>
 vnoremap <silent> # :call VisualSelection('b', '')<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Moving around, tabs, windows and buffers
+" Moving around in vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 " Treat long lines as break lines (useful when moving around in them)
 map j gj
 map k gk
@@ -199,11 +209,19 @@ map <leader>bd :Bclose<cr>:tabclose<cr>gT
 map <leader>ba :bufdo bd<cr>
 
 " Useful mappings for managing tabs
+map <leader>te :tabedit<cr>
+map <leader>tf :tabfind<cr>
 map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove
 map <leader>t<leader> :tabnext
+
+" The following mappings (which require gvim), you can press Ctrl-Left or Ctrl-Right to go to the previous or next tabs, and can press Alt-Left or Alt-Right to move the current tab to the left or right.
+nnoremap <C-Left> :tabprevious<CR>
+nnoremap <C-Right> :tabnext<CR>
+nnoremap <silent> <A-Left> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
+nnoremap <silent> <A-Right> :execute 'silent! tabmove ' . tabpagenr()<CR>
 
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
