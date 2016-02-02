@@ -14,7 +14,7 @@ set history=1000
 set scrolloff=15
 
 " do not store global and local values in a session
-set ssop-=options    
+set ssop-=options
 
 " Enable filetype plugins
 filetype plugin on
@@ -168,7 +168,7 @@ set tw=300
 set autoindent
 set smartindent
 "Wrap lines
-set wrap 
+set wrap
 
 " Show unfinished commands
 set showcmd
@@ -203,10 +203,10 @@ map <silent> <leader><cr> :noh<cr>
 "map <C-l> <C-W>l
 
 " Close the current buffer
-map <leader>bd :Bclose<cr>:tabclose<cr>gT
+"map <leader>bd :Bclose<cr>:tabclose<cr>gT
 
 " Close all the buffers
-map <leader>ba :bufdo bd<cr>
+"map <leader>ba :bufdo bd<cr>
 
 " Useful mappings for managing tabs
 map <leader>te :tabedit<cr>
@@ -215,13 +215,41 @@ map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove
-map <leader>t<leader> :tabnext
+"map <leader>t<leader> :tabnext
+
+" movement
+map <C-t><k> :tabr<cr>
+map <C-t><j> :tabl<cr>
+map <C-t><l> :tabp<cr>
+map <C-t><l> :tabn<cr>
+
+" Useful mappings for managing tabs
+"map <leader>tn :tabnext<cr>
+"map <leader>te :tabnew<cr>
+"map <leader>to :tabonly<cr>
+"map <leader>tc :tabclose<cr>
+"map <leader>tm :tabmove
+
+" Opens a new tab with the current buffer's path
+" Super useful when editing files in the same directory
+"map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
+
+" Move between windows
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+" Buffers
+"map <leader>n :new<cr>
+"map <leader>bd :bdelete!<cr>
+"map <leader>ba :1,1000 bd!<cr>
 
 " The following mappings (which require gvim), you can press Ctrl-Left or Ctrl-Right to go to the previous or next tabs, and can press Alt-Left or Alt-Right to move the current tab to the left or right.
-nnoremap <C-Left> :tabprevious<CR>
-nnoremap <C-Right> :tabnext<CR>
-nnoremap <silent> <A-Left> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
-nnoremap <silent> <A-Right> :execute 'silent! tabmove ' . tabpagenr()<CR>
+"nnoremap <C-Left> :tabprevious<CR>
+"nnoremap <C-Right> :tabnext<CR>
+"nnoremap <silent> <A-Left> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
+"nnoremap <silent> <A-Right> :execute 'silent! tabmove ' . tabpagenr()<CR>
 
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
@@ -438,29 +466,9 @@ map <leader>x :e ~/buffer.md<cr>
 " Toggle paste mode on and off
 map <leader>pp :setlocal paste!<cr>
 
-" Move between windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
-
-" Buffers
-map <leader>n :new<cr>
-map <leader>bd :bdelete!<cr>
-map <leader>ba :1,1000 bd!<cr>
 
 " Save using sudo
 noremap <Leader>W :w !sudo tee % > /dev/null
-
-" Useful mappings for managing tabs
-map <leader>tn :tabnew<cr>
-map <leader>to :tabonly<cr>
-map <leader>tc :tabclose<cr>
-map <leader>tm :tabmove
-
-" Opens a new tab with the current buffer's path
-" Super useful when editing files in the same directory
-map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 
 " Yank text to clipboad
 noremap <leader>y "*y
@@ -476,7 +484,6 @@ let g:EasyMotion_leader_key = '<Space>'
 :map <F7> :w !xclip<CR><CR>
 :vmap <F7> "*y
 :map <S-F7> :r!xclip -o<CR>
-
 
 " Split windows with | and -
 nnoremap <silent> \| <C-w>v

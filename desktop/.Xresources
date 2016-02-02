@@ -113,7 +113,7 @@ URxvt*color13: #FF00FF // magenta
 URxvt*color14: #00FFFF // cyan
 URxvt*color15: #FFFFFF // white
 
-URxvt.chdir:			/home/michael/
+URxvt.chdir:			$HOME
 URxvt.colorIT:			#268bd2
 URxvt.colorBD:			#859900
 URxvt.colorUL:			#b58900

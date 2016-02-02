@@ -16,9 +16,8 @@ alias suspend="systemctl suspend"
 alias vi="vim"
 alias c="clear"
 alias pack="tar -zcvf"
-uvir () {source "$HOME/.virtualenvs/$1/bin/activate"; }
 ubak () {bash $HOME/.backup/local-backup.sh; }
-alias uall="upac && ubak"
+alias doremi="upac && ubak"
 #alias list-packages="dpkg-query -f ${binary:Package} -W"
 
 ## Latex & PDF viewer
@@ -44,10 +43,7 @@ alias jup="jupyter notebook"
 ## Python
 alias i2="ipython2 -i --colors=lightbg"
 alias i="ipython3 -i -c \"import numpy as np;from math import *;\" --colors=lightbg"
-alias setup-virtualenv="virtualenv --no-site-packages --distribute .virtualenvs && source .virtualenvs/bin/activate && pip install -r requirements.txt – "
 
-alias virt-helmholtz="~/.virtualenvs/helmholtz/bin/activate"
-alias virt-icl="source ~/.virtualenvs/icl/bin/activate"
 
 ## Julia
 alias ju="julia"

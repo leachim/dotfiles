@@ -104,6 +104,9 @@ RPROMPT="\$(cabal_sandbox_info) $RPROMPT"
 
 setopt No_Beep
 
+# added by Anaconda3 2.4.1 installer
+export PATH="/home/michael/.anaconda3/bin:$PATH"
+
 ################################################
 zbell_duration=300
 # This script prints a bell character when a command finishes

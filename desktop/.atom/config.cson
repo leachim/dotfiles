@@ -6,6 +6,10 @@
   core:
     projectHome: "/home/michael/"
     openEmptyEditorOnStart: false
+    disabledPackages: [
+      "linter-flake8"
+    ]
+    autoHideMenuBar: true
   editor:
     invisibles: {}
     tabLength: 4
