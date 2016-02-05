@@ -16,7 +16,7 @@ alias suspend="systemctl suspend"
 alias vi="vim"
 alias c="clear"
 alias pack="tar -zcvf"
-ubak () {bash $HOME/.backup/local-backup.sh; }
+alias ubak="bash $HOME/.backup/local-backup.sh"
 alias doremi="upac && ubak"
 #alias list-packages="dpkg-query -f ${binary:Package} -W"
 
@@ -28,10 +28,6 @@ alias vw="evince"
 alias vd="evince *.pdf"
 alias arw="arara *.tex && evince *(.om[1])"
 alias ara="arara *.tex"
-
-## Docker
-docker-stopall () {sudo docker stop $(sudo docker ps -a -q); }
-docker-removeUntagged () { sudo docker rmi -f $(sudo docker images -f "dangling=true" -q); }
 
 ## Git
 alias g="git"
@@ -194,13 +190,13 @@ lighten () { xbacklight -set 100 ;}
 web-wgetPDF () { wget -A pdf -p -E -k -K -np $1 ; }
 
 # investigate IPs
-web-myIP () { curl ifconfig.me }
-web-queryIP () { dig +short myip.opendns.com @resolver1.opendns.com ; }
+alias web-wanip='dig +short myip.opendns.com @resolver1.opendns.com'
+alias web-ip="curl ifconfig.me/ip"
 web-quHOST () { host $1 | rev | cut -d " " -f1 | rev; }
 web-quCountrybyIP () { curl ipinfo.io/$1 2&>/dev/null | grep -Po '"country":.*?[^\\]",' | perl -pe 's/"country"://; s/^"//; s/",$//; s/"//; s/^\s+//' ; }
 
 # route through glaux-web
-proxy-ssh () { ssh glaux-web -D 8080 -N ; }
+alias proxyssh="ssh glaux-web -D 8080 -N"
 
 
 #########################################
@@ -245,4 +241,4 @@ backup-secure_encrypt-sign () { tar czvpf - $1 | gpg --symmetric --cipher-algo a
 backup-secure_encrypt-only () { tar czvpf - $1 | gpg --symmetric --cipher-algo aes256 -o safe.tar.gz.gpg ; }
 backup-secure_decrypt-signed () { gpg --verify $1.asc $1 && gpg -d $1 | tar xzvf - ; }
 backup-secure_decrypt-nocheck () { gpg -d $1 | tar xzvf - ; }
-
+#

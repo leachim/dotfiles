@@ -13,22 +13,23 @@
   editor:
     invisibles: {}
     tabLength: 4
-    fontSize: 15
+    fontSize: 17
     preferredLineLength: 160
   linter:
     showErrorPanel: false
   "atom-beautify": {}
   "linter-flake8":
     maxLineLength: 120
-".console.julia.text":
-  editor:
-    preferredLineLength: 160
-".console.python.text":
-  editor:
-    softWrap: true
+  minimap: {}
 ".python.text.traceback":
   editor:
     softWrap: true
+".console.python.text":
+  editor:
+    softWrap: true
+".console.julia.text":
+  editor:
+    preferredLineLength: 160
 ".julia.source":
   editor:
     preferredLineLength: 160

@@ -491,6 +491,7 @@ mode "caps" {
 # move workspace left and right
 bindsym $mod+Shift+e move workspace to output left
 bindsym $mod+Shift+r move workspace to output right
+bindsym $mod+i exec python ~/.i3/cycleworkspace.py
 
 bindsym $mod+m         exec xrandr --output HDMI1 --off
 bindsym $mod+shift+m   exec xrandr --output HDMI1 --auto --right-of eDP1

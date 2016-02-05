@@ -20,6 +20,9 @@ Bundle 'taglist.vim'
 Bundle 'scrooloose/nerdtree'
 Bundle 'Lokaltog/powerline'
 
+" Support for easytag -> lookup function definitions in vim
+Bundle 'xolox/vim-misc'
+Bundle 'xolox/vim-easytags'
 
 " Plugins
 " Bundle 'scrooloose/syntastic'
