@@ -1,4 +1,4 @@
-" This is vim, not vi
+
 set nocompatible
 
 " Vundle
@@ -39,7 +39,6 @@ set autoread
 " like <leader>w saves the current file
 let mapleader = ","
 let g:mapleader = ","
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " search
@@ -135,10 +134,6 @@ augroup vimrc_autocmds
     autocmd FileType python set nowrap
     augroup END
 
-" Powerline setup
-set guifont=DejaVu\ Sans\ Mono
-set laststatus=2
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " backup
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -190,8 +185,8 @@ map j gj
 map k gk
 
 " Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
-map <space> /
-map <c-space> ?
+" map <space> /
+" map <c-space> ?
 
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><cr> :noh<cr>
@@ -209,28 +204,28 @@ map <silent> <leader><cr> :noh<cr>
 "map <leader>ba :bufdo bd<cr>
 
 " Useful mappings for managing tabs
-nnoremap th  :tabfirst<CR>
-nnoremap tj  :tabnext<CR>
-nnoremap tk  :tabprev<CR>
-nnoremap tl  :tablast<CR>
-nnoremap tt  :tabedit<Space>
-nnoremap tn  :tabnext<Space>
-nnoremap tm  :tabm<Space>
-nnoremap td  :tabclose<CR>
-
-map <leader>te :tabedit<cr>
-map <leader>tf :tabfind<cr>
-map <leader>tn :tabnew<cr>
-map <leader>to :tabonly<cr>
-map <leader>tc :tabclose<cr>
-map <leader>tm :tabmove
+" noremap th  :tabfirst<CR>
+" nnoremap tj  :tabnext<CR>
+" nnoremap tk  :tabprev<CR>
+" nnoremap tl  :tablast<CR>
+" noremap tt  :tabedit<Space>
+" nnoremap tn  :tabnext<Space>
+" nnoremap tm  :tabm<Space>
+" nnoremap td  :tabclose<CR>
+" 
+" map <leader>te :tabedit<cr>
+" map <leader>tf :tabfind<cr>
+" map <leader>tn :tabnew<cr>
+" map <leader>to :tabonly<cr>
+" map <leader>tc :tabclose<cr>
+" map <leader>tm :tabmove
 "map <leader>t<leader> :tabnext
 
 " movement
-map <C-t><k> :tabr<cr>
-map <C-t><j> :tabl<cr>
-map <C-t><l> :tabp<cr>
-map <C-t><l> :tabn<cr>
+" map <C-t><k> :tabr<cr>
+" map <C-t><j> :tabl<cr>
+" map <C-t><l> :tabp<cr>
+" map <C-t><l> :tabn<cr>
 
 " Useful mappings for managing tabs
 "map <leader>tn :tabnext<cr>
@@ -244,10 +239,10 @@ map <C-t><l> :tabn<cr>
 "map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 
 " Move between windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+" map <C-j> <C-W>j
+" map <C-k> <C-W>k
+" map <C-h> <C-W>h
+" map <C-l> <C-W>l
 
 " Buffers
 "map <leader>n :new<cr>
@@ -261,23 +256,23 @@ map <C-l> <C-W>l
 "nnoremap <silent> <A-Right> :execute 'silent! tabmove ' . tabpagenr()<CR>
 
 " Let 'tl' toggle between this and the last accessed tab
-let g:lasttab = 1
-nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
-au TabLeave * let g:lasttab = tabpagenr()
+" let g:lasttab = 1
+" nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
+" au TabLeave * let g:lasttab = tabpagenr()
 
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
-map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
+" map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 
 " Switch CWD to the directory of the open buffer
-map <leader>cd :cd %:p:h<cr>:pwd<cr>
+" map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
 " Specify the behavior when switching between buffers
-try
-  set switchbuf=useopen,usetab,newtab
-  set stal=2
-catch
-endtry
+" try
+"   set switchbuf=useopen,usetab,newtab
+"   set stal=2
+" catch
+" endtry
 
 " Return to last edit position when opening files (You want this!)
 autocmd BufReadPost *
@@ -289,20 +284,39 @@ set viminfo^=%
 
 
 """"""""""""""""""""""""""""""
+" => Commenting
+""""""""""""""""""""""""""""""
+" Commenting blocks of code depending on file format
+autocmd FileType c,cpp,java,scala let b:comment_leader = '// '
+autocmd FileType sh,ruby,python,julia   let b:comment_leader = '# '
+autocmd FileType conf,fstab       let b:comment_leader = '# '
+autocmd FileType tex              let b:comment_leader = '% '
+autocmd FileType mail             let b:comment_leader = '> '
+autocmd FileType vim              let b:comment_leader = '" '
+noremap <silent> <leader>cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
+noremap <silent> <leader>nn :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
+
+filetype plugin indent on
+
+""""""""""""""""""""""""""""""
 " => Status line
 """"""""""""""""""""""""""""""
-" Always show the status line
+" Powerline setup
+set guifont=DejaVu\ Sans\ Mono
 set laststatus=2
 
 " Format the status line
 set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Editing mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Remap ESC key -> don't leave the home row
+inoremap jj <ESC><CR>  
+
 " Remap VIM 0 to first non-blank character
-map 0 ^
+"map 0 ^
 
 " Move a line of text using ALT+[jk] or Comamnd+[jk] on mac
 "nmap <M-j> mz:m+<cr>`z
@@ -439,16 +453,16 @@ map <leader>d :NERDTreeToggle<CR>
 
 " Copy Paste clipboard
 " Copy to X CLIPBOARD
-map <leader>cc :w !xsel -i -b<CR>
-map <leader>cp :w !xsel -i -p<CR>
-map <leader>cs :w !xsel -i -s<CR>
+" map <leader>cc :w !xsel -i -b<CR>
+" map <leader>cp :w !xsel -i -p<CR>
+" map <leader>cs :w !xsel -i -s<CR>
 " Paste from X CLIPBOARD
-map <leader>pp :r!xsel -p<CR>
-map <leader>ps :r!xsel -s<CR>
-map <leader>pb :r!xsel -b<CR>
+" map <leader>pp :r!xsel -p<CR>
+" map <leader>ps :r!xsel -s<CR>
+" map <leader>pb :r!xsel -b<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" We don't want that kind here
+" Learn not to use the wrong keys
 nnoremap <up> <nop>
 nnoremap <down> <nop>
 nnoremap <left> <nop>
@@ -464,30 +478,30 @@ vnoremap <right> <nop>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Remove the Windows ^M - when the encodings gets messed up
-noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
+" noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
 " Quickly open a buffer for scribble
-map <leader>q :e ~/buffer<cr>
+" map <leader>q :e ~/buffer<cr>
 
 " Quickly open a markdown buffer for scribble
-map <leader>x :e ~/buffer.md<cr>
+" map <leader>x :e ~/buffer.md<cr>
 
 " Toggle paste mode on and off
-map <leader>pp :setlocal paste!<cr>
+" map <leader>pp :setlocal paste!<cr>
 
 
 " Save using sudo
-noremap <Leader>W :w !sudo tee % > /dev/null
+" noremap <Leader>W :w !sudo tee % > /dev/null
 
 " Yank text to clipboad
 noremap <leader>y "*y
 noremap <leader>yy "*Y
 
 " Switch CWD to the directory of the open buffer
-map <leader>cd :cd %:p:h<cr>:pwd<cr>
+" map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
 " EasyMotion
-let g:EasyMotion_leader_key = '<Space>'
+"let g:EasyMotion_leader_key = '<Space>'
 
 " copy paste with urxvt and F7
 :map <F7> :w !xclip<CR><CR>
@@ -495,19 +509,18 @@ let g:EasyMotion_leader_key = '<Space>'
 :map <S-F7> :r!xclip -o<CR>
 
 " Split windows with | and -
-nnoremap <silent> \| <C-w>v
-nnoremap <silent> - <C-w>s
+"nnoremap <silent> \| <C-w>v
+"nnoremap <silent> - <C-w>s
 
 " move rowwise, not linewise
-nmap j gj
-nmap k gk
+"nmap j gj
+"nmap k gk
 
 " Allow using the repeat operator with a visual selection (!)
 " http://stackoverflow.com/a/8064607/127816
 vnoremap . :normal .<CR>
 
-syntax enable
-set background=dark
+" set background=dark
 colorscheme solarized
 
 " Fast saving

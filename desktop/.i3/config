@@ -13,7 +13,7 @@
 # ==========================================================================================
 
 # reload the configuration file, debugging only
-#bindsym $mod+Shift+d reload
+bindsym $mod+Shift+o reload
 
 # change modifier to windows key
 set $mod Mod4

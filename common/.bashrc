@@ -2,6 +2,9 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+## Load paths and variables 
+source ~/.profile
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -43,7 +46,7 @@ esac
 # uncomment for a colored prompt, if the terminal has the capability; turned
 # off by default to not distract the user: the focus in a terminal window
 # should be on the output of commands, not on the prompt
-#force_color_prompt=yes
+force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
@@ -76,18 +79,13 @@ esac
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
 
-    #alias grep='grep --color=auto'
-    #alias fgrep='fgrep --color=auto'
-    #alias egrep='egrep --color=auto'
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
 fi
-
-# some more ls aliases
-#alias ll='ls -l'
-#alias la='ls -A'
-#alias l='ls -CF'
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
@@ -95,7 +93,7 @@ fi
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
 if [ -f ~/.aliases ]; then
-    . ~/.aliases
+    source ~/.aliases
 fi
 
 # enable programmable completion features (you don't need to enable
@@ -109,10 +107,3 @@ if ! shopt -oq posix; then
   fi
 fi
 
-################################################
-###   Manual bashrc file configuration       ###
-################################################
-
-
-# added by Anaconda3 2.4.1 installer
-export PATH="/home/michael/.anaconda3/bin:$PATH"

@@ -1,3 +1,6 @@
 # Disable Enter key for confirming an autocomplete suggestion
 'atom-text-editor:not(mini).autocomplete-active':
   'enter': 'editor:newline'
+
+'atom-text-editor':
+  'ctrl-alt-l': 'editor:auto-indent'

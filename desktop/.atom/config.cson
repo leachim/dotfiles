@@ -8,19 +8,21 @@
     openEmptyEditorOnStart: false
     disabledPackages: [
       "linter-flake8"
+      "vim-mode"
     ]
     autoHideMenuBar: true
   editor:
     invisibles: {}
     tabLength: 4
-    fontSize: 17
+    fontSize: 15
     preferredLineLength: 160
   linter:
     showErrorPanel: false
   "atom-beautify": {}
   "linter-flake8":
     maxLineLength: 120
-  minimap: {}
+  minimap:
+    absoluteMode: true
 ".python.text.traceback":
   editor:
     softWrap: true

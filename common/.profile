@@ -16,5 +16,12 @@ if [ -n "$BASH_VERSION" ]; then
     fi
 fi
 
+# turn off bell
+xset -b 
+
+# added by Anaconda3 2.4.1 installer
+export PATH="/home/michael/.anaconda3/bin:$PATH"
+
+# Java dependencies
 export JAVA_HOME=/usr/lib/jvm/default-java/bin/java
 export PATH=$PATH:/usr/lib/jvm/default-java/bin

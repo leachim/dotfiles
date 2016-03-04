@@ -9,16 +9,19 @@
 
 ## SYSTEM
 alias logoff="pkill -KILL -u michael"
-alias upac="sudo apt-get update && sudo apt-get upgrade && apm update"
+alias upac="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm"
 alias ugit="git pull && git submodule update --init --recursive"
 alias timestamp="date +%Y_%m_%d-%H_%M"
 alias suspend="systemctl suspend"
 alias vi="vim"
+alias le="less"
 alias c="clear"
 alias pack="tar -zcvf"
 alias ubak="bash $HOME/.backup/local-backup.sh"
 alias doremi="upac && ubak"
-#alias list-packages="dpkg-query -f ${binary:Package} -W"
+alias list-packages="dpkg-query -W"
+
+alias m-timezone="timedatectl"
 
 ## Latex & PDF viewer
 alias lat="latexmk"
@@ -32,6 +35,7 @@ alias ara="arara *.tex"
 ## Git
 alias g="git"
 source $HOME/.gitalias
+function vm () { pandoc -s -f markdown -t man $1 | man -l - ;}
 
 ## Jupyter
 alias jup="jupyter notebook"
@@ -115,6 +119,7 @@ function countdown () {
      sleep 0.1
    done
    beep -f 600 -r 3 -d 500;
+   sleep 1; echo -e "\a";
 }
 
 function stopwatch () {
@@ -124,6 +129,7 @@ function stopwatch () {
     sleep 0.1
    done
    beep -f 600 -r 3 -d 500;
+   sleep 1; echo -e "\a";
 }
 
 # fix caps issue

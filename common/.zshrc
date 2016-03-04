@@ -5,6 +5,9 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
+# source profile file
+[[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
+
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
@@ -75,37 +78,17 @@ unsetopt share_history
 
 ### keep below
 
-# Unison
-#alias usync='unison raspi'
-
 # For renaming groups of files. Examples: 
 # zmv  'juliet-(*)' 'prospera-$1'
 # zmv '(*).sh' '$1'
 # Passing -n to zmv will show you what zmv would do, without doing anything. 
 autoload zmv
 
-# show Cabal sandbox status
-function cabal_sandbox_info() {
-    cabal_files=(*.cabal(N))
-    if [ $#cabal_files -gt 0 ]; then
-        if [ -f cabal.sandbox.config ]; then
-            echo "%{$fg[green]%}sandboxed%{$reset_color%}"
-        else
-            echo "%{$fg[red]%}not sandboxed%{$reset_color%}"
-        fi
-    fi
-}
- 
-RPROMPT="\$(cabal_sandbox_info) $RPROMPT"
-
 ################################################
 ###   Manual zshrc file configuration       ###
 ################################################
 
-setopt No_Beep
-
-# added by Anaconda3 2.4.1 installer
-export PATH="/home/michael/.anaconda3/bin:$PATH"
+setopt NO_BEEP
 
 ################################################
 zbell_duration=300
