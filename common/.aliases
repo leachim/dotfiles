@@ -19,7 +19,7 @@ alias c="clear"
 alias pack="tar -zcvf"
 alias ubak="bash $HOME/.backup/local-backup.sh"
 alias doremi="upac && ubak"
-alias list-packages="dpkg-query -W"
+alias list-packages="dpkg --get-selections"
 
 alias m-timezone="timedatectl"
 
@@ -152,7 +152,7 @@ dupsearch () { find -not -empty -type f -printf "%s\n" | sort -rn | uniq -d | xa
 
 # convert pdf to png
 function mpdf-convertToPNG(){
-    convert -verbose -density 200 -trim $1 -quality 100 ${1%.pdf}.png;
+    convert -verbose -density 300 -trim $1 -quality 100 ${1%.pdf}.png;
 }
 
 # decrypt pdf
@@ -224,7 +224,7 @@ function backup-restore-signed {
         printf "Do not restore to an existing location\n"
         return -1
     fi
-    duplicity --sign-key "$_SIGN_KEY" "file://$1" $2
+    duplicity --sign-key "$_SIGN_KEY" "file://$1" "file://$2"
 }
 
 function backup-restore-unsigned {

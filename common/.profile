@@ -25,3 +25,6 @@ export PATH="/home/michael/.anaconda3/bin:$PATH"
 # Java dependencies
 export JAVA_HOME=/usr/lib/jvm/default-java/bin/java
 export PATH=$PATH:/usr/lib/jvm/default-java/bin
+
+# fix CURL certificates path
+export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
