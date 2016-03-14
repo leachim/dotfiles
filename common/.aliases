@@ -211,6 +211,7 @@ alias proxyssh="ssh glaux-web -D 8080 -N"
 
 backup-manager () { bash $HOME/.backup/duplicity.sh; }
 backup-list () { ls $HOME/.backup/ | sort -r | grep backup.tar.gz | head -1; }
+backup-zotero () { bash $HOME/.backup/zotero-backup.sh; }
 
 function backup-restore-signed {
     echo -e "Restore from $1 to $2"
