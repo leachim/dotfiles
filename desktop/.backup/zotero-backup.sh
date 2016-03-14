@@ -1,9 +1,8 @@
 #!/bin/sh
 
 # Backup zotero folder to tar archive
-TIME=`date +%b-%d-%y`            # This Command will add date in Backup File Name.
-FILENAME=$TIME-zotero.tar.gz    # Here i define Backup file name format.
-SRCDIR=~/.zotero/zotero                    # Location of Important Data Directory (Source of backup).
+TIME=`date +%d_%m_%y`            # This Command will add date in Backup File Name.
+FILENAME=zotero-archive-$(hostname)-$TIME.tar.gz    # Here i define Backup file name format.
 DESDIR=~/Downloads         # Destination of backup file.
-tar -cpzf $DESDIR/$FILENAME $SRCDIR
+tar cpzf $DESDIR/$FILENAME -C $HOME/.zotero/ zotero
 #END
