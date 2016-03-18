@@ -30,6 +30,7 @@ TCPKeepAlive yes
 AcceptEnv LANG LC_*
 MaxAuthTries 5
 MaxSessions 10
+AllowUsers glaux
 #AllowUsers glaux@(your-ip) username@(another-ip-if-any)
 Subsystem sftp /usr/lib/openssh/sftp-server
 UsePAM yes
