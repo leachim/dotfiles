@@ -32,6 +32,7 @@
 [user]
     name = leachim
     email = leachim@users.noreply.github.com
+	useconfigonly = true
 [push]
     # sane default
     default = simple

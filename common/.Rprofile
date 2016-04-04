@@ -17,13 +17,13 @@ options(tab.width = 4)
 options(width = 130)
 options(graphics.record=TRUE) 
 
-.First <- function(){
-    cat("\nWelcome at", date(), "\n") 
-}
+#.First <- function(){
+#    cat("\nWelcome at", date(), "\n") 
+#}
 
-.Last <- function(){ 
-    cat("\nGoodbye at ", date(), "\n")
-}
+#.Last <- function(){ 
+#    cat("\nGoodbye at ", date(), "\n")
+#}
 
 ## Publication quality figures with R
 

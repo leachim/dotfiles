@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 ## Intro
 echo "Install basic environment, no root access required"
@@ -8,6 +8,20 @@ echo "exuberant-ctags is needed for special vim plugin"
 sleep 10
 
 # sudo apt-get install vim git zsh curl conky exuberant-ctags
+function link_file {
+	source="${PWD}/$1"
+    target="${HOME}/${1/_/.}"
+
+    if [ -e "${target}" ] && [ ! -L "${target}" ]; then
+		echo "Renaming $target to $target.bak"
+        mv $target $target.bak
+    fi
+
+    if [ ! -e "${target}" ]; then
+        echo "Linking $source to $target"
+        ln -sf ${source} ${target}
+    fi
+}
 
 
 ##
@@ -34,16 +48,11 @@ git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
 
 ##
 echo "symlinking dotfiles..."
-dir="$HOME/.dotfiles/common"
+#dir="$HOME/.dotfiles/common"
 
-for dotfile in  .* ;
+for dotfile in  _* ;
 do
-	echo "creating symlik for $dotfile"
-    if [ -d $dotfile ]; then
-        ln -sf "$dir/$dotfile/" "$HOME/$dotfile"
-    else
-	    ln -sf "$dir/$dotfile" "$HOME/$dotfile"
-    fi
+	link_file $dotfile
 done
 sleep 5
 

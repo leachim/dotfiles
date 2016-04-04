@@ -158,7 +158,7 @@ UXTerm*faceName:		Terminus:size=10
 UXTerm*background:		#000000
 UXTerm*foreground:		#a8a8a8
 UXTerm*jumpScroll:		off
-UXTerm*termName:		xterm-256color
+UXTerm*termName:		rxvt
 
 
 ! XPDF

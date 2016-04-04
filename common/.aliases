@@ -18,10 +18,11 @@ alias le="less"
 alias c="clear"
 alias pack="tar -zcvf"
 alias fasollati="bash $HOME/.backup/local-backup.sh"
-alias doremi="upac && ubak"
-alias list-packages="dpkg --get-selections"
 
 alias m-timezone="timedatectl"
+alias m-rsync="rsync -azP"
+m-filesize () {echo "df -h" | sftp $1 ;}
+alias matlab-desktop="/home/michael/.matlab/bin/matlab &"
 
 ## Latex & PDF viewer
 alias lat="latexmk"
@@ -145,6 +146,9 @@ overwrite () { pv -tpreb /dev/urandom | sudo dd of=$1 bs=4096; }
 # find duplicate files
 dupsearch () { find -not -empty -type f -printf "%s\n" | sort -rn | uniq -d | xargs -I{} -n1 find -type f -size {}c -print0 | xargs -0 md5sum | sort | uniq -w32 --all-repeated=separate; }
 
+function debchanglog () {
+        zless "/usr/share/doc/$1/changelog.Debian.gz"
+}
 
 #########################################
 ### Helper functions - pdfs           ###
@@ -215,6 +219,7 @@ alias proxyssh="ssh glaux-web -D 8080 -N"
 backup-manager () { bash $HOME/.backup/duplicity.sh; }
 backup-list () { ls $HOME/.backup/ | sort -r | grep backup.tar.gz | head -1; }
 backup-zotero () { bash $HOME/.backup/zotero-backup.sh; }
+alias backup-package-list="dpkg --get-selections"
 
 function backup-restore-signed {
     echo -e "Restore from $1 to $2"
