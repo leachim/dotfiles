@@ -1,7 +1,11 @@
 #########################################
 ###              ALIASES              ###
 #########################################
-
+function changemode (){
+	xrandr --newmode "1920x1080_60.00"  173.00  1920 2048 2248 2576  1080 1083 1088 1120 -hsync +vsyn;
+	xrandr --addmode DP2 1920x1080_60.00;
+	xrandr --output DP2 --mode 1920x1080_60.00;
+}
 
 #########################################
 ### Shortcuts                         ###
@@ -9,15 +13,18 @@
 
 ## SYSTEM
 alias logoff="pkill -KILL -u michael"
-alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm"
+alias datediff="d1=$(date -d '06/23/2016' +%s);d2=$(date -d 'now' +%s);echo \"\$(( (d2 - d1) / 86400 )) days\""
+alias weather="curl http://wttr.in/London"
+alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && echo \"Tage im Mai \" && datediff && weather"
 alias ugit="git pull && git submodule update --init --recursive"
 alias timestamp="date +%Y_%m_%d-%H_%M"
 alias suspend="systemctl suspend"
 alias vi="vim"
 alias le="less"
 alias c="clear"
+hl () {grep -A1 "Host $1" ~/.ssh/config | awk '/HostName/{getline; print}' | awk '{print $2}';}
 alias pack="tar -zcvf"
-alias fasollati="bash $HOME/.backup/local-backup.sh"
+alias fasollati="bash $HOME/.backup/local-backup.sh && echo \"df -h\" | sftp storagebox:"
 
 alias m-timezone="timedatectl"
 alias m-rsync="rsync -azP"
@@ -28,6 +35,7 @@ alias matlab-desktop="/home/michael/.matlab/bin/matlab &"
 alias lat="latexmk"
 alias late="latexmk -halt-on-error"
 alias lac="latexmk -c"
+alias lacc="latexmk -C"
 alias vw="evince"
 alias vd="evince *.pdf"
 alias arw="arara *.tex && evince *(.om[1])"
@@ -60,7 +68,7 @@ alias tml='tmux list-sessions'
 ## Shortcuts
 alias dun="du -chs | sort -h"
 alias dfn="df -Tha --total"
-alias webify="mogrify -resize 690\> *.png"
+#alias webify="mogrify -resize 690\> *.png"
 alias myip="curl http://ipecho.net/plain; echo"
 alias wgetNice="wget --cut-dirs=100 -nH -np -r -c"
 alias mkdir="mkdir -pv"
@@ -157,9 +165,16 @@ function debchanglog () {
 # count words in pdf
 function mpdf-wordcount () { pdftotext $1 - | wc -w ;}
 
+# crop images in pdf file
+function mpdf-crop () {pdfcrop $1;}
+
 # convert pdf to png
 function mpdf-convertToPNG(){
     convert -verbose -density 600 -trim $1 -quality 100 -sharpen 0x1.0 ${1%.pdf}.png;
+}
+
+function mpdf-webify(){
+    convert -verbose -density 200 -trim $1 -quality 100 ${1%.pdf}.png;
 }
 
 # decrypt pdf
@@ -209,7 +224,12 @@ web-quHOST () { host $1 | rev | cut -d " " -f1 | rev; }
 web-quCountrybyIP () { curl ipinfo.io/$1 2&>/dev/null | grep -Po '"country":.*?[^\\]",' | perl -pe 's/"country"://; s/^"//; s/",$//; s/"//; s/^\s+//' ; }
 
 # route through glaux-web
-alias proxyssh="ssh glaux-web -D 8080 -N"
+alias proxyssh="ssh glaux-web -D 8080 -N -C"
+# -D: Tells SSH that we want a SOCKS tunnel on the specified port number (you can choose a number between 1025-65536)
+# -f: Forks the process to the background
+# -C: Compresses the data before sending it
+# -q: Uses quiet mode
+# -N: Tells SSH that no command will be sent once the tunnel is up
 
 
 #########################################

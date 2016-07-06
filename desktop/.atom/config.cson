@@ -1,37 +1,37 @@
 "*":
-  "exception-reporting":
-    userId: "27189852-e9fd-e29d-8dd5-6dde1069e158"
-  welcome:
-    showOnStartup: false
+  "atom-beautify": {}
   core:
-    projectHome: "/home/michael/"
-    openEmptyEditorOnStart: false
     disabledPackages: [
       "linter-flake8"
       "vim-mode"
+      "enhanced-tabs"
     ]
-    autoHideMenuBar: true
+    openEmptyEditorOnStart: false
+    projectHome: "/home/michael/"
   editor:
+    fontSize: 16
     invisibles: {}
-    tabLength: 4
-    fontSize: 15
     preferredLineLength: 160
+    tabLength: 4
+  "exception-reporting":
+    userId: "27189852-e9fd-e29d-8dd5-6dde1069e158"
   linter:
     showErrorPanel: false
-  "atom-beautify": {}
   "linter-flake8":
     maxLineLength: 120
   minimap:
     absoluteMode: true
-".python.text.traceback":
-  editor:
-    softWrap: true
-".console.python.text":
-  editor:
-    softWrap: true
+  welcome:
+    showOnStartup: false
 ".console.julia.text":
   editor:
     preferredLineLength: 160
+".console.python.text":
+  editor:
+    softWrap: true
 ".julia.source":
   editor:
     preferredLineLength: 160
+".python.text.traceback":
+  editor:
+    softWrap: true

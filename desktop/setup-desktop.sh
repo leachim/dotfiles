@@ -12,8 +12,10 @@ echo "tor"
 gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -
 echo "x2go"
 sudo apt-key adv --recv-keys --keyserver keys.gnupg.net E1F958385BFE2B6E
-echo "docker.io"
-sudo sh -c "wget -qO- https://get.docker.io/gpg | apt-key add -"
+#echo "docker.io"
+#sudo sh -c "wget -qO- https://get.docker.io/gpg | apt-key add -"
+echo "docker official"
+sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 
 
 ## Install debian packages

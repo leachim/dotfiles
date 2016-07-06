@@ -28,3 +28,7 @@ export PATH=$PATH:/usr/lib/jvm/default-java/bin
 
 # fix CURL certificates path
 export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+
+# export cuda
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib"
+export CUDA_HOME=/usr/

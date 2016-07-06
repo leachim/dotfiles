@@ -37,3 +37,8 @@ systemctl disable bluetooth.service
 #see https://wiki.debian.org/Bumblebee
 bumblebee-nvidia
 primus
+
+
+## Swap memory issues
+# add zram to /etc/modules
+# test with lsmod | grep zram

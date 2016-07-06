@@ -4,3 +4,7 @@
 
 'atom-text-editor':
   'ctrl-alt-l': 'editor:auto-indent'
+
+'body':
+  'ctrl-tab': 'pane:show-next-item'
+  'ctrl-shift-tab': 'pane:show-previous-item'

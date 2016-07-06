@@ -98,6 +98,8 @@ set foldcolumn=1
 " Enable syntax highlighting
 syntax enable
 
+syntax on
+
 " 256 colors
 set t_Co=256
 

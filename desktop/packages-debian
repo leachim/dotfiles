@@ -241,6 +241,8 @@ unison
 #########################################################
 ## Writing & Citation management
 biber
+# convert bibliography to html format
+bibtex2html
 hunspell
 hunspell-de-de
 hunspell-en-med
