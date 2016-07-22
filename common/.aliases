@@ -22,13 +22,13 @@ alias suspend="systemctl suspend"
 alias vi="vim"
 alias le="less"
 alias c="clear"
-hl () {grep -A1 "Host $1" ~/.ssh/config | awk '/HostName/{getline; print}' | awk '{print $2}';}
+function hl () { grep -A1 "Host $1" $HOME/.ssh/config | awk '/HostName/{getline; print}' | awk '{print $2}';}
 alias pack="tar -zcvf"
 alias fasollati="bash $HOME/.backup/local-backup.sh && echo \"df -h\" | sftp storagebox:"
 
 alias m-timezone="timedatectl"
 alias m-rsync="rsync -azP"
-m-filesize () {echo "df -h" | sftp $1 ;}
+m-filesize () { echo "df -h" | sftp $1 ;}
 alias matlab-desktop="/home/michael/.matlab/bin/matlab &"
 
 ## Latex & PDF viewer
@@ -53,15 +53,15 @@ alias jup="jupyter notebook"
 alias i2="ipython2 -i --colors=lightbg"
 alias i="ipython3 -i -c \"import numpy as np;from math import *;\" --colors=lightbg"
 
-
 ## Julia
 alias ju="julia"
 
 ## TMUX
 # connect to running tmux session on ssh host
 sst () { ssh "$1" -t tmux a; }
+alias t="tmux"
+alias ta="tmux attach"
 alias tma='tmux attach -d -t'
-alias tmd='tmux new -s $(basename $(pwd))'
 alias tmn='tmux new -s $(basename $(pwd))'
 alias tml='tmux list-sessions'
 
@@ -77,6 +77,11 @@ alias free="free -mt"
 alias psg="ps aux | grep -v grep | grep -i -e VSZ -e"
 alias fhere="find . -name "
 alias cd..="cd .."
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+
 # make shell alert if running finished
 alias alertify='PS1="$PS1\a"'
 
@@ -162,11 +167,14 @@ function debchanglog () {
 ### Helper functions - pdfs           ###
 #########################################
 
+# convert pdf to eps
+function mpdf-toeps () { inkscape $1 --export-eps=${1%.pdf}.eps;}
+
 # count words in pdf
 function mpdf-wordcount () { pdftotext $1 - | wc -w ;}
 
 # crop images in pdf file
-function mpdf-crop () {pdfcrop $1;}
+function mpdf-crop () { pdfcrop $1;}
 
 # convert pdf to png
 function mpdf-convertToPNG(){

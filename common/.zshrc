@@ -15,11 +15,9 @@ fi
 
 # Customize to your needs...
 
-
 # NON-INTERACTIVE SHELLS {{{
 _source () { [[ -f $1 ]] && source $1 }
 _source ~/.aliases
-
 
 
 # Test for an interactive shell.
