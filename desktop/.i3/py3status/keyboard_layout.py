@@ -1,53 +1,107 @@
-# -*- coding: utf8 -*-
-
-import os
-import re
-import subprocess
-from time import time
-
+# -*- coding: utf-8 -*-
 """
-Py3status plugin - shows current keyboard layout
+Display the current active keyboard layout.
+
+Configuration parameters:
+    cache_timeout: check for keyboard layout change every seconds
+    color: a single color value for all layouts. eg: "#FCE94F"
+    colors: a comma separated string of color values for each layout,
+        eg: "us=#FCE94F, fr=#729FCF".
+    format: see placeholders below
+
+Format of status string placeholders:
+    {layout} currently active keyboard layout
 
 Requires:
+    xkblayout-state:
+        or
+    setxkbmap: and `xset` (works for the first two predefined layouts.)
 
-@author glaux1126
+@author shadowprince, tuxitop
+@license Eclipse Public License
 """
 
-CACHE_TIMEOUT = 1  # maximum time to update indicator
+from subprocess import check_output
+from time import time
+import re
 
-
-def get_keylayout():
-	""" return current keyboard layout """
-	bashCommand = 'case "$(xset -q | grep LED| awk \'{ print $10 }\')" in "00000000") echo "US" ;;"00001000") echo "DE" ;;*) echo "unknown" ;;esac'
-	language = subprocess.Popen(bashCommand, shell=True, stdout=subprocess.PIPE).communicate()[0]
-	language = re.findall( r'\b[A-Z]{2}\b', str(language) )[0]                                                 
-	if isinstance(language, str):
-		return language.strip()
-	else:
-		return ""
-	
 
 class Py3status:
-	def __init__(self):
-		initKeyboardLayoutCommand = '/usr/bin/setxkbmap -layout us,de ;/usr/bin/setxkbmap -option grp:alt_shift_toggle;'
-		subprocess.Popen(initKeyboardLayoutCommand, shell=True, stdout=subprocess.PIPE)
-		self.text = ''
+    """
+    """
+    # available configuration parameters
+    cache_timeout = 1
+    color = None
+    colors = 'us=#9f9f9f, de=#9f9f9f' #'us=#729FCF, de=#268BD2' #, ua=#FCE94F, ru=#F75252'
+    format = '{layout}'
 
-	def keyboard_layout(self, i3_status_output_json, i3status_config):
-		layout = get_keylayout()
+    def __init__(self):
+        """
+        find the best implementation to get the keyboard's layout
+        """
+        try:
+            self._xkblayout()
+            self._command = self._xkblayout
+        except:
+            self._command = self._xset
 
-		if self.text != layout:
-			transformed = True
-			self.text = layout
-		else:
-			transformed = False
+    def keyboard_layout(self, i3s_output_list, i3s_config):
+        response = {
+            'cached_until': time() + self.cache_timeout,
+            'full_text': ''
+        }
+        if not self.color:
+            self.colors_dict = dict((k.strip(), v.strip()) for k, v in (
+                layout.split('=') for layout in self.colors.split(',')))
+        lang = self._command().strip() or '??'
+        lang_color = self.color if self.color else self.colors_dict.get(lang)
+        if lang_color:
+            response['color'] = lang_color
 
-		response = {
-			'cached_until': time() + CACHE_TIMEOUT,
-			'full_text': self.text,
-			'name': 'keyboard-layout',
-			'transformed': transformed
-		}
+        response['full_text'] = self.format.format(layout=lang)
+        return response
 
-		return response
-		
+    def _get_layouts(self):
+        """
+        Returns a list of predefined keyboard layouts
+        """
+        layouts_re = re.compile(r".*layout:\s*((\w+,?)+).*", flags=re.DOTALL)
+        out = check_output(["setxkbmap", "-query"]).decode("utf-8")
+        layouts = re.match(layouts_re, out).group(1).split(",")
+        return layouts
+
+    def _xkblayout(self):
+        """
+        check using xkblayout-state
+        """
+        return check_output(["xkblayout-state", "print", "%s"]).decode('utf-8')
+
+    def _xset(self):
+        """
+        Check using setxkbmap >= 1.3.0 and xset
+        This method works only for the first two predefined layouts.
+        """
+        ledmask_re = re.compile(r".*LED\smask:\s*\d{4}([01])\d{3}.*",
+                                flags=re.DOTALL)
+        layouts = self._get_layouts()
+        if len(layouts) == 1:
+            return layouts[0]
+        xset_output = check_output(["xset", "-q"]).decode("utf-8")
+        led_mask = re.match(ledmask_re, xset_output).groups(0)[0]
+        return layouts[int(led_mask)]
+
+
+if __name__ == "__main__":
+    """
+    Test this module by calling it directly.
+    """
+    from time import sleep
+    x = Py3status()
+    config = {
+        'color_good': '#00FF00',
+        'color_degraded': '#FFFF00',
+        'color_bad': '#FF0000',
+    }
+    while True:
+        print(x.keyboard_layout([], config))
+        sleep(1)

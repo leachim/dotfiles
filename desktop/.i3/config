@@ -110,7 +110,7 @@ exec --no-startup-id dropbox start
 #bindsym $mod+Shift+d exec --no-startup-id dropbox start
 
 # keyboard layout
-exec --no-startup-id "/usr/bin/setxkbmap -layout us,de"
+exec --no-startup-id "/usr/bin/setxkbmap -model pc105 -layout us,de -option grp:alt_shift_toggle"
 
 # network manager
 #exec --no-startup-id /usr/bin/wicd-gtk -t
@@ -120,8 +120,8 @@ exec --no-startup-id /usr/bin/nm-applet --sm-disable
 exec --no-startup-id /usr/bin/blueman-applet
 
 # clipboard manager
-exec --no-startup-id /usr/bin/gpaste
-#exec --no-startup-id /usr/bin/xclipboard
+#exec --no-startup-id /usr/bin/gpaste
+exec --no-startup-id /usr/bin/xclipboard
 #exec --no-startup-id /usr/bin/autocutsel -fork
 #exec --no-startup-id /usr/bin/autocutsel -s PRIMARY -fork
 
@@ -493,8 +493,8 @@ bindsym $mod+Shift+e move workspace to output left
 bindsym $mod+Shift+r move workspace to output right
 bindsym $mod+i exec python ~/.i3/cycleworkspace.py
 
-bindsym $mod+m         exec xrandr --output HDMI1 --off
-bindsym $mod+shift+m   exec xrandr --output HDMI1 --auto --right-of eDP1
+bindsym $mod+m         exec xrandr --output HDMI-1 --off
+bindsym $mod+shift+m   exec xrandr --output HDMI-1 --auto --right-of eDP-1
 
 
 # ==========================================================================================
@@ -506,8 +506,7 @@ bindsym $mod+shift+m   exec xrandr --output HDMI1 --auto --right-of eDP1
 #bindsym Shift+Control+T exec ~/bin/touchpadtoggle.sh
 
 bindsym Print exec scrot
-bindsym $alt+Print exec scrot -s
-
+bindsym $alt+Print exec scrotclip
 
 
 # ==========================================================================================
@@ -577,7 +576,6 @@ for_window [instance="urxvt"] border 1pixel
 ## general settings
 for_window [class="Git-gui"] floating enable
 for_window [class="Guake"] floating enable
-for_window [class="Truecrypt"] floating enable
 
 # Sadly steam doesn't utilize the instance attribute properly.
 # https://github.com/ValveSoftware/steam-for-linux/issues/1879
@@ -639,7 +637,7 @@ bar {
             #inactive_workspace #333333 #222222 #888888
             #urgent_workspace   #2f343a #900000 #ffffff
     }
-        output eDP1
+        output eDP-1
         #tray_output primary
         # py3status
         output_format = "i3bar"
@@ -658,11 +656,11 @@ bar {
 }
 
 # bar {
-#        output VGA1
+#        output VGA-1
 #        status_command i3status --config ~/.i3/status-secondary.conf
 
 bar {
-    output VGA1
+    output VGA-1
     position top
     #tray_output none
     mode hide
