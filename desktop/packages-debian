@@ -93,6 +93,8 @@ syslog-summary
 sysstat
 # tool for network monitoring and data acquisition
 tcpdump
+# tool for optical character recognition
+tesseract-ocr
 # hides the mouse cursor in X after a period of inactivity
 unclutter
 # post-processing tool for scanned pages

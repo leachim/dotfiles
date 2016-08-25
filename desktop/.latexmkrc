@@ -16,7 +16,7 @@ $force_mode = 1;
 $preview_continuous_mode = 1;
 
 # Extra file extensions to remove when cleaning
-$clean_ext = 'synctex.gz synctex.gz(busy) %R.synctex.gz acn acr alg aux %R.aux bbl bcf blg brf d fdb_latexmk glg glo gls idx ilg ind ist lof log lot lox nav nlo nls out run.xml toc dvi bbl rel snm vrb';
+$clean_ext = 'synctex.gz synctex.gz(busy) %R.synctex.gz acn acr alg aux %R.aux bbl bcf blg brf d fdb_latexmk glg glo gls glsdefs idx ilg ind ist lof log lot lox nav nlo nls out run.xml toc dvi bbl rel snm vrb';
 
 # The command to invoke a PDF previewer
 $pdf_previewer = 'evince'

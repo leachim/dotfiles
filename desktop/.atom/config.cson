@@ -1,12 +1,18 @@
 "*":
   "atom-beautify": {}
+  "autocomplete-plus":
+    confirmCompletion: "tab"
+    enableAutoActivation: false
   core:
     disabledPackages: [
       "linter-flake8"
       "vim-mode"
       "enhanced-tabs"
+      "autocomplete-css"
+      "autocomplete-html"
     ]
     openEmptyEditorOnStart: false
+    packagesWithKeymapsDisabled: []
     projectHome: "/home/michael/"
   editor:
     fontSize: 16
@@ -26,12 +32,14 @@
 ".console.julia.text":
   editor:
     preferredLineLength: 160
+    tabLength: 4
 ".console.python.text":
   editor:
     softWrap: true
 ".julia.source":
   editor:
     preferredLineLength: 160
+    tabLength: 4
 ".python.text.traceback":
   editor:
     softWrap: true

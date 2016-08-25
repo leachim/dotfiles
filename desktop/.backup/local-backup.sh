@@ -2,7 +2,7 @@
 ## Backup script for local files of lesser importance
 
 ## files to backup
-FILES="--include $HOME/Dropbox --include $HOME/.zotero --include $HOME/Data --include $HOME/package-list --exclude $HOME"
+FILES="--include $HOME/Dropbox --include $HOME/.zotero --include $HOME/Data --include $HOME/Github --include $HOME/package-list --exclude $HOME"
 
 ### Sign archives
 dpkg --get-selections > ~/package-list

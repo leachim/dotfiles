@@ -9,6 +9,15 @@ case $- in
       *) return;;
 esac
 
+# fix issue with tmux colors
+export TERM="xterm-256color"
+force_color_prompt=yes
+
+## add specific file colors
+if [ -f ~/.dir_colors ] ; then
+    eval "`dircolors -b ~/.dir_colors`"
+fi
+
 # BASH OPTIONS {{{
 shopt -s cdspell                 # Correct cd typos
 shopt -s checkwinsize            # Update windows size on command
@@ -38,6 +47,9 @@ if [ -f ~/.aliases ]; then
     source ~/.aliases
 fi
 
+# Colorful bash 
+alias ls="ls --color=auto"
+
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -58,8 +70,8 @@ GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_SHOWUPSTREAM="auto"
 GIT_PS1_SHOWCOLORHINTS=1
 __git_ps1() { :;}
-if [ -e ~/.git-prompt.sh ]; then
-source ~/.git-prompt.sh
+if [ -f ~/.git-prompt.sh ]; then
+    source ~/.git-prompt.sh
 fi
 # PROMPT_COMMAND='history -a; printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1) ($(date +%m/%d\ %H:%M:%S))"'
 PROMPT_COMMAND='history -a; printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1)"'

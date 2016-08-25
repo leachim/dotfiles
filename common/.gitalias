@@ -15,6 +15,7 @@ alias go='git checkout '
 
 alias gs='git status '
 alias gss='git status -s'
+alias gs.='git status .'
 
 alias gls='git ls-tree -r HEAD'
 

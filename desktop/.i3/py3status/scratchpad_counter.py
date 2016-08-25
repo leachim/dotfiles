@@ -1,66 +1,77 @@
 # -*- coding: utf-8 -*-
 """
-Module showing amount of windows at the scratchpad.
-@author shadowprince
-@license Eclipse Public License
+Display the amount of windows and indicate urgency hints on scratchpad (async).
+
+Configuration parameters:
+    always_show: whether the indicator should be shown if there are no
+        scratchpad windows (default False)
+    color_urgent: color to use if a scratchpad window is urgent (default
+        "#900000")
+    format: string to format the output (default "{} ⌫")
+
+Requires:
+    i3ipc: (https://github.com/acrisci/i3ipc-python)
+
+@author cornerman
+@license BSD
 """
 
-import i3
-from time import time
-
-
-def find_scratch(tree):
-    if tree["name"] == "__i3_scratch":
-        return tree
-    else:
-        for x in tree["nodes"]:
-            result = find_scratch(x)
-            if result:
-                return result
-        return None
+from threading import Thread
+import i3ipc
 
 
 class Py3status:
     """
     """
     # available configuration parameters
-    cache_timeout = 5
-    format = "{} ⌫"  # format of indicator. {} replaces with count of windows
-    hide_when_none = True  # hide indicator when there is no windows
+    always_show = False
+    color_urgent = "#900000"
+    format = u"{} ⌫"
 
     def __init__(self):
-        self.count = -1
+        self.count = 0
+        self.urgent = False
+
+        t = Thread(target=self._listen)
+        t.daemon = True
+        t.start()
 
     def scratchpad_counter(self, i3s_output_list, i3s_config):
-        count = len(find_scratch(i3.get_tree()).get("floating_nodes", []))
+        response = {'cached_until': self.py3.CACHE_FOREVER}
 
-        if self.count != count:
-            transformed = True
-            self.count = count
+        if self.urgent:
+            response['color'] = self.color_urgent
+
+        if self.always_show or self.count > 0:
+            response['full_text'] = self.format.format(self.count)
         else:
-            transformed = False
-
-        response = {
-            'cached_until': time() + self.cache_timeout,
-            'transformed': transformed
-        }
-        if self.hide_when_none and count == 0:
             response['full_text'] = ''
-        else:
-            response['full_text'] = self.format.format(count)
 
         return response
 
+    def _listen(self):
+        def update_scratchpad_counter(conn, e=None):
+            cons = conn.get_tree().scratchpad().leaves()
+            self.urgent = any(con for con in cons if con.urgent)
+            self.count = len(cons)
+            self.py3.update()
+
+        conn = i3ipc.Connection()
+
+        update_scratchpad_counter(conn)
+
+        conn.on('window::move', update_scratchpad_counter)
+        conn.on('window::urgent', update_scratchpad_counter)
+
+        conn.main()
+
+
 if __name__ == "__main__":
     """
-    Test this module by calling it directly.
+    Run module in test mode.
     """
-    from time import sleep
-    x = Py3status()
     config = {
-        'color_good': '#00FF00',
-        'color_bad': '#FF0000',
+        'always_show': True
     }
-    while True:
-        print(x.scratchpad_counter([], config))
-        sleep(1)
+    from py3status.module_test import module_test
+    module_test(Py3status, config=config)

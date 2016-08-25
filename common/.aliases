@@ -3,8 +3,8 @@
 #########################################
 function changemode (){
 	xrandr --newmode "1920x1080_60.00"  173.00  1920 2048 2248 2576  1080 1083 1088 1120 -hsync +vsyn;
-	xrandr --addmode DP2 1920x1080_60.00;
-	xrandr --output DP2 --mode 1920x1080_60.00;
+	xrandr --addmode DP-2 1920x1080_60.00;
+	xrandr --output DP-2 --mode 1920x1080_60.00;
 }
 
 #########################################
@@ -15,7 +15,7 @@ function changemode (){
 alias logoff="pkill -KILL -u michael"
 alias datediff="d1=$(date -d '06/23/2016' +%s);d2=$(date -d 'now' +%s);echo \"\$(( (d2 - d1) / 86400 )) days\""
 alias weather="curl http://wttr.in/London"
-alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && echo \"Tage im Mai \" && datediff && weather"
+alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"Tage im Mai \" && datediff"
 alias ugit="git pull && git submodule update --init --recursive"
 alias timestamp="date +%Y_%m_%d-%H_%M"
 alias suspend="systemctl suspend"
@@ -50,11 +50,14 @@ function vm () { pandoc -s -f markdown -t man $1 | man -l - ;}
 alias jup="jupyter notebook"
 
 ## Python
-alias i2="ipython2 -i --colors=lightbg"
-alias i="ipython3 -i -c \"import numpy as np;from math import *;\" --colors=lightbg"
+alias i2="ipython2 -i --colors=Linux"
+alias i="ipython3 -i -c \"import numpy as np;from math import *;\" --colors=Linux"
 
 ## Julia
 alias ju="julia"
+
+## SSH
+ssi () { ssh "$1" -o "UserKnownHostsFile /dev/null"; }
 
 ## TMUX
 # connect to running tmux session on ssh host
@@ -64,6 +67,7 @@ alias ta="tmux attach"
 alias tma='tmux attach -d -t'
 alias tmn='tmux new -s $(basename $(pwd))'
 alias tml='tmux list-sessions'
+alias tls='tmux ls'
 
 ## Shortcuts
 alias dun="du -chs | sort -h"
@@ -91,6 +95,11 @@ alias latex-duplicate-labels="zsh -c \"perl -nE 'say $1 if /(\\label[^}]*})/' **
 #########################################
 ### Helper functions                  ###
 #########################################
+
+alias scrotclip="scrot -s ~/.temp.png && xclip -selection clipboard -t image/png -i ~/.temp.png && rm -f ~/.temp.png"
+function screenshot_to_text () {
+    bash ~/.dotfiles/scripts/screenshot_to_text.sh; 
+}
 
 function extract-helper {
  if [ -z "$1" ]; then
@@ -208,10 +217,10 @@ mpdf-printFileToPdf () { cat "$1" | a2ps -=book -B -q --medium=A4dj --borders=no
 #########################################
 
 # set dual/single monitors
-dual-dp () {  xrandr --output eDP1 --primary --output DP1 --auto --right-of eDP1;}
-dual-vga (){ xrandr --output eDP1 --primary --output DP2 --auto --right-of eDP1;}
-single () { xrandr --output DP1 --off; xrandr --output DP2 --off ; xrandr --output HDMI1 --off ; xrandr --output HDMI2 --off ;}
-present () { xrandr --output DP1 --auto ; xrandr --output DP2 --auto;}
+dual-dp () {  xrandr --output eDP-1 --primary --output DP-1 --auto --right-of eDP-1;}
+dual-vga (){ xrandr --output eDP-1 --primary --output DP-2 --auto --right-of eDP-1;}
+single () { xrandr --output DP-1 --off; xrandr --output DP-2 --off ; xrandr --output HDMI-1 --off ; xrandr --output HDMI-2 --off ;}
+present () { xrandr --output DP-1 --auto ; xrandr --output DP-2 --auto;}
 
 # set background light
 darken () { xbacklight -set 0 ; }
@@ -232,7 +241,7 @@ web-quHOST () { host $1 | rev | cut -d " " -f1 | rev; }
 web-quCountrybyIP () { curl ipinfo.io/$1 2&>/dev/null | grep -Po '"country":.*?[^\\]",' | perl -pe 's/"country"://; s/^"//; s/",$//; s/"//; s/^\s+//' ; }
 
 # route through glaux-web
-alias proxyssh="ssh glaux-web -D 8080 -N -C"
+alias proxyssh="ssh glaux-web -D 8080 -N -C -o \"UserKnownHostsFile /dev/null\""
 # -D: Tells SSH that we want a SOCKS tunnel on the specified port number (you can choose a number between 1025-65536)
 # -f: Forks the process to the background
 # -C: Compresses the data before sending it
