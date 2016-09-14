@@ -13,9 +13,9 @@ function changemode (){
 
 ## SYSTEM
 alias logoff="pkill -KILL -u michael"
-alias datediff="d1=$(date -d '06/23/2016' +%s);d2=$(date -d 'now' +%s);echo \"\$(( (d2 - d1) / 86400 )) days\""
+datediff () { d1=$(date -d $1 +%s);d2=$(date -d 'now' +%s);echo "$(( (d2 - d1) / 86400 )) days";}
 alias weather="curl http://wttr.in/London"
-alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"Tage im Mai \" && datediff"
+alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"Tage im Mai\t Tage im September \" && datediff 06/23/2016 && datediff 09/12/2016"
 alias ugit="git pull && git submodule update --init --recursive"
 alias timestamp="date +%Y_%m_%d-%H_%M"
 alias suspend="systemctl suspend"
@@ -154,6 +154,28 @@ function stopwatch () {
    beep -f 600 -r 3 -d 500;
    sleep 1; echo -e "\a";
 }
+
+function summary () {
+sort -n $1 | awk '
+  BEGIN {
+    c = 0;
+    sum = 0;
+  }
+  $1 ~ /^[0-9]*(\.[0-9]*)?$/ {
+    a[c++] = $1;
+    sum += $1;
+  }
+  END {
+    ave = sum / c;
+    if( (c % 2) == 1 ) {
+      median = a[ int(c/2) ];
+    } else {
+      median = ( a[c/2] + a[c/2-1] ) / 2;
+    }
+    OFS="\t";
+    print sum, c, ave, median, a[0], a[c-1];
+  }
+';}
 
 # fix caps issue
 capsfix () { python -c "from ctypes import *; X11 = cdll.LoadLibrary(\"libX11.so.6\"); display = X11.XOpenDisplay(None); X11.XkbLockModifiers(display, c_uint(0x0100), c_uint(2), c_uint(0)); X11.XCloseDisplay(display)" ; }
