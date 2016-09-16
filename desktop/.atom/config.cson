@@ -4,6 +4,7 @@
     confirmCompletion: "tab"
     enableAutoActivation: false
   core:
+    autoHideMenuBar: true
     disabledPackages: [
       "linter-flake8"
       "vim-mode"

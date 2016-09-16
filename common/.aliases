@@ -25,6 +25,7 @@ alias c="clear"
 function hl () { grep -A1 "Host $1" $HOME/.ssh/config | awk '/HostName/{getline; print}' | awk '{print $2}';}
 alias pack="tar -zcvf"
 alias fasollati="bash $HOME/.backup/local-backup.sh && echo \"df -h\" | sftp storagebox:"
+alias check-storage="echo \"df -h\" | sftp storagebox"
 
 alias m-timezone="timedatectl"
 alias m-rsync="rsync -azP"
