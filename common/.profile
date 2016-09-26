@@ -24,3 +24,4 @@ export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 # export cuda
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib"
 export CUDA_HOME=/usr/
+
