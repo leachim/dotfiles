@@ -240,10 +240,10 @@ mpdf-printFileToPdf () { cat "$1" | a2ps -=book -B -q --medium=A4dj --borders=no
 #########################################
 
 # set dual/single monitors
-dual-dp () {  xrandr --output eDP-1 --primary --output DP-1 --auto --right-of eDP-1;}
-dual-vga (){ xrandr --output eDP-1 --primary --output DP-2 --auto --right-of eDP-1;}
-single () { xrandr --output DP-1 --off; xrandr --output DP-2 --off ; xrandr --output HDMI-1 --off ; xrandr --output HDMI-2 --off ;}
-present () { xrandr --output DP-1 --auto ; xrandr --output DP-2 --auto;}
+dual-dp () {  xrandr --output eDP1 --primary --output DP1 --auto --right-of eDP1;}
+dual-vga (){ xrandr --output eDP1 --primary --output DP2 --auto --right-of eDP1;}
+single () { xrandr --output DP1 --off; xrandr --output DP2 --off ; xrandr --output HDMI1 --off ; xrandr --output HDMI2 --off ;}
+present () { xrandr --output DP1 --auto ; xrandr --output DP2 --auto;}
 
 # set background light
 darken () { xbacklight -set 0 ; }

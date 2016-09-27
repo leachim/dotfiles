@@ -637,12 +637,12 @@ bar {
             #inactive_workspace #333333 #222222 #888888
             #urgent_workspace   #2f343a #900000 #ffffff
     }
-        output eDP-1
+        output eDP1
         #tray_output primary
         # py3status
         output_format = "i3bar"
         # n option: update interval
-        status_command py3status -c ~/.i3/i3status.conf -i ~/.i3/py3status/
+        status_command py3status -c ~/.i3/i3status.conf -i ~/.i3/py3status/py3status/modules/
         # status_command i3status --config ~/.i3/i3status.conf | ~/.i3/my_i3status.py
         # simpler information, less cpu
         #status_command i3status --config ~/.i3/i3status.conf
@@ -660,7 +660,7 @@ bar {
 #        status_command i3status --config ~/.i3/status-secondary.conf
 
 bar {
-    output VGA-1
+    output VGA1
     position top
     #tray_output none
     mode hide
