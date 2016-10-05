@@ -13,7 +13,7 @@
 # ==========================================================================================
 
 # reload the configuration file, debugging only
-bindsym $mod+Shift+o reload
+#bindsym $mod+Shift+o reload
 
 # change modifier to windows key
 set $mod Mod4
@@ -386,7 +386,7 @@ bindsym $mod+Control+Shift+0 move container to workspace 20
 
 
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-#bindsym $mod+Shift+Insert restart
+bindsym $mod+Shift+o restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+Home exit
 # shutdown

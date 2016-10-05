@@ -8,10 +8,10 @@
 alias g='git'
 alias ga='git add '
 alias gb='git branch '
-alias gc='git commit'
+alias gmo='git commit'
 alias gm='git commit -m'
 alias gd='git diff'
-alias go='git checkout '
+alias gc='git checkout '
 
 alias gs='git status '
 alias gss='git status -s'

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+## Packages that should be installed
+# i3, rofi, urxvt256colors, colordiff
+
 ## Install keys for the packages
 echo "Installing keys for the hopefully updated packages in /etc/apt/sources.list"
 sleep 10
