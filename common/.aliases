@@ -49,7 +49,7 @@ alias apm-import="apm install --packages-file"
 
 ## Docker
 alias d="docker"
-function docker-export () {docker save $1 > $1.tar; }
+function docker-export () { docker save $1 > $1.tar; }
 
 ## Git
 alias g="git"
