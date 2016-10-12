@@ -14,8 +14,8 @@ function changemode (){
 ## SYSTEM
 alias logoff="pkill -KILL -u michael"
 datediff () { d1=$(date -d $1 +%s);d2=$(date -d 'now' +%s);echo "$(( (d2 - d1) / 86400 )) days";}
-alias weather="curl http://wttr.in/London"
-alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"Tage im Mai\t Tage im September \" && datediff 06/23/2016 && datediff 09/12/2016"
+alias weather="curl http://wttr.in/Tubingen"
+alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"Tage im Mai\t Tage im September \" && datediff 06/23/2016 && datediff 10/09/2016"
 alias ugit="git pull && git submodule update --init --recursive"
 alias timestamp="date +%Y_%m_%d-%H_%M"
 alias suspend="systemctl suspend"
@@ -27,6 +27,7 @@ alias pack="tar -zcvf"
 alias fasollati="bash $HOME/.backup/local-backup.sh && echo \"df -h\" | sftp storagebox:"
 alias check-storage="echo \"df -h\" | sftp storagebox"
 
+alias di="dirs -v"
 alias m-timezone="timedatectl"
 alias m-rsync="rsync -azP"
 m-filesize () { echo "df -h" | sftp $1 ;}
@@ -41,6 +42,14 @@ alias vw="evince"
 alias vd="evince *.pdf"
 alias arw="arara *.tex && evince *(.om[1])"
 alias ara="arara *.tex"
+
+## APM (atom package manager)
+alias apm-export="apm list --installed --bare"
+alias apm-import="apm install --packages-file"
+
+## Docker
+alias d="docker"
+function docker-export () {docker save $1 > $1.tar; }
 
 ## Git
 alias g="git"

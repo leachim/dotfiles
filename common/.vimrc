@@ -128,13 +128,13 @@ set ffs=unix,dos,mac
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " language support
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-augroup vimrc_autocmds
-    autocmd!
+" augroup vimrc_autocmds
+    " autocmd!
     " highlight characters past column 120
-    autocmd FileType python highlight Excess ctermbg=DarkGrey guibg=Black
-    autocmd FileType python match Excess /\%120v.*/
-    autocmd FileType python set nowrap
-    augroup END
+    " autocmd FileType python highlight Excess ctermbg=DarkGrey guibg=Black
+    " autocmd FileType python match Excess /\%120v.*/
+    " autocmd FileType python set nowrap
+    " augroup END
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " backup
