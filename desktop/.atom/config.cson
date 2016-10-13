@@ -11,6 +11,11 @@
       "enhanced-tabs"
       "autocomplete-css"
       "autocomplete-html"
+      "minimap-find-and-replace"
+      "minimap-git-diff"
+      "minimap-highlight-selected"
+      "script"
+      "vim-mode"
     ]
     openEmptyEditorOnStart: false
     packagesWithKeymapsDisabled: []
@@ -38,8 +43,17 @@
       "find-and-replaceDecorationsZIndex": 0
       "git-diff": true
       "git-diffDecorationsZIndex": 0
+      "highlight-selected": true
+      "highlight-selectedDecorationsZIndex": 0
+  "platformio-ide-terminal":
+    core:
+      scrollback: 5000
+      workingDirectory: "Active File"
+    style:
+      theme: "linux"
   "tool-bar":
     position: "Left"
+    visible: false
   "uber-juno":
     disable: true
   welcome:

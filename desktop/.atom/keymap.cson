@@ -10,3 +10,29 @@
   'ctrl-tab': 'pane:show-next-item'
   'ctrl-shift-tab ^ctrl': 'unset!'
   'ctrl-shift-tab': 'pane:show-previous-item'
+  'ctrl-c': 'core:copy'
+  'ctrl-x': 'core:cut'
+  'ctrl-v': 'core:paste'
+
+
+'.platform-linux atom-workspace, .platform-win32 atom-workspace':
+  'alt-`': 'platformio-ide-terminal:toggle'
+  'alt-M': 'platformio-ide-terminal:new'
+  'alt-shift-X': 'unset!'
+  'alt-X': 'platformio-ide-terminal:close'
+
+'atom-text-editor.vim-mode.normal-mode':
+  #'ctrl-v': 'vim-mode:activate-blockwise-visual-mode'
+  #'ctrl-c': 'vim-mode:reset-normal-mode'
+  #'ctrl-x': 'vim-mode:decrease'
+  'ctrl-v': 'unset!'
+  'ctrl-c': 'unset!'
+  'ctrl-x': 'unset!'
+
+'.platform-win32 .tree-view, .platform-linux .tree-view':
+  #'ctrl-x': 'tree-view:cut'
+  #'ctrl-v': 'tree-view:paste'
+  #'ctrl-c': 'tree-view:copy'
+  'ctrl-x': 'unset!'
+  'ctrl-c': 'unset!'
+  'ctrl-v': 'unset!'
