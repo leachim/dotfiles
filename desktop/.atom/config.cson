@@ -14,7 +14,6 @@
       "minimap-find-and-replace"
       "minimap-git-diff"
       "minimap-highlight-selected"
-      "script"
       "vim-mode"
     ]
     openEmptyEditorOnStart: false

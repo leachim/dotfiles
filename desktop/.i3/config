@@ -118,6 +118,7 @@ exec --no-startup-id /usr/bin/nm-applet --sm-disable
 
 # bluetooth applet
 exec --no-startup-id /usr/bin/blueman-applet
+exec --no-startup-id /usr/bin/solaar
 
 # clipboard manager
 #exec --no-startup-id /usr/bin/gpaste
@@ -642,7 +643,7 @@ bar {
         # py3status
         output_format = "i3bar"
         # n option: update interval
-        status_command py3status -c ~/.i3/i3status.conf -i ~/.i3/py3status/py3status/modules/
+        status_command py3status -c ~/.i3/i3status.conf -i ~/.i3/py3status/py3status/modules/ -i ~/.i3/modules/
         # status_command i3status --config ~/.i3/i3status.conf | ~/.i3/my_i3status.py
         # simpler information, less cpu
         #status_command i3status --config ~/.i3/i3status.conf

@@ -85,6 +85,8 @@ p7zip
 sensord
 # control and monitor storage systems using S.M.A.R.T.
 smartmontools
+# support logitech unifying adapter (mouse and keyboard battery)
+solaar
 # System call tracer - debugging
 strace
 # summarize the contents of a syslog log file

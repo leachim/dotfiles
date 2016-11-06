@@ -38,6 +38,9 @@ SAVEHIST=4000
 setopt hist_ignore_all_dups
 setopt hist_ignore_space
 setopt incappendhistory
+setopt share_history
+# save every command before it is executed
+setopt inc_append_history
 
 # cd
 setopt autocd

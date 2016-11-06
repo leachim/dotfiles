@@ -15,7 +15,7 @@ function changemode (){
 alias logoff="pkill -KILL -u michael"
 datediff () { d1=$(date -d $1 +%s);d2=$(date -d 'now' +%s);echo "$(( (d2 - d1) / 86400 )) days";}
 alias weather="curl http://wttr.in/Tubingen"
-alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"Tage im Mai\t Tage im September \" && datediff 06/23/2016 && datediff 10/09/2016"
+alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"Tage im Mai\t Tage im September \" && datediff 06/23/2016 && datediff 10/23/2016"
 alias ugit="git pull && git submodule update --init --recursive"
 alias timestamp="date +%Y_%m_%d-%H_%M"
 alias suspend="systemctl suspend"
