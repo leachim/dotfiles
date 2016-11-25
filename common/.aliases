@@ -15,7 +15,7 @@ function changemode (){
 alias logoff="pkill -KILL -u michael"
 datediff () { d1=$(date -d $1 +%s);d2=$(date -d 'now' +%s);echo "$(( (d2 - d1) / 86400 )) days";}
 alias weather="curl http://wttr.in/Tubingen"
-alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"Tage im Mai\t Tage im September \" && datediff 06/23/2016 && datediff 10/23/2016"
+alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"Tage im Mai\t Tage im September \" && datediff 06/23/2016 && datediff 11/20/2016"
 alias ugit="git pull && git submodule update --init --recursive"
 alias timestamp="date +%Y_%m_%d-%H_%M"
 alias suspend="systemctl suspend"
@@ -106,6 +106,25 @@ alias latex-duplicate-labels="zsh -c \"perl -nE 'say $1 if /(\\label[^}]*})/' **
 ### Helper functions                  ###
 #########################################
 
+alias mpng-shrink="optipng"
+alias mjpg-shrink="jpegoptim"
+
+function de-archive () {
+# remove leading character string (exact 10 characters) that could be used as unique identifier for cluster jobs
+    files=( $@ )
+    for i in "${files[@]}"; do
+        new_name=${i#*.}
+        uid=${i%%.*}
+        if [ ${#uid} -eq 10 ]
+        then
+            if ! [[ -f $new_name ]]
+            then
+                mv $i $new_name;
+            fi
+        fi
+    done
+}
+
 alias scrotclip="scrot -s ~/.temp.png && xclip -selection clipboard -t image/png -i ~/.temp.png && rm -f ~/.temp.png"
 function screenshot_to_text () {
     bash ~/.dotfiles/scripts/screenshot_to_text.sh; 
@@ -166,7 +185,7 @@ function stopwatch () {
 }
 
 function summary () {
-sort -n $1 | awk '
+sort -g $1 | awk '
   BEGIN {
     c = 0;
     sum = 0;

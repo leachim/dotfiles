@@ -29,3 +29,6 @@ export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib"
 export CUDA_HOME=/usr/
 
+# create fixed tmux session directory, to restore tmux sessions remotely
+mkdir -p $HOME/.tmux_socket;
+export TMPDIR=~/.tmux_socket
