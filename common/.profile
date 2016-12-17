@@ -16,7 +16,7 @@ xset -dpms
 
 
 # added by Anaconda3 2.4.1 installer
-export PATH="/home/michael/.anaconda3/bin:/home/michael/.matlab/bin:$PATH"
+export PATH="/home/michael/.anaconda3/bin:/home/michael/.matlab/bin:/home/michael/.local/bin:$PATH"
 
 # Java dependencies
 export JAVA_HOME=/usr/lib/jvm/default-java/bin/java

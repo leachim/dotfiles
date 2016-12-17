@@ -15,7 +15,7 @@ function changemode (){
 alias logoff="pkill -KILL -u michael"
 datediff () { d1=$(date -d $1 +%s);d2=$(date -d 'now' +%s);echo "$(( (d2 - d1) / 86400 )) days";}
 alias weather="curl http://wttr.in/Tubingen"
-alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"Tage im Mai\t Tage im September \" && datediff 06/23/2016 && datediff 11/20/2016"
+alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"Tage im Mai\t Tage im September \" && datediff 06/23/2016 && datediff 12/06/2016"
 alias ugit="git pull && git submodule update --init --recursive"
 alias timestamp="date +%Y_%m_%d-%H_%M"
 alias suspend="systemctl suspend"
@@ -307,6 +307,8 @@ alias proxyssh="ssh glaux-web -D 8080 -N -C -o \"UserKnownHostsFile /dev/null\""
 backup-manager () { bash $HOME/.backup/duplicity.sh; }
 backup-list () { ls $HOME/.backup/ | sort -r | grep backup.tar.gz | head -1; }
 backup-zotero () { bash $HOME/.backup/zotero-backup.sh; }
+backup-email () { gmvault sync -d $HOME/.mail --emails-only $1; }
+
 alias backup-package-list="dpkg --get-selections"
 
 function backup-restore-signed {
