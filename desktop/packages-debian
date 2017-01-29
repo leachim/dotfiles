@@ -46,6 +46,8 @@ cpufrequtils
 debian-keyring
 htop
 #########################################################
+# sound utility
+alsa-utils
 # gui to manage display layout
 arandr
 # atool is a script for managing file archives of various types
@@ -70,8 +72,6 @@ exfat-utils
 f2fs-tools
 # userspace virtual filesystem - GIO module
 gvfs
-# change themes using gtk-theme-swith
-gtk2-theme-switch
 # Universal source code to formatted text converter
 highlight
 # inkscape, draw nice graphics
@@ -116,7 +116,7 @@ iucode-tool
 # Clipboard management system
 gpaste
 #
-lightdm
+# lightdm
 # rofi (dmenu-replacement) dependencies
 rofi
 # command line screen capture utility
@@ -173,7 +173,6 @@ default-jdk
 pyhoca-cli
 pyhoca-gui
 python3
-ipython3-notebook
 python-gnomekeyring
 python-pip
 python-requests
@@ -184,20 +183,17 @@ r-base-dev
 bioperl
 octave
 subversion
-# R jupyter kernel
-libzmq3-dev
-libcurl4-openssl-dev
 #########################################################
 ## Virtualisation
 # python virtual environments
-virtualenv
-virtualenvwrapper
+#virtualenv
+#virtualenvwrapper
 # docker
-docker.io
+#docker.io
 # virtualbox
-virtualbox
-virtualbox-ext-pack
-virtualbox-guest-additions-iso
+#virtualbox
+#virtualbox-ext-pack
+#virtualbox-guest-additions-iso
 #########################################################
 ## Media
 mpv
@@ -269,3 +265,4 @@ texlive-xetex
 texstudio
 xournal
 #!zotero-standalone
+murrine-themes

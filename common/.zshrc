@@ -37,10 +37,9 @@ HISTFILE=$HOME/.zsh_history
 SAVEHIST=4000
 setopt hist_ignore_all_dups
 setopt hist_ignore_space
-setopt incappendhistory
-setopt share_history
 # save every command before it is executed
 setopt inc_append_history
+setopt incappendhistory
 
 # cd
 setopt autocd
@@ -73,8 +72,9 @@ zstyle ':completion:*' menu select
 # case-insensitive -> partial-word -> substring completion
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
-## do not share history between terminals
+## share history between terminals
 unsetopt share_history
+#setopt share_history
 
 
 ### keep below

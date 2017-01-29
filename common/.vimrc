@@ -1,6 +1,9 @@
 
 set nocompatible
 
+" copy paste to system clipboard, no vim registers
+set clipboard=unnamed
+
 " Vundle
 source ~/.vundlerc
 

@@ -47,6 +47,7 @@
   "platformio-ide-terminal":
     core:
       scrollback: 5000
+      shell: "/usr/bin/zsh"
       workingDirectory: "Active File"
     style:
       theme: "linux"

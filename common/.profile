@@ -19,7 +19,7 @@ xset -dpms
 export PATH="/home/michael/.anaconda3/bin:/home/michael/.matlab/bin:/home/michael/.local/bin:$PATH"
 
 # Java dependencies
-export JAVA_HOME=/usr/lib/jvm/default-java/bin/java
+export JAVA_HOME=/usr/lib/jvm/default-java
 export PATH=$PATH:/usr/lib/jvm/default-java/bin
 
 # fix CURL certificates path
@@ -31,4 +31,4 @@ export CUDA_HOME=/usr/
 
 # create fixed tmux session directory, to restore tmux sessions remotely
 mkdir -p $HOME/.tmux_socket;
-export TMPDIR=~/.tmux_socket
+export TMUX_TMPDIR=~/.tmux_socket

@@ -24,8 +24,13 @@ alias le="less"
 alias c="clear"
 function hl () { grep -A1 "Host $1" $HOME/.ssh/config | awk '/HostName/{getline; print}' | awk '{print $2}';}
 alias pack="tar -zcvf"
+alias pingg="ping 8.8.8.8"
 alias fasollati="bash $HOME/.backup/local-backup.sh && echo \"df -h\" | sftp storagebox:"
 alias check-storage="echo \"df -h\" | sftp storagebox"
+
+alias gpu-status="cat /proc/acpi/bbswitch"
+alias gpu-off="sudo tee /proc/acpi/bbswitch <<<OFF"
+alias gpu-on="sudo tee /proc/acpi/bbswitch <<<ON"
 
 alias di="dirs -v"
 alias m-timezone="timedatectl"
@@ -49,11 +54,22 @@ alias apm-import="apm install --packages-file"
 
 ## Docker
 alias d="docker"
+function do-stopall () { docker stop $(docker ps -a -q) ; }
+function do-rmall () { docker rmi $(docker images -a -q) ; }
 function docker-export () { docker save $1 > $1.tar; }
+
+## Digital Ocean
+function dig-connect() { doctl compute droplet create glaux-london --image 22065670 --region $1 --size 512mb --ssh-keys 8c:7e:36:3e:d0:f5:98:d7:46:86:b5:78:7d:2e:9a:1e && 
+sleep 10 && 
+sslocal -c /etc/shadowsocks.json -s $(doctl compute droplet list | tail -n 1 | cut -f 3) ; }
+function dig-close () { doctl compute droplet delete $(doctl compute droplet list | tail -n 1 | cut -f 1) && sleep 10 && doctl compute droplet list ; }
+alias dig-status="doctl compute droplet list"
+function dig-access () { doctl compute ssh $(doctl compute droplet list | tail -n 1 | cut -f 1) ; } 
 
 ## Git
 alias g="git"
 source $HOME/.gitalias
+function gtrack () { git ls-files $1 --error-unmatch; echo $? ; }
 function vm () { pandoc -s -f markdown -t man $1 | man -l - ;}
 
 ## Jupyter
@@ -202,6 +218,7 @@ sort -g $1 | awk '
       median = ( a[c/2] + a[c/2-1] ) / 2;
     }
     OFS="\t";
+    print "sum, count, average, median, min, max";
     print sum, c, ave, median, a[0], a[c-1];
   }
 ';}
@@ -298,6 +315,7 @@ alias proxyssh="ssh glaux-web -D 8080 -N -C -o \"UserKnownHostsFile /dev/null\""
 # -C: Compresses the data before sending it
 # -q: Uses quiet mode
 # -N: Tells SSH that no command will be sent once the tunnel is up
+proxyshadow () { sslocal -c /etc/shadowsocks.json -s $1 ; }
 
 
 #########################################
@@ -342,8 +360,8 @@ function backup-restore-unsigned {
 
 ## secure tresor operations
 backup-secure_shredFile () { echo "Are you sure, shredding may not work on SSD? [y/N] "; read response ; if [[ $response =~ ^(yes|y)$ ]]; then shred -n 30 -z -u  $1 ; else echo "exited"; fi ; }
-backup-secure_encrypt-sign () { tar czvpf - $1 | gpg --symmetric --cipher-algo aes256 -o safe.tar.gz.gpg && gpg --armor --detach-sign safe.tar.gz.gpg; }
-backup-secure_encrypt-only () { tar czvpf - $1 | gpg --symmetric --cipher-algo aes256 -o safe.tar.gz.gpg ; }
+backup-secure_encrypt-sign () { tar czvpf - $1 | gpg --cipher-algo aes256 -o safe.tar.gz.gpg --symmetric && gpg --armor --detach-sign safe.tar.gz.gpg; }
+backup-secure_encrypt-only () { tar czvpf - $1 | gpg --cipher-algo aes256 -o safe.tar.gz.gpg --symmetric ; }
 backup-secure_decrypt-signed () { gpg --verify $1.asc $1 && gpg -d $1 | tar xzvf - ; }
 backup-secure_decrypt-nocheck () { gpg -d $1 | tar xzvf - ; }
 #
