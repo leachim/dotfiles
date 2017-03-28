@@ -13,7 +13,7 @@
 # ==========================================================================================
 
 # reload the configuration file, debugging only
-#bindsym $mod+Shift+o reload
+bindsym $mod+Shift+o reload
 
 # change modifier to windows key
 set $mod Mod4
@@ -386,7 +386,7 @@ bindsym $mod+Control+Shift+0 move container to workspace 20
 
 
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+o restart
+bindsym $mod+Shift+o+p restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+Home exit
 # shutdown
@@ -637,7 +637,7 @@ bar {
             #inactive_workspace #333333 #222222 #888888
             #urgent_workspace   #2f343a #900000 #ffffff
     }
-        output eDP1
+        output eDP-1
         #tray_output primary
         # py3status
         output_format = "i3bar"
@@ -655,12 +655,8 @@ bar {
     position top
 }
 
-# bar {
-#        output VGA-1
-#        status_command i3status --config ~/.i3/status-secondary.conf
-
 bar {
-    output VGA1
+    output DP-1
     position top
     #tray_output none
     mode hide
@@ -676,10 +672,10 @@ bar {
 # exec xautolock -detectsleep -locker 'i3lock -ti ~/Bilder/rainbow_dash_wallpaper_by_ancientkale-d3tjto3.png'
 
 ## Special keys
-bindsym XF86MonBrightnessUp exec xbacklight -set $(echo "$(xbacklight -get) + 10" | bc)
-bindsym XF86MonBrightnessDown exec xbacklight -set $(echo "$(xbacklight -get) -10" | bc)
-bindsym XF86MonBrightnessUp+Shift exec xbacklight -set 100
-bindsym XF86MonBrightnessDown+Shift exec xbacklight -set 0
+#bindsym XF86MonBrightnessUp exec xbacklight -set $(echo "$(xbacklight -get) + 10" | bc)
+#bindsym XF86MonBrightnessDown exec xbacklight -set $(echo "$(xbacklight -get) -10" | bc)
+#bindsym XF86MonBrightnessUp+Shift exec xbacklight -set 100
+#bindsym XF86MonBrightnessDown+Shift exec xbacklight -set 0
 bindsym XF86AudioRaiseVolume exec amixer set 'Master' 2%+
 bindsym XF86AudioLowerVolume exec amixer set 'Master' 2%-
 #bindsym XF86AudioMute exec amixer set 'Master' toggle

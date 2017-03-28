@@ -1,9 +1,6 @@
 
 set nocompatible
 
-" copy paste to system clipboard, no vim registers
-set clipboard=unnamed
-
 " Vundle
 source ~/.vundlerc
 
@@ -12,6 +9,9 @@ source ~/.vundlerc
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Sets how many lines of history VIM has to remember
 set history=1000
+
+" copy paste to system clipboard, no vim registers
+set clipboard=unnamed
 
 " When scrolling always center view
 set scrolloff=15
@@ -217,7 +217,7 @@ map <silent> <leader><cr> :noh<cr>
 " nnoremap tn  :tabnext<Space>
 " nnoremap tm  :tabm<Space>
 " nnoremap td  :tabclose<CR>
-" 
+"
 " map <leader>te :tabedit<cr>
 " map <leader>tf :tabfind<cr>
 " map <leader>tn :tabnew<cr>
@@ -318,7 +318,7 @@ set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Remap ESC key -> don't leave the home row
-inoremap jj <ESC><CR>  
+inoremap jj <ESC><CR>
 
 " Remap VIM 0 to first non-blank character
 "map 0 ^
@@ -370,7 +370,7 @@ vnoremap <silent> <leader>r :call VisualSelection('replace', '')<CR>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Spell checking
+" => Spell and Syntax checking
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<cr>
@@ -381,7 +381,14 @@ map <leader>ss :setlocal spell!<cr>
 "map <leader>sa zg
 "map <leader>s? z=
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" w0rp/ale, syntax checking
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_text_changed = 0
+" You can disable this option too
+" " if you don't want linters to run on opening a file
+let g:ale_lint_on_enter = 0
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! CmdLine(str)
@@ -535,12 +542,3 @@ nmap <leader>w :w!<cr>
 " (useful for handling the permission-denied error)
 " command W w !sudo tee % > /dev/null
 "
-" Syntastic settings for beginners
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0

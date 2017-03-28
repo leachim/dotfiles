@@ -16,7 +16,7 @@ xset -dpms
 
 
 # added by Anaconda3 2.4.1 installer
-export PATH="/home/michael/.anaconda3/bin:/home/michael/.matlab/bin:/home/michael/.local/bin:$PATH"
+export PATH="/home/michael/.anaconda3/bin:/home/michael/.matlab/bin:/home/michael/.julia/bin:$PATH"
 
 # Java dependencies
 export JAVA_HOME=/usr/lib/jvm/default-java
@@ -28,6 +28,9 @@ export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 # export cuda
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib"
 export CUDA_HOME=/usr/
+
+# soft notification sound
+export BEEP=/home/michael/.dotfiles/files/soft_beep.way
 
 # create fixed tmux session directory, to restore tmux sessions remotely
 mkdir -p $HOME/.tmux_socket;

@@ -3,8 +3,8 @@
 #########################################
 function changemode (){
 	xrandr --newmode "1920x1080_60.00"  173.00  1920 2048 2248 2576  1080 1083 1088 1120 -hsync +vsyn;
-	xrandr --addmode DP-2 1920x1080_60.00;
-	xrandr --output DP-2 --mode 1920x1080_60.00;
+	xrandr --addmode DP-1 1920x1080_60.00;
+	xrandr --output DP-1 --mode 1920x1080_60.00;
 }
 
 #########################################
@@ -13,15 +13,20 @@ function changemode (){
 
 ## SYSTEM
 alias logoff="pkill -KILL -u michael"
+alias notify="paplay $BEEP"
+alias takeover="tmux detach -a"
 datediff () { d1=$(date -d $1 +%s);d2=$(date -d 'now' +%s);echo "$(( (d2 - d1) / 86400 )) days";}
-alias weather="curl http://wttr.in/Tubingen"
+alias weather="curl http://wttr.in/Heidelberg\?lang\=en"
+alias clock="date | cut -d ' ' -f 5"
 alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"Tage im Mai\t Tage im September \" && datediff 06/23/2016 && datediff 12/06/2016"
-alias ugit="git pull && git submodule update --init --recursive"
+alias ugit="git pull && git submodule update --recursive"
+function update-git () { for i in **; do cd $i; ugit; cd ..; done ; }
 alias timestamp="date +%Y_%m_%d-%H_%M"
 alias suspend="systemctl suspend"
 alias vi="vim"
 alias le="less"
 alias c="clear"
+alias cdp="cd -P"
 function hl () { grep -A1 "Host $1" $HOME/.ssh/config | awk '/HostName/{getline; print}' | awk '{print $2}';}
 alias pack="tar -zcvf"
 alias pingg="ping 8.8.8.8"
@@ -54,9 +59,13 @@ alias apm-import="apm install --packages-file"
 
 ## Docker
 alias d="docker"
-function do-stopall () { docker stop $(docker ps -a -q) ; }
-function do-rmall () { docker rmi $(docker images -a -q) ; }
-function docker-export () { docker save $1 > $1.tar; }
+alias dim="docker images"
+alias dps="docker ps"
+function do-stopall () { docker container stop $(docker container ls -a -q) ; }
+function do-cleanup () { docker rm $(docker ps -qa --no-trunc --filter "status=exited"); docker rmi $(docker images --filter "dangling=true" -q --no-trunc) ; }
+#function do-rmall () { docker image rm $(docker image ls -a -q) ; }
+#function do-rmdan () { docker image rm -f $(docker images -f \"dangling=true\" -q) ; }
+function do-export () { docker image save $1 > $1.tar; }
 
 ## Digital Ocean
 function dig-connect() { doctl compute droplet create glaux-london --image 22065670 --region $1 --size 512mb --ssh-keys 8c:7e:36:3e:d0:f5:98:d7:46:86:b5:78:7d:2e:9a:1e && 
@@ -78,6 +87,9 @@ alias jup="jupyter notebook"
 ## Python
 alias i2="ipython2 -i --colors=Linux"
 alias i="ipython3 -i -c \"import numpy as np;from math import *;\" --colors=Linux"
+# program to format python files
+mformat-python () { PYTHONPATH=~/Software/yapf python ~/Software/yapf/yapf --style google $1 ; }
+
 
 ## Julia
 alias ju="julia"
@@ -252,6 +264,9 @@ function mpdf-wordcount () { pdftotext $1 - | wc -w ;}
 
 # crop images in pdf file
 function mpdf-crop () { pdfcrop $1;}
+
+# change pdf format to a4
+function mpdf-a4 () { pdfjam --outfile ${1%.pdf}_out.pdf --paper a4paper $1 ; }
 
 # convert pdf to png
 function mpdf-convertToPNG(){

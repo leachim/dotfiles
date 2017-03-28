@@ -9,8 +9,8 @@ case $- in
       *) return;;
 esac
 
-# fix issue with tmux colors
-export TERM="xterm-256color"
+# fix issue with tmux colors -> remove as leads to problems with htop
+#export TERM="xterm-256color"
 force_color_prompt=yes
 
 ## add specific file colors

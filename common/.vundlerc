@@ -1,70 +1,78 @@
 " vim: set ft=vim:
 " Vundle configuration
-filetype off
+filetype off                  " required
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
-" Bundles
-Bundle 'gmarik/vundle'
+Plugin 'VundleVim/Vundle.vim'
 
 " Dependencies for SnipMate
-Bundle 'MarcWeber/vim-addon-mw-utils'
-Bundle 'tomtom/tlib_vim'
-Bundle 'garbas/vim-snipmate'
-Bundle 'honza/vim-snippets'
+"Plugin 'MarcWeber/vim-addon-mw-utils'
+"Plugin 'tomtom/tlib_vim'
+"Plugin 'garbas/vim-snipmate'
+"Plugin 'honza/vim-snippets'
 
-Bundle 'tpope/vim-fugitive'
-Bundle 'taglist.vim'
+Plugin 'tpope/vim-fugitive'
+Plugin 'taglist.vim'
 
-Bundle 'scrooloose/nerdtree'
-Bundle 'Lokaltog/powerline'
+"Plugin 'scrooloose/nerdtree'
+"Plugin 'scrooloose/nerdcommenter'
+
+"Plugin 'nathanaelkane/vim-indent-guides'
+"Plugin 'Lokaltog/powerline'
 
 " Support for easytag -> lookup function definitions in vim
-Bundle 'xolox/vim-misc'
-Bundle 'xolox/vim-easytags'
+"Plugin 'xolox/vim-misc'
+"Plugin 'xolox/vim-easytags'
 
 " Plugins
-Bundle 'scrooloose/syntastic'
-" Bundle 'kien/ctrlp.vim'
-" Bundle 'bling/vim-airline'
-" Bundle 'mileszs/ack.vim'
-" Bundle 'corntrace/bufexplorer'
-""Bundle 'tpope/vim-repeat'
-""Bundle 'tpope/vim-surround'
-""Bundle 'tpope/vim-unimpaired'
-""Bundle 'zhaocai/GoldenView.Vim'
-""Bundle 'Vim-R-Plugin'
-" Bundle 'taglist.vim'
-Bundle 'python.vim'
-Bundle 'JuliaEditorSupport/julia-vim'
-Bundle 'Valloric/YouCompleteMe'
-""Bundle 'c.vim'
-" Bundle 'sjl/gundo.vim'
-" Bundle 'terryma/vim-multiple-cursors'
-" Bundle 'scrooloose/nerdcommenter'
-""Bundle 'scrooloose/nerdtree'
-""Bundle 'taglist.vim'
-""Bundle 'vim-flake8'
-""Bundle 'Syntastic'
-""Bundle 'vim-python-virtualenv'
-" Bundle 'godlygeek/tabular'
-" Bundle 'Lokaltog/vim-easymotion'
-" Bundle 'garbas/vim-snipmate'
-" Bundle 'kien/rainbow_parentheses.vim'
-" Bundle 'edsono/vim-matchit'
-" Bundle 'chrisbra/NrrwRgn'
-" Bundle 'ujihisa/neco-ghc'
-" Bundle 'dag/vim2hs'
-" Bundle 'Shougo/neocomplete.vim'
-" Bundle 'bitc/vim-hdevtools'
-" Bundle 'jpalardy/vim-slime'
-" Bundle 'derekwyatt/vim-scala'
-" Bundle 'derekwyatt/vim-sbt'
-" Bundle 'chriskempson/vim-tomorrow-theme'
-" ##my bundles
-""Bundle 'flazz/vim-colorschemes'
-" Color schemes
-Bundle 'altercation/vim-colors-solarized'
+"Plugin 'scrooloose/syntastic'
+"better async alternative
+Plugin 'w0rp/ale'
 
-filetype plugin indent on
+" Plugin 'kien/ctrlp.vim'
+" Plugin 'bling/vim-airline'
+" Plugin 'mileszs/ack.vim'
+" Plugin 'corntrace/bufexplorer'
+""Plugin 'tpope/vim-repeat'
+""Plugin 'tpope/vim-surround'
+""Plugin 'tpope/vim-unimpaired'
+""Plugin 'zhaocai/GoldenView.Vim'
+""Plugin 'Vim-R-Plugin'
+" Plugin 'taglist.vim'
+Plugin 'python.vim'
+Plugin 'python-mode/python-mode'
+Plugin 'JuliaEditorSupport/julia-vim'
+Plugin 'Valloric/YouCompleteMe'
+""Plugin 'c.vim'
+" Plugin 'sjl/gundo.vim'
+" Plugin 'terryma/vim-multiple-cursors'
+" Plugin 'scrooloose/nerdcommenter'
+""Plugin 'scrooloose/nerdtree'
+""Plugin 'taglist.vim'
+""Plugin 'vim-flake8'
+""Plugin 'Syntastic'
+""Plugin 'vim-python-virtualenv'
+" Plugin 'godlygeek/tabular'
+" Plugin 'Lokaltog/vim-easymotion'
+" Plugin 'garbas/vim-snipmate'
+" Plugin 'kien/rainbow_parentheses.vim'
+" Plugin 'edsono/vim-matchit'
+" Plugin 'chrisbra/NrrwRgn'
+" Plugin 'ujihisa/neco-ghc'
+" Plugin 'dag/vim2hs'
+" Plugin 'Shougo/neocomplete.vim'
+" Plugin 'bitc/vim-hdevtools'
+" Plugin 'jpalardy/vim-slime'
+" Plugin 'derekwyatt/vim-scala'
+" Plugin 'derekwyatt/vim-sbt'
+" Plugin 'chriskempson/vim-tomorrow-theme'
+" ##my Plugins
+""Plugin 'flazz/vim-colorschemes'
+" Color schemes
+Plugin 'altercation/vim-colors-solarized'
+
+call vundle#end()            " required
+filetype plugin indent on    " required

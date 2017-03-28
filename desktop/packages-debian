@@ -56,6 +56,8 @@ atool
 autocutsel
 # shell extension to jump to frequently used directories
 autojump
+# sound signal
+beep
 # tool to colorize 'diff' output
 colordiff
 # Management of encrypted file systems
