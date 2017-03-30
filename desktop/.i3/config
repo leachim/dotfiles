@@ -637,7 +637,7 @@ bar {
             #inactive_workspace #333333 #222222 #888888
             #urgent_workspace   #2f343a #900000 #ffffff
     }
-        output eDP-1
+        output eDP1
         #tray_output primary
         # py3status
         output_format = "i3bar"
@@ -656,7 +656,7 @@ bar {
 }
 
 bar {
-    output DP-1
+    output DP1
     position top
     #tray_output none
     mode hide

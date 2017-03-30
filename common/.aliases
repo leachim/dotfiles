@@ -57,6 +57,9 @@ alias ara="arara *.tex"
 alias apm-export="apm list --installed --bare"
 alias apm-import="apm install --packages-file"
 
+## AWS
+function aws-login () { $(aws ecr get-login); }
+
 ## Docker
 alias d="docker"
 alias dim="docker images"

@@ -7,8 +7,8 @@
 ! ----------------------------------------------------------------------------
 
 ! Load solarized color scheme from files -> can be used to switch between dark and light theme
-! #include ".terminfo/Xresources/Xresources.dark"
-#include ".terminfo/Xresources/Xresources.light"
+#include ".terminfo/Xresources/Xresources.dark"
+! #include ".terminfo/Xresources/Xresources.light"
 
 ! To only apply colors to your terminal, for example, prefix
 ! the color assignment statement with its name. Example:
