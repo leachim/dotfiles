@@ -25,7 +25,8 @@ alias gh='git status .'
 alias gls='git ls-tree -r HEAD'
 
 alias gp="git push"
-alias gt="git tag"
+alias gpa="git push --all && git push --tags"
+alias gt="git tag -l --sort=v:refname"
 alias gu="git pull"
 
 alias lg="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"

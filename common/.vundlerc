@@ -8,6 +8,9 @@ call vundle#begin()
 
 Plugin 'VundleVim/Vundle.vim'
 
+" simple comment uncomment
+Plugin 'scrooloose/nerdcommenter'
+
 " Dependencies for SnipMate
 "Plugin 'MarcWeber/vim-addon-mw-utils'
 "Plugin 'tomtom/tlib_vim'
@@ -18,7 +21,6 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'taglist.vim'
 
 "Plugin 'scrooloose/nerdtree'
-"Plugin 'scrooloose/nerdcommenter'
 
 "Plugin 'nathanaelkane/vim-indent-guides'
 "Plugin 'Lokaltog/powerline'
@@ -42,6 +44,7 @@ Plugin 'w0rp/ale'
 ""Plugin 'zhaocai/GoldenView.Vim'
 ""Plugin 'Vim-R-Plugin'
 " Plugin 'taglist.vim'
+" Language support
 Plugin 'python.vim'
 Plugin 'python-mode/python-mode'
 Plugin 'JuliaEditorSupport/julia-vim'

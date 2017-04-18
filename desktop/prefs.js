@@ -8,10 +8,10 @@
  * To make a manual change to preferences, you can visit the URL about:config
  */
 
-user_pref("app.update.lastUpdateTime.addon-background-update-timer", 1490862631);
-user_pref("app.update.lastUpdateTime.blocklist-background-update-timer", 1490862751);
-user_pref("app.update.lastUpdateTime.search-engine-update-timer", 1490860302);
-user_pref("app.update.lastUpdateTime.xpi-signature-verification", 1490862511);
+user_pref("app.update.lastUpdateTime.addon-background-update-timer", 1492498775);
+user_pref("app.update.lastUpdateTime.blocklist-background-update-timer", 1492498895);
+user_pref("app.update.lastUpdateTime.search-engine-update-timer", 1492498535);
+user_pref("app.update.lastUpdateTime.xpi-signature-verification", 1492498655);
 user_pref("browser.cache.disk.capacity", 358400);
 user_pref("browser.cache.disk.filesystem_reported", 1);
 user_pref("datareporting.sessions.current.activeTicks", 217);
@@ -43,7 +43,7 @@ user_pref("extensions.zotero.firstRun2", false);
 user_pref("extensions.zotero.fontSize", "1.3");
 user_pref("extensions.zotero.lastRenameAssociatedFile", true);
 user_pref("extensions.zotero.lastViewedFolder", "C1");
-user_pref("extensions.zotero.lastWebDAVOrphanPurge", 1490688678);
+user_pref("extensions.zotero.lastWebDAVOrphanPurge", 1492498449);
 user_pref("extensions.zotero.newItemTypeMRU", "23");
 user_pref("extensions.zotero.pane.persist", "{\"zotero-collections-pane\":{\"width\":\"250\"},\"zotero-tags-splitter\":{\"state\":\"\"},\"zotero-tag-selector\":{\"height\":\"-4\",\"collapsed\":\"\",\"showAutomatic\":\"\",\"filterToScope\":\"\"},\"zotero-collections-splitter\":{\"state\":\"\"},\"zotero-items-pane\":{\"width\":\"1186\"},\"zotero-items-column-title\":{\"width\":\"491\",\"ordinal\":\"1\",\"hidden\":\"\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-firstCreator\":{\"width\":\"170\",\"ordinal\":\"3\",\"hidden\":\"\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-itemType\":{\"width\":\"40\",\"ordinal\":\"5\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-date\":{\"width\":\"\",\"ordinal\":\"7\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-year\":{\"width\":\"76\",\"ordinal\":\"9\",\"hidden\":\"false\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-publisher\":{\"width\":\"\",\"ordinal\":\"11\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-publicationTitle\":{\"width\":\"195\",\"ordinal\":\"25\",\"hidden\":\"false\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-journalAbbreviation\":{\"width\":\"142\",\"ordinal\":\"13\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-language\":{\"width\":\"\",\"ordinal\":\"15\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-accessDate\":{\"width\":\"\",\"ordinal\":\"17\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-libraryCatalog\":{\"width\":\"\",\"ordinal\":\"19\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-callNumber\":{\"width\":\"\",\"ordinal\":\"21\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-rights\":{\"width\":\"\",\"ordinal\":\"23\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-dateAdded\":{\"width\":\"26\",\"ordinal\":\"27\",\"hidden\":\"false\",\"sortActive\":\"true\",\"sortDirection\":\"ascending\"},\"zotero-items-column-dateModified\":{\"width\":\"16\",\"ordinal\":\"29\",\"hidden\":\"false\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-archive\":{\"width\":\"\",\"ordinal\":\"31\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-archiveLocation\":{\"width\":\"\",\"ordinal\":\"33\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-place\":{\"width\":\"\",\"ordinal\":\"35\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-volume\":{\"width\":\"\",\"ordinal\":\"37\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-edition\":{\"width\":\"\",\"ordinal\":\"39\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-pages\":{\"width\":\"\",\"ordinal\":\"41\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-issue\":{\"width\":\"\",\"ordinal\":\"43\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-series\":{\"width\":\"\",\"ordinal\":\"45\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-seriesTitle\":{\"width\":\"\",\"ordinal\":\"47\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-court\":{\"width\":\"\",\"ordinal\":\"49\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-medium\":{\"width\":\"\",\"ordinal\":\"51\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-genre\":{\"width\":\"\",\"ordinal\":\"53\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-system\":{\"width\":\"\",\"ordinal\":\"55\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-extra\":{\"width\":\"\",\"ordinal\":\"57\",\"hidden\":\"true\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-hasAttachment\":{\"ordinal\":\"59\",\"hidden\":\"\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-column-numNotes\":{\"width\":\"153\",\"ordinal\":\"61\",\"hidden\":\"false\",\"sortActive\":\"\",\"sortDirection\":\"\"},\"zotero-items-splitter\":{\"state\":\"\"},\"zotero-item-pane\":{\"width\":\"464\"}}");
 user_pref("extensions.zotero.prefVersion", 2);
@@ -84,16 +84,16 @@ user_pref("gfx.crash-guard.glcontext.appVersion", "45.4.0");
 user_pref("gfx.crash-guard.glcontext.deviceID", "Mesa DRI Intel(R) Haswell Mobile ");
 user_pref("gfx.crash-guard.glcontext.driverVersion", "3.0 Mesa 12.0.3");
 user_pref("gfx.crash-guard.status.glcontext", 2);
-user_pref("idle.lastDailyNotification", 1490864848);
+user_pref("idle.lastDailyNotification", 1492499412);
 user_pref("network.cookie.prefsMigrated", true);
 user_pref("network.predictor.cleaned-up", true);
-user_pref("places.database.lastMaintenance", 1490649620);
+user_pref("places.database.lastMaintenance", 1479681590);
 user_pref("places.history.expiration.transient_current_max_pages", 104858);
 user_pref("plugin.importedState", true);
 user_pref("plugin.state.flash", 0);
 user_pref("plugin.state.java", 0);
 user_pref("signon.importedFromSqlite", true);
-user_pref("storage.vacuum.last.index", 1);
-user_pref("storage.vacuum.last.places.sqlite", 1490649620);
+user_pref("storage.vacuum.last.index", 0);
+user_pref("storage.vacuum.last.places.sqlite", 1479508447);
 user_pref("toolkit.telemetry.cachedClientID", "c92e6023-151f-4b87-b5d0-e8e340a0c186");
 user_pref("toolkit.telemetry.previousBuildID", "20160818");

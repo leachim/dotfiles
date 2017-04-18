@@ -3,8 +3,8 @@
 #########################################
 function changemode (){
 	xrandr --newmode "1920x1080_60.00"  173.00  1920 2048 2248 2576  1080 1083 1088 1120 -hsync +vsyn;
-	xrandr --addmode DP-1 1920x1080_60.00;
-	xrandr --output DP-1 --mode 1920x1080_60.00;
+	xrandr --addmode DP1 1920x1080_60.00;
+	xrandr --output DP1 --mode 1920x1080_60.00;
 }
 
 #########################################
@@ -18,7 +18,7 @@ alias takeover="tmux detach -a"
 datediff () { d1=$(date -d $1 +%s);d2=$(date -d 'now' +%s);echo "$(( (d2 - d1) / 86400 )) days";}
 alias weather="curl http://wttr.in/Heidelberg\?lang\=en"
 alias clock="date | cut -d ' ' -f 5"
-alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"Tage im Mai\t Tage im September \" && datediff 06/23/2016 && datediff 12/06/2016"
+alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"Tage im Mai\t Tage im September \" && datediff 06/23/2016 && datediff 04/15/2017"
 alias ugit="git pull && git submodule update --recursive"
 function update-git () { for i in **; do cd $i; ugit; cd ..; done ; }
 alias timestamp="date +%Y_%m_%d-%H_%M"
@@ -64,6 +64,7 @@ function aws-login () { $(aws ecr get-login); }
 alias d="docker"
 alias dim="docker images"
 alias dps="docker ps"
+alias do-count="docker ps -q | wc -l"
 function do-stopall () { docker container stop $(docker container ls -a -q) ; }
 function do-cleanup () { docker rm $(docker ps -qa --no-trunc --filter "status=exited"); docker rmi $(docker images --filter "dangling=true" -q --no-trunc) ; }
 #function do-rmall () { docker image rm $(docker image ls -a -q) ; }
@@ -71,7 +72,7 @@ function do-cleanup () { docker rm $(docker ps -qa --no-trunc --filter "status=e
 function do-export () { docker image save $1 > $1.tar; }
 
 ## Digital Ocean
-function dig-connect() { doctl compute droplet create glaux-london --image 22065670 --region $1 --size 512mb --ssh-keys 8c:7e:36:3e:d0:f5:98:d7:46:86:b5:78:7d:2e:9a:1e && 
+function dig-connect() { doctl compute droplet create glaux-london --image 24142787 --region $1 --size 512mb --ssh-keys 8c:7e:36:3e:d0:f5:98:d7:46:86:b5:78:7d:2e:9a:1e && 
 sleep 10 && 
 sslocal -c /etc/shadowsocks.json -s $(doctl compute droplet list | tail -n 1 | cut -f 3) ; }
 function dig-close () { doctl compute droplet delete $(doctl compute droplet list | tail -n 1 | cut -f 1) && sleep 10 && doctl compute droplet list ; }
@@ -92,7 +93,6 @@ alias i2="ipython2 -i --colors=Linux"
 alias i="ipython3 -i -c \"import numpy as np;from math import *;\" --colors=Linux"
 # program to format python files
 mformat-python () { PYTHONPATH=~/Software/yapf python ~/Software/yapf/yapf --style google $1 ; }
-
 
 ## Julia
 alias ju="julia"
