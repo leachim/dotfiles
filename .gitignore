@@ -23,8 +23,16 @@ desktop/.config/texstudio/*
 !desktop/.config/texstudio/texstudiode_DE.ign
 #desktop/.config/texstudio/texstudio.ini
 
+# other config to ignore
+desktop/.config/chromium
+desktop/.config/pulse
+desktop/.config/sway
+
 ## only include source of themes and current theme
 desktop/.themes/*
 !desktop/.themes/readme
 !desktop/.themes/MediterraneanWhite/*
 !desktop/.themes/iris-light-master/*
+
+## do not store tmux sessions
+common/.tmux/resurrect

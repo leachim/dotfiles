@@ -18,7 +18,7 @@ alias takeover="tmux detach -a"
 datediff () { d1=$(date -d $1 +%s);d2=$(date -d 'now' +%s);echo "$(( (d2 - d1) / 86400 )) days";}
 alias weather="curl http://wttr.in/Heidelberg\?lang\=en"
 alias clock="date | cut -d ' ' -f 5"
-alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"Tage im Mai\t Tage im September \" && datediff 06/23/2016 && datediff 04/15/2017"
+alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"Tage im Mai\t Tage im September \" && datediff 06/23/2016 && datediff 05/14/2017"
 alias ugit="git pull && git submodule update --recursive"
 function update-git () { for i in **; do cd $i; ugit; cd ..; done ; }
 alias timestamp="date +%Y_%m_%d-%H_%M"

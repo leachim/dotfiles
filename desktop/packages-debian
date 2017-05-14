@@ -60,6 +60,8 @@ autojump
 beep
 # tool to colorize 'diff' output
 colordiff
+# good diff tool for git
+icdiff
 # Management of encrypted file systems
 cryptmount
 # utility to replace problematic characters in filenames

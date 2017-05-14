@@ -21,7 +21,7 @@
     projectHome: "/home/michael/"
     telemetryConsent: "no"
   editor:
-    fontSize: 16
+    fontSize: 17
     invisibles: {}
     preferredLineLength: 160
     tabLength: 4
@@ -31,10 +31,13 @@
     enableMenu: true
     enableToolBar: true
     launchOnStartup: true
-  linter:
-    showErrorPanel: false
+    notifications: false
+    useStandardLayout: true
+  linter: {}
   "linter-flake8":
     maxLineLength: 120
+  "linter-ui-default":
+    showPanel: true
   minimap:
     absoluteMode: true
     plugins:
@@ -51,6 +54,8 @@
       workingDirectory: "Active File"
     style:
       theme: "linux"
+    toggles:
+      runInsertedText: false
   "tool-bar":
     position: "Left"
     visible: false

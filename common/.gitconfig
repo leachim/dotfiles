@@ -22,11 +22,30 @@
 	changed = yellow bold
 	untracked = red bold
 [diff]
-	tool = vimdiff
+	tool = icdiff
 [difftool]
 	prompt = false
+[difftool "icdiff"]
+	cmd = /usr/bin/icdiff --line-numbers $LOCAL $REMOTE
 [alias]
-    glog = log --graph --full-history --all --color --pretty=tformat:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s%x20%x1b[33m(%an)%x1b[0m"
+	prune = fetch --prune
+	# Because I constantly forget how to do this
+	# https://git-scm.com/docs/git-fetch#git-fetch--p
+
+	undo = reset --soft HEAD^
+	# Not quite as common as an amend, but still common
+	# https://git-scm.com/docs/git-reset#git-reset-emgitresetemltmodegtltcommitgt
+
+	stash-all = stash save --include-untracked
+	# We wanna grab those pesky un-added files!
+	# https://git-scm.com/docs/git-stash
+
+	glog = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+	# No need for a GUI - a nice, colorful, graphical representation
+	# https://git-scm.com/docs/git-log
+	# via https://medium.com/@payload.dd/thanks-for-the-git-st-i-will-use-this-4da5839a21a4
+
+    glogfull = log --graph --full-history --all --color --pretty=tformat:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s%x20%x1b[33m(%an)%x1b[0m"
 [github]
     user = leachim
 [user]
@@ -34,214 +53,26 @@
     email = leachim@users.noreply.github.com
 	useconfigonly = true
 [push]
-    # sane default
-    default = simple
-[alias]
-    # Show all configured aliases
-    aliases = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\ \t => \\2/' | sort
-	#amend to commit
-   	amend = !git log -n 1 --pretty=tformat:%s%n%n%b | git commit -F - --amend
+	default = simple
+	# "push the current branch back to the branch whose changes are usually integrated into the current branch"
+	# "refuse to push if the upstream branch’s name is different from the local one"
+	# https://git-scm.com/docs/git-config#git-config-pushdefault
 
-	s = !git status --short
-	# View the log and diff for a commit (previous if no SHA1 provided)
-	d = log -n1 -p --format=fuller
-	#View a pretty git log with branch tree
-	l = !git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	followTags = true
+	# Because I get sick of telling git to do it manually
+	# https://git-scm.com/docs/git-config#git-config-pushfollowTags
+[merge]
+	ff = only
+	# I pretty much never mean to do a real merge, since I use a rebase workflow.
+	# Note: this global option applies to all merges, including those done during a git pull
+	# https://git-scm.com/docs/git-config#git-config-mergeff
 
-	# Return the repository's root directory (usefull for shell prompts)
-    root = rev-parse --show-toplevel
-    # Thin out older metadata within the repository, reduceses filesystem footprint
-    utrim = !git reflog expire --expire=now --all && git gc --prune=now
-	#Show all branches
-   	br-all = branch -av
-    #Show the current branch name
-   	br-name = !git branch | grep "^*" | awk '{ print $2 }'
-    #Which files are receiving the most "love"
-   	churn = !git log --all -M -C --name-only --format='format:' "$@" | sort | grep -v '^$' | uniq -c | sort | awk 'BEGIN {print "count,file"} {print $1 "," $2}'
-	# Save a repo as a tarball
-	export = archive -o $1.tar.gz -9 --prefix=latest/
-
-	## log stuff
-	ls = log --all --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset' --abbrev-commit
-	la = log --all --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ci) %C(bold blue)<%an>%Creset' --abbrev-commit
-	ll = log --graph --decorate --pretty=oneline --abbrev-commit
-	lla = log --stat --graph --decorate --pretty=oneline --abbrev-commit --numstat
-	#List oneline commits showing dates:
-	lld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
-	#List oneline commits showing relative dates:
-	llr = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
-
-	## diff stuff
-	dh = diff --color-words head
-	#Show a diff last commit:
-	dlc = diff --cached HEAD^
-	# all commits related to a file
-	fl = log -u
-
-	# Being the Branch/Integration manager at my current client, I use these constantly to merge stuff:
-	rev-ours = "!f() { git co --ours $@ && git add $@; }; f"
-	rev-theirs = "!f() { git co --theirs $@ && git add $@; }; f"
-
-
-    ############################
-	## Using arguments
-	############################
-	# Grep from root folder:
-	grep = "!f() { A=$(pwd) && TOPLEVEL=$(git rev-parse --show-toplevel) && cd $TOPLEVEL && git grep --full-name -In $1 | xargs -I{} echo $TOPLEVEL/{} && cd $A; }; f"
-	# list commits by date or author
-	review = "!sh -c 'git log --all --oneline --reverse --date=local --since=\"$0\"'"
-	whois = "!sh -c 'git log -i -1 --pretty=\"format:%an <%ae>\n\" --author=\"$1\"' -"
-
-	############################
-	## Common aliases
-	############################
-	#############
-	a = add .
-	a = add --all
-	ai = add -i
-	#############
-	ap = apply
-	as = apply --stat
-	ac = apply --check
-	#############
-	ama = am --abort
-	amr = am --resolved
-	ams = am --skip
-	#############
-	b = branch
-	ba = branch -a
-	bd = branch -d
-	br = branch -r
-	#############
-	#############
-	c = commit
-	ca = commit -a
-	cm = commit -m
-	cem = commit --allow-empty -m
-	cam = commit -am
-	cd = commit --amend
-	cad = commit -a --amend
-	ced = commit --allow-empty --amend
-	#############
-	#d = diff
-	dc = diff --cached
-	dl = difftool
-	dlc = difftool --cached
-	dk = diff --check
-	dp = diff --patience
-	dck = diff --cached --check
-	#############
-	f = fetch
-	fo = fetch origin
-	fu = fetch upstream
-	#############
-	fp = format-patch
-	#############
-	fk = fsck
-	#############
-	g = grep -p
-	#############
-	lg = log --oneline --graph --decorate
-	#############
-	ls = ls-files
-	lsf = "!git ls-files | grep -i"
-	#############
-	m = merge
-	ma = merge --abort
-	mc = merge --continue
-	ms = merge --skip
-	#############
-	o = checkout
-	ob = checkout -b
-	#############
-	pr = prune -v
-	#############
-	ps = push
-	psf = push -f
-	psu = push -u
-	pso = push origin
-	psao = push --all origin
-	psfo = push -f origin
-	psuo = push -u origin
-	psom = push origin master
-	psfom = push -f origin master
-	psuom = push -u origin master
-	#############
-	pl = pull
-	plu = pull -u
-	plo = pull origin
-	plp = pull upstream
-	plom = pull origin master
-	plpm = pull upstream master
-	#############
-	pb = pull --rebase
-	pbo = pull --rebase origin
-	pbp = pull --rebase upstream
-	pbom = pull --rebase origin master
-	pbpm = pull --rebase upstream master
-	#############
-	#############
-	rb = rebase
-	rba = rebase --abort
-	rbc = rebase --continue
-	rbi = rebase --interactive
-	rbs = rebase --skip
-	#############
-	re = reset
-	rh = reset HEAD
-	reh = reset --hard
-	rem = reset --mixed
-	res = reset --soft
-	rehh = reset --hard HEAD
-	remh = reset --mixed HEAD
-	resh = reset --soft HEAD
-	#############
-	r = remote
-	ra = remote add
-	rr = remote rm
-	rv = remote -v
-	rm = remote rename
-	rp = remote prune
-	rs = remote show
-	rao = remote add origin
-	rau = remote add upstream
-	rso = remote show origin
-	rsu = remote show upstream
-	rpo = remote prune origin
-	rpu = remote prune upstream
-	#############
-	sb = status -s -b
-	sa = stash apply
-	sc = stash clear
-	sd = stash drop
-	sl = stash list
-	sp = stash pop
-	ss = stash save
-	sw = stash show
-	#############
-	svnr = svn rebase
-	svnd = svn dcommit
-	svnl = svn log --oneline --show-commit
-    #############
-    tr = ls-tree -r master --name-only
-    #############
-	w = show
-	wp = show -p
-	wr = show -p --no-color
-	#############
-	assume = update-index --assume-unchanged
-	unassume = update-index --no-assume-unchanged
-	assumed = "!git ls-files -v | grep ^h | cut -c 3-"
-	unassumeall = !git assumed | xargs git update-index --no-assume-unchanged
-	assumeall = "!git st -s | awk {'print $2'} | xargs git assume"
-	#############
-	whois = "!sh -c 'git log -i -1 --pretty=\"format:%an <%ae>\n\" --author=\"$1\"' -"
-	whatis = show -s --pretty='tformat:%h (%s, %ad)' --date=short
-	#############
-	barebranch = !sh -c 'git symbolic-ref HEAD refs/heads/$1 && git rm --cached -r . && git clean -xfd' -
-	flat = clone --depth 1
-	subpull = !git submodule foreach git pull --tags origin master
-	subrepo = !sh -c 'filter-branch --prune-empty --subdirectory-filter $1 master' -
-	human = name-rev --name-only --refs=refs/heads/*
-	serve = !git daemon --reuseaddr --verbose  --base-path=. --export-all ./.git
-	snapshot = !git stash save "snapshot: $(date)" && git stash apply "stash@{0}"
+	conflictstyle = diff3
+	# Standard diff is two sets of final changes. This introduces the original text before each side's changes.
+	# https://git-scm.com/docs/git-config#git-config-mergeconflictStyle
+[transfer]
+	fsckobjects = true
+	# To combat repository corruption!
+	# Note: this global option applies during receive and transmit
+	# https://git-scm.com/docs/git-config#git-config-transferfsckObjects
+	# via https://groups.google.com/forum/#!topic/binary-transparency/f-BI4o8HZW0
