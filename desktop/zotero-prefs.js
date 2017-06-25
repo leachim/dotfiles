@@ -53,8 +53,8 @@ user_pref("extensions.zotero.sourceList.persist", "{\"L\":true,\"C69\":true,\"C7
 user_pref("extensions.zotero.sync.server.username", "glaux1126");
 user_pref("extensions.zotero.sync.storage.groups.enabled", false);
 user_pref("extensions.zotero.sync.storage.protocol", "webdav");
-user_pref("extensions.zotero.sync.storage.url", "u116994.your-storagebox.de");
-user_pref("extensions.zotero.sync.storage.username", "u116994");
+user_pref("extensions.zotero.sync.storage.url", "u116994-sub2.your-storagebox.de");
+user_pref("extensions.zotero.sync.storage.username", "u116994-sub2");
 user_pref("extensions.zotero.sync.storage.verified", true);
 user_pref("extensions.zotero.translators.better-bibtex.autoAbbrevStyle", "http://www.zotero.org/styles/cell");
 user_pref("extensions.zotero.translators.better-bibtex.citekeyFormat", "[auth][year]");
