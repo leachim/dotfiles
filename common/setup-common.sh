@@ -25,7 +25,6 @@ do
   fi;
 done
 sleep 3
-for i in ${HOME}/.* ; do done
 
 for dotfile in  .* ;
 do
@@ -40,7 +39,7 @@ sleep 5
 
 ##
 echo "Installing Vim Plugins .."
-vim -u "None" +BundleInstall +qall
+vim -u None +BundleInstall +qall
 
 ##
 echo "Configuring ZSH and Prezto .."
