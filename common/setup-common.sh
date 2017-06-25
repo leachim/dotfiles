@@ -18,10 +18,14 @@ dir="$HOME/.dotfiles/common"
 echo "backing up existing dotfiles..."
 for dotfile in ${HOME}/.*; 
 do 
-  echo "backup up $dotfile"
-  mv $dotfile "$dotfile.bak"
+  if [ "$dotfile" != "${HOME}/.dotfiles" ]; 
+  then
+    echo "backing up $dotfile"
+    mv $dotfile "$dotfile.bak"
+  fi;
 done
 sleep 3
+for i in ${HOME}/.* ; do done
 
 for dotfile in  .* ;
 do
