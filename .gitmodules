@@ -19,6 +19,6 @@
 [submodule "common/.zprezto"]
 	path = common/.zprezto
 	url = https://github.com/sorin-ionescu/prezto.git
-[submodule "common/.vim/bundle/vundle"]
-	path = common/.vim/bundle/vundle
-	url = https://github.com/gmarik/vundle.git
+[submodule "common/.vim/bundle/Vundle.vim"]
+	path = common/.vim/bundle/Vundle.vim
+	url = https://github.com/VundleVim/Vundle.vim.git
