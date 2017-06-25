@@ -16,9 +16,9 @@ alias logoff="pkill -KILL -u michael"
 alias notify="paplay $BEEP"
 alias takeover="tmux detach -a"
 datediff () { d1=$(date -d $1 +%s);d2=$(date -d 'now' +%s);echo "$(( (d2 - d1) / 86400 )) days";}
-alias weather="curl http://wttr.in/Heidelberg\?lang\=en"
+alias weather="curl http://wttr.in/Cham\?lang\=en"
 alias clock="date | cut -d ' ' -f 5"
-alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"Tage im Mai\t Tage im September \" && datediff 06/23/2016 && datediff 05/14/2017"
+alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"Tage im Mai\t Tage im September \" && datediff 06/23/2016 && datediff 05/14/2017 && cal"
 alias ugit="git pull && git submodule update --recursive"
 function update-git () { for i in **; do cd $i; ugit; cd ..; done ; }
 alias timestamp="date +%Y_%m_%d-%H_%M"
@@ -58,7 +58,7 @@ alias apm-export="apm list --installed --bare"
 alias apm-import="apm install --packages-file"
 
 ## AWS
-function aws-login () { $(aws ecr get-login); }
+function aws-login () { $(aws ecr get-login --no-include-email); }
 
 ## Docker
 alias d="docker"
@@ -69,15 +69,17 @@ function do-stopall () { docker container stop $(docker container ls -a -q) ; }
 function do-cleanup () { docker rm $(docker ps -qa --no-trunc --filter "status=exited"); docker rmi $(docker images --filter "dangling=true" -q --no-trunc) ; }
 #function do-rmall () { docker image rm $(docker image ls -a -q) ; }
 #function do-rmdan () { docker image rm -f $(docker images -f \"dangling=true\" -q) ; }
-function do-export () { docker image save $1 > $1.tar; }
+function do-export () { docker save $1 > $1.tar; }
 
 ## Digital Ocean
-function dig-connect() { doctl compute droplet create glaux-london --image 24142787 --region $1 --size 512mb --ssh-keys 8c:7e:36:3e:d0:f5:98:d7:46:86:b5:78:7d:2e:9a:1e && 
-sleep 10 && 
-sslocal -c /etc/shadowsocks.json -s $(doctl compute droplet list | tail -n 1 | cut -f 3) ; }
-function dig-close () { doctl compute droplet delete $(doctl compute droplet list | tail -n 1 | cut -f 1) && sleep 10 && doctl compute droplet list ; }
+function dig-create() { doctl compute droplet create glaux-web --image 25572872 --region $1 --size 512mb --ssh-keys 8c:7e:36:3e:d0:f5:98:d7:46:86:b5:78:7d:2e:9a:1e &&
+sleep 5 && doctl compute firewall add-droplets de489db5-1e04-40e6-891c-8bdfa47745c8 --droplet-ids $(doctl compute droplet list | tail -n 1 |  awk '{print $1}') && sleep 10 ; } 
+function dig-connect() { sslocal -c /etc/shadowsocks.json -s $(doctl compute droplet list | tail -n 1 |  awk '{print $3}') ; }
+function dig-domain() { doctl compute domain records create $(doctl compute domain list | tail -n 1 | awk '{print $1}') --record-type A --record-name web --record-data $(doctl compute droplet list | tail -n 1 |  awk '{print $3}') --record-ttl 180 ; }
+function dig-close () { doctl compute droplet delete $(doctl compute droplet list | tail -n 1 |  awk '{print $1}') && sleep 10 && doctl compute domain records delete $(doctl compute domain list | tail -n 1 | awk '{print $1}') $(doctl compute domain records list $(doctl compute domain list | tail -n 1 | awk '{print $1}') | grep "A" |  awk '{print $1}') && doctl compute droplet list ; }
 alias dig-status="doctl compute droplet list"
-function dig-access () { doctl compute ssh $(doctl compute droplet list | tail -n 1 | cut -f 1) ; } 
+dig-domain-status() { doctl compute domain records list $(doctl compute domain list | tail -n 1 | awk '{print $1}') ; } 
+function dig-access () { doctl compute ssh $(doctl compute droplet list | tail -n 1 |  awk '{print $1}') ; } 
 
 ## Git
 alias g="git"
@@ -333,8 +335,8 @@ alias proxyssh="ssh glaux-web -D 8080 -N -C -o \"UserKnownHostsFile /dev/null\""
 # -C: Compresses the data before sending it
 # -q: Uses quiet mode
 # -N: Tells SSH that no command will be sent once the tunnel is up
-proxyshadow () { sslocal -c /etc/shadowsocks.json -s $1 ; }
-
+proxyshadow () { sslocal -c /etc/shadowsocks.json -s web.$(doctl compute domain list | tail -n 1 | awk '{print $1}') ; }
+proxyvpn () { sudo openvpn --remote web.$(doctl compute domain list | tail -n 1 | awk '{print $1}') 443 --config ~/.ssh/client1.ovpn ; }
 
 #########################################
 ### Backup and restore files          ###

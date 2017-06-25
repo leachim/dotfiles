@@ -16,3 +16,12 @@
 [submodule "common/.tmux/plugins/tmux-yank"]
 	path = common/.tmux/plugins/tmux-yank
 	url = git@github.com:tmux-plugins/tmux-yank.git
+[submodule "common/prezto"]
+	path = common/prezto
+	url = https://github.com/sorin-ionescu/prezto.git
+[submodule "common/.zprezto"]
+	path = common/.zprezto
+	url = https://github.com/sorin-ionescu/prezto.git
+[submodule "common/.vim/bundle/vundle"]
+	path = common/.vim/bundle/vundle
+	url = https://github.com/gmarik/vundle.git

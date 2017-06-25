@@ -1,40 +1,27 @@
 #!/bin/bash
 
-## Intro
-echo "Install basic environment, no root access required"
-sleep 2
-echo "The following packages should be installed: vim git zsh curl (conky + exuberant-ctags)"
-echo "exuberant-ctags is needed for special vim plugin"
-sleep 10
-
 # sudo apt-get install vim git zsh curl conky exuberant-ctags
 
-
-##
-echo "Configuring ZSH and Prezto .."
-##
-git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
-zsh -c 'setopt EXTENDED_GLOB;
-for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
-    ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
-done'
-echo "ENTER USER PASSWORD"
-
-# set zsh as default shell
-chsh -s /bin/zsh
-
-rm $HOME/.zlogout
-echo "Remove .zlogout, no sensible message included"
-
-
-##
-echo "Pimping Vim .."
-git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
-
+## Intro
+echo "Install basic command line environment"
+sleep 2
+echo "The following packages should be installed: vim git zsh curl (conky)"
+hash git 2>/dev/null || { echo >&2 "I require git but it's not installed.  Aborting."; exit 1; }
+hash vim 2>/dev/null || { echo >&2 "I require vim but it's not installed.  Aborting."; exit 1; }
+hash curl 2>/dev/null || { echo >&2 "I require curl but it's not installed.  Aborting."; exit 1; }
 
 ##
 echo "symlinking dotfiles..."
 dir="$HOME/.dotfiles/common"
+
+#
+echo "backing up existing dotfiles..."
+for dotfile in "$HOME/.*"; 
+do 
+  echo "backup up $dotfile"
+  mv $HOME/$dotfile "$HOME/$dotfile.bak"
+done
+sleep 3
 
 for dotfile in  .* ;
 do
@@ -47,9 +34,19 @@ do
 done
 sleep 5
 
-
 ##
 echo "Installing Vim Plugins .."
 vim +BundleInstall +qall
 
-## echo "Remember to remove git alias file in zprezto"
+##
+echo "Configuring ZSH and Prezto .."
+##
+hash foo 2>/dev/null || { echo >&2 "I require foo but it's not installed.  Aborting."; exit 1; }
+
+zsh -c 'setopt EXTENDED_GLOB;
+for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
+    ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
+done'
+
+# set zsh as default shell
+echo "Run command to switch default shell to zsh: \nchsh -s /bin/zsh"
