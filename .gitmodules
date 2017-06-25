@@ -1,21 +1,18 @@
 [submodule "desktop/.i3/py3status"]
 	path = desktop/.i3/py3status
-	url = git@github.com:ultrabug/py3status.git
+    url = https://github.com/ultrabug/py3status.git
 [submodule "common/.tmux/plugins/tpm"]
 	path = common/.tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm
 [submodule "common/.tmux/plugins/tmux-resurrect"]
 	path = common/.tmux/plugins/tmux-resurrect
 	url = https://github.com/tmux-plugins/tmux-resurrect
-[submodule "common/.tmux/plugins/old_plugins/tmux-copycat"]
-	path = common/.tmux/plugins/old_plugins/tmux-copycat
-	url = git@github.com:tmux-plugins/tmux-copycat.git
 [submodule "common/.tmux/plugins/tmux-copycat"]
 	path = common/.tmux/plugins/tmux-copycat
-	url = git@github.com:tmux-plugins/tmux-copycat.git
+    url = https://github.com/tmux-plugins/tmux-copycat.git
 [submodule "common/.tmux/plugins/tmux-yank"]
 	path = common/.tmux/plugins/tmux-yank
-	url = git@github.com:tmux-plugins/tmux-yank.git
+    url = https://github.com/tmux-plugins/tmux-yank.git
 [submodule "common/prezto"]
 	path = common/prezto
 	url = https://github.com/sorin-ionescu/prezto.git
