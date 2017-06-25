@@ -19,7 +19,7 @@ echo "backing up existing dotfiles..."
 for dotfile in "$HOME/.*"; 
 do 
   echo "backup up $dotfile"
-  mv $HOME/$dotfile "$HOME/$dotfile.bak"
+  mv $dotfile "$dotfile.bak"
 done
 sleep 3
 
