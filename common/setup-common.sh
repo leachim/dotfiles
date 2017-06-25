@@ -16,7 +16,7 @@ dir="$HOME/.dotfiles/common"
 
 #
 echo "backing up existing dotfiles..."
-for dotfile in "$HOME/.*"; 
+for dotfile in ${HOME}/.*; 
 do 
   echo "backup up $dotfile"
   mv $dotfile "$dotfile.bak"
