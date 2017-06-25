@@ -11,6 +11,9 @@ desktop/.backup/*
 !desktop/.backup/duplicity.sh
 !desktop/.backup/backup-list
 
+## do not include doctl information
+desktop/.config/doctl/*
+
 ## do not include atom compiled files
 desktop/.atom/*
 !desktop/.atom/config.cson

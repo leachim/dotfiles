@@ -21,7 +21,7 @@
     projectHome: "/home/michael/"
     telemetryConsent: "no"
   editor:
-    fontSize: 17
+    fontSize: 16
     invisibles: {}
     preferredLineLength: 160
     tabLength: 4

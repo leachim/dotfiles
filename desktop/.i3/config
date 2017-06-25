@@ -672,10 +672,10 @@ bar {
 # exec xautolock -detectsleep -locker 'i3lock -ti ~/Bilder/rainbow_dash_wallpaper_by_ancientkale-d3tjto3.png'
 
 ## Special keys
-#bindsym XF86MonBrightnessUp exec xbacklight -set $(echo "$(xbacklight -get) + 10" | bc)
-#bindsym XF86MonBrightnessDown exec xbacklight -set $(echo "$(xbacklight -get) -10" | bc)
-#bindsym XF86MonBrightnessUp+Shift exec xbacklight -set 100
-#bindsym XF86MonBrightnessDown+Shift exec xbacklight -set 0
+bindsym XF86MonBrightnessUp exec xbacklight -set $(echo "$(xbacklight -get) + 10" | bc)
+bindsym XF86MonBrightnessDown exec xbacklight -set $(echo "$(xbacklight -get) -10" | bc)
+bindsym XF86MonBrightnessUp+Shift exec xbacklight -set 100
+bindsym XF86MonBrightnessDown+Shift exec xbacklight -set 0
 bindsym XF86AudioRaiseVolume exec amixer set 'Master' 2%+
 bindsym XF86AudioLowerVolume exec amixer set 'Master' 2%-
 #bindsym XF86AudioMute exec amixer set 'Master' toggle
