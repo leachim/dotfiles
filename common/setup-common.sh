@@ -36,7 +36,7 @@ sleep 5
 
 ##
 echo "Installing Vim Plugins .."
-vim +BundleInstall +qall
+vim -u "None" +BundleInstall +qall
 
 ##
 echo "Configuring ZSH and Prezto .."
