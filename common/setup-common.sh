@@ -39,12 +39,12 @@ sleep 5
 
 ##
 echo "Installing Vim Plugins .."
-vim -u None +BundleInstall +qall
+vim -u None +PluginInstall +qall
 
 ##
 echo "Configuring ZSH and Prezto .."
 ##
-hash foo 2>/dev/null || { echo >&2 "I require foo but it's not installed.  Aborting."; exit 1; }
+hash zsh 2>/dev/null || { echo >&2 "I require zsh but it's not installed.  Aborting."; exit 1; }
 
 zsh -c 'setopt EXTENDED_GLOB;
 for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
