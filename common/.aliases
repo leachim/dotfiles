@@ -7,6 +7,14 @@ function changemode (){
 	xrandr --output DP1 --mode 1920x1080_60.00;
 }
 
+function mfigure (){
+    pdftk A=$1 cat end output $2 
+    mpdf-crop $2;
+    mv -f ${2%.pdf}-crop.pdf $2;
+    mpdf-convertToPNG $2;
+    rm -f $1;
+}
+
 #########################################
 ### Shortcuts                         ###
 #########################################
@@ -18,7 +26,7 @@ alias takeover="tmux detach -a"
 datediff () { d1=$(date -d $1 +%s);d2=$(date -d 'now' +%s);echo "$(( (d2 - d1) / 86400 )) days";}
 alias weather="curl http://wttr.in/Cham\?lang\=en"
 alias clock="date | cut -d ' ' -f 5"
-alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"Tage im Mai\t Tage im September \" && datediff 06/23/2016 && datediff 05/14/2017 && cal"
+alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"For what does it profit a man to gain the whole world and forfeit his soul?\" && echo \"Tage im Mai\t Tage im September \" && datediff 06/23/2016 && datediff 05/14/2017 && cal"
 alias ugit="git pull && git submodule update --recursive"
 function update-git () { for i in **; do cd $i; ugit; cd ..; done ; }
 alias timestamp="date +%Y_%m_%d-%H_%M"

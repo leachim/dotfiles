@@ -17,8 +17,8 @@ Plugin 'scrooloose/nerdcommenter'
 "Plugin 'garbas/vim-snipmate'
 "Plugin 'honza/vim-snippets'
 
-Plugin 'tpope/vim-fugitive'
-Plugin 'taglist.vim'
+"Plugin 'tpope/vim-fugitive'
+"Plugin 'taglist.vim'
 
 "Plugin 'scrooloose/nerdtree'
 
@@ -32,7 +32,7 @@ Plugin 'taglist.vim'
 " Plugins
 "Plugin 'scrooloose/syntastic'
 "better async alternative
-Plugin 'w0rp/ale'
+"Plugin 'w0rp/ale'
 
 " Plugin 'kien/ctrlp.vim'
 " Plugin 'bling/vim-airline'
@@ -45,10 +45,8 @@ Plugin 'w0rp/ale'
 ""Plugin 'Vim-R-Plugin'
 " Plugin 'taglist.vim'
 " Language support
-Plugin 'python.vim'
-Plugin 'python-mode/python-mode'
-Plugin 'JuliaEditorSupport/julia-vim'
-Plugin 'Valloric/YouCompleteMe'
+"Plugin 'JuliaEditorSupport/julia-vim'
+"Plugin 'Valloric/YouCompleteMe'
 ""Plugin 'c.vim'
 " Plugin 'sjl/gundo.vim'
 " Plugin 'terryma/vim-multiple-cursors'

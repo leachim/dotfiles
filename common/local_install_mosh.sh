@@ -22,9 +22,9 @@ mkdir build
 mkdir install
 
 cd build
-curl -L -O https://github.com/google/protobuf/releases/download/v3.3.0/protobuf-cpp-${PROTOBUF_VERSION}.tar.gz
-curl -L -O https://mosh.mit.edu/mosh-${MOSH_VERSION}.tar.gz
-curl -L -O ftp://ftp.gnu.org/gnu/ncurses/ncurses-6.0.tar.gz
+wget -L -O https://github.com/google/protobuf/releases/download/v3.3.0/protobuf-cpp-${PROTOBUF_VERSION}.tar.gz
+wget -L -O https://mosh.mit.edu/mosh-${MOSH_VERSION}.tar.gz
+wget -L -O ftp://ftp.gnu.org/gnu/ncurses/ncurses-6.0.tar.gz
 
 
 echo "================="
