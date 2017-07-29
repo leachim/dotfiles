@@ -8,8 +8,30 @@ call vundle#begin()
 
 Plugin 'VundleVim/Vundle.vim'
 
+" Status bar
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+
 " simple comment uncomment
 Plugin 'scrooloose/nerdcommenter'
+
+" autocomplete
+Plugin 'Valloric/YouCompleteMe'
+
+" file browser
+Plugin 'scrooloose/nerdtree'
+
+" syntax highlighting
+Plugin 'vim-syntastic/syntastic'
+" more modern async alternative
+"Plugin 'neomake/neomake'
+Plugin 'nvie/vim-flake8'
+
+" flexible search
+Plugin 'kien/ctrlp.vim'
+
+" vim integration
+Plugin 'tpope/vim-fugitive'
 
 " Dependencies for SnipMate
 "Plugin 'MarcWeber/vim-addon-mw-utils'
@@ -46,7 +68,6 @@ Plugin 'scrooloose/nerdcommenter'
 " Plugin 'taglist.vim'
 " Language support
 "Plugin 'JuliaEditorSupport/julia-vim'
-"Plugin 'Valloric/YouCompleteMe'
 ""Plugin 'c.vim'
 " Plugin 'sjl/gundo.vim'
 " Plugin 'terryma/vim-multiple-cursors'

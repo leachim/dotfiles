@@ -15,6 +15,10 @@
 # reload the configuration file, debugging only
 bindsym $mod+Shift+o reload
 
+exec --no-startup-id xmodmap -e 'keycode 108 = Alt_R' && xset -r 108
+exec --no-startup-id xmodmap -e 'remove Mod1 = Alt_R'
+exec --no-startup-id xmodmap -e 'add Mod4 = Alt_R'
+
 # change modifier to windows key
 set $mod Mod4
 set $alt Mod1
@@ -505,8 +509,8 @@ bindsym $mod+shift+m   exec xrandr --output HDMI-1 --auto --right-of eDP-1
 #bindsym Control+$alt exec chromium
 #bindsym Shift+Control+T exec ~/bin/touchpadtoggle.sh
 
-bindsym Print exec scrot
-bindsym $alt+Print exec scrotclip
+bindsym Print exec scrot 
+bindsym $alt+Print exec scrot --select
 
 
 # ==========================================================================================

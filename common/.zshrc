@@ -73,8 +73,8 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
 ## share history between terminals
-#unsetopt share_history
-setopt share_history
+unsetopt share_history
+#setopt share_history
 
 
 ### keep below

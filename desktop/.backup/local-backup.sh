@@ -10,3 +10,6 @@ dpkg --get-selections > ~/package-list
 duplicity --full-if-older-than 6M --volsize 500 --no-encryption --verbosity 5 $FILES $HOME sftp://storagebox/backup/$(hostname) 
 
 rm -f ~/package-list
+
+## howto restore
+# duplicity sft://storagebox/backup/$(hostname) to_restore

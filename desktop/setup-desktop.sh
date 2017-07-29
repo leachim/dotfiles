@@ -19,6 +19,9 @@ sudo apt-key adv --recv-keys --keyserver keys.gnupg.net E1F958385BFE2B6E
 #sudo sh -c "wget -qO- https://get.docker.io/gpg | apt-key add -"
 echo "docker official"
 sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+## Spotify
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BBEBDCB318AD50EC6865090613B00F1FD2C19886
+
 
 
 ## Install debian packages

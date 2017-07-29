@@ -71,7 +71,7 @@
 	# Standard diff is two sets of final changes. This introduces the original text before each side's changes.
 	# https://git-scm.com/docs/git-config#git-config-mergeconflictStyle
 [transfer]
-	fsckobjects = true
+    fsckobjects = true
 	# To combat repository corruption!
 	# Note: this global option applies during receive and transmit
 	# https://git-scm.com/docs/git-config#git-config-transferfsckObjects
