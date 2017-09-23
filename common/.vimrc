@@ -40,6 +40,11 @@ set mouse=
 " Set to auto read when a file is changed from the outside
 set autoread
 
+" timeout after key press
+"set notimeout
+"set ttimeoutlen=1000
+"set timeoutlen=2000 
+"set ttimeoutlen=1000
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => UI layout
@@ -340,7 +345,7 @@ vnoremap . :normal .<CR>
 " The following mappings (which require gvim), you can press Ctrl-Left or Ctrl-Right to go to the previous or next tabs, and can press Alt-Left or Alt-Right to move the current tab to the left or right.
 "nnoremap <C-Left> :tabprevious<CR>
 "nnoremap <C-Right> :tabnext<CR>
-"nnoremap <silent> <A-Left> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
+" "nnoremap <silent> <A-Left> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
 "nnoremap <silent> <A-Right> :execute 'silent! tabmove ' . tabpagenr()<CR>
 
 " Let 'tl' toggle between this and the last accessed tab
@@ -417,7 +422,7 @@ autocmd FileType conf,fstab       let b:comment_leader = '# '
 autocmd FileType tex              let b:comment_leader = '% '
 autocmd FileType mail             let b:comment_leader = '> '
 autocmd FileType vim              let b:comment_leader = '" '
-noremap <silent> <leader>cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
+noremap <silent> <leader>nc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
 noremap <silent> <leader>nn :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
 
 filetype plugin indent on
@@ -428,10 +433,11 @@ filetype plugin indent on
 """"""""""""""""""""""""""""""
 let g:airline_theme='minimalist'
 
+let g:airline_highlighting_cache = 1
 "let g:bufferline_echo = 0
         
 let g:airline#extensions#whitespace#enabled = 1
-let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#branch#enabled = 0
 let g:airline#extensions#hunks#non_zero_only = 1
 
 let g:airline#extensions#tabline#enabled = 1

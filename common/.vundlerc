@@ -20,6 +20,7 @@ Plugin 'Valloric/YouCompleteMe'
 
 " file browser
 Plugin 'scrooloose/nerdtree'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
 
 " syntax highlighting
 Plugin 'vim-syntastic/syntastic'

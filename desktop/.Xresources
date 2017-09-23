@@ -39,9 +39,14 @@
 !URxvt.color15:                 S_base3
 
 !!!! End solarized colorscheme settings !!!!
+URxvt.xftAntialias:     true
+URxvt.font:             xft:dejavu sans mono:size=13:antialias=true,hinting=true, xft:inconsolata:size=13:antialias=true:hinting=true 
+URxvt.boldFont:         xft:dejavu sans mono:size=13:antialias=true,hinting=true, xft:inconsolata:size=13:antialias=true:hinting=true 
+URxvt.italicFont:       xft:dejavu sans mono:size=13:antialias=true,hinting=true, xft:inconsolata:size=13:antialias=true:hinting=true 
+URxvt.bolditalicFont:   xft:dejavu sans mono:size=13:antialias=true,hinting=true, xft:inconsolata:size=13:antialias=true:hinting=true 
 
-URxvt.font:     xft:bitstream vera sans mono:size=12:antialias=true
-URxvt.boldFont: xft:bitstream vera sans mono:bold:size=12:antialias=true
+!URxvt.font:     xft:bitstream vera sans mono:size=12:antialias=true
+!URxvt.boldFont: xft:bitstream vera sans mono:bold:size=12:antialias=true
 
 !URxvt*color0:  #000000 // black
 !URxvt*color1:  #B40000 // red
