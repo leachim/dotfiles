@@ -1,3 +1,6 @@
+# Do not automatically add changes in duplicity script
+desktop/.backup/duplicity.sh
+
 ## keep python compiled files outside
 *.pyc
 
@@ -8,7 +11,6 @@ desktop/.offlineimap/*
 
 ## do not include backup information
 desktop/.backup/*
-!desktop/.backup/duplicity.sh
 !desktop/.backup/backup-list
 
 ## do not include doctl information
