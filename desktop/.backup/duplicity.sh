@@ -33,21 +33,23 @@ _SALT="IiNb6ckUGAJmw"
 _HASH="RMkyNZvpBzIZfyqPsvcnhihuUI16VMshVwKQJWvKL1PE9TYsttkUdo9aS5LUDmwAQzDRO8qlZti6Bib36cjBt0"
 
 printf "Please enter the correct password for encryption\n"
-_MYHASH=$(mkpasswd --method=sha-512 --salt=$_SALT --rounds=99999999)
+stty -echo
+read -s -p "Enter password: " _PASSPHRASE
+stty echo
+_MYHASH=$(mkpasswd --method=sha-512 --salt=$_SALT --rounds=99999999 --stdin <<< "$_PASSPHRASE")
 _MYHASH=${_MYHASH##*$}
 export PASSPHRASE=$_PASSPHRASE
 
 # check if password is correct
 if [ "$_MYHASH" != "$_HASH" ]; then
   printf "WRONG PASSWORD!"
-	unset _SALTA
-	unset _SALTB
+	unset _SALT
 	unset _HASH
 	unset SIGN_PASSPHRASE
 	unset _SIGN_KEY
 	unset PASSPHRASE
 	unset _PASSPHRASE
-    exit -1
+  exit -1
 fi
 
 ####################################
