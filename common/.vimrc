@@ -41,7 +41,9 @@ set mouse=
 set autoread
 
 " timeout after key press
-"set notimeout
+" https://stackoverflow.com/questions/14737429/how-to-disable-the-timeout-on-the-vim-leader-key
+set notimeout 
+set ttimeout
 "set ttimeoutlen=1000
 "set timeoutlen=2000 
 "set ttimeoutlen=1000
@@ -98,7 +100,7 @@ set t_vb=
 set tm=500
 
 " Add a bit extra margin to the left
-set foldcolumn=1
+"set foldcolumn=1
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -126,11 +128,26 @@ augroup vimrc_autocmds
     autocmd!
     " highlight characters past column 120
     autocmd Filetype python setlocal expandtab tabstop=4 shiftwidth=4
-    autocmd FileType python highlight Excess ctermbg=DarkGrey guibg=Black
+    autocmd FileType python highlight Excess guibg=Black
+    " autocmd FileType python highlight Excess ctermbg=DarkGrey guibg=Black
     autocmd FileType python match Excess /\%120v.*/
     autocmd FileType python set nowrap
     augroup END
 
+augroup configgroup
+    autocmd!
+    autocmd VimEnter * highlight clear SignColumn
+    autocmd BufWritePre *.php,*.py,*.js,*.txt,*.hs,*.java,*.md,*.rb :call <SID>StripTrailingWhitespaces()
+    autocmd BufEnter *.cls setlocal filetype=java
+    autocmd BufEnter *.zsh-theme setlocal filetype=zsh
+    autocmd BufEnter Makefile setlocal noexpandtab
+    autocmd BufEnter *.sh setlocal tabstop=2
+    autocmd BufEnter *.sh setlocal shiftwidth=2
+    autocmd BufEnter *.sh setlocal softtabstop=2
+    autocmd BufEnter *.py setlocal tabstop=4
+    autocmd BufEnter *.py setlocal expandtab
+    autocmd BufEnter *.md setlocal ft=markdown
+augroup END
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " backup
@@ -147,7 +164,6 @@ set noswapfile
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Text formatting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 
 " Use spaces instead of tabs
 set expandtab
@@ -179,20 +195,6 @@ set foldnestmax=10      " max 10 depth
 set foldenable          " don't fold files by default on open
 set foldlevelstart=10  " start with fold level of 1
 
-augroup configgroup
-    autocmd!
-    autocmd VimEnter * highlight clear SignColumn
-    autocmd BufWritePre *.php,*.py,*.js,*.txt,*.hs,*.java,*.md,*.rb :call <SID>StripTrailingWhitespaces()
-    autocmd BufEnter *.cls setlocal filetype=java
-    autocmd BufEnter *.zsh-theme setlocal filetype=zsh
-    autocmd BufEnter Makefile setlocal noexpandtab
-    autocmd BufEnter *.sh setlocal tabstop=2
-    autocmd BufEnter *.sh setlocal shiftwidth=2
-    autocmd BufEnter *.sh setlocal softtabstop=2
-    autocmd BufEnter *.py setlocal tabstop=4
-    autocmd BufEnter *.md setlocal ft=markdown
-augroup END
-
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -218,15 +220,10 @@ vnoremap <left> <nop>
 vnoremap <right> <nop>
 
 " With a map leader it's possible to do extra key combinations
-" like <leader>w saves the current file
-" let mapleader = "\"
-" let g:mapleader = "\"
+let mapleader = "\\"
 
 " remap esc to jk combination -> better than using Ctrl-c
 inoremap jk <Esc>
-nnoremap jk <Esc>
-inoremap kj <Esc>
-nnoremap kj <Esc>
 
 " Visual mode pressing * or # searches for the current selection
 " Super useful! From an idea by Michael Naumann
@@ -234,19 +231,39 @@ vnoremap <silent> * :call VisualSelection('f', '')<CR>
 vnoremap <silent> # :call VisualSelection('b', '')<CR>
 
 " Treat long lines as break lines (useful when moving around in them)
-map j gj
-map k gk
+"noremap j gj
+"noremap k gk
 
-" Disable highlight when <leader><cr> is pressed
-map <silent> <leader><cr> :noh<cr>
+" Disable highlight when <leader>n is pressed
+noremap <silent> <leader>n :noh<cr>
 
-" Smart way to move between windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
 
+" Windows 
+"Better window navigation
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
+
+" Open new split panes to right and bottom
+set splitbelow
+set splitright
+
+" quick navigation between two buffers
+" noremap <leader>j :bnext<cr>
+" noremap <leader>k :bprev<cr>
+nnoremap <leader>w :bprevious<CR>
+nnoremap <leader>Tabw :bnext<CR>
+" A list of your buffers can be shown after switching 
+nnoremap <A-n> :bnext<CR>:redraw<CR>:ls<CR>
+nnoremap <A-p> :bprevious<CR>:redraw<CR>:ls<CR>
+
+" cycle through windows
+nnoremap <Tab> <C-w><C-w>
+nnoremap <S-Tab> <C-w>w 
 " Close the current buffer
+"
+"
 "map <leader>bd :Bclose<cr>:tabclose<cr>gT
 
 " Close all the buffers
@@ -269,31 +286,20 @@ map <C-l> <C-W>l
 " nnoremap <leader>g :call RunGoFile()<CR>
 " vnoremap <leader>y "+y
 
-" tabs
-" movement
-nnoremap th  :tabfirst<CR>
-nnoremap tj  :tabnext<CR>
-nnoremap tk  :tabprev<CR>
-nnoremap tl  :tablast<CR>
+" tabs movement
+nnoremap <C-t>h  :tabfirst<CR>
+nnoremap <C-t>j  :tabnext<CR>
+nnoremap <C-t>k  :tabprev<CR>
+nnoremap <C-t>l  :tablast<CR>
 
-nnoremap tt  :tabedit<Space>
-nnoremap tn  :tabnext<Space>
-nnoremap tm  :tabmove<Space>
-nnoremap tc  :tabclose<CR>
-nnoremap to  :tabonly<CR>
-" map <C-t><k> :tabr<cr>
-" map <C-t><j> :tabl<cr>
-" map <C-t><l> :tabp<cr>
-" map <C-t><l> :tabn<cr>
+map <leader>te :tabedit<cr>
+map <leader>tn :tabnext<cr>
+map <leader>tp :tabprev<cr>
+map <leader>to :tabonly<cr>
+map <leader>tc :tabclose<cr>
+map <leader>tm :tabmove
 
-" map <leader>te :tabedit<cr>
-" map <leader>tn :tabnext<cr>
-" map <leader>tp :tabprev<cr>
-" map <leader>to :tabonly<cr>
-" map <leader>tc :tabclose<cr>
-" map <leader>tm :tabmove
-
-
+" buffer movement
 " Remove the Windows ^M - when the encodings gets messed up
 " noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
@@ -329,9 +335,11 @@ noremap <leader>yy "*Y
 " http://stackoverflow.com/a/8064607/127816
 vnoremap . :normal .<CR>
 
-
-
-
+" execute file (requires #!/usr/bin/program )
+nnoremap <leader>r :!%:p
+" execute as program
+nnoremap <buffer> <leader>p :exec '!python' shellescape(@%, 1)<cr>
+nnoremap <buffer> <leader>o :exec '!julia' shellescape(@%, 1)<cr>
 
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
@@ -444,6 +452,8 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
 
+" " Show just the filename
+let g:airline#extensions#tabline#fnamemod = ':t'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -544,6 +554,20 @@ let g:ctrlp_prompt_mappings = {
     \ 'AcceptSelection("e")': ['<c-t>'],
     \ 'AcceptSelection("t")': ['<cr>', '<2-LeftMouse>'],
     \ }
+
+" Use the nearest .git directory as the cwd
+let g:ctrlp_working_path_mode = 'r'
+
+" Use a leader instead of the actual named binding
+nmap <leader>f :CtrlP<cr>
+
+" Easy bindings for its various modes
+nmap <leader>bb :CtrlPBuffer<cr>
+nmap <leader>bm :CtrlPMixed<cr>
+nmap <leader>bs :CtrlPMRU<cr>
+
+" search functions
+let g:ctrlp_extensions = ['buffertag']
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

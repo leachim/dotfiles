@@ -15,6 +15,7 @@ function mfigure (){
     rm -f $1;
 }
 
+
 #########################################
 ### Shortcuts                         ###
 #########################################
@@ -22,12 +23,11 @@ alias zotero="/opt/Zotero_linux-x86_64/zotero"
 
 ## SYSTEM
 alias logoff="pkill -KILL -u michael"
-alias notify="paplay $HOME/.dotfiles/files/soft_beep.way"
 alias takeover="tmux detach -a"
 datediff () { d1=$(date -d $1 +%s);d2=$(date -d 'now' +%s);echo "$(( (d2 - d1) / 86400 )) days";}
 alias weather="curl http://wttr.in/Cham\?lang\=en"
 alias clock="date | cut -d ' ' -f 5"
-alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"For what does it profit a man to gain the whole world and forfeit his soul?\" && echo \"Tage im Mai\t Tage im September \" && datediff 09/15/2017 && datediff 06/23/2016 && cal"
+alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"For what does it profit a man to gain the whole world and forfeit his soul?\" && echo \"It is not difficult to change the world. It is difficult to change yourself.\" && echo \"Tage im Mai\t Tage im September \" && datediff 10/08/2017 && datediff 06/23/2016 && cal"
 alias ugit="git pull && git submodule update --recursive"
 function update-git () { for i in **; do cd $i; ugit; cd ..; done ; }
 alias timestamp="date +%Y_%m_%d-%H_%M"
@@ -51,6 +51,16 @@ alias m-timezone="timedatectl"
 alias m-rsync="rsync -azP"
 m-filesize () { echo "df -h" | sftp $1 ;}
 alias matlab-desktop="/home/michael/.matlab/bin/matlab &"
+
+## Alerts, a set of flexible alerts to notify about the end of a computation in terminal and tmux
+alias alert-visual="echo -e '\a'"
+alias alert-all="echo -ne \"\033]777;notify;$(hostname);$(date '+%Y-%m-%d %H:%M:%S');Computation completed!;\007\007\""
+alias alert-sound="aplay -q $HOME/.dotfiles/files/soft_beep.way"
+alias talert-visual="echo -ne '\033Ptmux;\033\a\033\\'"
+alias talert-all="echo -ne '\033Ptmux;\033\033]777;notify;$(hostname);$(date '+%Y-%m-%d %H:%M:%S');Computation completed!;\007\007\\033\\'"
+
+## Remote file system
+alias mount-library="sshfs -o allow_other -o ro storagebox:/library ~/mount"
 
 ## Latex & PDF viewer
 alias lat="latexmk"
@@ -89,6 +99,7 @@ function dig-close () { doctl compute droplet delete $(doctl compute droplet lis
 alias dig-status="doctl compute droplet list"
 dig-domain-status() { doctl compute domain records list $(doctl compute domain list | tail -n 1 | awk '{print $1}') ; } 
 function dig-access () { doctl compute ssh $(doctl compute droplet list | tail -n 1 |  awk '{print $1}') ; } 
+function dig-reboot() { doctl compute droplet-action reboot $(doctl compute droplet list | tail -n 1 | awk '{print $1}') ; }
 
 ## Git
 alias g="git"
@@ -172,6 +183,10 @@ function screenshot_to_text () {
     bash ~/.dotfiles/scripts/screenshot_to_text.sh; 
 }
 
+# compression on linux
+alias targz="tar czvf"
+alias tarbz="tar cjvf"
+alias tarxy="tar cJvf"
 function extract-helper {
  if [ -z "$1" ]; then
     # display usage if no parameters given

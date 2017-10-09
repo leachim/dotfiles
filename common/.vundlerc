@@ -31,8 +31,15 @@ Plugin 'nvie/vim-flake8'
 " flexible search
 Plugin 'kien/ctrlp.vim'
 
-" vim integration
+" git integration
 Plugin 'tpope/vim-fugitive'
+
+" multiple cursors
+Plugin 'terryma/vim-multiple-cursors'
+
+" look at
+" tpope/vim-dispatch
+" 
 
 " Dependencies for SnipMate
 "Plugin 'MarcWeber/vim-addon-mw-utils'
@@ -40,11 +47,7 @@ Plugin 'tpope/vim-fugitive'
 "Plugin 'garbas/vim-snipmate'
 "Plugin 'honza/vim-snippets'
 
-"Plugin 'tpope/vim-fugitive'
 "Plugin 'taglist.vim'
-
-"Plugin 'scrooloose/nerdtree'
-
 "Plugin 'nathanaelkane/vim-indent-guides'
 "Plugin 'Lokaltog/powerline'
 

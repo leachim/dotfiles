@@ -14,6 +14,8 @@ xset -b
 xset s off
 xset -dpms
 
+# quicker reaction rate
+xset r rate 300 30
 
 # added by Anaconda3 2.4.1 installer
 export PATH="/home/michael/.anaconda3/bin:/home/michael/.matlab/bin:/home/michael/.julia/bin:/home/michael/.local/bin:$PATH"

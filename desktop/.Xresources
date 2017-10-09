@@ -73,7 +73,7 @@ URxvt.externalBorder:	0
 URxvt.internalBorder:	0
 URxvt.jumpScroll:		true
 !-*- Perl extensions -*-
-URxvt.perl-ext-common: default,clipboard,selection-to-clipboard,pasta,matcher,keyboard-select
+URxvt.perl-ext-common: default,clipboard,selection-to-clipboard,pasta,matcher,keyboard-select,on_osc_seq_perl
 URxvt.iso14755: False
 URxvt.keysym.M-u:     perl:url-select:select_next
 URxvt.url-launcher:   /usr/bin/chromium
@@ -101,6 +101,8 @@ URxvt.clipboard.autocopy: true
 !URxvt.secondaryScroll:	true
 !URxvt.skipScroll:		false
 !URxvt.underlineURLs:	true
+URxvt.perl-lib: ~/.dotfiles/scripts/on_osc_seq_perl
+URxvt.bell-command: notify-send "rxvt-unicode: bell!"
 URxvt.urgentOnBell:	true
 URxvt.url-launcher:	chromium
 
