@@ -20,14 +20,25 @@ function mfigure (){
 ### Shortcuts                         ###
 #########################################
 alias zotero="/opt/Zotero_linux-x86_64/zotero"
+function retab () { python ~/.dotfiles/scripts/reindent.py $1 ; }
 
 ## SYSTEM
+alias lst="ls -lt"
 alias logoff="pkill -KILL -u michael"
 alias takeover="tmux detach -a"
 datediff () { d1=$(date -d $1 +%s);d2=$(date -d 'now' +%s);echo "$(( (d2 - d1) / 86400 )) days";}
-alias weather="curl http://wttr.in/Cham\?lang\=en"
-alias clock="date | cut -d ' ' -f 5"
-alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && weather && echo \"For what does it profit a man to gain the whole world and forfeit his soul?\" && echo \"It is not difficult to change the world. It is difficult to change yourself.\" && echo \"Tage im Mai\t Tage im September \" && datediff 10/08/2017 && datediff 06/23/2016 && cal"
+function wttr () {
+    # change Paris to your default location
+    curl -s -S -H "Accept-Language: en" wttr.in/"${1:-Munich}" | head -q -n -3 ; }
+alias weather="curl -s -S http://wttr.in/Cham\?lang\=en?m | head -q -n -3"
+function daily-quote () { 
+  quotearray=("Stilles bescheidenes Leben gibt mehr Glück als erfolgreiches Streben, verbunden mit beständiger Unruhe." "For what does it profit a man to gain the whole world and forfeit his soul?" "It is not difficult to change the world. It is difficult to change yourself."); 
+  n_quotes=${#quotearray[@]}+1
+  rand=$(($RANDOM%$n_quotes)) 
+  echo ${quotearray[$rand]} ; }
+alias clock="date | cut -d ' ' -f 4"
+alias daily-cal="ncal -A 1 -M -b -w"
+alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && echo \"\" && weather && echo \"Tage im Mai: $(datediff 10/08/2017)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
 alias ugit="git pull && git submodule update --recursive"
 function update-git () { for i in **; do cd $i; ugit; cd ..; done ; }
 alias timestamp="date +%Y_%m_%d-%H_%M"
@@ -83,6 +94,7 @@ function aws-login () { $(aws ecr get-login --no-include-email); }
 alias d="docker"
 alias dim="docker images"
 alias dps="docker ps"
+function do-bash () { docker exec -i -t $1 /bin/bash ; }
 alias do-count="docker ps -q | wc -l"
 function do-stopall () { docker container stop $(docker container ls -a -q) ; }
 function do-cleanup () { docker rm $(docker ps -qa --no-trunc --filter "status=exited"); docker rmi $(docker images --filter "dangling=true" -q --no-trunc) ; }
@@ -112,7 +124,7 @@ alias jup="jupyter notebook"
 
 ## Python
 alias i2="ipython2 -i --colors=Linux"
-alias i="ipython3 -i -c \"import numpy as np;from math import *;\" --colors=Linux"
+alias i="ipython3 -i -c \"import numpy as np;import pandas as pd;from math import *;\" --colors=Linux"
 # program to format python files
 mformat-python () { PYTHONPATH=~/Software/yapf python ~/Software/yapf/yapf --style google $1 ; }
 
@@ -372,6 +384,21 @@ backup-zotero () { bash $HOME/.backup/zotero-backup.sh; }
 backup-email () { gmvault sync -d $HOME/.mail --emails-only $1; }
 
 alias backup-package-list="dpkg --get-selections"
+
+function backup-conda-envs {
+	NOW=$(date "+%Y-%m-%d")
+    mkdir "$HOME/conda-$NOW"
+	ENVS=$(conda env list | grep '^\w' | cut -d' ' -f1)
+    while read -r env; do
+		source activate $env
+		conda env export > $HOME/conda-$NOW/$env.yml
+		echo "Exporting $env"
+        source deactivate
+    done <<< "$ENVS"
+    zip -r "$HOME/conda-$NOW.zip" "$HOME/conda-$NOW"
+    rm -rf "$HOME/conda-$NOW"
+}
+
 
 function backup-restore-signed {
     echo -e "Restore from $1 to $2"

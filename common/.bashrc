@@ -78,3 +78,5 @@ PROMPT_COMMAND='history -a; printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__g
 PS1="\[\e[34m\]\u\[\e[1;32m\]@\[\e[0;33m\]\h\[\e[35m\]:"
 PS1="$PS1\[\e[m\]\w\[\e[1;31m\]> \[\e[0m\]"
 #PS1="$PS1\[\e[0;38m\]\w\[\e[1;35m\]> \[\e[0m\]"
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

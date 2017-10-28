@@ -1,5 +1,5 @@
 [global]
-    font = Monospace 10
+    font = Monospace 12
 	#font = Cousine 10
 
     # Allow a small subset of html markup:
@@ -22,7 +22,7 @@
     #   %I  iconname (without its path)
     #   %p  progress value if set ([  0%] to [100%]) or nothing
     # Markup is allowed
-    format = "%a: <b>%s</b> %b"
+    format = "%a: <b>%s</b> %b %p"
     #format = "%a: <b>%s</b>\n%b"
 	
     # Sort messages by urgency.
@@ -67,7 +67,7 @@
     # The width can be negative.  In this case the actual width is the
     # screen width minus the width defined in within the geometry option.
     #geometry = "300x5-30+20"
-	geometry = "700x3+240+0"
+	geometry = "800x5+240+0"
 	
     # Shrink window if it's smaller than the width.  Will be ignored if
     # width is 0.
@@ -104,7 +104,7 @@
     sticky_history = yes
 
     # Maximum amount of notifications kept in history
-    history_length = 40
+    history_length = 60
 
     # Display indicators for URLs (U) and actions (A).
     show_indicators = yes
@@ -117,13 +117,13 @@
     # Draw a line of "separator_height" pixel height between two
     # notifications.
     # Set to 0 to disable.
-    separator_height = 2
+    separator_height = 5
 
     # Padding between text and separator.
     padding = 8
 
     # Horizontal padding.
-    horizontal_padding = 8
+    horizontal_padding = 10
 
     # Define a color for the separator.
     # possible values are:
@@ -181,13 +181,13 @@
     background = "#2c2c2e"
     #foreground = "#888888"
     foreground = "#88b090"
-    timeout = 10
+    timeout = 30
 
 [urgency_normal]
     background = "#2c2c2e"
     #foreground = "#ffffff"
     foreground = "#ccdc90" 
-    timeout = 10
+    timeout = 0
 
 [urgency_critical]
     background = "#900000"
@@ -200,6 +200,10 @@
     summary = "*"
     format = ""
 
+[NetworkManager]
+    appname = NetworkManager
+    urgency = low
+    timeout = 10
 # i3 colors
 #color_good      = "#88b090"
 #color_degraded  = "#ccdc90"
@@ -225,23 +229,23 @@
 # to find fitting options for rules.
 
 
-[icedove]
-  appname = Icedove
-  summary = "*New*"
-  foreground = "#f2c261"
-  timeout = 10
-
 [dropbox_added]
   appname = Dropbox
   summary = "*added*"
   foreground = "#9079f2"
-  timeout = 10
+  timeout = 20
 
 [dropbox_deleted]
   appname = Dropbox
   summary = "*deleted*"
   foreground = "#ff3377"
-  timeout = 10
+  timeout = 20
+
+[zotero]
+  appname = Zotero
+  summary = "*ZotFile*"
+  urgency = normal
+  timeout = 20
 
 #[espeak]
 #    summary = "*"

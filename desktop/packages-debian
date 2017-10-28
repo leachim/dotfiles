@@ -87,6 +87,8 @@ mtools
 p7zip
 # hardware sensor information logging daemon
 sensord
+# fuzzy command line and vim search 
+silversearcher-ag
 # control and monitor storage systems using S.M.A.R.T.
 smartmontools
 # support logitech unifying adapter (mouse and keyboard battery)

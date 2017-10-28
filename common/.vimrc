@@ -1,12 +1,8 @@
-set nocompatible
-
-" Vundle
-source ~/.vundlerc
+"set nocompatible
 
 " Enable syntax processing and highlighting
 syntax enable
 syntax on
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
@@ -102,65 +98,6 @@ set tm=500
 " Add a bit extra margin to the left
 "set foldcolumn=1
 
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Colors and Fonts
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" 256 colors
-set t_Co=256
-colorscheme solarized
-set background=dark
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" language and encoding support
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" Set utf8 as standard encoding and en_US as the standard language
-set encoding=utf8
-
-" Use Unix as the standard file type
-set ffs=unix,dos,mac
-
-" Python
-augroup vimrc_autocmds
-    autocmd!
-    " highlight characters past column 120
-    autocmd Filetype python setlocal expandtab tabstop=4 shiftwidth=4
-    autocmd FileType python highlight Excess guibg=Black
-    " autocmd FileType python highlight Excess ctermbg=DarkGrey guibg=Black
-    autocmd FileType python match Excess /\%120v.*/
-    autocmd FileType python set nowrap
-    augroup END
-
-augroup configgroup
-    autocmd!
-    autocmd VimEnter * highlight clear SignColumn
-    autocmd BufWritePre *.php,*.py,*.js,*.txt,*.hs,*.java,*.md,*.rb :call <SID>StripTrailingWhitespaces()
-    autocmd BufEnter *.cls setlocal filetype=java
-    autocmd BufEnter *.zsh-theme setlocal filetype=zsh
-    autocmd BufEnter Makefile setlocal noexpandtab
-    autocmd BufEnter *.sh setlocal tabstop=2
-    autocmd BufEnter *.sh setlocal shiftwidth=2
-    autocmd BufEnter *.sh setlocal softtabstop=2
-    autocmd BufEnter *.py setlocal tabstop=4
-    autocmd BufEnter *.py setlocal expandtab
-    autocmd BufEnter *.md setlocal ft=markdown
-augroup END
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" backup
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" Turn backup off, since most stuff is in SVN, git et.c anyway...
-set nobackup
-set nowb
-set noswapfile
-" If you really need it
-" set directory=~/.vim/
-
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Text formatting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -195,11 +132,52 @@ set foldnestmax=10      " max 10 depth
 set foldenable          " don't fold files by default on open
 set foldlevelstart=10  " start with fold level of 1
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" language and encoding support
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Set utf8 as standard encoding and en_US as the standard language
+set encoding=utf8
 
+" Use Unix as the standard file type
+set ffs=unix,dos,mac
+
+" Python
+augroup vimrc_autocmds
+    autocmd!
+    " highlight characters past column 120
+    autocmd Filetype python setlocal expandtab tabstop=4 shiftwidth=4
+    autocmd FileType python highlight Excess guibg=Black
+    " autocmd FileType python highlight Excess ctermbg=DarkGrey guibg=Black
+    autocmd FileType python match Excess /\%120v.*/
+    autocmd FileType python set nowrap
+    augroup END
+
+augroup configgroup
+    autocmd!
+    autocmd VimEnter * highlight clear SignColumn
+    autocmd BufWritePre *.php,*.py,*.js,*.txt,*.hs,*.java,*.md,*.rb :call <SID>StripTrailingWhitespaces()
+    autocmd BufEnter *.cls setlocal filetype=java
+    autocmd BufEnter *.zsh-theme setlocal filetype=zsh
+    autocmd BufEnter Makefile setlocal noexpandtab
+    autocmd BufEnter *.sh setlocal tabstop=2
+    autocmd BufEnter *.sh setlocal shiftwidth=2
+    autocmd BufEnter *.sh setlocal softtabstop=2
+    " autocmd BufEnter *.py setlocal tabstop=4
+    " autocmd BufEnter *.py setlocal expandtab
+    autocmd BufEnter *.md setlocal ft=markdown
+augroup END
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" backup
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Turn backup off, since most stuff is in SVN, git et.c anyway...
+set nobackup
+set nowb
+set noswapfile
+" If you really need it
+" set directory=~/.vim/
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Moving around in vim
@@ -222,21 +200,102 @@ vnoremap <right> <nop>
 " With a map leader it's possible to do extra key combinations
 let mapleader = "\\"
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Load plugins (using vim-plug)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+call plug#begin('~/.vim/plugged')
+
+" Status bar
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+" simple comment uncomment
+Plug 'scrooloose/nerdcommenter'
+
+" autocomplete
+Plug 'Valloric/YouCompleteMe'
+
+" file browser
+Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+
+" syntax highlighting
+" Plugin 'vim-syntastic/syntastic'
+" more modern async alternative
+"Plugin 'neomake/neomake'
+" Plugin 'nvie/vim-flake8'
+Plug 'w0rp/ale'
+" syntax support
+Plug 'sheerun/vim-polyglot'
+" indendation autodetect
+Plug 'tpope/vim-sleuth'
+
+" flexible search 
+"Plugin 'kien/ctrlp.vim' -> replaced by fzf
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'mileszs/ack.vim'
+
+" git integration
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+
+" multiple cursors
+Plug 'terryma/vim-multiple-cursors'
+
+" vim improvements
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-commentary'
+
+" combine vim with tmux
+Plug 'christoomey/vim-tmux-navigator'
+
+" distraction free writing
+Plug 'junegunn/goyo.vim'
+
+" color scheme
+Plug 'altercation/vim-colors-solarized'
+
+call plug#end()
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Colors and Fonts
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" 256 colors
+set t_Co=256
+colorscheme solarized
+set background=dark
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Shortcuts
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 " remap esc to jk combination -> better than using Ctrl-c
 inoremap jk <Esc>
+" Treat long lines as break lines (useful when moving around in them)
+noremap j gj
+noremap k gk
 
 " Visual mode pressing * or # searches for the current selection
 " Super useful! From an idea by Michael Naumann
 vnoremap <silent> * :call VisualSelection('f', '')<CR>
 vnoremap <silent> # :call VisualSelection('b', '')<CR>
 
-" Treat long lines as break lines (useful when moving around in them)
-"noremap j gj
-"noremap k gk
+" toggle scrolling synchronously
+nnoremap <leader>sc :vs<cr>:set scrollbind cursorbind cursorline<cr><c-w><c-w>:set scrollbind cursorbind cursorline<cr><c-w><c-w>
+
 
 " Disable highlight when <leader>n is pressed
 noremap <silent> <leader>n :noh<cr>
 
+" work with terminal
+noremap ,r :!tmux send-keys -t right Up C-m <CR><CR>
+noremap ,c :!tmux send-keys -t right C-c "a" "clear" C-m Up C-u <CR><CR>
+noremap <silent> <leader>e :terminal<CR>
 
 " Windows 
 "Better window navigation
@@ -253,17 +312,13 @@ set splitright
 " noremap <leader>j :bnext<cr>
 " noremap <leader>k :bprev<cr>
 nnoremap <leader>w :bprevious<CR>
-nnoremap <leader>Tabw :bnext<CR>
-" A list of your buffers can be shown after switching 
-nnoremap <A-n> :bnext<CR>:redraw<CR>:ls<CR>
-nnoremap <A-p> :bprevious<CR>:redraw<CR>:ls<CR>
+nnoremap <leader><S-w> :bnext<CR>
 
 " cycle through windows
 nnoremap <Tab> <C-w><C-w>
 nnoremap <S-Tab> <C-w>w 
+
 " Close the current buffer
-"
-"
 "map <leader>bd :Bclose<cr>:tabclose<cr>gT
 
 " Close all the buffers
@@ -323,9 +378,9 @@ noremap <leader>yy "*Y
 "let g:EasyMotion_leader_key = '<Space>'
 
 " copy paste with urxvt and F7
-:map <F7> :w !xclip<CR><CR>
-:vmap <F7> "*y
-:map <S-F7> :r!xclip -o<CR>
+" :map <F7> :w !xclip<CR><CR>
+" :vmap <F7> "*y
+" :map <S-F7> :r!xclip -o<CR>
 
 " Split windows with | and -
 "nnoremap <silent> \| <C-w>v
@@ -340,6 +395,10 @@ nnoremap <leader>r :!%:p
 " execute as program
 nnoremap <buffer> <leader>p :exec '!python' shellescape(@%, 1)<cr>
 nnoremap <buffer> <leader>o :exec '!julia' shellescape(@%, 1)<cr>
+
+" commenting
+noremap <silent> <leader>nc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
+noremap <silent> <leader>nn :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
 
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
@@ -411,13 +470,20 @@ map <leader>ss :setlocal spell!<cr>
 "map <leader>sa zg
 "map <leader>s? z=
 
-" w0rp/ale, syntax checking
-"let g:ale_lint_on_save = 1
-"let g:ale_lint_on_text_changed = 0
-" You can disable this option too
-" " if you don't want linters to run on opening a file
-"let g:ale_lint_on_enter = 0
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Custom commands
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"  " I always hit ":W" instead of ":w" because I linger on the shift key...
+"  command! Q q
+"  command! W w
+
+"  " Trim spaces at EOL and retab. I run `:CLEAN` a lot to clean up files.
+"  command! TEOL %s/\s\+$//
+"  command! CLEAN retab | TEOL
+
+"  " Close all buffers except this one
+"  command! BufCloseOthers %bd|e#
 
 """"""""""""""""""""""""""""""
 " => Commenting
@@ -430,8 +496,6 @@ autocmd FileType conf,fstab       let b:comment_leader = '# '
 autocmd FileType tex              let b:comment_leader = '% '
 autocmd FileType mail             let b:comment_leader = '> '
 autocmd FileType vim              let b:comment_leader = '" '
-noremap <silent> <leader>nc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
-noremap <silent> <leader>nn :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
 
 filetype plugin indent on
 
@@ -451,6 +515,9 @@ let g:airline#extensions#hunks#non_zero_only = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
+
+" Show ale error in airline
+let g:airline#extensions#ale#enabled = 1
 
 " " Show just the filename
 let g:airline#extensions#tabline#fnamemod = ':t'
@@ -522,54 +589,77 @@ let g:NERDTrimTrailingWhitespace = 1
 "set statusline+=%{SyntasticStatuslineFlag()}
 "set statusline+=%*
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_mode="passive"
-let g:syntastic_enable_signs=0
-
-let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes':   [],'passive_filetypes': [] }
-noremap <C-w>e :SyntasticCheck<CR>
-noremap <C-w>q :SyntasticToggleMode<CR>
-
-" ignore certain warnings
-let g:syntastic_quiet_messages={'level':'warnings'}
-let g:syntastic_python_checker_args = '--ignore=E402'
-let g:syntastic_python_flake8_post_args='--ignore=E402'
-
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
+" let g:syntastic_mode="passive"
+" let g:syntastic_enable_signs=0
+"
+" let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes':   [],'passive_filetypes': [] }
+" noremap <C-w>e :SyntasticCheck<CR>
+" noremap <C-w>q :SyntasticToggleMode<CR>
+"
+" " ignore certain warnings
+" let g:syntastic_quiet_messages={'level':'warnings'}
+" let g:syntastic_python_checker_args = '--ignore=E402'
+" let g:syntastic_python_flake8_post_args='--ignore=E402'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" CTRLP 
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
+" FZF (replaces Ctrl-P, FuzzyFinder and Command-T)
+set rtp+=~/.dotfiles/dependencies/fzf
+nmap ; :buffers<CR>
+nmap <Leader>f :files<CR>
+nmap <Leader>a :ag<CR>
 
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-  \ 'file': '\v\.(exe|so|dll)$',
-  \ 'link': 'some_bad_symbolic_links',
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ack.vim
+" " Tell ack.vim to use ag (the Silver Searcher) instead
+let g:ackprg = 'ag --vimgrep'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" GitGutter
+" " GitGutter styling to use · instead of +/-
+let g:gitgutter_sign_added = '∙'
+let g:gitgutter_sign_modified = '∙'
+let g:gitgutter_sign_removed = '∙'
+let g:gitgutter_sign_modified_removed = '∙'
+
+" " Highlight YAML frontmatter in Markdown files
+" let g:vim_markdown_frontmatter = 1
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ALE
+let g:ale_sign_warning = '▲'
+let g:ale_sign_error = '✗'
+highlight link ALEWarningSign String
+highlight link ALEErrorSign Title
+
+let g:ale_linters = {
+  \ 'python': ['autopep8'] ,
   \ }
+"let g:ale_lint_on_save = 1
+let g:ale_lint_on_text_changed = 1
+" You can disable this option too
+" " if you don't want linters to run on opening a file
+"let g:ale_lint_on_enter = 0
 
-let g:ctrlp_prompt_mappings = {
-    \ 'AcceptSelection("e")': ['<c-t>'],
-    \ 'AcceptSelection("t")': ['<cr>', '<2-LeftMouse>'],
-    \ }
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" tmux  
+let g:tmux_navigator_no_mappings = 1
+" Update all buffers before navigating from Vim to tmux pane
+let g:tmux_navigator_save_on_switch = 1
+" Disable tmux navigator when zooming the Vim pane
+let g:tmux_navigator_disable_when_zoomed = 1
 
-" Use the nearest .git directory as the cwd
-let g:ctrlp_working_path_mode = 'r'
+nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
+nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
+nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
+nnoremap <silent> <C-/> :TmuxNavigatePrevious<cr>
 
-" Use a leader instead of the actual named binding
-nmap <leader>f :CtrlP<cr>
-
-" Easy bindings for its various modes
-nmap <leader>bb :CtrlPBuffer<cr>
-nmap <leader>bm :CtrlPMixed<cr>
-nmap <leader>bs :CtrlPMRU<cr>
-
-" search functions
-let g:ctrlp_extensions = ['buffertag']
-
-
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Helper functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! ToggleNumber()
     if(&relativenumber == 1)
@@ -606,9 +696,6 @@ endfunction
 " "
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Helper functions
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! CmdLine(str)
     exe "menu Foo.Bar :" . a:str
     emenu Foo.Bar
@@ -636,7 +723,19 @@ function! VisualSelection(direction, extra_filter) range
     let @" = l:saved_reg
 endfunction
 
+function! ProseMode()
+  call goyo#execute(0, [])
+  set spell noci nosi noai nolist noshowmode noshowcmd
+  set complete+=s
+  set bg=light
+  if !has('gui_running')
+    let g:solarized_termcolors=256
+  endif
+  colors solarized
+endfunction
 
+command! ProseMode call ProseMode()
+nmap ,p :ProseMode<CR>
 " " Don't close window, when deleting a buffer
 " command! Bclose call <SID>BufcloseCloseIt()
 " function! <SID>BufcloseCloseIt()
