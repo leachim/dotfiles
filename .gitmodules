@@ -13,9 +13,6 @@
 [submodule "common/.tmux/plugins/tmux-yank"]
 	path = common/.tmux/plugins/tmux-yank
     url = https://github.com/tmux-plugins/tmux-yank.git
-[submodule "common/prezto"]
-	path = common/prezto
-	url = https://github.com/sorin-ionescu/prezto.git
 [submodule "common/.zprezto"]
 	path = common/.zprezto
 	url = https://github.com/sorin-ionescu/prezto.git
