@@ -5,7 +5,7 @@ sudo apt-get install firmware-iwlwifi
 
 ## support graphics card
 # linux, nvidia, non-free
-nvidia-kernel-dkms
+#nvidia-kernel-dkms
 
 ## backlight issues with thinkpad
 # edit /etc/default/grub

@@ -26,6 +26,9 @@ tmux
 vim
 zsh
 #########################################################
+## docker
+docker.io
+#########################################################
 ## Security
 audispd-plugins
 auditd
@@ -39,6 +42,9 @@ selinux-utils
 setools-gui
 # Forensic tool to find hidden processes and ports
 #!unhide
+#
+apt-transport-https
+software-properties-common
 #########################################################
 ## Other
 apt-listbugs
@@ -58,6 +64,8 @@ autocutsel
 autojump
 # sound signal
 beep
+# build projects
+cmake
 # tool to colorize 'diff' output
 colordiff
 # good diff tool for git
@@ -165,8 +173,8 @@ pdftk
 poppler-utils
 #########################################################
 ## Programming
-eclipse
-eclipse-cdt
+#eclipse
+#eclipse-cdt
 # automatic annotation
 doxygen
 geany
@@ -175,20 +183,10 @@ haskell-platform
 # Java
 default-jre
 default-jdk
-# Python
-pyhoca-cli
-pyhoca-gui
-python3
-python-gnomekeyring
-python-pip
-python-requests
-python-requests-oauthlib
-# R
-r-base
-r-base-dev
-bioperl
+# Go
+golang
+# Matlab/Octave
 octave
-subversion
 #########################################################
 ## Virtualisation
 # python virtual environments
@@ -248,6 +246,11 @@ remmina
 #tor
 unison
 #########################################################
+## Crypto
+gnupg2
+# makepasswd command
+whois 
+#########################################################
 ## Writing & Citation management
 biber
 # convert bibliography to html format
@@ -270,5 +273,4 @@ texlive-science
 texlive-xetex
 texstudio
 xournal
-#!zotero-standalone
 murrine-themes

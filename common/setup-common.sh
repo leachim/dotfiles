@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "First install vim git zsh curl"
+exit 1
 # sudo apt-get install vim git zsh curl conky exuberant-ctags
 
 ## Intro
@@ -9,6 +11,7 @@ echo "The following packages should be installed: vim git zsh curl (conky)"
 hash git 2>/dev/null || { echo >&2 "I require git but it's not installed.  Aborting."; exit 1; }
 hash vim 2>/dev/null || { echo >&2 "I require vim but it's not installed.  Aborting."; exit 1; }
 hash curl 2>/dev/null || { echo >&2 "I require curl but it's not installed.  Aborting."; exit 1; }
+hash zsh 2>/dev/null || { echo >&2 "I require zsh but it's not installed.  Aborting."; exit 1; }
 
 ##
 echo "symlinking dotfiles..."
@@ -39,13 +42,16 @@ sleep 5
 
 ##
 echo "Installing Vim Plugins .."
-vim -u None +PlugInstall 
+# install plug.vim for vim
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+# and for nvim
+curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+vim +PlugInstall 
 
 ##
 echo "Configuring ZSH and Prezto .."
-##
-hash zsh 2>/dev/null || { echo >&2 "I require zsh but it's not installed.  Aborting."; exit 1; }
-
 zsh -c 'setopt EXTENDED_GLOB;
 for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
     ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"

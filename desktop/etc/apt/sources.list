@@ -14,31 +14,24 @@ deb-src http://ftp.debian.org/debian/ testing-updates main contrib non-free
 
 #### unstable #########
 
-#deb http://ftp.debian.org/debian unstable main contrib non-free
+deb http://ftp.debian.org/debian unstable main contrib non-free
 #deb-src http://ftp.debian.org/debian unstable main contrib non-free
 
 #### other packages ########
 
-# jessie-backports, previously on backports.debian.org
-#deb http://ftp.de.debian.org/debian/ jessie-backports main
-#deb-src http://ftp.de.debian.org/debian/ jessie-backports main
-
-# Dropbox
-# sudo apt-key adv --keyserver pgp.mit.edu --recv-keys 5044912E
-deb http://linux.dropbox.com/debian jessie main
+# Docker CE
+deb [arch=amd64] https://download.docker.com/linux/debian stretch stable
+# deb-src [arch=amd64] https://download.docker.com/linux/debian stretch stable
+# deb-src http://packages.x2go.org/debian wheezy main
 
 # Oracle Virtualbox
-# http://www.virtualbox.org/wiki/Linux_Downloads
-# Secure Apt: wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- |  apt-key add -
-deb http://download.virtualbox.org/virtualbox/debian jessie contrib
+deb http://download.virtualbox.org/virtualbox/debian stretch contrib
 
 # Vagga, https://github.com/tailhook/vagga
 deb [arch=amd64 trusted=yes] http://ubuntu.zerogw.com vagga main
 
 # Tor http://www.torproject.org/docs/debian.html.en
-# Secure APT - gpg --keyserver keys.gnupg.net --recv 886DDD89
-# gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add - 
-#deb http://deb.torproject.org/torproject.org wheezy main
+deb http://deb.torproject.org/torproject.org stretch main
 
 # X2Go - everywhere@home : http://www.x2go.org/doku.php/start
 # Secure APT: apt-key adv --recv-keys --keyserver keys.gnupg.net E1F958385BFE2B6E

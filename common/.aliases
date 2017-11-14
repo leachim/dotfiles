@@ -32,7 +32,17 @@ function wttr () {
     curl -s -S -H "Accept-Language: en" wttr.in/"${1:-Munich}" | head -q -n -3 ; }
 alias weather="curl -s -S http://wttr.in/Cham\?lang\=en?m | head -q -n -3"
 function daily-quote () { 
-  quotearray=("Stilles bescheidenes Leben gibt mehr Glück als erfolgreiches Streben, verbunden mit beständiger Unruhe." "For what does it profit a man to gain the whole world and forfeit his soul?" "It is not difficult to change the world. It is difficult to change yourself."); 
+  quotearray=("Stilles bescheidenes Leben gibt mehr Glück als erfolgreiches Streben, verbunden mit beständiger Unruhe." 
+              "For what does it profit a man to gain the whole world and forfeit his soul?"
+              "It is not difficult to change the world. It is difficult to change yourself."
+              "All models are wrong, but some are useful. (George E. P. Box)"
+              "An approximate answer to the right problem is worth a good deal more than an exact answer to an approximate problem. (John Tukey)"
+              "To call in the statistician after the experiment is done may be no more than asking him to perform a post-mortem examination: he may be able to say what the experiment died of. (Ronald Fisher)"
+              "Statisticians, like artists, have the bad habit of falling in love with their models. (George Box)"
+              "Prediction is very difficult, especially about the future. (Niels Bohr)"
+              "The best thing about being a statistician is that you get to play in everyone's backyard. (John Tukey)"
+              "All we know about the world teaches us that the effects of A and B are always different - in some decimal place - for any A and B. Thus asking \"are the effects different?\" is foolish. (Tukey)"
+              ); 
   n_quotes=${#quotearray[@]}+1
   rand=$(($RANDOM%$n_quotes)) 
   echo ${quotearray[$rand]} ; }
@@ -103,7 +113,7 @@ function do-cleanup () { docker rm $(docker ps -qa --no-trunc --filter "status=e
 function do-export () { docker save $1 > $1.tar; }
 
 ## Digital Ocean
-function dig-create() { doctl compute droplet create glaux-web --image 25572872 --region $1 --size 512mb --ssh-keys 8c:7e:36:3e:d0:f5:98:d7:46:86:b5:78:7d:2e:9a:1e &&
+function dig-create() { doctl compute droplet create glaux-web --image 29006376 --region $1 --size 512mb --ssh-keys 8c:7e:36:3e:d0:f5:98:d7:46:86:b5:78:7d:2e:9a:1e &&
 sleep 5 && doctl compute firewall add-droplets de489db5-1e04-40e6-891c-8bdfa47745c8 --droplet-ids $(doctl compute droplet list | tail -n 1 |  awk '{print $1}') && sleep 10 ; } 
 function dig-connect() { sslocal -c /etc/shadowsocks.json -s $(doctl compute droplet list | tail -n 1 |  awk '{print $3}') ; }
 function dig-domain() { doctl compute domain records create $(doctl compute domain list | tail -n 1 | awk '{print $1}') --record-type A --record-name web --record-data $(doctl compute droplet list | tail -n 1 |  awk '{print $3}') --record-ttl 180 ; }

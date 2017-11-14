@@ -1,6 +1,11 @@
 # Do not automatically add changes in duplicity script
 desktop/.backup/duplicity.sh
 
+# do not store all configurations
+common/.vim
+common/.config/*
+!common/.config/nvim/
+
 ## keep python compiled files outside
 *.pyc
 

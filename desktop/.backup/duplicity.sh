@@ -6,12 +6,12 @@
 _TIMESTAMP=`date +%Y_%m_%d-%H_%M`
 _SRC="/home/$(whoami)/.encrypted/" ## directory to backup
 _DEST="/home/$(whoami)/.backup/" ## backup directory
-#_RESTORE="/home/$(whoami)/.restore/" ## restore directory, potential restore directory
+# _RESTORE="/home/$(whoami)/.restore/" ## restore directory, potential restore directory
 _EXCLUDEDIR="**excludeFromBackup/**" ## excluded from backup
 _LOG="/home/$(whoami)/duplicity-backup-$_TIMESTAMP.log" ## log file
 
 ### Sign archives
-_SIGN_KEY=4FF90AD4
+_SIGN_KEY=747C915A4FF90AD4
 export SIGN_PASSPHRASE=""
 
 ####################################

@@ -1,3 +1,4 @@
+# Use nameserver in connection with network manager through /etc/dhcp/dhclient.conf
 ## open dns family shield
 nameserver 208.67.220.220
 nameserver 208.67.222.222
@@ -8,6 +9,3 @@ nameserver 213.73.91.35
 #nameserver 8.8.4.4
 #nameserver 2001:4860:4860::8888
 #nameserver 2001:4860:4860::8844
-## open dns
-#nameserver 208.67.222.222
-#nameserver 208.67.220.220

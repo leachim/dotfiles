@@ -4,8 +4,8 @@ Pin-Priority: 900
 
 Package: *
 Pin: release a=unstable
-Pin-Priority: -10
+Pin-Priority: -20
 
 #Package: *
 #Pin: release a=stable
-#Pin-Priority: -20
+#Pin-Priority: -10
