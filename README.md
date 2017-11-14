@@ -12,4 +12,4 @@ dotfiles and how to setup new system
 07. install hardware specific stuff
 08. install desktop
 09. install non-free programs such as mathematica, matlab
-10. download and setup accounts in chrome, iceowl/thunderbird
+10. download and setup accounts in chrome, firefox, thunderbird

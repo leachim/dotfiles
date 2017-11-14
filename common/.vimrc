@@ -214,7 +214,14 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'scrooloose/nerdcommenter'
 
 " autocomplete
-Plug 'Valloric/YouCompleteMe'
+" Plug 'Shougo/deoplete.nvim'
+" Plug 'roxma/nvim-yarp'
+" Plug 'roxma/vim-hug-neovim-rpc'
+Plug 'Valloric/YouCompleteMe' 
+" Installation issue with YCM:
+" cd to plugged/YouCompleteMe/third_party/ycmd
+" git -c transfer.fsckobjects=false submodule update --init third_party/requests
+" git submodule update --init --recursive
 
 " file browser
 Plug 'scrooloose/nerdtree'

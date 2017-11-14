@@ -1,6 +1,3 @@
-[submodule "desktop/.i3/py3status"]
-	path = desktop/.i3/py3status
-    url = git@github.com:leachim/py3status.git
 [submodule "common/.tmux/plugins/tpm"]
 	path = common/.tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm

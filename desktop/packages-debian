@@ -250,6 +250,8 @@ unison
 gnupg2
 # makepasswd command
 whois 
+# Ubuntu's snap systems
+snapd
 #########################################################
 ## Writing & Citation management
 biber
