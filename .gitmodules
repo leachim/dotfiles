@@ -13,6 +13,6 @@
 [submodule "common/.zprezto"]
 	path = common/.zprezto
 	url = https://github.com/sorin-ionescu/prezto.git
-[submodule "common/.vim/bundle/Vundle.vim"]
-	path = common/.vim/bundle/Vundle.vim
-	url = https://github.com/VundleVim/Vundle.vim.git
+[submodule "desktop/.i3/py3status"]
+	path = desktop/.i3/py3status
+	url = git@github.com:leachim/py3status.git
