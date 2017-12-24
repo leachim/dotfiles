@@ -38,10 +38,10 @@ bindsym $mod+s exec "rofi -show ssh -terminal urxvt"
 exec --no-startup-id xsetroot -solid "#007799"
 
 # switch between the current and the previously focused one
-bindsym $mod+Escape workspace back_and_forth
-workspace_auto_back_and_forth no
+bindsym $alt+j workspace back_and_forth
+workspace_auto_back_and_forth yes
 
-## half-full screen, full screen keeping info bar
+# half-full screen, full screen keeping info bar
 bindsym $mod+Shift+f focus parent; fullscreen; focus child
 
 # Jump to browser
@@ -51,7 +51,7 @@ bindsym $mod+Shift+f focus parent; fullscreen; focus child
 bindsym $mod+y floating disable
 bindsym $mod+Next floating disable
 
-bindsym $alt+c exec /usr/bin/chromium
+bindsym $alt+b exec /usr/bin/chromium
 bindsym $alt+n exec /usr/bin/nautilus
 #bindsym $alt+m exec /usr/bin/icedove
 bindsym $alt+z exec /usr/bin/zotero
@@ -91,12 +91,10 @@ bindsym $mod+p exec dmenu_run
 # bindsym $mod+d exec dmenu-launch
 
 # start gmrun
-bindsym $mod+Shift+p exec gmrun
+#bindsym $mod+Shift+p exec gmrun
 
 # urgency support
 bindsym $mod+u [urgent="oldest"] focus
-
-
 
 # ==========================================================================================
 # Load external programs
@@ -393,7 +391,7 @@ bindsym $mod+Control+Shift+0 move container to workspace 20
 
 
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+o+p restart
+bindsym $mod+Shift+p restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+Home exit
 # shutdown
@@ -660,12 +658,14 @@ bar {
         #status_command i3pystatus
     mode dock
     position top
+    workspace_buttons yes
 }
 
 bar {
     output DP1
     position top
     tray_output none
+    workspace_buttons no
     mode hide
 }
 
@@ -681,8 +681,8 @@ bar {
 ## Special keys
 bindsym XF86MonBrightnessUp exec xbacklight -set $(echo "$(xbacklight -get) + 10" | bc)
 bindsym XF86MonBrightnessDown exec xbacklight -set $(echo "$(xbacklight -get) -10" | bc)
-bindsym XF86MonBrightnessUp+Shift exec xbacklight -set 100
-bindsym XF86MonBrightnessDown+Shift exec xbacklight -set 0
+# bindsym XF86MonBrightnessUp+Shift exec xbacklight -set 100
+# bindsym XF86MonBrightnessDown+Shift exec xbacklight -set 0
 bindsym XF86AudioRaiseVolume exec amixer set 'Master' 2%+
 bindsym XF86AudioLowerVolume exec amixer set 'Master' 2%-
 #bindsym XF86AudioMute exec amixer set 'Master' toggle

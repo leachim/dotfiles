@@ -64,7 +64,9 @@ URxvt.bolditalicFont:   xft:dejavu sans mono:size=13:antialias=true,hinting=true
 !URxvt*color13: #FF00FF // magenta
 !URxvt*color14: #00FFFF // cyan
 !URxvt*color15: #FFFFFF // white
-
+!
+xterm*dynamicColors: true
+URxvt*dynamicColors: on
 URxvt.colorIT:			#268bd2
 URxvt.colorBD:			#859900
 URxvt.colorUL:			#b58900
@@ -73,7 +75,7 @@ URxvt.externalBorder:	0
 URxvt.internalBorder:	0
 URxvt.jumpScroll:		true
 !-*- Perl extensions -*-
-URxvt.perl-ext-common: default,clipboard,selection-to-clipboard,pasta,matcher,keyboard-select,on_osc_seq_perl
+URxvt.perl-ext-common: default,clipboard,selection-to-clipboard,matcher,on_osc_seq_perl
 URxvt.iso14755: False
 URxvt.keysym.M-u:     perl:url-select:select_next
 URxvt.url-launcher:   /usr/bin/chromium
@@ -81,8 +83,23 @@ URxvt.underlineURLs:  True
 URxvt.matcher.button: 1 
 URxvt.keysym.M-Escape:perl:keyboard-select:activate
 !URxvt.keysym.C-Shift-v:     perl:pasta:paste
-URxvt.keysym.C-Shift-c:   perl:clipboard:copy
-URxvt.keysym.C-v:   perl:clipboard:paste
+!URxvt.keysym.C-Shift-c:   perl:clipboard:copy
+!URxvt.keysym.C-v:   perl:clipboard:paste
+! Copy/Paste, same keys as gnome-terminal
+! https://stackoverflow.com/questions/39884093
+! Disable ISO 14755 unicode input so we can use Ctrl-Shift bindings
+URxvt.iso14755:        false
+URxvt.iso14755_52:     false
+! Disable Ctrl-Alt-c & Ctrl-Alt-v bindings (optional)
+! URxvt.keysym.C-M-c:    builtin-string:
+! URxvt.keysym.C-M-v:    builtin-string:
+! Bind Ctrl-Shift-c & Ctrl-Shift-v to copy and paste
+! I dont know why, but I needed to use hex keysym values to get it to work
+! URxvt.keysym.C-S-0x43: eval:selection_to_clipboard
+! URxvt.keysym.C-S-0x56: eval:paste_clipboard
+URxvt.keysym.M-c: eval:selection_to_clipboard
+URxvt.keysym.M-v: eval:paste_clipboard
+URxvt.keysym.M-V: eval:paste_primary
 ! Comment this if you dont want copy when text is selected
 URxvt.clipboard.autocopy: true
 
@@ -100,7 +117,7 @@ URxvt.clipboard.autocopy: true
 !URxvt.scrollTtyKeypress:	true
 !URxvt.secondaryScroll:	true
 !URxvt.skipScroll:		false
-!URxvt.underlineURLs:	true
+URxvt.underlineURLs:	true
 URxvt.perl-lib: ~/.dotfiles/scripts/on_osc_seq_perl
 URxvt.bell-command: notify-send "rxvt-unicode: bell!"
 URxvt.urgentOnBell:	true

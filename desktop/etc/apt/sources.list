@@ -11,10 +11,16 @@ deb-src http://security.debian.org/ testing/updates main contrib non-free
 deb http://ftp.debian.org/debian/ testing-updates main contrib non-free
 deb-src http://ftp.debian.org/debian/ testing-updates main contrib non-free
 
+# security
+deb http://security.debian.org/ stretch/updates main contrib non-free
+deb-src http://security.debian.org/ stretch/updates main contrib non-free
 
-#### unstable #########
+#### stable and unstable #########
 
 deb http://ftp.debian.org/debian unstable main contrib non-free
+#deb-src http://ftp.debian.org/debian unstable main contrib non-free
+
+deb http://ftp.debian.org/debian stable main contrib non-free
 #deb-src http://ftp.debian.org/debian unstable main contrib non-free
 
 #### other packages ########
@@ -23,6 +29,9 @@ deb http://ftp.debian.org/debian unstable main contrib non-free
 deb [arch=amd64] https://download.docker.com/linux/debian stretch stable
 # deb-src [arch=amd64] https://download.docker.com/linux/debian stretch stable
 # deb-src http://packages.x2go.org/debian wheezy main
+
+# Google Cloud
+deb http://packages.cloud.google.com/apt cloud-sdk-buster main
 
 # Oracle Virtualbox
 deb http://download.virtualbox.org/virtualbox/debian stretch contrib

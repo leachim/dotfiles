@@ -24,31 +24,23 @@ function retab () { python ~/.dotfiles/scripts/reindent.py $1 ; }
 
 ## SYSTEM
 alias lst="ls -lt"
+alias sac="source activate"
 alias logoff="pkill -KILL -u michael"
 alias takeover="tmux detach -a"
 datediff () { d1=$(date -d $1 +%s);d2=$(date -d 'now' +%s);echo "$(( (d2 - d1) / 86400 )) days";}
 function wttr () {
     # change Paris to your default location
     curl -s -S -H "Accept-Language: en" wttr.in/"${1:-Munich}" | head -q -n -3 ; }
-alias weather="curl -s -S http://wttr.in/Cham\?lang\=en?m | head -q -n -3"
+alias weather="curl -s -S http://wttr.in/Berlin | head -q -n -3"
 function daily-quote () { 
-  quotearray=("Stilles bescheidenes Leben gibt mehr Glück als erfolgreiches Streben, verbunden mit beständiger Unruhe." 
-              "For what does it profit a man to gain the whole world and forfeit his soul?"
-              "It is not difficult to change the world. It is difficult to change yourself."
-              "All models are wrong, but some are useful. (George E. P. Box)"
-              "An approximate answer to the right problem is worth a good deal more than an exact answer to an approximate problem. (John Tukey)"
-              "To call in the statistician after the experiment is done may be no more than asking him to perform a post-mortem examination: he may be able to say what the experiment died of. (Ronald Fisher)"
-              "Statisticians, like artists, have the bad habit of falling in love with their models. (George Box)"
-              "Prediction is very difficult, especially about the future. (Niels Bohr)"
-              "The best thing about being a statistician is that you get to play in everyone's backyard. (John Tukey)"
-              "All we know about the world teaches us that the effects of A and B are always different - in some decimal place - for any A and B. Thus asking \"are the effects different?\" is foolish. (Tukey)"
-              ); 
+  source ~/.quotes
   n_quotes=${#quotearray[@]}+1
   rand=$(($RANDOM%$n_quotes)) 
   echo ${quotearray[$rand]} ; }
 alias clock="date | cut -d ' ' -f 4"
 alias daily-cal="ncal -A 1 -M -b -w"
-alias doremi="sudo apt-get update && sudo apt-get upgrade && apm update --no-confirm && conda update conda --yes && conda update --all --yes && echo \"\" && weather && echo \"Tage im Mai: $(datediff 10/08/2017)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
+alias upip="pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs pip install -U"
+alias doremi="sudo apt-get update && sudo apt-get upgrade && conda update conda --yes && conda update --all --yes && upip && echo \"\" && weather && echo \"Tage im Mai: $(datediff 11/24/2017)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
 alias ugit="git pull && git submodule update --recursive"
 function update-git () { for i in **; do cd $i; ugit; cd ..; done ; }
 alias timestamp="date +%Y_%m_%d-%H_%M"
@@ -69,16 +61,17 @@ alias gpu-on="sudo tee /proc/acpi/bbswitch <<<ON"
 
 alias di="dirs -v"
 alias m-timezone="timedatectl"
+alias m-timezone-update="sudo dpkg-reconfigure tzdata"
 alias m-rsync="rsync -azP"
 m-filesize () { echo "df -h" | sftp $1 ;}
 alias matlab-desktop="/home/michael/.matlab/bin/matlab &"
 
 ## Alerts, a set of flexible alerts to notify about the end of a computation in terminal and tmux
 alias alert-visual="echo -e '\a'"
-alias alert-all="echo -ne \"\033]777;notify;$(hostname);$(date '+%Y-%m-%d %H:%M:%S');Computation completed!;\007\007\""
+alias alert-all="echo -ne \"\033]777;notify-send;$(hostname);$(date '+%Y-%m-%d %H:%M:%S');Computation completed!;\007\007\""
 alias alert-sound="aplay -q $HOME/.dotfiles/files/soft_beep.way"
 alias talert-visual="echo -ne '\033Ptmux;\033\a\033\\'"
-alias talert-all="echo -ne '\033Ptmux;\033\033]777;notify;$(hostname);$(date '+%Y-%m-%d %H:%M:%S');Computation completed!;\007\007\\033\\'"
+alias talert-all="echo -ne '\033Ptmux;\033\033]777;notify-send;$(hostname);$(date '+%Y-%m-%d %H:%M:%S');Computation completed!;\007\007\\033\\'"
 
 ## Remote file system
 alias mount-library="sshfs -o allow_other -o ro storagebox:/library ~/mount"
@@ -104,6 +97,8 @@ function aws-login () { $(aws ecr get-login --no-include-email); }
 alias d="docker"
 alias dim="docker images"
 alias dps="docker ps"
+alias deb="docker run --rm -it test:latest /bin/bash"
+function dev () { docker build -t $1 . ; }
 function do-bash () { docker exec -i -t $1 /bin/bash ; }
 alias do-count="docker ps -q | wc -l"
 function do-stopall () { docker container stop $(docker container ls -a -q) ; }
@@ -115,7 +110,7 @@ function do-export () { docker save $1 > $1.tar; }
 ## Digital Ocean
 function dig-create() { doctl compute droplet create glaux-web --image 29006376 --region $1 --size 512mb --ssh-keys 8c:7e:36:3e:d0:f5:98:d7:46:86:b5:78:7d:2e:9a:1e &&
 sleep 5 && doctl compute firewall add-droplets de489db5-1e04-40e6-891c-8bdfa47745c8 --droplet-ids $(doctl compute droplet list | tail -n 1 |  awk '{print $1}') && sleep 10 ; } 
-function dig-connect() { sslocal -c /etc/shadowsocks.json -s $(doctl compute droplet list | tail -n 1 |  awk '{print $3}') ; }
+function dig-connect() { ss-local -c /etc/shadowsocks.json -s $(doctl compute droplet list | tail -n 1 |  awk '{print $3}') ; }
 function dig-domain() { doctl compute domain records create $(doctl compute domain list | tail -n 1 | awk '{print $1}') --record-type A --record-name web --record-data $(doctl compute droplet list | tail -n 1 |  awk '{print $3}') --record-ttl 180 ; }
 function dig-close () { doctl compute droplet delete $(doctl compute droplet list | tail -n 1 |  awk '{print $1}') && sleep 10 && doctl compute domain records delete $(doctl compute domain list | tail -n 1 | awk '{print $1}') $(doctl compute domain records list $(doctl compute domain list | tail -n 1 | awk '{print $1}') | grep "A" |  awk '{print $1}') && doctl compute droplet list ; }
 alias dig-status="doctl compute droplet list"
@@ -153,8 +148,12 @@ alias tma='tmux attach -d -t'
 alias tmn='tmux new -s $(basename $(pwd))'
 alias tml='tmux list-sessions'
 alias tls='tmux ls'
+alias tdelete="tmux kill-session -t"
+tcreate () { bash ~/.dotfiles/scripts/tmux-dev.sh "$1" ; }
 
 ## Shortcuts
+alias tailwatch="watch -n 1 'tail $(ls -lA -t | head -n 1)'"
+alias brd="bash runDocker.sh"
 alias dun="du -chs | sort -h"
 alias dfn="df -Tha --total"
 #alias webify="mogrify -resize 690\> *.png"
@@ -353,6 +352,7 @@ mpdf-printFileToPdf () { cat "$1" | a2ps -=book -B -q --medium=A4dj --borders=no
 # set dual/single monitors
 dual-dp () {  xrandr --output eDP1 --primary --output DP1 --auto --right-of eDP1;}
 dual-vga (){ xrandr --output eDP1 --primary --output DP2 --auto --right-of eDP1;}
+dual-hdmi () {  xrandr --output eDP1 --primary --output HDMI1 --auto --right-of eDP1;}
 single () { xrandr --output DP1 --off; xrandr --output DP2 --off ; xrandr --output HDMI1 --off ; xrandr --output HDMI2 --off ;}
 present () { xrandr --output DP1 --auto ; xrandr --output DP2 --auto;}
 
@@ -381,7 +381,7 @@ alias proxyssh="ssh glaux-web -D 8080 -N -C -o \"UserKnownHostsFile /dev/null\""
 # -C: Compresses the data before sending it
 # -q: Uses quiet mode
 # -N: Tells SSH that no command will be sent once the tunnel is up
-proxyshadow () { sslocal -c /etc/shadowsocks.json -s web.$(doctl compute domain list | tail -n 1 | awk '{print $1}') ; }
+proxyshadow () { ss-local -l 8080 -c /etc/shadowsocks.json -s web.$(doctl compute domain list | tail -n 1 | awk '{print $1}') ; }
 proxyvpn () { sudo openvpn --remote web.$(doctl compute domain list | tail -n 1 | awk '{print $1}') 443 --config ~/.ssh/client1.ovpn ; }
 
 #########################################

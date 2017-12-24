@@ -34,6 +34,7 @@ desktop/.config/texstudio/*
 #desktop/.config/texstudio/texstudio.ini
 
 # other config to ignore
+desktop/.config/
 desktop/.config/chromium
 desktop/.config/pulse
 desktop/.config/sway

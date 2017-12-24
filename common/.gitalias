@@ -16,9 +16,13 @@ alias gmo='git commit'
 alias gm='git commit -m'
 alias gd='git diff'
 alias gc='git checkout '
+alias gcm='git checkout master'
+alias gcd="git checkout devel"
 
+alias gst="git stash"
 alias gs='git status '
 alias gss='git status -s'
+alias gsu='git status -uno'
 alias gs.='git status .'
 alias gh='git status .'
 

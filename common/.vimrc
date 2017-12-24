@@ -146,11 +146,12 @@ set ffs=unix,dos,mac
 augroup vimrc_autocmds
     autocmd!
     " highlight characters past column 120
-    autocmd Filetype python setlocal expandtab tabstop=4 shiftwidth=4
+    " autocmd Filetype python setlocal expandtab tabstop=4 shiftwidth=4
     autocmd FileType python highlight Excess guibg=Black
     " autocmd FileType python highlight Excess ctermbg=DarkGrey guibg=Black
     autocmd FileType python match Excess /\%120v.*/
     autocmd FileType python set nowrap
+    autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab
     augroup END
 
 augroup configgroup
@@ -237,6 +238,12 @@ Plug 'w0rp/ale'
 Plug 'sheerun/vim-polyglot'
 " indendation autodetect
 Plug 'tpope/vim-sleuth'
+
+" vim snippets
+" Track the engine.
+Plug 'SirVer/ultisnips'
+" Snippets are separated from the engine. Add this if you want them:
+Plug 'honza/vim-snippets'
 
 " flexible search 
 "Plugin 'kien/ctrlp.vim' -> replaced by fzf
@@ -383,11 +390,6 @@ noremap <leader>yy "*Y
 
 " EasyMotion
 "let g:EasyMotion_leader_key = '<Space>'
-
-" copy paste with urxvt and F7
-" :map <F7> :w !xclip<CR><CR>
-" :vmap <F7> "*y
-" :map <S-F7> :r!xclip -o<CR>
 
 " Split windows with | and -
 "nnoremap <silent> \| <C-w>v
@@ -549,17 +551,21 @@ map <leader>d :NERDTreeToggle<CR>
 
 " Copy Paste clipboard
 " Copy to X CLIPBOARD
-" map <leader>cc :w !xsel -i -b<CR>
-" map <leader>cp :w !xsel -i -p<CR>
-" map <leader>cs :w !xsel -i -s<CR>
+vnoremap <C-c> "*y
+"map <leader>cc :w !xsel -i -b<CR>
+"map <leader>cp :w !xsel -i -p<CR>
+"map <leader>cs :w !xsel -i -s<CR>
 " Paste from X CLIPBOARD
 " map <leader>pp :r!xsel -p<CR>
 " map <leader>ps :r!xsel -s<CR>
-" map <leader>pb :r!xsel -b<CR>
+"map <leader>vv :r!xsel -b<CR>
 
 " YCM - autocompletion
 map <F9> :YcmCompleter FixIt<CR>
 nnoremap <leader>jd :YcmCompleter GoTo<CR>
+nnoremap <leader>gl :YcmCompleter GoToDeclaration<CR>
+nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>
+nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -637,19 +643,30 @@ let g:gitgutter_sign_modified_removed = '∙'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ALE
+
+" Toggle linting
+map <leader>at :ALEToggle<CR>
+
 let g:ale_sign_warning = '▲'
 let g:ale_sign_error = '✗'
 highlight link ALEWarningSign String
 highlight link ALEErrorSign Title
 
-let g:ale_linters = {
-  \ 'python': ['autopep8'] ,
-  \ }
+" Check Python files with flake8 and pylint.
+let b:ale_linters = ['autopep8', 'flake8', 'pylint']
+" Fix Python files with autopep8 and yapf.
+let b:ale_fixers = ['autopep8', 'yapf']
+" Disable warnings about trailing whitespace for Python files.
+let b:ale_warn_about_trailing_whitespace = 0
 "let g:ale_lint_on_save = 1
 let g:ale_lint_on_text_changed = 1
 " You can disable this option too
 " " if you don't want linters to run on opening a file
-"let g:ale_lint_on_enter = 0
+" let g:ale_lint_on_enter = 0
+" Enable completion where available.
+let g:ale_completion_enabled = 1
+
+let g:autopep8_ignore="C0103"
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " tmux  
@@ -664,6 +681,19 @@ nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
 nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
 nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
 nnoremap <silent> <C-/> :TmuxNavigatePrevious<cr>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" snippets
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<C-c>"
+let g:UltiSnipsJumpForwardTrigger="<C-s>"
+let g:UltiSnipsJumpBackwardTrigger="<C-a>"
+
+let g:UltiSnipsSnippetsDir        = '~/.vim/snippets/'
+let g:UltiSnipsSnippetDirectories = ['UltiSnips']
+
+" If you want :UltiSnipsEdit to split your window.
+" let g:UltiSnipsEditSplit="vertical"
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions

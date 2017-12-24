@@ -26,9 +26,6 @@ tmux
 vim
 zsh
 #########################################################
-## docker
-docker.io
-#########################################################
 ## Security
 audispd-plugins
 auditd
@@ -88,13 +85,16 @@ gvfs
 highlight
 # inkscape, draw nice graphics
 inkscape
-# tools for creating jupyter reports
-pandoc
+# notification via dunstrc
+libnotify-bin
 # Tools for manipulating MSDOS files
 mtools
+# tools for creating jupyter reports
+pandoc
+#
 p7zip
 # hardware sensor information logging daemon
-sensord
+#sensord
 # fuzzy command line and vim search 
 silversearcher-ag
 # control and monitor storage systems using S.M.A.R.T.
@@ -135,7 +135,6 @@ gpaste
 rofi
 # command line screen capture utility
 scrot
-stalonetray
 xbacklight
 xbindkeys
 xclip
@@ -146,7 +145,7 @@ xscreensaver
 xsel
 #########################################################
 ## Tools & programs
-calibre
+# calibre
 #!filezilla-common
 gparted
 # displays bandwidth usage information on an network interface
@@ -155,15 +154,15 @@ iftop
 iotop
 #!mosh
 # Full screen ncurses and X11 traceroute tool
-mtr
+# mtr
 # view multiple logfiles windowed on console
 multitail
 # IMAP/Maildir synchronization and reader support
-offlineimap
-pidgin
+# offlineimap
+# pidgin
 rxvt-unicode
-rxvt-unicode-256color
-screenfetch
+#rxvt-unicode-256color
+# screenfetch
 #########################################################
 ## PDF management
 diffpdf
@@ -242,9 +241,10 @@ wireshark
 ## Internet
 owncloud-client
 owncloud-client-cmd
-remmina
+# remmina
+shadowsocks-libev
 #tor
-unison
+# unison
 #########################################################
 ## Crypto
 gnupg2
@@ -270,7 +270,6 @@ texlive-font-utils
 texlive-lang-german
 texlive-latex-extra
 texlive-luatex
-texlive-math-extra
 texlive-science
 texlive-xetex
 texstudio

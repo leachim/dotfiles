@@ -204,6 +204,7 @@
     appname = NetworkManager
     urgency = low
     timeout = 10
+
 # i3 colors
 #color_good      = "#88b090"
 #color_degraded  = "#ccdc90"

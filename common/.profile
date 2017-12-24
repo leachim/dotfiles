@@ -18,7 +18,7 @@ xset -dpms
 xset r rate 300 30
 
 # added by Anaconda3 2.4.1 installer
-export PATH="/home/michael/.anaconda3/bin:/snap/bin:/opt/bin:/home/michael/.local/bin:$PATH"
+export PATH="/home/michael/.anaconda3/bin:/snap/bin:/opt/bin:/home/michael/.local/bin:/opt/node-v8.9.1-linux-x64/bin:$PATH"
 
 # Java dependencies
 export JAVA_HOME=/usr/lib/jvm/default-java
@@ -48,3 +48,7 @@ if [ -e ~/.fzf ]; then
 	--color info:108,prompt:109,spinner:108,pointer:168,marker:168
 	'
 fi
+
+# added by travis gem
+[ -f /home/michael/.travis/travis.sh ] && source /home/michael/.travis/travis.sh
+
