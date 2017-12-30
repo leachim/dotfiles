@@ -1,267 +1,313 @@
-## comments now allowed
-#!dzen2
-#!xfce4
-#!pymol
-#!urlview
-#!tree
-#!staden-io-lib-utils
-#!c2hs
-#!dkms
-#!libcanberra-gtk-module
-#!libnss3-tools
-#!libreoffice-l10n-de
-#!libxdg-basedir-dev
-#!libxft-dev
-#!libxinerama
-#!mozilla-plugin-vlc
-#!x2goclient
-#########################################################
-## basics
-chromium
-conky
-dropbox
-duplicity
-git
-tmux
-vim
-zsh
-#########################################################
-## Security
+acpi-call-dkms
+adduser
+alsa-utils
+# alsa-utils sound utility
+apt
+apt-listbugs
+apt-listchanges
+apt-transport-https
+apt-utils
+arandr
+# arandr gui to manage display layout
+atomicparsley
+atool
+# atool is a script for managing file archives of various types
 audispd-plugins
 auditd
-logcheck
-# certificates for ssl key verification
-ca-certificates
-rkhunter
-# selinux
-selinux-basics
-selinux-utils
-setools-gui
-# Forensic tool to find hidden processes and ports
-#!unhide
-#
-apt-transport-https
-software-properties-common
-#########################################################
-## Other
-apt-listbugs
-cpufrequtils
-debian-keyring
-htop
-#########################################################
-# sound utility
-alsa-utils
-# gui to manage display layout
-arandr
-# atool is a script for managing file archives of various types
-atool
-# Keep the X clipboard and the cutbuffer in sync
+autoconf
 autocutsel
-# shell extension to jump to frequently used directories
+# autocutsel Keep the X clipboard and the cutbuffer in sync
 autojump
-# sound signal
+# autojump shell extension to jump to frequently used directories
+automake
+base-files
+base-passwd
+bash
+bash-completion
+bbswitch-dkms
+bbswitch-source
 beep
-# build projects
-cmake
-# tool to colorize 'diff' output
-colordiff
-# good diff tool for git
-icdiff
-# Management of encrypted file systems
-cryptmount
-# utility to replace problematic characters in filenames
-detox
-# versatile resource statistics tool
-dstat
-# tool to send magic Wake-on-LAN packets
-etherwake
-# utilities to create, check, label and dump exFAT filesystem
-exfat-utils
-# Tools for Flash-Friendly File System
-f2fs-tools
-# userspace virtual filesystem - GIO module
-gvfs
-# Universal source code to formatted text converter
-highlight
-# inkscape, draw nice graphics
-inkscape
-# notification via dunstrc
-libnotify-bin
-# Tools for manipulating MSDOS files
-mtools
-# tools for creating jupyter reports
-pandoc
-#
-p7zip
-# hardware sensor information logging daemon
-#sensord
-# fuzzy command line and vim search 
-silversearcher-ag
-# control and monitor storage systems using S.M.A.R.T.
-smartmontools
-# support logitech unifying adapter (mouse and keyboard battery)
-solaar
-# System call tracer - debugging
-strace
-# summarize the contents of a syslog log file
-syslog-summary
-# system performance tools for Linux
-sysstat
-# tool for network monitoring and data acquisition
-tcpdump
-# tool for optical character recognition
-tesseract-ocr
-# hides the mouse cursor in X after a period of inactivity
-unclutter
-# post-processing tool for scanned pages
-unpaper
-#########################################################
-## Hardware
-firmware-linux
-firmware-linux-nonfree
+# beep sound signal
+biber
+bibtex2html
+# bibtex2html convert bibliography to html format
+bind9-host
 blueman
-# tool for enabling and disabling wireless devices
-rfkill
-# Processor microcode firmware for Intel CPUs
-intel-microcode
-iucode-tool
-#########################################################
-## Window manager & tools
-# Clipboard management system
-gpaste
-#
-# lightdm
-# rofi (dmenu-replacement) dependencies
-rofi
-# command line screen capture utility
-scrot
-xbacklight
-xbindkeys
-xclip
-xdotool
-# Screensaver daemon and frontend for X11
-xscreensaver
-# command-line tool to access X clipboard and selection buffers
-xsel
-#########################################################
-## Tools & programs
-# calibre
-#!filezilla-common
-gparted
-# displays bandwidth usage information on an network interface
-iftop
-# i/o top
-iotop
-#!mosh
-# Full screen ncurses and X11 traceroute tool
-# mtr
-# view multiple logfiles windowed on console
-multitail
-# IMAP/Maildir synchronization and reader support
-# offlineimap
-# pidgin
-rxvt-unicode
-#rxvt-unicode-256color
-# screenfetch
-#########################################################
-## PDF management
-diffpdf
-pdfgrep
-pdf-presenter-console
-pdftk
-poppler-utils
-#########################################################
-## Programming
-#eclipse
-#eclipse-cdt
-# automatic annotation
-doxygen
-geany
-graphviz
-haskell-platform
-# Java
-default-jre
-default-jdk
-# Go
-golang
-# Matlab/Octave
-octave
-#########################################################
-## Virtualisation
-# python virtual environments
-#virtualenv
-#virtualenvwrapper
-# docker
-#docker.io
-# virtualbox
-#virtualbox
-#virtualbox-ext-pack
-#virtualbox-guest-additions-iso
-#########################################################
-## Media
-mpv
-vlc
-# reduce image file size
-optipng
-jpegoptim
-# convert raw to jpg format
-ufraw
-#########################################################
-## Network tools
-# command line webdav client
+borgbackup
+bsdmainutils
+bsdutils
+build-essential
+bumblebee
+busybox
+bzip2
+ca-certificates
+# ca-certificates certificates for ssl key verification
 cadaver
-# The SMB/CIFS protocol provides support for cross-platform file sharing with Microsoft Windows, OS X, and other Unix systems.
+# cadaver command line webdav client
+chromium
+chromium-common
 cifs-utils
-# Sophisticated command-line FTP/HTTP client programs
+# cifs-utils The SMB/CIFS protocol provides support for cross-platform file sharing with Microsoft Windows, OS X, and other Unix systems.
+cmake
+# cmake build projects
+colordiff
+# colordiff tool to colorize 'diff' output
+## comments now allowed
+conky
+console-setup
+coreutils
+cpio
+cpufrequtils
+cron
+cryptmount
+# cryptmount Management of encrypted file systems
+cryptsetup
+curl
+dash
+dbus
+debconf
+debian-archive-keyring
+debian-keyring
+debianutils
+default-jdk
+default-jre
+# default-jre Java
+detox
+# detox utility to replace problematic characters in filenames
+diffpdf
+diffutils
+discover
+dmidecode
+dmsetup
+docker-ce
+doxygen
+# doxygen automatic annotation
+dpkg
+dropbox
+dstat
+# dstat versatile resource statistics tool
+duplicity
+e2fslibs
+e2fsprogs
+easytag
+etherwake
+# etherwake tool to send magic Wake-on-LAN packets
+exfat-utils
+# exfat-utils utilities to create, check, label and dump exFAT filesystem
+f2fs-tools
+# f2fs-tools Tools for Flash-Friendly File System
+ffmpeg
+file
+filezilla
+findutils
+firefox
+firmware-iwlwifi
+firmware-linux
+firmware-linux-free
+firmware-linux-nonfree
+g++
+gcc
+gcc-6-base
+geany
+gettext-base
+gist
+git
+git-core
+gnupg
+gnupg2
+gnupg-agent
+golang
+# golang Go
+google-cloud-sdk
+gparted
+gpaste
+# gpaste Clipboard management system
+gpgv
+graphviz
+graphviz-dev
+grep
+groff-base
+grub-common
+grub-pc
+gvfs
+# gvfs userspace virtual filesystem - GIO module
+gzip
+haskell-platform
+hdparm
+highlight
+# highlight Universal source code to formatted text converter
+hostname
+htop
+hunspell
+hunspell-de-de
+hunspell-en-med
+i3
+i3lock
+i3status
+icdiff
+# icdiff good diff tool for git
+iftop
+# iftop displays bandwidth usage information on an network interface
+ifupdown
+imagemagick
+init
+initramfs-tools
+init-system-helpers
+inkscape
+# inkscape, draw nice graphics
+installation-report
+intel-microcode
+# intel-microcode Processor microcode firmware for Intel CPUs
+iotop
+# iotop i/o top
+iproute2
+iptables
+iputils-ping
+isc-dhcp-client
+isc-dhcp-common
+iucode-tool
+iw
+jabref
+jpegoptim
+# jpegoptim reduce image file size
+jq
+keyboard-configuration
+kmod
+krb5-locales
+kubectl
+laptop-detect
+latexmk
+less
 lftp
-# Net top tool grouping bandwidth per process
+# lftp Sophisticated command-line FTP/HTTP client programs
+libavcodec-extra
+libav-tools
+libc-bin
+libnotify4
+libnotify-bin
+# libnotify-bin notification via dunstrc
+librsvg2-bin
+# librsvg2-bin convert svg to pdf/png
+linux-headers-4.13.0-1-all
+linux-headers-4.13.0-1-amd64
+linux-headers-amd64
+linux-image-amd64
+lm-sensors
+locales
+logcheck
+login
+logrotate
+lsb-base
+lsof
+lvm2
+make
+man-db
+manpages
+mawk
+mime-support
+mount
+mpv
+mtools
+# mtools Tools for manipulating MSDOS files
+multiarch-support
+multitail
+# multitail view multiple logfiles windowed on console
+murrine-themes
+ncurses-base
+ncurses-bin
+ncurses-term
+neovim
+netbase
+netcat-traditional
 nethogs
+# nethogs Net top tool grouping bandwidth per process
 network-manager
 network-manager-gnome
 network-manager-openvpn
 network-manager-openvpn-gnome
 network-manager-vpnc
 network-manager-vpnc-gnome
-# grep for network traffic
 ngrep
-# Monitor Network Traffic and Bandwidth Usage In Real Time
+# ngrep grep for network traffic
 nload
-# utility for network exploration or security auditing
+# nload Monitor Network Traffic and Bandwidth Usage In Real Time
 nmap
+# nmap utility for network exploration or security auditing
+ocrmypdf
+octave
+# octave Matlab/Octave
+openssh-client
+openssl
 openvpn
-# Realtime network interface monitor
-slurm
-sshfs
-ssmtp
-# tunnel traffic via proxy
-#!tsocks
-vpnc
-wireshark
-#########################################################
-## Internet
+optipng
+# optipng reduce image file size
 owncloud-client
 owncloud-client-cmd
-# remmina
+p7zip
+pandoc
+# pandoc tools for creating jupyter reports
+passwd
+pciutils
+pdf2svg
+pdfgrep
+pdfposter
+pdf-presenter-console
+pdftk
+perl
+perl-base
+perl-modules-5.24
+pinentry-curses
+pkg-config
+poppler-utils
+readline-common
+reportbug
+rfkill
+# rfkill tool for enabling and disabling wireless devices
+rkhunter
+rofi
+# rofi (dmenu-replacement) dependencies
+rsyslog
+ruby-dev
+rxvt-unicode-256color
+scrot
+# scrot command line screen capture utility
+sed
+# selinux
+selinux-basics
+selinux-utils
+sensible-utils
+setools-gui
 shadowsocks-libev
-#tor
-# unison
-#########################################################
-## Crypto
-gnupg2
-# makepasswd command
-whois 
-# Ubuntu's snap systems
+silversearcher-ag
+# silversearcher-ag fuzzy command line and vim search 
+slurm
+smartmontools
+# smartmontools control and monitor storage systems using S.M.A.R.T.
 snapd
-#########################################################
-## Writing & Citation management
-biber
-# convert bibliography to html format
-bibtex2html
-hunspell
-hunspell-de-de
-hunspell-en-med
-jabref
-latexmk
+# snapd Ubuntu's snap systems
+software-properties-common
+solaar
+# solaar support logitech unifying adapter (mouse and keyboard battery)
+sqlcipher
+sshfs
+strace
+# strace System call tracer - debugging
+suckless-tools
+sudo
+syncthing
+syslog-summary
+# syslog-summary summarize the contents of a syslog log file
+sysstat
+# sysstat system performance tools for Linux
+systemd
+systemd-sysv
+sysvinit-utils
+tar
+tcpdump
+# tcpdump tool for network monitoring and data acquisition
+telnet
+tesseract-ocr
+# tesseract-ocr tool for optical character recognition
 texlive
 texlive-bibtex-extra
 texlive-extra-utils
@@ -273,5 +319,48 @@ texlive-luatex
 texlive-science
 texlive-xetex
 texstudio
+tlp
+tlp-rdw
+tmux
+traceroute
+tsocks
+tzdata
+ucf
+udev
+ufraw
+# ufraw convert raw to jpg format
+unclutter
+# unclutter hides the mouse cursor in X after a period of inactivity
+# unhide Forensic tool to find hidden processes and ports
+unpaper
+# unpaper post-processing tool for scanned pages
+usbutils
+util-linux
+vim
+vim-athena
+vim-common
+vim-nox
+vim-tiny
+virtualbox
+virtualbox-dkms
+vlc
+vpnc
+wamerican
+wget
+whiptail
+whois 
+# whois makepasswd command
+wireshark
+x264
+# x264 codecs
+xbacklight
+xbindkeys
+xclip
+xdotool
+xkbset
 xournal
-murrine-themes
+xscreensaver
+# xscreensaver Screensaver daemon and frontend for X11
+xsel
+# xsel command-line tool to access X clipboard and selection buffers
+zsh

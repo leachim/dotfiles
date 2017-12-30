@@ -40,7 +40,7 @@ function daily-quote () {
 alias clock="date | cut -d ' ' -f 4"
 alias daily-cal="ncal -A 1 -M -b -w"
 alias upip="pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs pip install -U"
-alias doremi="sudo apt-get update && sudo apt-get upgrade && conda update conda --yes && conda update --all --yes && upip && echo \"\" && weather && echo \"Tage im Mai: $(datediff 11/24/2017)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
+alias doremi="sudo apt-get update && sudo apt-get upgrade && conda update conda --yes && conda update --all --yes && upip && sudo apt-get autoremove && echo \"\" && weather && echo \"Tage im Mai: $(datediff 12/27/2017)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
 alias ugit="git pull && git submodule update --recursive"
 function update-git () { for i in **; do cd $i; ugit; cd ..; done ; }
 alias timestamp="date +%Y_%m_%d-%H_%M"
@@ -53,6 +53,7 @@ function hl () { grep -A1 "Host $1" $HOME/.ssh/config | awk '/HostName/{getline;
 alias pack="tar -zcvf"
 alias pingg="ping 8.8.8.8"
 alias fasollati="bash $HOME/.backup/local-backup.sh && echo \"df -h\" | sftp storagebox:"
+alias jour="sudo apt-get autoclean && bash $HOME/.backup/borg-backup.sh && doremi"
 alias check-storage="echo \"df -h\" | sftp storagebox"
 
 alias gpu-status="cat /proc/acpi/bbswitch"
@@ -305,6 +306,17 @@ function debchanglog () {
 #########################################
 ### Helper functions - pdfs           ###
 #########################################
+
+alias mlat="/bin/bash ~/.dotfiles/scripts/latexeqs.sh"
+
+# convert svg to pdf or png with rsvg-convert (in librsvg package)
+function msvg-topdf () { rsvg-convert $1 > {1%.svg}.pdf ; }
+
+# convert pdf to emf
+function mpdf-toemf () { pdf2svg $1 ${1%.pdf}.svg ; inkscape ${1%.pdf}.svg -M ${1%.pdf}.emf ; }
+
+# convert pdf to emf
+function mpdf-tosvg () { pdf2svg $1 ${1%.pdf}.svg ; }
 
 # convert pdf to eps
 function mpdf-toeps () { inkscape $1 --export-eps=${1%.pdf}.eps;}
