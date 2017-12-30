@@ -24,7 +24,8 @@ if [ ! -d "$_DEST" ]; then
     exit -1
 fi
 
-# Comment this out before using script
+# make sure to empty tmp/ folder before creating a full backup"
+# and comment this out before using script
 echo "salt is not correct yet, is a function of password at the end"
 exit 1
 
@@ -76,6 +77,10 @@ case $first_answer in
         duplicity inc --gpg-options "--compress-algo bzip2 --cipher-algo aes256 --digest-algo sha512 --s2k-digest-algo sha512 --s2k-cipher-algo aes256" --sign-key "$_SIGN_KEY" --exclude "**excludeFromBackup/**" --exclude "**safe/**" --log-file $_LOG --volsize 250 --verbosity 6 $_SRC "file://$_TMP"
     	;;
     	full)
+        if [ "$(ls -A $_TMP)" ]; then
+          echo "ISSUE! $_TMP is not empty, might lead to larger than necessary backup size"; 
+          exit -1 
+        fi 
         # create new full backup in tmp, create archive file with time stamp
         duplicity full --gpg-options "--compress-algo bzip2 --cipher-algo aes256 --digest-algo sha512 --s2k-digest-algo sha512 --s2k-cipher-algo aes256" --sign-key "$_SIGN_KEY" --exclude "**excludeFromBackup/**" --exclude "**safe/**" --log-file $_LOG --volsize 250 --verbosity 6 $_SRC "file://$_TMP"
         _FILE="$_DEST$_TIMESTAMP-backup.tar.gz"
