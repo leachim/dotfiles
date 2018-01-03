@@ -9,6 +9,8 @@ apt-transport-https
 apt-utils
 arandr
 # arandr gui to manage display layout
+arc-theme
+# arc-theme: my current theme for debian
 atomicparsley
 atool
 # atool is a script for managing file archives of various types
@@ -323,6 +325,8 @@ tlp
 tlp-rdw
 tmux
 traceroute
+tree
+# list directory content in tree structure
 tsocks
 tzdata
 ucf

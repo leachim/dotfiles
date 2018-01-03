@@ -1,5 +1,5 @@
 #!/bin/bash
-# source: 
+# source: https://mensfeld.pl/2015/09/random-mac-address-changing-script-for-your-linux-wifi-mac-address-spoofing/
 
 echo "This script requires root privileges"
 hexchars="0123456789ABCDEF"

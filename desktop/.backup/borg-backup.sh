@@ -56,33 +56,77 @@ borg create                                 \
     --compression lzma,6                    \
     --exclude-caches                        \
     --exclude '/home/*/.cache/*'            \
-    --exclude '/var/cache/*'                \
-    --exclude '/var/tmp/*'                  \
-    --exclude '/var/log/*'                  \
+                                            \
+    --exclude '/etc/.pwd.lock'              \
+    --exclude '/etc/apparmor.d/*'           \
+    --exclude '/etc/audit'                  \
+    --exclude '/etc/audisp'                 \
+    --exclude '/etc/cups/ssl'               \
+    --exclude '/etc/cups/printers.conf*'    \
+    --exclude '/etc/cups/subscriptions.conf*'\
+    --exclude '/etc/docker/key.json'        \
+    --exclude '/etc/default/cacerts'        \
+    --exclude '/etc/exim4/passwd.client'    \
+    --exclude '/etc/gshadow*'               \
+    --exclude '/etc/logcheck/*'             \
+    --exclude '/etc/lvm/backup'             \
+    --exclude '/etc/NetworkManager/system-connections/*'\
+    --exclude '/etc/ppp/*-secrets'          \
+    --exclude '/etc/polkit-1/localauthority'\
+    --exclude '/etc/security/opasswd'       \
+    --exclude '/etc/subuid*'                \
+    --exclude '/etc/sudoers*'               \
+    --exclude '/etc/vpnc'                   \
+    --exclude '/etc/subgid*'                \
+    --exclude '/etc/shadow*'                \
+    --exclude '/etc/ssl/private'            \
+                                            \
+    --exclude '/home/*/.anaconda3/pkgs/*'   \
+    --exclude '/home/*/.anaconda3/conda-bld/*'\
     --exclude '/home/*/.config/borg/*'      \
+    --exclude '/home/*/.config/doctl/*'     \
     --exclude '/home/*/.config/gcloud/*'    \
     --exclude '/home/*/.config/geany/*'     \
-    --exclude '/home/*/.config/chromium/*'  \
     --exclude '/home/*/.config/VirtualBox/*'\
+    --exclude '/home/*/.dbus/*'             \
+    --exclude '/home/*/.dockercfg'          \
+    --exclude '/home/*/.dropbox/*'          \
+    --exclude '/home/*/.dropbox-dist/*'     \
+    --exclude '/home/*/.gcalcli_oauth'      \
+    --exclude '/home/*/.grip/*'             \
+    --exclude '/home/*/.kube/*'             \
+    --exclude '/home/*/.miniconda3/pkgs/*'  \
+    --exclude '/home/*/.miniconda3/conda-bld/*'\
+    --exclude '/home/*/.xsession-errors'    \
+    --exclude '/home/*/.zcompdump'          \
+    --exclude '/home/*/.zcompcache'         \
+                                            \
+    --exclude '/home/*/*_oauth'             \
+    --exclude '/home/*/**/*_oauth'          \
+    --exclude '/home/*/.*_history'          \
+                                            \
     --exclude '/home/*/.aws/*'              \
     --exclude '/home/*/.backup/*'           \
     --exclude '/home/*/.dotfiles/*'         \
     --exclude '/home/*/.encrypted/*'        \
     --exclude '/home/*/.gmvault/*'          \
     --exclude '/home/*/.gnupg/*'            \
-    --exclude '/home/*/.mozilla/*'          \
+    --exclude '/home/*/.pki/*'              \
     --exclude '/home/*/.ssh/*'              \
+                                            \
+    --exclude '/home/*/.config/chromium/*'  \
+    --exclude '/home/*/.mozilla/*'          \
     --exclude '/home/*/.travis/*'           \
-    --exclude '/home/*/.*_history'          \
+    --exclude '/home/*/.virtualbox/*'       \
+                                            \
     --exclude '/home/*/Data/*'              \
     --exclude '/home/*/Downloads/*'         \
+    --exclude '/home/*/VirtualBox VMs/*'    \
                                             \
     ::'{hostname}-{now}'                    \
     /opt                                    \
     /etc                                    \
     /home                                   \
-    /root                                   \
-    /var                                    \
 
 backup_exit=$?
 
@@ -97,10 +141,11 @@ borg prune                          \
     --list                          \
     --prefix '{hostname}-'          \
     --show-rc                       \
-    --keep-daily    10              \
-    --keep-weekly   6               \
-    --keep-monthly  11              \
-    --keep-yearly   3               \
+    --keep-within 7d                \
+    --keep-daily    14              \
+    --keep-weekly   8               \
+    --keep-monthly  12              \
+    --keep-yearly   4               \
 
 prune_exit=$?
 

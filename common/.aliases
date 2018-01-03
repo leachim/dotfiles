@@ -41,6 +41,7 @@ alias clock="date | cut -d ' ' -f 4"
 alias daily-cal="ncal -A 1 -M -b -w"
 alias upip="pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs pip install -U"
 alias doremi="sudo apt-get update && sudo apt-get upgrade && conda update conda --yes && conda update --all --yes && upip && sudo apt-get autoremove && echo \"\" && weather && echo \"Tage im Mai: $(datediff 12/27/2017)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
+alias daily-info="weather && echo \"Tage im Mai: $(datediff 12/27/2017)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
 alias ugit="git pull && git submodule update --recursive"
 function update-git () { for i in **; do cd $i; ugit; cd ..; done ; }
 alias timestamp="date +%Y_%m_%d-%H_%M"
@@ -307,37 +308,45 @@ function debchanglog () {
 ### Helper functions - pdfs           ###
 #########################################
 
-alias mlat="/bin/bash ~/.dotfiles/scripts/latexeqs.sh"
+function mlat () { for var in "$@"; do /bin/bash ~/.dotfiles/scripts/latexeqs.sh "$var"; done ; }
 
 # convert svg to pdf or png with rsvg-convert (in librsvg package)
-function msvg-topdf () { rsvg-convert $1 > {1%.svg}.pdf ; }
+function msvg-topdf () { for var in "$@"; do rsvg-convert $var > ${var%.svg}.pdf ; done ; }
 
 # convert pdf to emf
-function mpdf-toemf () { pdf2svg $1 ${1%.pdf}.svg ; inkscape ${1%.pdf}.svg -M ${1%.pdf}.emf ; }
+function mpdf-toemf () { for var in "$@"; do pdf2svg $var ${var%.pdf}.svg ; inkscape ${var%.pdf}.svg -M ${var%.pdf}.emf ; done ; }
 
 # convert pdf to emf
-function mpdf-tosvg () { pdf2svg $1 ${1%.pdf}.svg ; }
+function mpdf-tosvg () { for var in "$@"; do pdf2svg $var ${var%.pdf}.svg ; done ; }
+
+# convert pdf to png
+function mpdf-topng () { for var in "$@"; do pdftoppm $var ${var%.pdf} -png -r 300 -singlefile ; done ; }
+
+# convert pdf to png, specify resolution
+function mpdf-topng-res () { pdftoppm $1 ${1%.pdf} -png -r $2 -singlefile ; }
 
 # convert pdf to eps
-function mpdf-toeps () { inkscape $1 --export-eps=${1%.pdf}.eps;}
+function mpdf-toeps () { for var in "$@"; do inkscape $var --export-eps=${var%.pdf}.eps; done ; }
 
 # count words in pdf
-function mpdf-wordcount () { pdftotext $1 - | wc -w ;}
+function mpdf-wordcount () { for var in "$@"; do pdftotext $var - | wc -w ; done ; }
 
 # crop images in pdf file
-function mpdf-crop () { pdfcrop $1;}
+function mpdf-crop () { for var in "$@"; do pdfcrop $var; done ; }
 
 # change pdf format to a4
 function mpdf-a4 () { pdfjam --outfile ${1%.pdf}_out.pdf --paper a4paper $1 ; }
 
 # convert pdf to png
 function mpdf-convertToPNG(){
-    convert -verbose -density 600 -trim $1 -quality 100 -sharpen 0x1.0 ${1%.pdf}.png;
+    for var in "$@"
+    do
+      convert -verbose -density 600 -trim "$var" -quality 100 -sharpen 0x1.0 ${var%.pdf}.png;
+    done
 }
 
 function mpdf-webify(){
-    convert -verbose -density 200 -trim $1 -quality 100 ${1%.pdf}.png;
-}
+    for var in "$@"; do convert -verbose -density 200 -trim $var -quality 100 ${var%.pdf}.png; done ; }
 
 # decrypt pdf
 function mpdf-decrypt () {
