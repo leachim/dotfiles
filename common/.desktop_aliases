@@ -1,0 +1,122 @@
+###########################
+###        SYSTEM       ###
+###########################
+
+alias gpu-status="cat /proc/acpi/bbswitch"
+alias gpu-off="sudo tee /proc/acpi/bbswitch <<<OFF"
+alias gpu-on="sudo tee /proc/acpi/bbswitch <<<ON"
+
+function changemode (){
+	xrandr --newmode "1920x1080_60.00"  173.00  1920 2048 2248 2576  1080 1083 1088 1120 -hsync +vsyn;
+	xrandr --addmode DP1 1920x1080_60.00;
+	xrandr --output DP1 --mode 1920x1080_60.00;
+}
+
+function hl () { grep -A1 "Host $1" $HOME/.ssh/config | awk '/HostName/{getline; print}' | awk '{print $2}';}
+
+## Remote file system
+alias mount-library="sshfs -o allow_other -o ro storagebox:/library ~/mount"
+
+# fix caps issue
+capsfix () { python -c "from ctypes import *; X11 = cdll.LoadLibrary(\"libX11.so.6\"); display = X11.XOpenDisplay(None); X11.XkbLockModifiers(display, c_uint(0x0100), c_uint(2), c_uint(0)); X11.XCloseDisplay(display)" ; }
+CAPSFIX () { python -c "from ctypes import *; X11 = cdll.LoadLibrary(\"libX11.so.6\"); display = X11.XOpenDisplay(None); X11.XkbLockModifiers(display, c_uint(0x0100), c_uint(2), c_uint(0)); X11.XCloseDisplay(display)" ; }
+
+### Monitor and presentation settings ###
+
+# set dual/single monitors
+dual-dp () {  xrandr --output eDP1 --primary --output DP1 --auto --right-of eDP1;}
+dual-vga (){ xrandr --output eDP1 --primary --output DP2 --auto --right-of eDP1;}
+dual-hdmi () {  xrandr --output eDP1 --primary --output HDMI1 --auto --right-of eDP1;}
+single () { xrandr --output DP1 --off; xrandr --output DP2 --off ; xrandr --output HDMI1 --off ; xrandr --output HDMI2 --off ;}
+present () { xrandr --output DP1 --auto ; xrandr --output DP2 --auto;}
+
+# set background light
+darken () { xbacklight -set 0 ; }
+lighten () { xbacklight -set 100 ;}
+
+
+###########################
+###       SERVICES      ###
+###########################
+
+alias zotero="/opt/Zotero_linux-x86_64/zotero"
+alias matlab-desktop="/home/michael/.matlab/bin/matlab &"
+
+# route through glaux-web
+alias proxyssh="ssh glaux-web -D 8080 -N -C -o \"UserKnownHostsFile /dev/null\""
+# -D: Tells SSH that we want a SOCKS tunnel on the specified port number (you can choose a number between 1025-65536)
+# -f: Forks the process to the background
+# -C: Compresses the data before sending it
+# -q: Uses quiet mode
+# -N: Tells SSH that no command will be sent once the tunnel is up
+proxyshadow () { ss-local -l 8080 -c /etc/shadowsocks.json -s web.$(doctl compute domain list | tail -n 1 | awk '{print $1}') ; }
+proxyvpn () { sudo openvpn --remote web.$(doctl compute domain list | tail -n 1 | awk '{print $1}') 443 --config ~/.ssh/client1.ovpn ; }
+
+
+################################
+###  BACKUP & System updates ###
+################################
+
+# Backup routine
+alias fasollati="bash $HOME/.backup/local-backup.sh && echo \"df -h\" | sftp storagebox:"
+alias jour="sudo apt-get autoclean && bash $HOME/.backup/borg-backup.sh && doremi"
+alias check-storage="echo \"df -h\" | sftp storagebox"
+
+## Backup management
+backup-manager () { bash $HOME/.backup/duplicity.sh; }
+backup-list () { ls $HOME/.backup/ | sort -r | grep backup.tar.gz | head -1; }
+backup-zotero () { bash $HOME/.backup/zotero-backup.sh; }
+backup-email () { gmvault sync -d $HOME/.mail --emails-only $1; }
+
+alias backup-package-list="dpkg --get-selections"
+
+function backup-conda-envs {
+	NOW=$(date "+%Y-%m-%d")
+    mkdir "$HOME/conda-$NOW"
+	ENVS=$(conda env list | grep '^\w' | cut -d' ' -f1)
+    while read -r env; do
+		source activate $env
+		conda env export > $HOME/conda-$NOW/$env.yml
+		echo "Exporting $env"
+        source deactivate
+    done <<< "$ENVS"
+    zip -r "$HOME/conda-$NOW.zip" "$HOME/conda-$NOW"
+    rm -rf "$HOME/conda-$NOW"
+}
+
+
+function backup-restore-signed {
+    echo -e "Restore from $1 to $2"
+    sleep 5
+    _SIGN_KEY=4FF90AD4
+    if [ ! -d $1 ]; then
+        printf "Backup does not exist\n"
+        return -1
+    fi
+    if [ -d $2 ]; then
+        printf "Do not restore to an existing location\n"
+        return -1
+    fi
+    duplicity --sign-key "$_SIGN_KEY" "file://$1" "file://$2"
+}
+
+function backup-restore-unsigned {
+    echo -e "Restore from $1 to $2"
+    sleep 5
+    if [ ! -d $1 ]; then
+        echo "Backup does not exist\n"
+        return -1
+    fi
+    if [ -d $2 ]; then
+        echo "Do not restore to an existing location\n"
+        return -1
+    fi
+    duplicity --gpg-options "--skip-verify" "file://$1" $2
+}
+
+## secure tresor operations
+backup-secure_shredFile () { echo "Are you sure, shredding may not work on SSD? [y/N] "; read response ; if [[ $response =~ ^(yes|y)$ ]]; then shred -n 30 -z -u  $1 ; else echo "exited"; fi ; }
+backup-secure_encrypt-sign () { tar czvpf - $1 | gpg --cipher-algo aes256 -o safe.tar.gz.gpg --symmetric && gpg --armor --detach-sign safe.tar.gz.gpg; }
+backup-secure_encrypt-only () { tar czvpf - $1 | gpg --cipher-algo aes256 -o safe.tar.gz.gpg --symmetric ; }
+backup-secure_decrypt-signed () { gpg --verify $1.asc $1 && gpg -d $1 | tar xzvf - ; }
+backup-secure_decrypt-nocheck () { gpg -d $1 | tar xzvf - ; }

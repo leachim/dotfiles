@@ -1,36 +1,55 @@
 #########################################
 ###              ALIASES              ###
 #########################################
-function changemode (){
-	xrandr --newmode "1920x1080_60.00"  173.00  1920 2048 2248 2576  1080 1083 1088 1120 -hsync +vsyn;
-	xrandr --addmode DP1 1920x1080_60.00;
-	xrandr --output DP1 --mode 1920x1080_60.00;
-}
 
-function mfigure (){
-    pdftk A=$1 cat end output $2 
-    mpdf-crop $2;
-    mv -f ${2%.pdf}-crop.pdf $2;
-    mpdf-convertToPNG $2;
-    rm -f $1;
-}
-
-
-#########################################
-### Shortcuts                         ###
-#########################################
-alias zotero="/opt/Zotero_linux-x86_64/zotero"
-function retab () { python ~/.dotfiles/scripts/reindent.py $1 ; }
-
-## SYSTEM
+## Shortcuts
 alias lst="ls -lt"
 alias sac="source activate"
 alias logoff="pkill -KILL -u michael"
 alias takeover="tmux detach -a"
+alias vi="vim"
+alias le="less"
+alias c="clear"
+alias cdp="cd -P"
+alias pack="tar -zcvf"
+alias pingg="ping 8.8.8.8"
+alias di="dirs -v"
+
+alias tailwatch="watch -n 1 'tail $(ls -lA -t | head -n 1)'"
+alias brd="bash runDocker.sh"
+alias dun="du -chs | sort -h"
+alias dfn="df -Tha --total"
+#alias webify="mogrify -resize 690\> *.png"
+alias myip="curl http://ipecho.net/plain; echo"
+alias wgetNice="wget --cut-dirs=100 -nH -np -r -c"
+alias mkdir="mkdir -pv"
+alias psn="ps auxf"
+alias free="free -mt"
+alias psg="ps aux | grep -v grep | grep -i -e VSZ -e"
+alias fhere="find . -name "
+alias cd..="cd .."
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+
+
+#########################################
+###              CODING               ###
+#########################################
+
+## python
+function retab () { python ~/.dotfiles/scripts/reindent.py $1 ; }
+
+
+#########################################
+###              SYSTEM               ###
+#########################################
+
 datediff () { d1=$(date -d $1 +%s);d2=$(date -d 'now' +%s);echo "$(( (d2 - d1) / 86400 )) days";}
 function wttr () {
     # change Paris to your default location
-    curl -s -S -H "Accept-Language: en" wttr.in/"${1:-Munich}" | head -q -n -3 ; }
+    curl -s -S -H "Accept-Language: en" wttr.in/"${1:-Berlin}" | head -q -n -3 ; }
 alias weather="curl -s -S http://wttr.in/Berlin | head -q -n -3"
 function daily-quote () { 
   source ~/.quotes
@@ -46,27 +65,10 @@ alias ugit="git pull && git submodule update --recursive"
 function update-git () { for i in **; do cd $i; ugit; cd ..; done ; }
 alias timestamp="date +%Y_%m_%d-%H_%M"
 alias suspend="systemctl suspend"
-alias vi="vim"
-alias le="less"
-alias c="clear"
-alias cdp="cd -P"
-function hl () { grep -A1 "Host $1" $HOME/.ssh/config | awk '/HostName/{getline; print}' | awk '{print $2}';}
-alias pack="tar -zcvf"
-alias pingg="ping 8.8.8.8"
-alias fasollati="bash $HOME/.backup/local-backup.sh && echo \"df -h\" | sftp storagebox:"
-alias jour="sudo apt-get autoclean && bash $HOME/.backup/borg-backup.sh && doremi"
-alias check-storage="echo \"df -h\" | sftp storagebox"
-
-alias gpu-status="cat /proc/acpi/bbswitch"
-alias gpu-off="sudo tee /proc/acpi/bbswitch <<<OFF"
-alias gpu-on="sudo tee /proc/acpi/bbswitch <<<ON"
-
-alias di="dirs -v"
 alias m-timezone="timedatectl"
 alias m-timezone-update="sudo dpkg-reconfigure tzdata"
 alias m-rsync="rsync -azP"
 m-filesize () { echo "df -h" | sftp $1 ;}
-alias matlab-desktop="/home/michael/.matlab/bin/matlab &"
 
 ## Alerts, a set of flexible alerts to notify about the end of a computation in terminal and tmux
 alias alert-visual="echo -e '\a'"
@@ -75,10 +77,14 @@ alias alert-sound="aplay -q $HOME/.dotfiles/files/soft_beep.way"
 alias talert-visual="echo -ne '\033Ptmux;\033\a\033\\'"
 alias talert-all="echo -ne '\033Ptmux;\033\033]777;notify-send;$(hostname);$(date '+%Y-%m-%d %H:%M:%S');Computation completed!;\007\007\\033\\'"
 
-## Remote file system
-alias mount-library="sshfs -o allow_other -o ro storagebox:/library ~/mount"
+# make shell alert if running finished
+alias alertify='PS1="$PS1\a"'
 
-## Latex & PDF viewer
+###########################
+###       SERVICES      ###
+###########################
+
+## Latex, Markdown & PDF viewer
 alias lat="latexmk"
 alias late="latexmk -halt-on-error"
 alias lac="latexmk -c"
@@ -87,6 +93,10 @@ alias vw="evince"
 alias vd="evince *.pdf"
 alias arw="arara *.tex && evince *(.om[1])"
 alias ara="arara *.tex"
+function vm () { pandoc -s -f markdown -t man $1 | man -l - ;}
+
+## Latex stuff
+alias latex-duplicate-labels="zsh -c \"perl -nE 'say $1 if /(\\label[^}]*})/' **/*.tex | sort | uniq -c | sort -n\""
 
 ## APM (atom package manager)
 alias apm-export="apm list --installed --bare"
@@ -105,8 +115,6 @@ function do-bash () { docker exec -i -t $1 /bin/bash ; }
 alias do-count="docker ps -q | wc -l"
 function do-stopall () { docker container stop $(docker container ls -a -q) ; }
 function do-cleanup () { docker rm $(docker ps -qa --no-trunc --filter "status=exited"); docker rmi $(docker images --filter "dangling=true" -q --no-trunc) ; }
-#function do-rmall () { docker image rm $(docker image ls -a -q) ; }
-#function do-rmdan () { docker image rm -f $(docker images -f \"dangling=true\" -q) ; }
 function do-export () { docker save $1 > $1.tar; }
 
 ## Digital Ocean
@@ -124,7 +132,6 @@ function dig-reboot() { doctl compute droplet-action reboot $(doctl compute drop
 alias g="git"
 source $HOME/.gitalias
 function gtrack () { git ls-files $1 --error-unmatch; echo $? ; }
-function vm () { pandoc -s -f markdown -t man $1 | man -l - ;}
 
 ## Jupyter
 alias jup="jupyter notebook"
@@ -153,34 +160,10 @@ alias tls='tmux ls'
 alias tdelete="tmux kill-session -t"
 tcreate () { bash ~/.dotfiles/scripts/tmux-dev.sh "$1" ; }
 
-## Shortcuts
-alias tailwatch="watch -n 1 'tail $(ls -lA -t | head -n 1)'"
-alias brd="bash runDocker.sh"
-alias dun="du -chs | sort -h"
-alias dfn="df -Tha --total"
-#alias webify="mogrify -resize 690\> *.png"
-alias myip="curl http://ipecho.net/plain; echo"
-alias wgetNice="wget --cut-dirs=100 -nH -np -r -c"
-alias mkdir="mkdir -pv"
-alias psn="ps auxf"
-alias free="free -mt"
-alias psg="ps aux | grep -v grep | grep -i -e VSZ -e"
-alias fhere="find . -name "
-alias cd..="cd .."
-alias ..="cd .."
-alias ...="cd ../.."
-alias ....="cd ../../.."
-alias .....="cd ../../../.."
 
-# make shell alert if running finished
-alias alertify='PS1="$PS1\a"'
-
-## Latex stuff
-alias latex-duplicate-labels="zsh -c \"perl -nE 'say $1 if /(\\label[^}]*})/' **/*.tex | sort | uniq -c | sort -n\""
-
-#########################################
-### Helper functions                  ###
-#########################################
+###########################
+###        FILES        ###
+###########################
 
 alias mpng-shrink="optipng"
 alias mjpg-shrink="jpegoptim"
@@ -244,6 +227,76 @@ fi
 
 untar () { tar –zxvf $1 ; }
 
+function mlat () { for var in "$@"; do /bin/bash ~/.dotfiles/scripts/latexeqs.sh "$var"; done ; }
+
+# convert svg to pdf or png with rsvg-convert (in librsvg package)
+function msvg-topdf () { for var in "$@"; do rsvg-convert $var > ${var%.svg}.pdf ; done ; }
+
+# convert pdf to emf
+function mpdf-toemf () { for var in "$@"; do pdf2svg $var ${var%.pdf}.svg ; inkscape ${var%.pdf}.svg -M ${var%.pdf}.emf ; done ; }
+
+# convert pdf to emf
+function mpdf-tosvg () { for var in "$@"; do pdf2svg $var ${var%.pdf}.svg ; done ; }
+
+# convert pdf to png
+function mpdf-topng () { for var in "$@"; do pdftoppm $var ${var%.pdf} -png -r 300 -singlefile ; done ; }
+
+# convert pdf to png, specify resolution
+function mpdf-topng-res () { pdftoppm $1 ${1%.pdf} -png -r $2 -singlefile ; }
+
+# convert pdf to eps
+function mpdf-toeps () { for var in "$@"; do inkscape $var --export-eps=${var%.pdf}.eps; done ; }
+
+# count words in pdf
+function mpdf-wordcount () { for var in "$@"; do pdftotext $var - | wc -w ; done ; }
+
+# crop images in pdf file
+function mpdf-crop () { for var in "$@"; do pdfcrop $var; done ; }
+
+# change pdf format to a4
+function mpdf-a4 () { pdfjam --outfile ${1%.pdf}_out.pdf --paper a4paper $1 ; }
+
+# convert pdf to png
+function mpdf-convertToPNG(){
+    for var in "$@"
+    do
+      convert -verbose -density 600 -trim "$var" -quality 100 -sharpen 0x1.0 ${var%.pdf}.png;
+    done
+}
+
+function mpdf-webify(){
+    for var in "$@"; do convert -verbose -density 200 -trim $var -quality 100 ${var%.pdf}.png; done ; }
+
+function mfigure (){
+    pdftk A=$1 cat end output $2 
+    mpdf-crop $2;
+    mv -f ${2%.pdf}-crop.pdf $2;
+    mpdf-convertToPNG $2;
+    rm -f $1;
+}
+
+# decrypt pdf
+function mpdf-decrypt () {
+    if [ ! -d $1 ]; then
+        printf "File does not exist\n"
+        exit -1
+    fi
+    mv $1 backup_$file
+    qpdf --password=$2 --decrypt $1 decrypted_$1
+    mv decrypted_$1 $file
+}
+
+# decrease size of pdf - Quality level in dPDFSETTINGS= are "/screen," "/ebook," "/printer" and "/prepress,"
+mpdf-shrink () { mv $1 $1_original && /usr/bin/gs -dPDFSETTINGS=/ebook -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -sOutputFile=${1/_original} $1_original && if [ $(ls -l  $1 | cut -f 5 -d " ") -lt $(ls -l  $1_original | cut -f 5 -d " ") ]; then rm -f $1_original; else mv -f $1_original $1; fi ;}
+
+# print content of file to pdf
+mpdf-printFileToPdf () { cat "$1" | a2ps -=book -B -q --medium=A4dj --borders=no -o out12345678.ps && ps2pdf out12345678.ps printTerm.pdf && rm -f out12345678.ps ; }
+
+
+#########################################
+### Helper functions                  ###
+#########################################
+
 function countdown () {
    date1=$((`date +%s` + $1));
    while [ "$date1" -ne `date +%s` ]; do
@@ -287,10 +340,6 @@ sort -g $1 | awk '
   }
 ';}
 
-# fix caps issue
-capsfix () { python -c "from ctypes import *; X11 = cdll.LoadLibrary(\"libX11.so.6\"); display = X11.XOpenDisplay(None); X11.XkbLockModifiers(display, c_uint(0x0100), c_uint(2), c_uint(0)); X11.XCloseDisplay(display)" ; }
-CAPSFIX () { python -c "from ctypes import *; X11 = cdll.LoadLibrary(\"libX11.so.6\"); display = X11.XOpenDisplay(None); X11.XkbLockModifiers(display, c_uint(0x0100), c_uint(2), c_uint(0)); X11.XCloseDisplay(display)" ; }
-
 # remove whitespace from file
 removeWhitespace () { mv "$1" "${1// /_}"; }
 
@@ -303,83 +352,6 @@ dupsearch () { find -not -empty -type f -printf "%s\n" | sort -rn | uniq -d | xa
 function debchanglog () {
         zless "/usr/share/doc/$1/changelog.Debian.gz"
 }
-
-#########################################
-### Helper functions - pdfs           ###
-#########################################
-
-function mlat () { for var in "$@"; do /bin/bash ~/.dotfiles/scripts/latexeqs.sh "$var"; done ; }
-
-# convert svg to pdf or png with rsvg-convert (in librsvg package)
-function msvg-topdf () { for var in "$@"; do rsvg-convert $var > ${var%.svg}.pdf ; done ; }
-
-# convert pdf to emf
-function mpdf-toemf () { for var in "$@"; do pdf2svg $var ${var%.pdf}.svg ; inkscape ${var%.pdf}.svg -M ${var%.pdf}.emf ; done ; }
-
-# convert pdf to emf
-function mpdf-tosvg () { for var in "$@"; do pdf2svg $var ${var%.pdf}.svg ; done ; }
-
-# convert pdf to png
-function mpdf-topng () { for var in "$@"; do pdftoppm $var ${var%.pdf} -png -r 300 -singlefile ; done ; }
-
-# convert pdf to png, specify resolution
-function mpdf-topng-res () { pdftoppm $1 ${1%.pdf} -png -r $2 -singlefile ; }
-
-# convert pdf to eps
-function mpdf-toeps () { for var in "$@"; do inkscape $var --export-eps=${var%.pdf}.eps; done ; }
-
-# count words in pdf
-function mpdf-wordcount () { for var in "$@"; do pdftotext $var - | wc -w ; done ; }
-
-# crop images in pdf file
-function mpdf-crop () { for var in "$@"; do pdfcrop $var; done ; }
-
-# change pdf format to a4
-function mpdf-a4 () { pdfjam --outfile ${1%.pdf}_out.pdf --paper a4paper $1 ; }
-
-# convert pdf to png
-function mpdf-convertToPNG(){
-    for var in "$@"
-    do
-      convert -verbose -density 600 -trim "$var" -quality 100 -sharpen 0x1.0 ${var%.pdf}.png;
-    done
-}
-
-function mpdf-webify(){
-    for var in "$@"; do convert -verbose -density 200 -trim $var -quality 100 ${var%.pdf}.png; done ; }
-
-# decrypt pdf
-function mpdf-decrypt () {
-    if [ ! -d $1 ]; then
-        printf "File does not exist\n"
-        exit -1
-    fi
-    mv $1 backup_$file
-    qpdf --password=$2 --decrypt $1 decrypted_$1
-    mv decrypted_$1 $file
-}
-
-# decrease size of pdf - Quality level in dPDFSETTINGS= are "/screen," "/ebook," "/printer" and "/prepress,"
-mpdf-shrink () { mv $1 $1_original && /usr/bin/gs -dPDFSETTINGS=/ebook -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -sOutputFile=${1/_original} $1_original && if [ $(ls -l  $1 | cut -f 5 -d " ") -lt $(ls -l  $1_original | cut -f 5 -d " ") ]; then rm -f $1_original; else mv -f $1_original $1; fi ;}
-
-# print content of file to pdf
-mpdf-printFileToPdf () { cat "$1" | a2ps -=book -B -q --medium=A4dj --borders=no -o out12345678.ps && ps2pdf out12345678.ps printTerm.pdf && rm -f out12345678.ps ; }
-
-
-#########################################
-### Monitor and presentation settings ###
-#########################################
-
-# set dual/single monitors
-dual-dp () {  xrandr --output eDP1 --primary --output DP1 --auto --right-of eDP1;}
-dual-vga (){ xrandr --output eDP1 --primary --output DP2 --auto --right-of eDP1;}
-dual-hdmi () {  xrandr --output eDP1 --primary --output HDMI1 --auto --right-of eDP1;}
-single () { xrandr --output DP1 --off; xrandr --output DP2 --off ; xrandr --output HDMI1 --off ; xrandr --output HDMI2 --off ;}
-present () { xrandr --output DP1 --auto ; xrandr --output DP2 --auto;}
-
-# set background light
-darken () { xbacklight -set 0 ; }
-lighten () { xbacklight -set 100 ;}
 
 
 #########################################
@@ -394,76 +366,3 @@ alias web-wanip='dig +short myip.opendns.com @resolver1.opendns.com'
 alias web-ip="curl ifconfig.me/ip"
 web-quHOST () { host $1 | rev | cut -d " " -f1 | rev; }
 web-quCountrybyIP () { curl ipinfo.io/$1 2&>/dev/null | grep -Po '"country":.*?[^\\]",' | perl -pe 's/"country"://; s/^"//; s/",$//; s/"//; s/^\s+//' ; }
-
-# route through glaux-web
-alias proxyssh="ssh glaux-web -D 8080 -N -C -o \"UserKnownHostsFile /dev/null\""
-# -D: Tells SSH that we want a SOCKS tunnel on the specified port number (you can choose a number between 1025-65536)
-# -f: Forks the process to the background
-# -C: Compresses the data before sending it
-# -q: Uses quiet mode
-# -N: Tells SSH that no command will be sent once the tunnel is up
-proxyshadow () { ss-local -l 8080 -c /etc/shadowsocks.json -s web.$(doctl compute domain list | tail -n 1 | awk '{print $1}') ; }
-proxyvpn () { sudo openvpn --remote web.$(doctl compute domain list | tail -n 1 | awk '{print $1}') 443 --config ~/.ssh/client1.ovpn ; }
-
-#########################################
-### Backup and restore files          ###
-#########################################
-
-backup-manager () { bash $HOME/.backup/duplicity.sh; }
-backup-list () { ls $HOME/.backup/ | sort -r | grep backup.tar.gz | head -1; }
-backup-zotero () { bash $HOME/.backup/zotero-backup.sh; }
-backup-email () { gmvault sync -d $HOME/.mail --emails-only $1; }
-
-alias backup-package-list="dpkg --get-selections"
-
-function backup-conda-envs {
-	NOW=$(date "+%Y-%m-%d")
-    mkdir "$HOME/conda-$NOW"
-	ENVS=$(conda env list | grep '^\w' | cut -d' ' -f1)
-    while read -r env; do
-		source activate $env
-		conda env export > $HOME/conda-$NOW/$env.yml
-		echo "Exporting $env"
-        source deactivate
-    done <<< "$ENVS"
-    zip -r "$HOME/conda-$NOW.zip" "$HOME/conda-$NOW"
-    rm -rf "$HOME/conda-$NOW"
-}
-
-
-function backup-restore-signed {
-    echo -e "Restore from $1 to $2"
-    sleep 5
-    _SIGN_KEY=4FF90AD4
-    if [ ! -d $1 ]; then
-        printf "Backup does not exist\n"
-        return -1
-    fi
-    if [ -d $2 ]; then
-        printf "Do not restore to an existing location\n"
-        return -1
-    fi
-    duplicity --sign-key "$_SIGN_KEY" "file://$1" "file://$2"
-}
-
-function backup-restore-unsigned {
-    echo -e "Restore from $1 to $2"
-    sleep 5
-    if [ ! -d $1 ]; then
-        echo "Backup does not exist\n"
-        return -1
-    fi
-    if [ -d $2 ]; then
-        echo "Do not restore to an existing location\n"
-        return -1
-    fi
-    duplicity --gpg-options "--skip-verify" "file://$1" $2
-}
-
-## secure tresor operations
-backup-secure_shredFile () { echo "Are you sure, shredding may not work on SSD? [y/N] "; read response ; if [[ $response =~ ^(yes|y)$ ]]; then shred -n 30 -z -u  $1 ; else echo "exited"; fi ; }
-backup-secure_encrypt-sign () { tar czvpf - $1 | gpg --cipher-algo aes256 -o safe.tar.gz.gpg --symmetric && gpg --armor --detach-sign safe.tar.gz.gpg; }
-backup-secure_encrypt-only () { tar czvpf - $1 | gpg --cipher-algo aes256 -o safe.tar.gz.gpg --symmetric ; }
-backup-secure_decrypt-signed () { gpg --verify $1.asc $1 && gpg -d $1 | tar xzvf - ; }
-backup-secure_decrypt-nocheck () { gpg -d $1 | tar xzvf - ; }
-#

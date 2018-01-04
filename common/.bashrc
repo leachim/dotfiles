@@ -46,6 +46,9 @@ HISTFILESIZE=20000
 if [ -f ~/.aliases ]; then
     source ~/.aliases
 fi
+if [ -f ~/.desktop_aliases ]; then
+    source ~/.desktop_aliases
+fi
 
 # Colorful bash 
 alias ls="ls --color=auto"

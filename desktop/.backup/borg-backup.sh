@@ -113,6 +113,8 @@ borg create                                 \
     --exclude '/home/*/.gnupg/*'            \
     --exclude '/home/*/.pki/*'              \
     --exclude '/home/*/.ssh/*'              \
+    --exclude '/home/*/*/streisand/global_vars/*'\
+    --exclude '/home/*/*/streisand/generated-docs/*'\
                                             \
     --exclude '/home/*/.config/chromium/*'  \
     --exclude '/home/*/.mozilla/*'          \
@@ -155,11 +157,13 @@ global_exit=$(( backup_exit > prune_exit ? backup_exit : prune_exit ))
 if [ ${global_exit} -eq 1 ];
 then
     info "Backup and/or Prune finished with a warning"
+    notify-send "$(hostname): $(date '+%Y-%m-%d %H:%M:%S') - Borg warning" "Borg finished with a warning.\nBackup exit: $backup_exit\nPrune exit: $prune_exit" --urgency=normal
 fi
 
 if [ ${global_exit} -gt 1 ];
 then
     info "Backup and/or Prune finished with an error"
+    notify-send "$(hostname): $(date '+%Y-%m-%d %H:%M:%S') - Borg error" "Borg finished with an error.\nBackup exit: $backup_exit\nPrune exit: $prune_exit" --urgency=critical
 fi
 
 rm -f ~/manual_installed_packages_*
