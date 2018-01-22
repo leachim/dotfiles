@@ -25,6 +25,9 @@ deb http://ftp.debian.org/debian stable main contrib non-free
 
 #### other packages ########
 
+# Google Chrome support
+deb http://dl.google.com/linux/deb/ stable main 
+
 # Docker CE
 deb [arch=amd64] https://download.docker.com/linux/debian stretch stable
 # deb-src [arch=amd64] https://download.docker.com/linux/debian stretch stable

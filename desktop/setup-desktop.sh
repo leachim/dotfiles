@@ -18,6 +18,8 @@ echo "docker official"
 curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | sudo apt-key add -
 echo "google cloud"
 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+echo "google chrome on debian"
+wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 
 
 ## Install debian packages

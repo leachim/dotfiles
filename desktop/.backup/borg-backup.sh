@@ -124,6 +124,7 @@ borg create                                 \
     --exclude '/home/*/streisand/generated-docs/*'\
                                             \
     --exclude '/home/*/.config/chromium/*'  \
+    --exclude '/home/*/.config/google-chrome/*'\
     --exclude '/home/*/.mozilla/*'          \
     --exclude '/home/*/.travis/*'           \
     --exclude '/home/*/.virtualbox/*'       \
