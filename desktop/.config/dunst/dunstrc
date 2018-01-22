@@ -12,7 +12,7 @@
     # <http://developer.gnome.org/pango/stable/PangoMarkupFormat.html>.
     # If markup is not allowed, those tags will be stripped out of the
     # message.
-    allow_markup = yes
+    markup = yes
 
     # The format of the message.  Possible variables are:
     #   %a  appname
@@ -150,9 +150,8 @@
     # Paths to default icons.
     #icon_folders = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
 
-[frame]
-    width = 3
-    color = "#aaaaaa"
+    frame_width = 3
+    frame_color = "#aaaaaa"
 
 [shortcuts]
 
@@ -170,7 +169,7 @@
     # Redisplay last message(s).
     # On the US keyboard layout "grave" is normally above TAB and left
     # of "1".
-    history = ctrl+grave
+    history = ctrl+h
 
     # Context menu.
     context = ctrl+shift+period

@@ -18,8 +18,8 @@ function hl () { grep -A1 "Host $1" $HOME/.ssh/config | awk '/HostName/{getline;
 alias mount-library="sshfs -o allow_other -o ro storagebox:/library ~/mount"
 
 # fix caps issue
-capsfix () { python -c "from ctypes import *; X11 = cdll.LoadLibrary(\"libX11.so.6\"); display = X11.XOpenDisplay(None); X11.XkbLockModifiers(display, c_uint(0x0100), c_uint(2), c_uint(0)); X11.XCloseDisplay(display)" ; }
-CAPSFIX () { python -c "from ctypes import *; X11 = cdll.LoadLibrary(\"libX11.so.6\"); display = X11.XOpenDisplay(None); X11.XkbLockModifiers(display, c_uint(0x0100), c_uint(2), c_uint(0)); X11.XCloseDisplay(display)" ; }
+capsfix () { /usr/bin/python3 -c "from ctypes import *; X11 = cdll.LoadLibrary(\"libX11.so.6\"); display = X11.XOpenDisplay(None); X11.XkbLockModifiers(display, c_uint(0x0100), c_uint(2), c_uint(0)); X11.XCloseDisplay(display)" ; }
+CAPSFIX () { /usr/bin/python3 -c "from ctypes import *; X11 = cdll.LoadLibrary(\"libX11.so.6\"); display = X11.XOpenDisplay(None); X11.XkbLockModifiers(display, c_uint(0x0100), c_uint(2), c_uint(0)); X11.XCloseDisplay(display)" ; }
 
 ### Monitor and presentation settings ###
 
@@ -34,6 +34,9 @@ present () { xrandr --output DP1 --auto ; xrandr --output DP2 --auto;}
 darken () { xbacklight -set 0 ; }
 lighten () { xbacklight -set 100 ;}
 
+### Internet and proxy commands ###
+alias wgup="sudo wg-quick up wg0-client"
+alias wgdown="sudo wg-quick down wg0-client"
 
 ###########################
 ###       SERVICES      ###
@@ -49,8 +52,8 @@ alias proxyssh="ssh glaux-web -D 8080 -N -C -o \"UserKnownHostsFile /dev/null\""
 # -C: Compresses the data before sending it
 # -q: Uses quiet mode
 # -N: Tells SSH that no command will be sent once the tunnel is up
-proxyshadow () { ss-local -l 8080 -c /etc/shadowsocks.json -s web.$(doctl compute domain list | tail -n 1 | awk '{print $1}') ; }
-proxyvpn () { sudo openvpn --remote web.$(doctl compute domain list | tail -n 1 | awk '{print $1}') 443 --config ~/.ssh/client1.ovpn ; }
+proxyshadow () { ss-local -l 8080 -c /etc/shadowsocks.json -s proxy.$(doctl compute domain list | tail -n 1 | awk '{print $1}') ; }
+proxyvpn () { sudo openvpn --remote proxy.$(doctl compute domain list | tail -n 1 | awk '{print $1}') 443 --config ~/.ssh/client1.ovpn ; }
 
 
 ################################

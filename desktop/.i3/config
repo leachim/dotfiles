@@ -106,7 +106,7 @@ exec --no-startup-id /usr/bin/xfsettingsd
 exec --no-startup-id /usr/bin/gnome-keyring-daemon
 exec_always --no-startup-id /usr/bin/xbindkeys
 
-exec --no-startup-id /usr/bin/dunst -config $HOME/.dunstrc &
+# exec --no-startup-id /usr/bin/dunst -config $HOME/.dunstrc &
 exec --no-startup-id dropbox start
 #exec --no-startup-id owncloud
 #bindsym $mod+Shift+d exec --no-startup-id dropbox start

@@ -33,6 +33,12 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
+alias apu="sudo apt-get update"
+alias apg="sudo apt-get upgrade"
+alias api="sudo apt-get install"
+alias reboot="sudo systemctl reboot"
+alias poweroff="sudo systemctl poweroff"
+
 
 #########################################
 ###              CODING               ###
@@ -118,7 +124,7 @@ function do-cleanup () { docker rm $(docker ps -qa --no-trunc --filter "status=e
 function do-export () { docker save $1 > $1.tar; }
 
 ## Digital Ocean
-function dig-create() { doctl compute droplet create glaux-web --image 29006376 --region $1 --size 512mb --ssh-keys 8c:7e:36:3e:d0:f5:98:d7:46:86:b5:78:7d:2e:9a:1e &&
+function dig-create() { doctl compute droplet create glaux-web --image debian-9-x64 --region $1 --size 1gb --ssh-keys 8c:7e:36:3e:d0:f5:98:d7:46:86:b5:78:7d:2e:9a:1e &&
 sleep 5 && doctl compute firewall add-droplets de489db5-1e04-40e6-891c-8bdfa47745c8 --droplet-ids $(doctl compute droplet list | tail -n 1 |  awk '{print $1}') && sleep 10 ; } 
 function dig-connect() { ss-local -c /etc/shadowsocks.json -s $(doctl compute droplet list | tail -n 1 |  awk '{print $3}') ; }
 function dig-domain() { doctl compute domain records create $(doctl compute domain list | tail -n 1 | awk '{print $1}') --record-type A --record-name web --record-data $(doctl compute droplet list | tail -n 1 |  awk '{print $3}') --record-ttl 180 ; }
@@ -230,7 +236,7 @@ untar () { tar –zxvf $1 ; }
 function mlat () { for var in "$@"; do /bin/bash ~/.dotfiles/scripts/latexeqs.sh "$var"; done ; }
 
 # convert svg to pdf or png with rsvg-convert (in librsvg package)
-function msvg-topdf () { for var in "$@"; do rsvg-convert $var > ${var%.svg}.pdf ; done ; }
+function msvg-topdf () { for var in "$@"; do rsvg-convert -f pdf -o ${var%.svg}.pdf $var; done ; }
 
 # convert pdf to emf
 function mpdf-toemf () { for var in "$@"; do pdf2svg $var ${var%.pdf}.svg ; inkscape ${var%.pdf}.svg -M ${var%.pdf}.emf ; done ; }

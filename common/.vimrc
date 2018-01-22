@@ -53,8 +53,8 @@ set showcmd             " show command in bottom bar
 set nocursorline        " highlight current line
 set showmatch           " higlight matching parenthesis
 "set fillchars+=vert:┃
-"Always show current position
-set ruler
+"Always show current position, i.e. line and column number
+set ruler " show line and colum number
 
 " Height of the command bar
 set cmdheight=1
@@ -71,7 +71,8 @@ set wildignore+=.git\*,.hg\*,.svn\*
 set hid
 
 " Configure backspace so it acts as it should act
-set backspace=eol,start,indent
+" set backspace=eol,start,indent
+set backspace=indent,eol,start
 set whichwrap+=<,>,h,l
 
 " Search settings
@@ -113,7 +114,7 @@ set softtabstop=4
 
 " Linebreak on 500 characters
 set lbr
-set tw=300
+set textwidth=120
 
 " Enable autoindent
 set autoindent
@@ -168,6 +169,12 @@ augroup configgroup
     " autocmd BufEnter *.py setlocal expandtab
     autocmd BufEnter *.md setlocal ft=markdown
 augroup END
+
+" configure expanding of tabs for various file types
+au BufRead,BufNewFile *.py set expandtab
+au BufRead,BufNewFile *.c set noexpandtab
+au BufRead,BufNewFile *.h set noexpandtab
+au BufRead,BufNewFile Makefile* set noexpandtab
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " backup
@@ -271,6 +278,9 @@ Plug 'junegunn/goyo.vim'
 
 " color scheme
 Plug 'altercation/vim-colors-solarized'
+
+" julia language support
+Plug 'JuliaEditorSupport/julia-vim'
 
 call plug#end()
 

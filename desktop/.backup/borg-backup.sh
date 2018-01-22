@@ -13,6 +13,7 @@ LOG="~/Downloads/borgbackup.log"
 
 # restore archive, see https://borgbackup.readthedocs.io/en/stable/usage/extract.html for more examples, note to remove leading /
 # first, recreate repository
+# make sure to backup keys!
 # BORG_RSH="ssh -i ~/.ssh/borg_$(hostname)" borg key import ssh://storagebox:23/./borg/$(hostname) path/to/key
 # BORG_RSH="ssh -i ~/.ssh/borg_$(hostname)" borg extract ssh://storagebox:23/./borg/$(hostname)::glaux-laptop-2017-12-30T21:55:49 home/$(username)/src
 
@@ -56,12 +57,15 @@ borg create                                 \
     --compression lzma,6                    \
     --exclude-caches                        \
     --exclude '/home/*/.cache/*'            \
+    --exclude '/home/*/*.pyc'               \
+    --exclude '/home/*/*.o'                 \
                                             \
     --exclude '/etc/.pwd.lock'              \
     --exclude '/etc/apparmor.d/*'           \
     --exclude '/etc/audit'                  \
     --exclude '/etc/audisp'                 \
     --exclude '/etc/cups/ssl'               \
+    --exclude '/etc/cups/ppd/*'             \
     --exclude '/etc/cups/printers.conf*'    \
     --exclude '/etc/cups/subscriptions.conf*'\
     --exclude '/etc/docker/key.json'        \
@@ -80,6 +84,7 @@ borg create                                 \
     --exclude '/etc/subgid*'                \
     --exclude '/etc/shadow*'                \
     --exclude '/etc/ssl/private'            \
+    --exclude '/etc/wireguard/*'            \
                                             \
     --exclude '/home/*/.anaconda3/pkgs/*'   \
     --exclude '/home/*/.anaconda3/conda-bld/*'\
@@ -107,14 +112,16 @@ borg create                                 \
                                             \
     --exclude '/home/*/.aws/*'              \
     --exclude '/home/*/.backup/*'           \
-    --exclude '/home/*/.dotfiles/*'         \
+    --exclude '/home/*/.dotfiles/*/.backup' \
+    --exclude '/home/*/.dotfiles/*/.config' \
     --exclude '/home/*/.encrypted/*'        \
     --exclude '/home/*/.gmvault/*'          \
     --exclude '/home/*/.gnupg/*'            \
     --exclude '/home/*/.pki/*'              \
+    --exclude '/home/*/.streisand/*'        \
     --exclude '/home/*/.ssh/*'              \
-    --exclude '/home/*/*/streisand/global_vars/*'\
-    --exclude '/home/*/*/streisand/generated-docs/*'\
+    --exclude '/home/*/streisand/global_vars/*'\
+    --exclude '/home/*/streisand/generated-docs/*'\
                                             \
     --exclude '/home/*/.config/chromium/*'  \
     --exclude '/home/*/.mozilla/*'          \
@@ -157,13 +164,13 @@ global_exit=$(( backup_exit > prune_exit ? backup_exit : prune_exit ))
 if [ ${global_exit} -eq 1 ];
 then
     info "Backup and/or Prune finished with a warning"
-    notify-send "$(hostname): $(date '+%Y-%m-%d %H:%M:%S') - Borg warning" "Borg finished with a warning.\nBackup exit: $backup_exit\nPrune exit: $prune_exit" --urgency=normal
+    notify-send "$(hostname): $(date '+%Y-%m-%d %H:%M:%S') - Borg warning" "\nBorg finished with a warning.\nBackup exit: $backup_exit\nPrune exit: $prune_exit" --urgency=normal
 fi
 
 if [ ${global_exit} -gt 1 ];
 then
     info "Backup and/or Prune finished with an error"
-    notify-send "$(hostname): $(date '+%Y-%m-%d %H:%M:%S') - Borg error" "Borg finished with an error.\nBackup exit: $backup_exit\nPrune exit: $prune_exit" --urgency=critical
+    notify-send "$(hostname): $(date '+%Y-%m-%d %H:%M:%S') - Borg error" "\nBorg finished with an error.\nBackup exit: $backup_exit\nPrune exit: $prune_exit" --urgency=critical
 fi
 
 rm -f ~/manual_installed_packages_*
