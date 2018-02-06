@@ -13,7 +13,9 @@ alias c="clear"
 alias cdp="cd -P"
 alias pack="tar -zcvf"
 alias pingg="ping 8.8.8.8"
-alias di="dirs -v"
+alias s="dirs -v" # zprezto directory module
+alias f='fasd_cd -i' # zprezto fasd module
+
 
 alias tailwatch="watch -n 1 'tail $(ls -lA -t | head -n 1)'"
 alias brd="bash runDocker.sh"
@@ -149,7 +151,7 @@ alias i="ipython3 -i -c \"import numpy as np;import pandas as pd;from math impor
 mformat-python () { PYTHONPATH=~/Software/yapf python ~/Software/yapf/yapf --style google $1 ; }
 
 ## Julia
-alias ju="julia"
+alias j="julia"
 
 ## SSH
 ssi () { ssh "$1" -o "UserKnownHostsFile /dev/null"; }
@@ -165,6 +167,7 @@ alias tml='tmux list-sessions'
 alias tls='tmux ls'
 alias tdelete="tmux kill-session -t"
 tcreate () { bash ~/.dotfiles/scripts/tmux-dev.sh "$1" ; }
+tmonitor () { bash ~/.dotfiles/scripts/tmux-mon.sh "$1" ; }
 
 
 ###########################

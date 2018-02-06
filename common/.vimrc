@@ -298,6 +298,10 @@ set background=dark
 " => Shortcuts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" easy save and close
+map ZZ :w! <CR>
+map ZX :wq <CR>
+
 " remap esc to jk combination -> better than using Ctrl-c
 inoremap jk <Esc>
 " Treat long lines as break lines (useful when moving around in them)
