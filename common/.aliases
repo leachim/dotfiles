@@ -49,6 +49,9 @@ alias poweroff="sudo systemctl poweroff"
 ## python
 function retab () { python ~/.dotfiles/scripts/reindent.py $1 ; }
 
+# conda backup
+alias backup-conda-all="bash ~/.dotfiles/scripts/conda_backup.sh"
+
 
 #########################################
 ###              SYSTEM               ###
@@ -67,7 +70,7 @@ function daily-quote () {
 alias clock="date | cut -d ' ' -f 4"
 alias daily-cal="ncal -A 1 -M -b -w"
 alias upip="pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs pip install -U"
-alias doremi="sudo apt-get update && sudo apt-get upgrade && conda update conda --yes && conda update --all --yes && upip && sudo apt-get autoremove && echo \"\" && weather && echo \"Tage im Mai: $(datediff 12/27/2017)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
+alias doremi="apt-mark showhold && sudo apt-get update && sudo apt-get upgrade && conda update conda --yes && conda update --all --yes && upip && sudo apt-get autoremove && echo \"\" && weather && echo \"Tage im Mai: $(datediff 12/27/2017)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
 alias daily-info="weather && echo \"Tage im Mai: $(datediff 12/27/2017)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
 alias ugit="git pull && git submodule update --recursive"
 function update-git () { for i in **; do cd $i; ugit; cd ..; done ; }
@@ -142,7 +145,8 @@ source $HOME/.gitalias
 function gtrack () { git ls-files $1 --error-unmatch; echo $? ; }
 
 ## Jupyter
-alias jup="jupyter notebook"
+# alias jup="jupyter notebook"
+alias jup="jupyter lab"
 
 ## Python
 alias i2="ipython2 -i --colors=Linux"

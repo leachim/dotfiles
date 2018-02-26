@@ -244,7 +244,7 @@ Plug 'w0rp/ale'
 " syntax support
 Plug 'sheerun/vim-polyglot'
 " indendation autodetect
-Plug 'tpope/vim-sleuth'
+" Plug 'tpope/vim-sleuth'
 
 " vim snippets
 " Track the engine.
@@ -276,6 +276,9 @@ Plug 'christoomey/vim-tmux-navigator'
 " distraction free writing
 Plug 'junegunn/goyo.vim'
 
+" annoying indents
+" Plug 'tpope/vim-sleuth'
+
 " color scheme
 Plug 'altercation/vim-colors-solarized'
 
@@ -300,6 +303,7 @@ set background=dark
 
 " easy save and close
 map ZZ :w! <CR>
+map zz :w! <CR>
 map ZX :wq <CR>
 
 " remap esc to jk combination -> better than using Ctrl-c

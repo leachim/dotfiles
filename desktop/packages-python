@@ -15,3 +15,6 @@ flake8-docstring
 ## streisand setup
 ansible
 markupsafe
+## python stack via conda
+# conda install -c conda-forge jupyter-lab
+# 

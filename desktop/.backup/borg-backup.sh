@@ -44,6 +44,7 @@ info "Starting backup"
 
 apt-mark showmanual > ~/manual_installed_packages_$(date +%Y_%m_%d-%H_%M_%S)
 dpkg --get-selections > ~/all_installed_packages_$(date +%Y_%m_%d-%H_%M_%S)
+bash ~/.dotfiles/scripts/conda_backup.sh 
 
 # Backup the most important directories into an archive named after
 # the machine this script is currently running on:
@@ -64,10 +65,7 @@ borg create                                 \
     --exclude '/etc/apparmor.d/*'           \
     --exclude '/etc/audit'                  \
     --exclude '/etc/audisp'                 \
-    --exclude '/etc/cups/ssl'               \
-    --exclude '/etc/cups/ppd/*'             \
-    --exclude '/etc/cups/printers.conf*'    \
-    --exclude '/etc/cups/subscriptions.conf*'\
+    --exclude '/etc/cups/*'               \
     --exclude '/etc/docker/key.json'        \
     --exclude '/etc/default/cacerts'        \
     --exclude '/etc/exim4/passwd.client'    \
@@ -86,8 +84,8 @@ borg create                                 \
     --exclude '/etc/ssl/private'            \
     --exclude '/etc/wireguard/*'            \
                                             \
-    --exclude '/home/*/.anaconda3/pkgs/*'   \
-    --exclude '/home/*/.anaconda3/conda-bld/*'\
+    --exclude '/home/*/.anaconda/*'         \
+    --exclude '/home/*/.anaconda3/*'        \
     --exclude '/home/*/.config/borg/*'      \
     --exclude '/home/*/.config/doctl/*'     \
     --exclude '/home/*/.config/gcloud/*'    \
@@ -100,8 +98,8 @@ borg create                                 \
     --exclude '/home/*/.gcalcli_oauth'      \
     --exclude '/home/*/.grip/*'             \
     --exclude '/home/*/.kube/*'             \
-    --exclude '/home/*/.miniconda3/pkgs/*'  \
-    --exclude '/home/*/.miniconda3/conda-bld/*'\
+    --exclude '/home/*/.miniconda3/*'       \
+    --exclude '/home/*/.miniconda/*'        \
     --exclude '/home/*/.xsession-errors'    \
     --exclude '/home/*/.zcompdump'          \
     --exclude '/home/*/.zcompcache'         \
@@ -114,6 +112,7 @@ borg create                                 \
     --exclude '/home/*/.backup/*'           \
     --exclude '/home/*/.dotfiles/*/.backup' \
     --exclude '/home/*/.dotfiles/*/.config' \
+    --exclude '/home/*/.dotfiles/.git/*'    \
     --exclude '/home/*/.encrypted/*'        \
     --exclude '/home/*/.gmvault/*'          \
     --exclude '/home/*/.gnupg/*'            \
@@ -176,6 +175,7 @@ fi
 
 rm -f ~/manual_installed_packages_*
 rm -f ~/all_installed_packages_*
+rm -f ~/conda-$(date +%Y-%m-%d).zip 
 
 # unset -v $BORG_PASSPHRASE
 exit ${global_exit}

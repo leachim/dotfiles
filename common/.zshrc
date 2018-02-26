@@ -104,6 +104,9 @@ _my_generic () {
 }
 bindkey '^X^a' all-matches
 
+# break of in the middle of writing command
+# https://sgeb.io/posts/2016/11/til-bash-zsh-half-typed-commands/
+bindkey '^q' push-line-or-edit
 
 
 ################################################

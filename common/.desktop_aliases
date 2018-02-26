@@ -62,7 +62,7 @@ proxyvpn () { sudo openvpn --remote proxy.$(doctl compute domain list | tail -n 
 
 # Backup routine
 alias fasollati="bash $HOME/.backup/local-backup.sh && echo \"df -h\" | sftp storagebox:"
-alias jour="sudo apt-get autoclean && bash $HOME/.backup/borg-backup.sh && doremi"
+alias jour="sudo apt-get autoclean && bash $HOME/.backup/borg-backup.sh && sleep 5 && doremi"
 alias check-storage="echo \"df -h\" | sftp storagebox"
 
 ## Backup management
