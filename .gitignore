@@ -47,3 +47,6 @@ desktop/.themes/*
 
 ## do not store tmux sessions
 common/.tmux/resurrect
+
+# do not store decrypted file
+common/quotes.dec

@@ -78,6 +78,7 @@ borg create                                 \
     --exclude '/etc/security/opasswd'       \
     --exclude '/etc/subuid*'                \
     --exclude '/etc/sudoers*'               \
+    --exclude '/etc/systemd/network/wg0.netdev'\
     --exclude '/etc/vpnc'                   \
     --exclude '/etc/subgid*'                \
     --exclude '/etc/shadow*'                \

@@ -1,9 +1,9 @@
 # Use nameserver in connection with network manager through /etc/dhcp/dhclient.conf
 ## open dns family shield
-nameserver 208.67.220.220
-nameserver 208.67.222.222
+#nameserver 208.67.220.220
+#nameserver 208.67.222.222
 ## chaos computer club
-nameserver 213.73.91.35
+#nameserver 213.73.91.35
 # quad9
 #nameserver 9.9.9.9
 ## google
@@ -11,3 +11,12 @@ nameserver 213.73.91.35
 #nameserver 8.8.4.4
 #nameserver 2001:4860:4860::8888
 #nameserver 2001:4860:4860::8844
+
+#### 
+# ipv6 nameservers
+# google
+#nameserver 2001:4860:4860::8888
+#nameserver 2001:4860:4860::8844
+# ccc
+# quad 9
+nameserver 2620:fe::fe

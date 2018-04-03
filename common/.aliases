@@ -63,7 +63,7 @@ function wttr () {
     curl -s -S -H "Accept-Language: en" wttr.in/"${1:-Berlin}" | head -q -n -3 ; }
 alias weather="curl -s -S http://wttr.in/Berlin | head -q -n -3"
 function daily-quote () { 
-  source ~/.quotes
+  source ~/.dotfiles/common/quotes.dec
   n_quotes=${#quotearray[@]}+1
   rand=$(($RANDOM%$n_quotes)) 
   echo ${quotearray[$rand]} ; }
@@ -177,6 +177,9 @@ tmonitor () { bash ~/.dotfiles/scripts/tmux-mon.sh "$1" ; }
 ###########################
 ###        FILES        ###
 ###########################
+
+function mfile-encrypt { openssl aes-256-cbc -a -salt -in $1 -out $2 ; }
+function mfile-decrypt { openssl aes-256-cbc -d -a -in $1 -out $2 ; }
 
 alias mpng-shrink="optipng"
 alias mjpg-shrink="jpegoptim"
