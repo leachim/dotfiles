@@ -5,7 +5,7 @@
 ## Shortcuts
 alias lst="ls -lt"
 alias sac="source activate"
-alias logoff="pkill -KILL -u michael"
+alias logoff="pkill -KILL -u $USER"
 alias takeover="tmux detach -a"
 alias vi="vim"
 alias le="less"
