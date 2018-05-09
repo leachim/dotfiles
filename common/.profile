@@ -18,7 +18,7 @@ xset -dpms
 xset r rate 300 30
 
 # added by Anaconda3 2.4.1 installer
-export PATH="/home/michael/.anaconda3/bin:/snap/bin:/opt/bin:/home/michael/.local/bin:/opt/node-v8.9.1-linux-x64/bin:$PATH"
+export PATH="$HOME/.anaconda3/bin:/snap/bin:/opt/bin:$HOME/.local/bin:/opt/node-v8.9.1-linux-x64/bin:$HOME/.dotfiles/bin:$PATH"
 
 # Java dependencies
 export JAVA_HOME=/usr/lib/jvm/default-java

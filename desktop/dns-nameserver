@@ -1,4 +1,6 @@
 # Use nameserver in connection with network manager through /etc/dhcp/dhclient.conf
+# provider comparison: https://medium.com/@nykolas.z/dns-resolvers-performance-compared-cloudflare-x-google-x-quad9-x-opendns-149e803734e5
+#
 ## open dns family shield
 #nameserver 208.67.220.220
 #nameserver 208.67.222.222

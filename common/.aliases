@@ -15,6 +15,7 @@ alias pack="tar -zcvf"
 alias pingg="ping 8.8.8.8"
 alias s="dirs -v" # zprezto directory module
 alias f='fasd_cd -i' # zprezto fasd module
+alias agenda="gcalcli agenda"
 
 
 alias tailwatch="watch -n 1 'tail $(ls -lA -t | head -n 1)'"
@@ -70,7 +71,7 @@ function daily-quote () {
 alias clock="date | cut -d ' ' -f 4"
 alias daily-cal="ncal -A 1 -M -b -w"
 alias upip="pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs pip install -U"
-alias doremi="apt-mark showhold && sudo apt-get update && sudo apt-get upgrade && conda update conda --yes && conda update --all --yes && upip && sudo apt-get autoremove && echo \"\" && weather && echo \"Tage im Mai: $(datediff 12/27/2017)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
+alias doremi="apt-mark showhold && sudo apt-get update && sudo apt-get upgrade && conda update conda --yes && conda update --all --yes && upip && sudo apt-get autoremove && echo \"\" && weather && echo \"Tage im Mai: $(datediff 04/29/2018)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
 alias daily-info="weather && echo \"Tage im Mai: $(datediff 12/27/2017)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
 alias ugit="git pull && git submodule update --recursive"
 function update-git () { for i in **; do cd $i; ugit; cd ..; done ; }
@@ -308,6 +309,8 @@ mpdf-shrink () { mv $1 $1_original && /usr/bin/gs -dPDFSETTINGS=/ebook -dNOPAUSE
 # print content of file to pdf
 mpdf-printFileToPdf () { cat "$1" | a2ps -=book -B -q --medium=A4dj --borders=no -o out12345678.ps && ps2pdf out12345678.ps printTerm.pdf && rm -f out12345678.ps ; }
 
+# check file content
+mcheck-zerowidth () { grep "$(printf %b '\u200b')" $1 ; }
 
 #########################################
 ### Helper functions                  ###

@@ -99,6 +99,7 @@ borg create                                 \
     --exclude '/home/*/.gcalcli_oauth'      \
     --exclude '/home/*/.grip/*'             \
     --exclude '/home/*/.kube/*'             \
+    --exclude '/home/*/.local/*/Trash/*'    \
     --exclude '/home/*/.miniconda3/*'       \
     --exclude '/home/*/.miniconda/*'        \
     --exclude '/home/*/.xsession-errors'    \

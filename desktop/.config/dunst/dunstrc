@@ -228,18 +228,19 @@
 # NOTE: It might be helpful to run dunst -print in a terminal in order
 # to find fitting options for rules.
 
-
 [dropbox_added]
   appname = Dropbox
   summary = "*added*"
   foreground = "#9079f2"
   timeout = 20
+  format = ""
 
 [dropbox_deleted]
   appname = Dropbox
   summary = "*deleted*"
   foreground = "#ff3377"
   timeout = 20
+  format = ""
 
 [zotero]
   appname = Zotero

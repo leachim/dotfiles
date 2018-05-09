@@ -37,6 +37,8 @@ lighten () { xbacklight -set 100 ;}
 ### Internet and proxy commands ###
 alias wgup="sudo wg-quick up wg0-client"
 alias wgdown="sudo wg-quick down wg0-client"
+alias caup="sudo ipsec up CAM"
+alias cadown="sudo ipsec down CAM"
 
 ###########################
 ###       SERVICES      ###
@@ -52,8 +54,8 @@ alias proxyssh="ssh glaux-web -D 8080 -N -C -o \"UserKnownHostsFile /dev/null\""
 # -C: Compresses the data before sending it
 # -q: Uses quiet mode
 # -N: Tells SSH that no command will be sent once the tunnel is up
-proxyshadow () { ss-local -l 8080 -c /etc/shadowsocks.json -s proxy.$(doctl compute domain list | tail -n 1 | awk '{print $1}') ; }
-proxyvpn () { sudo openvpn --remote proxy.$(doctl compute domain list | tail -n 1 | awk '{print $1}') 443 --config ~/.ssh/client1.ovpn ; }
+proxyshadow () { ss-local -l 8080 -c /etc/shadowsocks.json -s proxy.$(hostname | sed -e "s/[-][[:alnum:]]\+$//")lab.org ; }
+proxyvpn () { sudo openvpn --remote proxy.$(hostname | sed -e "s/[-][[:alnum:]]\+$//" | awk '{print $1}')lab.org 443 --config ~/.ssh/client1.ovpn ; }
 
 
 ################################
