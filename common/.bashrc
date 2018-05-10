@@ -148,13 +148,26 @@ PS1="$PS1\[\e[m\]\w\[\e[1;31m\]> \[\e[0m\]"
 #PS1="$PS1\[\e[0;38m\]\w\[\e[1;35m\]> \[\e[0m\]"
 
 # some more ls aliases
+alias lst="ls -lt"
 alias ll='ls -alF'
-alias c="clear"
+alias sl="ls"
 alias la='ls -A'
 alias l='ls -CF'
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+alias c="clear"
+alias cdp="cd -P"
+alias cd..="cd .."
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias takeover="tmux detach -a"
+alias vi="vim"
+alias le="less"
 
-## Load paths and variables
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e
+'\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+# Load paths and variables
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 if [ -f ~/.aliases ]; then
