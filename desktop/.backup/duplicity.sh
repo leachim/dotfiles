@@ -31,7 +31,8 @@ exit 1
 
 ## PASSWORD SALTS
 _SALT="IiNb6ckUGAJmw"
-_HASH="RMkyNZvpBzIZfyqPsvcnhihuUI16VMshVwKQJWvKL1PE9TYsttkUdo9aS5LUDmwAQzDRO8qlZti6Bib36cjBt0"
+#_HASH="RMkyNZvpBzIZfyqPsvcnhihuUI16VMshVwKQJWvKL1PE9TYsttkUdo9aS5LUDmwAQzDRO8qlZti6Bib36cjBt0"
+_HASH="sK095GfDuXU/muw/Ud6LZfK5amXjtq.LUZHTnghmUlXRnljbqmiruQhkUhdt3HTueONr1d8NfO3boG.QSEQed0"
 
 printf "Please enter the correct password for encryption\n"
 stty -echo
