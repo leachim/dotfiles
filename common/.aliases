@@ -385,3 +385,5 @@ alias web-wanip='dig +short myip.opendns.com @resolver1.opendns.com'
 alias web-ip="curl ifconfig.me/ip"
 web-quHOST () { host $1 | rev | cut -d " " -f1 | rev; }
 web-quCountrybyIP () { curl ipinfo.io/$1 2&>/dev/null | grep -Po '"country":.*?[^\\]",' | perl -pe 's/"country"://; s/^"//; s/",$//; s/"//; s/^\s+//' ; }
+
+alias m-drivemount="google-drive-ocamlfuse ~/Drive"

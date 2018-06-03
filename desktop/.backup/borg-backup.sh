@@ -2,25 +2,26 @@
 ## borg backup script
 LOG="~/Downloads/borgbackup.log"
 
+BBPATH=ssh://storagebox:23/./backup/$(hostname)/borg/
 # initialize backup repository, only needed for new installations, on one line, replace $(hostname) with actual value
-#BORG_RSH="ssh -i ~/.ssh/borg_$(hostname)" borg init --encryption=keyfile ssh://storagebox:23/./borg/$(hostname) --debug
+#BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg" borg init --encryption=keyfile "$BBPATH" --debug
 
 # list all archives in the repository:
-# BORG_RSH="ssh -i ~/.ssh/borg_$(hostname)" borg list ssh://storagebox:23/./borg/$(hostname)
+# BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg" borg list "$BBPATH" 
 
 # list the contents of the Monday archive:
-# BORG_RSH="ssh -i ~/.ssh/borg_$(hostname)" borg list ssh://storagebox:23/./borg/$(hostname)::archivename
+# BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg" borg list "$BBPATH"::archivename
 
 # restore archive, see https://borgbackup.readthedocs.io/en/stable/usage/extract.html for more examples, note to remove leading /
 # first, recreate repository
 # make sure to backup keys!
-# BORG_RSH="ssh -i ~/.ssh/borg_$(hostname)" borg key import ssh://storagebox:23/./borg/$(hostname) path/to/key
-# BORG_RSH="ssh -i ~/.ssh/borg_$(hostname)" borg extract ssh://storagebox:23/./borg/$(hostname)::glaux-laptop-2017-12-30T21:55:49 home/$(username)/src
+# BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg" borg key import "$BBPATH" path/to/key
+# BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg" borg extract "$BBPATH"::glaux-laptop-2017-12-30T21:55:49 home/$(username)/src
 
 
 # Setting this, so the repo does not need to be given on the commandline:
-export BORG_RSH="ssh -i ~/.ssh/borg_$(hostname)"
-export BORG_REPO=ssh://storagebox:23/./borg/$(hostname)
+export BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg"
+export BORG_REPO="$BBPATH"
 #ssh://username@example.com:2022/~/backup/main
 
 # # Setting this, so you won't be asked for your repository passphrase:
@@ -65,11 +66,12 @@ borg create                                 \
     --exclude '/etc/apparmor.d/*'           \
     --exclude '/etc/audit'                  \
     --exclude '/etc/audisp'                 \
-    --exclude '/etc/cups/*'               \
+    --exclude '/etc/cups/*'                 \
     --exclude '/etc/docker/key.json'        \
     --exclude '/etc/default/cacerts'        \
     --exclude '/etc/exim4/passwd.client'    \
     --exclude '/etc/gshadow*'               \
+    --exclude '/etc/ipsec*'                 \
     --exclude '/etc/logcheck/*'             \
     --exclude '/etc/lvm/backup'             \
     --exclude '/etc/NetworkManager/system-connections/*'\
@@ -95,8 +97,10 @@ borg create                                 \
     --exclude '/home/*/.dbus/*'             \
     --exclude '/home/*/.dockercfg'          \
     --exclude '/home/*/.dropbox/*'          \
+    --exclude '/home/*/.dropbox.cache/*'    \
     --exclude '/home/*/.dropbox-dist/*'     \
     --exclude '/home/*/.gcalcli_oauth'      \
+    --exclude '/home/*/.gdfuse/*'           \
     --exclude '/home/*/.grip/*'             \
     --exclude '/home/*/.kube/*'             \
     --exclude '/home/*/.local/*/Trash/*'    \
@@ -132,6 +136,9 @@ borg create                                 \
                                             \
     --exclude '/home/*/Data/*'              \
     --exclude '/home/*/Downloads/*'         \
+    --exclude '/home/*/Drive/*'             \
+    --exclude '/home/*/Images/*'            \
+    --exclude '/home/*/Software/*'          \
     --exclude '/home/*/VirtualBox VMs/*'    \
                                             \
     ::'{hostname}-{now}'                    \

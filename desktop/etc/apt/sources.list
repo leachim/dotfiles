@@ -26,7 +26,7 @@ deb http://ftp.debian.org/debian stable main contrib non-free
 #### other packages ########
 
 # Google Chrome support
-deb http://dl.google.com/linux/deb/ stable main 
+deb http://dl.google.com/linux/deb/ stable main
 
 # Docker CE
 deb [arch=amd64] https://download.docker.com/linux/debian stretch stable
@@ -42,8 +42,12 @@ deb http://download.virtualbox.org/virtualbox/debian stretch contrib
 # Vagga, https://github.com/tailhook/vagga
 deb [arch=amd64 trusted=yes] http://ubuntu.zerogw.com vagga main
 
+# google drive ocamlfuse
+# https://github.com/astrada/google-drive-ocamlfuse/wiki/Installation
+deb http://ppa.launchpad.net/alessandro-strada/ppa/ubuntu bionic main
+
 # Tor http://www.torproject.org/docs/debian.html.en
-deb http://deb.torproject.org/torproject.org stretch main
+#deb http://deb.torproject.org/torproject.org stretch main
 
 # X2Go - everywhere@home : http://www.x2go.org/doku.php/start
 # Secure APT: apt-key adv --recv-keys --keyserver keys.gnupg.net E1F958385BFE2B6E
