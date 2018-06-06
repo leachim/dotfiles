@@ -551,6 +551,7 @@ for_window [class="Evolution" instance="Mail"] border none
 
 # App-specific
 # Use `xprop` (and maybe `xwininfo`) to determine class, title, etc.
+for_window [class="(?i)Zathura"] border pixel 1
 for_window [title=".* LibreOffice .*"] floating enable; border normal
 for_window [class="Firefox"] border normal
 for_window [class="Geany"] floating disable; border normal

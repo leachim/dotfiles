@@ -1,0 +1,101 @@
+# settings
+set selection-clipboard   clipboard
+#set selection-clipboard primary
+
+# strip file path from the title
+set window-title-basename false
+set statusbar-home-tilde  true
+set statusbar-basename false
+set statusbar-v-padding 6
+set statusbar-h-padding 4
+
+# there is no default icon for zathura
+#set window-icon /usr/share/icons/Moka/32x32/apps/xpdf.png
+
+set incremental-search true
+# default; on abort (<esc>) clear higlight (like :nohl)
+set abort-clear-search true
+#set adjust-open		  best-fit
+set adjust-open           width
+set n-completion-items    20
+set first-page-column     2
+# invert colors -> if true, white on black
+set recolor               false
+set page-padding 5
+
+set pages-per-row 1
+set scroll-page-aware true
+set scroll-wrap false
+set scroll-full-overlap 0.1
+set scroll-step 50
+set smooth-scroll "true"
+set show-scrollbars false
+set zoom-min 5
+set zoom-max 1000
+set zoom-step 5
+
+# keyboard shortcuts
+map b toggle_statusbar
+# map <C-t> jumplist backward
+map <C-q> quit
+map <C-g> abort
+
+map <Space> navigate next
+map <BackSpace> navigate previous
+map <S-Space> navigate previous
+# map <PageUp> scroll full_up
+# map <PageDown> scroll full_down
+# map <BackSpace> scroll full_up all
+map <M-v> scroll full_up
+map <C-v> scroll full_down
+
+map + zoom in
+map - zoom out
+map q quit
+map w adjust_window width
+map z adjust_window bestfit
+
+# appearance
+set font                   "monaco 12"
+#set font 				   "monospace 13"
+#set font 				   "fixedzero normal 9"
+
+# set guioptions s
+#set statusbar-v-padding 2
+#set statusbar-h-padding 8
+# blank space between pages
+
+#// colors:
+set guioptions Noto Sans 12
+# set default-bg                  "#282c34"
+# set default-fg                  "#353b45"
+# set statusbar-fg                "#61AFEF"
+# set statusbar-bg                "#282c34"
+# set inputbar-bg                 "#282c34"
+# set inputbar-fg                 "#c8ccd4"
+# set notification-bg             "#282c34"
+# set notification-fg             "#c8ccd4"
+# set notification-error-bg       "#282c34"
+# set notification-error-fg       "#e06c75"
+# set notification-warning-bg     "#282c34"
+# set notification-warning-fg     "#e06c75"
+# set highlight-color             "#e5c07b"
+# set highlight-active-color      "#61afef"
+# set completion-bg               "#353b45"
+# set completion-fg               "#61afef"
+# set completion-highlight-fg     "#c8ccd4"
+# set completion-highlight-bg     "#61afef"
+# set recolor-lightcolor          "#282c34"
+# set recolor-darkcolor           "#b6bdca"
+
+set default-bg "#002b36"
+#set default-fg "#"
+set statusbar-bg "#073642"
+set statusbar-fg "#93a1a1"
+set index-bg "#002b36"
+set index-fg "#93a1a1"
+set index-active-bg "#268bd2"
+set index-active-fg "#eee8d5"
+set recolor-darkcolor "#657b83"
+set recolor-lightcolor "#fdf6e3
+set recolor-keephue "false"
