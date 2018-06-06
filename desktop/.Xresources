@@ -75,7 +75,7 @@ URxvt.externalBorder:	0
 URxvt.internalBorder:	0
 URxvt.jumpScroll:		true
 !-*- Perl extensions -*-
-URxvt.perl-ext-common: default,clipboard,selection-to-clipboard,matcher,on_osc_seq_perl
+URxvt.perl-ext-common: default,selection-to-clipboard,matcher
 URxvt.iso14755: False
 URxvt.keysym.M-u:     perl:url-select:select_next
 URxvt.url-launcher:   /usr/bin/chromium

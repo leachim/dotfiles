@@ -33,9 +33,9 @@ echo "\documentclass{article}
 \usepackage{mathrsfs}
 \begin{document}
 \pagestyle{empty}
-\begin{equation*}" > part1_32813829813.temp
+\begin{align}" > part1_32813829813.temp
 
-echo "\end{equation*}
+echo "\end{align}
 \end{document}
 " > part3_32813829813.temp
 

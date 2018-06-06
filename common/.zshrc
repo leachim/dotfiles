@@ -62,6 +62,7 @@ setopt nobgnice
 # IMPORTS {{{
 _source ~/.zsh/aliases
 _source ~/.zsh/bookmarks
+_source ~/.autocompletion/docker-machine.zsh
 # }}}
 
 # COMPLETION {{{

@@ -14,14 +14,15 @@ shopt -s checkwinsize            # Update windows size on command
 #shopt -s extglob                 # Extended pattern
 shopt -s no_empty_cmd_completion  # No empty completion
 
-# append to the history file, don't overwrite it
-shopt -s histappend
 # Combine multiline commands into one in history
 shopt -s cmdhist
 # checks the window size after each command 
 shopt -s checkwinsize
 # don't put duplicate lines or lines starting with space in the history.
-HISTCONTROL=ignoreboth
+# https://unix.stackexchange.com/questions/18212/bash-history-ignoredups-and-erasedups-setting-conflict-with-common-history
+HISTCONTROL=ignoredups:erasedups
+shopt -s histappend
+PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
 export HISTIGNORE="&:ls:[bf]g:exit"
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
@@ -147,6 +148,11 @@ PS1="\[\e[34m\]\u\[\e[1;32m\]@\[\e[0;33m\]\h\[\e[35m\]:"
 PS1="$PS1\[\e[m\]\w\[\e[1;31m\]> \[\e[0m\]"
 #PS1="$PS1\[\e[0;38m\]\w\[\e[1;35m\]> \[\e[0m\]"
 
+# Tab autocompletion functionality for bash emulating zsh behavior
+bind "TAB:menu-complete"
+bind "set show-all-if-ambiguous on"
+bind "set menu-complete-display-prefix on"
+
 # some more ls aliases
 alias lst="ls -lt"
 alias ll='ls -alF'
@@ -167,11 +173,18 @@ alias le="less"
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e
 '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
+# some cluster aliases
+alias bstat="sstat -p --format=AveCPU,AvePages,AveRSS,AveVMSize,JobID,MaxVMSize,MaxVMSizeTask,AveDiskWrite,MaxDiskWrite,MaxDiskWriteNode -j $1"
+
 # Load paths and variables
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 if [ -f ~/.aliases ]; then
     source ~/.aliases
+fi
+
+if [ -f ~/.autocompletion/docker-machine.bash ]; then 
+    source ~/.autocompletion/docker-machine.bash
 fi
 
 if [ -f ~/.desktop_aliases ]; then
