@@ -150,7 +150,9 @@ PS1="$PS1\[\e[m\]\w\[\e[1;31m\]> \[\e[0m\]"
 
 # Tab autocompletion functionality for bash emulating zsh behavior
 bind "TAB:menu-complete"
+bind "\e[Z: menu-complete-backward"
 bind "set show-all-if-ambiguous on"
+bind "set show-all-if-unmodified off"
 bind "set menu-complete-display-prefix on"
 
 # some more ls aliases
