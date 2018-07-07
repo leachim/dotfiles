@@ -263,6 +263,7 @@ Plug 'airblade/vim-gitgutter'
 
 " multiple cursors
 Plug 'terryma/vim-multiple-cursors'
+Plug 'Townk/vim-autoclose'
 
 " vim improvements
 Plug 'tpope/vim-repeat'
