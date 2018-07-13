@@ -281,6 +281,23 @@ function mpdf-convertToPNG(){
     done
 }
 
+# create single pdf
+function mpdf-view () {
+    fh=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+    pdftk "$@" cat output "/tmp/${fh}.pdf"
+    zathura "/tmp/${fh}.pdf"
+    unset fh;
+}
+
+function mpdf-join () {
+    array123=( "${@}" );
+    newfile123=${array123[-1]};
+    array123=( "${array123[@]:0:$(( ${#array123[@]} - 1 ))}" );
+    pdftk $array123 cat output $newfile123;
+    unset newfile123;
+    unset array123;
+}
+
 function mpdf-webify(){
     for var in "$@"; do convert -verbose -density 200 -trim $var -quality 100 ${var%.pdf}.png; done ; }
 
