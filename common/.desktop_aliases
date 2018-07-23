@@ -21,6 +21,10 @@ alias mount-library="sshfs -o allow_other -o ro storagebox:/library ~/mount"
 capsfix () { /usr/bin/python3 -c "from ctypes import *; X11 = cdll.LoadLibrary(\"libX11.so.6\"); display = X11.XOpenDisplay(None); X11.XkbLockModifiers(display, c_uint(0x0100), c_uint(2), c_uint(0)); X11.XCloseDisplay(display)" ; }
 CAPSFIX () { /usr/bin/python3 -c "from ctypes import *; X11 = cdll.LoadLibrary(\"libX11.so.6\"); display = X11.XOpenDisplay(None); X11.XkbLockModifiers(display, c_uint(0x0100), c_uint(2), c_uint(0)); X11.XCloseDisplay(display)" ; }
 
+m-mode-present () { xrandr --output DP1 --auto ; xrandr --output DP2 --auto ; } 
+m-mode-airport () { dropbox stop && dropbox status ; }
+m-mode-donotdisturb () { killall -SIGUSR1 dunst && touch /tmp/donotdisturb.lock; }
+m-mode-disturb () { killall -SIGUSR2 dunst; rm -f /tmp/donotdisturb.lock; }
 ### Monitor and presentation settings ###
 
 # set dual/single monitors
