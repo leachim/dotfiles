@@ -4,23 +4,23 @@ LOG="~/Downloads/borgbackup.log"
 
 BBPATH=ssh://storagebox:23/./backup/$(hostname)/borg/
 # initialize backup repository, only needed for new installations, on one line, replace $(hostname) with actual value
-#BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg" borg init --encryption=keyfile "$BBPATH" --debug
+#BORG_RSH="ssh -i ~/.ssh/$(hostname)-borg" borg init --encryption=keyfile "$BBPATH" --debug
 
 # list all archives in the repository:
-# BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg" borg list "$BBPATH" 
+# BORG_RSH="ssh -i ~/.ssh/$(hostname)-borg" borg list "$BBPATH" 
 
 # list the contents of the Monday archive:
-# BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg" borg list "$BBPATH"::archivename
+# BORG_RSH="ssh -i ~/.ssh/$(hostname)-borg" borg list "$BBPATH"::archivename
 
 # restore archive, see https://borgbackup.readthedocs.io/en/stable/usage/extract.html for more examples, note to remove leading /
 # first, recreate repository
 # make sure to backup keys!
-# BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg" borg key import "$BBPATH" path/to/key
-# BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg" borg extract "$BBPATH"::glaux-laptop-2017-12-30T21:55:49 home/$(username)/src
+# BORG_RSH="ssh -i ~/.ssh/$(hostname)-borg" borg key import "$BBPATH" path/to/key
+# BORG_RSH="ssh -i ~/.ssh/$(hostname)-borg" borg extract "$BBPATH"::glaux-laptop-2017-12-30T21:55:49 home/$(username)/src
 
 
 # Setting this, so the repo does not need to be given on the commandline:
-export BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg"
+export BORG_RSH="ssh -i ~/.ssh/$(hostname)-borg"
 export BORG_REPO="$BBPATH"
 #ssh://username@example.com:2022/~/backup/main
 

@@ -17,6 +17,7 @@ export SIGN_PASSPHRASE=""
 ####################################
 ### Verify password
 ####################################
+# cryptsetup dependency (cryptsetup)
 
 ## check backup directory exists
 if [ ! -d "$_DEST" ]; then
@@ -31,16 +32,15 @@ exit 1
 
 ## PASSWORD SALTS
 _SALT="IiNb6ckUGAJmw"
-#_HASH="RMkyNZvpBzIZfyqPsvcnhihuUI16VMshVwKQJWvKL1PE9TYsttkUdo9aS5LUDmwAQzDRO8qlZti6Bib36cjBt0"
-_HASH="sK095GfDuXU/muw/Ud6LZfK5amXjtq.LUZHTnghmUlXRnljbqmiruQhkUhdt3HTueONr1d8NfO3boG.QSEQed0"
+_HASH="7rNEmnYYXSJTG6w6qcKk0yNDCtXoVYPlCa3LeohCwMPbLSbpE.dT0VAzpg6cZZ8rwjBlD/swMaKCn0KoWIjYD."
 
 printf "Please enter the correct password for encryption\n"
 stty -echo
-read -s -p "Enter password: " _PASSPHRASE
-stty echo
+_PASSPHRASE=$(/lib/cryptsetup/askpass "Enter the password")
 _MYHASH=$(mkpasswd --method=sha-512 --salt=$_SALT --rounds=99999999 --stdin <<< "$_PASSPHRASE")
 _MYHASH=${_MYHASH##*$}
 export PASSPHRASE=$_PASSPHRASE
+stty echo
 
 # check if password is correct
 if [ "$_MYHASH" != "$_HASH" ]; then
@@ -84,7 +84,7 @@ case $first_answer in
         fi 
         # create new full backup in tmp, create archive file with time stamp
         duplicity full --gpg-options "--compress-algo bzip2 --cipher-algo aes256 --digest-algo sha512 --s2k-digest-algo sha512 --s2k-cipher-algo aes256" --sign-key "$_SIGN_KEY" --exclude "**excludeFromBackup/**" --exclude "**safe/**" --log-file $_LOG --volsize 250 --verbosity 6 $_SRC "file://$_TMP"
-        _FILE="$_DEST$_TIMESTAMP-backup.tar.gz"
+        _FILE="$_DEST$_TIMESTAMP-backup-$(hostname).tar.gz"
         sleep $_PAUSE
         printf "Creating encrypted archive in $_FILE\n"
         cd $_DEST
@@ -97,7 +97,7 @@ case $first_answer in
             printf "$_TMP DIRECTORY DOES NOT EXIST"
             exit -1
         fi
-        _FILE="$_DEST$_TIMESTAMP-backup.tar.gz"
+        _FILE="$_DEST$_TIMESTAMP-backup-$(hostname).tar.gz"
         sleep $_PAUSE
         printf "Creating encrypted archive in $_FILE\n"
         cd $_DEST
