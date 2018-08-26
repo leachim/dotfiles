@@ -52,7 +52,7 @@ alias zotero="/opt/Zotero_linux-x86_64/zotero"
 alias matlab-desktop="/home/michael/.matlab/bin/matlab &"
 
 # route through glaux-web
-alias proxyssh="ssh glaux-web -D 8080 -N -C -o \"UserKnownHostsFile /dev/null\""
+alias proxyssh="ssh glaux-proxy -D 8080 -N -C -o \"UserKnownHostsFile /dev/null\""
 # -D: Tells SSH that we want a SOCKS tunnel on the specified port number (you can choose a number between 1025-65536)
 # -f: Forks the process to the background
 # -C: Compresses the data before sending it
@@ -61,6 +61,8 @@ alias proxyssh="ssh glaux-web -D 8080 -N -C -o \"UserKnownHostsFile /dev/null\""
 proxyshadow () { ss-local -l 8080 -c /etc/shadowsocks.json -s proxy.$(hostname | sed -e "s/[-][[:alnum:]]\+$//")lab.org ; }
 proxyvpn () { sudo openvpn --remote proxy.$(hostname | sed -e "s/[-][[:alnum:]]\+$//" | awk '{print $1}')lab.org 443 --config ~/.ssh/client1.ovpn ; }
 
+# route through work
+alias proxywork="ssh desktop -D 8079 -N -C"
 
 ################################
 ###  BACKUP & System updates ###

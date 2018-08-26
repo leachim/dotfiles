@@ -44,6 +44,14 @@ set ttimeout
 "set timeoutlen=2000 
 "set ttimeoutlen=1000
 
+" fix esc issue
+" set timeoutlen=1000 ttimeoutlen=10
+augroup FastEscape
+  autocmd!
+  au InsertEnter * set timeoutlen=0
+  au InsertLeave * set timeoutlen=100
+augroup END
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => UI layout
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -263,7 +271,9 @@ Plug 'airblade/vim-gitgutter'
 
 " multiple cursors
 Plug 'terryma/vim-multiple-cursors'
-Plug 'Townk/vim-autoclose'
+
+" potentially leads to issues with Esc key
+"Plug 'Townk/vim-autoclose'
 
 " vim improvements
 Plug 'tpope/vim-repeat'

@@ -27,7 +27,7 @@ _source ~/.desktop_aliases
 
 # SETTINGS {{{
 WORDCHARS="${WORDCHARS:s#/#}"
-KEYTIMEOUT=5
+KEYTIMEOUT=1
 
 # flow control
 stty -ixon -ixoff
