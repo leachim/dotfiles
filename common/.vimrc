@@ -304,9 +304,15 @@ call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " 256 colors
-set t_Co=256
+" set t_Co=256
+" let g:solarized_termcolors=256
+" set background=dark
+if has('gui_running')
+    set background=light
+else
+    set background=dark
+endif
 colorscheme solarized
-set background=dark
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Shortcuts
@@ -330,7 +336,6 @@ vnoremap <silent> # :call VisualSelection('b', '')<CR>
 
 " toggle scrolling synchronously
 nnoremap <leader>sc :vs<cr>:set scrollbind cursorbind cursorline<cr><c-w><c-w>:set scrollbind cursorbind cursorline<cr><c-w><c-w>
-
 
 " Disable highlight when <leader>n is pressed
 noremap <silent> <leader>n :noh<cr>
@@ -789,16 +794,16 @@ function! VisualSelection(direction, extra_filter) range
     let @" = l:saved_reg
 endfunction
 
-function! ProseMode()
-  call goyo#execute(0, [])
-  set spell noci nosi noai nolist noshowmode noshowcmd
-  set complete+=s
-  set bg=light
-  if !has('gui_running')
-    let g:solarized_termcolors=256
-  endif
-  colors solarized
-endfunction
+" function! ProseMode()
+  " call goyo#execute(0, [])
+  " set spell noci nosi noai nolist noshowmode noshowcmd
+  " set complete+=s
+  " set bg=light
+  " if !has('gui_running')
+    " let g:solarized_termcolors=256
+  " endif
+  " colors solarized
+" endfunction
 
 command! ProseMode call ProseMode()
 nmap ,p :ProseMode<CR>

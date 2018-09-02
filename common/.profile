@@ -8,17 +8,8 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 
-# turn off bell
-xset -b 
-# turn of screen saver and power saving mode
-xset s off
-xset -dpms
-
-# quicker reaction rate
-xset r rate 300 30
-
-# added by Anaconda3 2.4.1 installer
-export PATH="$HOME/.anaconda3/bin:/snap/bin:/opt/bin:$HOME/.local/bin:/opt/node-v8.9.1-linux-x64/bin:$HOME/.dotfiles/bin:$PATH"
+# added by Anaconda3 installer
+export PATH="$HOME/.anaconda3/bin:/snap/bin:/opt/bin:$HOME/.local/bin:/opt/bin:$HOME/.dotfiles/bin:$PATH"
 
 # Java dependencies
 export JAVA_HOME=/usr/lib/jvm/default-java
@@ -51,4 +42,20 @@ fi
 
 # added by travis gem
 [ -f /home/michael/.travis/travis.sh ] && source /home/michael/.travis/travis.sh
+
+TZ='Europe/London'; export TZ
+
+# if running from tty1 start sway  -> desktop session
+if [ $(tty) = "/dev/tty1" ]; then
+    export XKB_DEFAULT_LAYOUT=us,de
+    export XKB_DEFAULT_VARIANT=nodeadkeys
+    export XKB_DEFAULT_OPTIONS=grp:alt_shift_toggle
+
+    # export WLC_REPEAT_DELAY=100
+    # export WLC_REPEAT_RATE=1
+    # export SWAY_CURSOR_THEME=""
+    # export SWAY_CURSOR_SIZE=5
+    sway 
+    exit 0
+fi
 

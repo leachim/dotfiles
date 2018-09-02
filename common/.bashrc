@@ -39,8 +39,7 @@ case "$TERM" in
     xterm-color) color_prompt=yes;;
 esac
 #
-# fix issue with tmux colors -> remove as leads to problems with htop
-#export TERM="xterm-256color"
+
 force_color_prompt=yes
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
@@ -200,3 +199,4 @@ fi
 if [ -f ~/.miniconda3 ]; then
     export PATH="$HOME/.miniconda3/bin:$PATH"
 fi
+

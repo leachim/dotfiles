@@ -35,8 +35,8 @@ single () { xrandr --output DP1 --off; xrandr --output DP2 --off ; xrandr --outp
 present () { xrandr --output DP1 --auto ; xrandr --output DP2 --auto;}
 
 # set background light
-darken () { xbacklight -set 0 ; }
-lighten () { xbacklight -set 100 ;}
+darken () { brightnessctl set 0% ; }
+lighten () { brightnessctl set 100% ;}
 
 ### Internet and proxy commands ###
 alias wgup="sudo wg-quick up wg0-client"

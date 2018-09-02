@@ -7,18 +7,11 @@ apt-listbugs
 apt-listchanges
 apt-transport-https
 apt-utils
-arandr
-# arandr gui to manage display layout
 arc-theme
 # arc-theme: my current theme for debian
-atomicparsley
 atool
 # atool is a script for managing file archives of various types
-audispd-plugins
-auditd
 autoconf
-autocutsel
-# autocutsel Keep the X clipboard and the cutbuffer in sync
 autojump
 # autojump shell extension to jump to frequently used directories
 automake
@@ -26,8 +19,6 @@ base-files
 base-passwd
 bash
 bash-completion
-bbswitch-dkms
-bbswitch-source
 beep
 # beep sound signal
 biber
@@ -39,7 +30,6 @@ borgbackup
 bsdmainutils
 bsdutils
 build-essential
-bumblebee
 busybox
 bzip2
 ca-certificates
@@ -48,8 +38,6 @@ cadaver
 # cadaver command line webdav client
 chromium
 chromium-common
-cifs-utils
-# cifs-utils The SMB/CIFS protocol provides support for cross-platform file sharing with Microsoft Windows, OS X, and other Unix systems.
 cmake
 # cmake build projects
 colordiff
@@ -129,8 +117,6 @@ graphviz
 graphviz-dev
 grep
 groff-base
-grub-common
-grub-pc
 gvfs
 # gvfs userspace virtual filesystem - GIO module
 gzip
@@ -143,8 +129,6 @@ htop
 hunspell
 hunspell-de-de
 hunspell-en-med
-i3
-i3lock
 i3status
 icdiff
 # icdiff good diff tool for git
@@ -224,11 +208,6 @@ netcat-traditional
 nethogs
 # nethogs Net top tool grouping bandwidth per process
 network-manager
-network-manager-gnome
-network-manager-openvpn
-network-manager-openvpn-gnome
-network-manager-vpnc
-network-manager-vpnc-gnome
 ngrep
 # ngrep grep for network traffic
 nload
@@ -296,7 +275,7 @@ strace
 # strace System call tracer - debugging
 suckless-tools
 sudo
-syncthing
+#syncthing
 syslog-summary
 # syslog-summary summarize the contents of a syslog log file
 sysstat
@@ -357,14 +336,6 @@ whois
 wireshark
 x264
 # x264 codecs
-xbacklight
-xbindkeys
-xclip
-xdotool
 xkbset
 xournal
-xscreensaver
-# xscreensaver Screensaver daemon and frontend for X11
-xsel
-# xsel command-line tool to access X clipboard and selection buffers
 zsh

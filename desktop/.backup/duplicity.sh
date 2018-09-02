@@ -130,6 +130,7 @@ case $first_answer in
     echo $_TMP
     echo $_RESTORE
     duplicity --sign-key "$_SIGN_KEY" file://$_TMP $_RESTORE;;
+    #duplicity --gpg-options="--skip-verify" file://$_TMP $_RESTORE;;
     #esac
     #;;
 *) echo "not an option" && exit -1;;

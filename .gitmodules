@@ -16,3 +16,6 @@
 [submodule "desktop/.i3/py3status"]
 	path = desktop/.i3/py3status
 	url = git@github.com:leachim/py3status.git
+[submodule "desktop/.config/sway/py3status"]
+	path = desktop/.config/sway/py3status
+	url = git@github.com:leachim/py3status.git

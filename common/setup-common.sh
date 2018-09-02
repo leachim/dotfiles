@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "First install vim git zsh curl"
-exit 1
+#exit 1
 # sudo apt-get install vim git zsh curl conky exuberant-ctags
 
 ## Intro
