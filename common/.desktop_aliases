@@ -2,16 +2,7 @@
 ###        SYSTEM       ###
 ###########################
 
-alias gpu-status="cat /proc/acpi/bbswitch"
-alias gpu-off="sudo tee /proc/acpi/bbswitch <<<OFF"
-alias gpu-on="sudo tee /proc/acpi/bbswitch <<<ON"
-
-function changemode (){
-	xrandr --newmode "1920x1080_60.00"  173.00  1920 2048 2248 2576  1080 1083 1088 1120 -hsync +vsyn;
-	xrandr --addmode DP1 1920x1080_60.00;
-	xrandr --output DP1 --mode 1920x1080_60.00;
-}
-
+alias pfirefox="firefox --private"
 function hl () { grep -A1 "Host $1" $HOME/.ssh/config | awk '/HostName/{getline; print}' | awk '{print $2}';}
 
 ## Remote file system
@@ -63,6 +54,7 @@ proxyvpn () { sudo openvpn --remote proxy.$(hostname | sed -e "s/[-][[:alnum:]]\
 
 # route through work
 alias proxywork="ssh desktop -D 8079 -N -C"
+alias proxyrstudio="ssh -N -L localhost:8787:localhost:8787 desktop" 
 
 ################################
 ###  BACKUP & System updates ###

@@ -58,13 +58,13 @@ bindsym $mod+Shift+r move workspace to output right
 output eDP-1 scale 1.4
 
 ### Input configuration
-input 2:7:SynPS/2_Synaptics_TouchPad {
-	dwt disabled
-	drag_lock disabled
-	tap enabled
-	natural_scroll enabled
-	middle_emulation enabled
-}
+#input 2:7:SynPS/2_Synaptics_TouchPad {
+#	dwt disabled
+#	drag_lock disabled
+	#tap enabled
+	#natural_scroll enabled
+	#middle_emulation enabled
+#}
 
 # use Mouse+Mod1 to drag floating windows to their wanted position
 floating_modifier $alt normal
@@ -518,8 +518,8 @@ bar {
 bindsym XF86MonBrightnessUp exec brightnessctl set +10% 
 bindsym XF86MonBrightnessDown exec brightnessctl set -10% 
 
-bindsym XF86AudioRaiseVolume exec amixer set 'Master' 2%+
-bindsym XF86AudioLowerVolume exec amixer set 'Master' 2%-
+bindsym XF86AudioRaiseVolume exec amixer set 'Master' 1dB+
+bindsym XF86AudioLowerVolume exec amixer set 'Master' 1dB- 
 bindsym XF86AudioMute exec amixer set 'Master' toggle
 bindsym XF86AudioMicMute exec amixer set 'Speaker' toggle
 

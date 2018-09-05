@@ -64,10 +64,12 @@ borg create                                 \
                                             \
     --exclude '/etc/.pwd.lock'              \
     --exclude '/etc/apparmor.d/*'           \
+    --exclude '/etc/at.deny'                \
+    --exclude '/etc/docker/*'               \
     --exclude '/etc/audit'                  \
     --exclude '/etc/audisp'                 \
     --exclude '/etc/cups/*'                 \
-    --exclude '/etc/docker/key.json'        \
+    --exclude '/etc/docker*'                \
     --exclude '/etc/default/cacerts'        \
     --exclude '/etc/exim4/passwd.client'    \
     --exclude '/etc/gshadow*'               \
