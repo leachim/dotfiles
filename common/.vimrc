@@ -291,6 +291,8 @@ Plug 'junegunn/goyo.vim'
 " Plug 'tpope/vim-sleuth'
 
 " color scheme
+Plug 'othree/yajs.vim' " syntax support for oceanic next
+Plug 'mhartington/oceanic-next'
 Plug 'altercation/vim-colors-solarized'
 
 " julia language support
@@ -305,14 +307,22 @@ call plug#end()
 
 " 256 colors
 " set t_Co=256
+" if has('gui_running')
+    " set background=light
+" else
+    " set background=dark
+" endif
+" set t_Co=256
 " let g:solarized_termcolors=256
+" colorscheme solarized
 " set background=dark
-if has('gui_running')
-    set background=light
-else
-    set background=dark
+" for vim 8
+"
+if (has("termguicolors"))
+    set termguicolors
 endif
-colorscheme solarized
+
+colorscheme OceanicNext
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Shortcuts
@@ -546,7 +556,8 @@ filetype plugin indent on
 """"""""""""""""""""""""""""""
 " => Status line
 """"""""""""""""""""""""""""""
-let g:airline_theme='minimalist'
+" let g:airline_theme='minimalist'
+let g:airline_theme='oceanicnext'
 
 let g:airline_highlighting_cache = 1
 "let g:bufferline_echo = 0
@@ -630,7 +641,7 @@ let g:NERDTrimTrailingWhitespace = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Syntastic - syntax highlighting 
 "let python_highlight_all=1
-"syntax on
+syntax on
 
 "set statusline+=%#warningmsg#
 "set statusline+=%{SyntasticStatuslineFlag()}
