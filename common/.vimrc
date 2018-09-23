@@ -510,6 +510,10 @@ endfunc
 autocmd BufWrite *.py :call DeleteTrailingWS()
 autocmd BufWrite *.coffee :call DeleteTrailingWS()
 
+" support snakemake syntax
+au BufNewFile,BufRead Snakefile set syntax=snakemake
+au BufNewFile,BufRead *.smk set syntax=snakemake
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Spell and Syntax checking

@@ -17,7 +17,7 @@ alias pingg="ping 8.8.8.8"
 alias s="dirs -v" # zprezto directory module
 alias f='fasd_cd -i' # zprezto fasd module
 alias agenda="gcalcli agenda"
-
+do-most_recent_container() { docker exec -it `docker ps -a --no-trunc -q | head -n 1` bash; }
 
 alias tailwatch="watch -n 1 'tail $(ls -lA -t | head -n 1)'"
 alias brd="bash runDocker.sh"
