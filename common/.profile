@@ -59,6 +59,19 @@ if [ $(tty) = "/dev/tty1" ]; then
     exit 0
 fi
 
+# check if running as a remote ssh session
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+  SESSION_TYPE=remote/ssh;
+# many other tests omitted
+else
+  case $(ps -o comm= -p $PPID) in
+    sshd|*/sshd) SESSION_TYPE=remote/ssh;;
+  esac
+fi
+if [ -z ${SESSION_TYPE+x} ]; then unalias suspend; fi
+
+
+
 # start ssh agent
 SSH_ENV="$HOME/.ssh/environment"
 

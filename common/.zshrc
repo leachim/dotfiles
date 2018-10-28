@@ -5,6 +5,10 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
+# NON-INTERACTIVE SHELLS {{{
+_source () { [[ -f $1 ]] && source $1 }
+_source ~/.aliases
+
 # source profile file
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
 
@@ -12,13 +16,6 @@
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
-
-# Customize to your needs...
-
-# NON-INTERACTIVE SHELLS {{{
-_source () { [[ -f $1 ]] && source $1 }
-_source ~/.aliases
-
 
 # Test for an interactive shell.
 [[ -t 1 ]] || return
