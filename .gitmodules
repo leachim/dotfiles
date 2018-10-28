@@ -13,3 +13,6 @@
 [submodule "common/.zprezto"]
 	path = common/.zprezto
 	url = https://github.com/sorin-ionescu/prezto.git
+[submodule "desktop/.config/sway/py3status"]
+	path = desktop/.config/sway/py3status
+	url = https://github.com/ultrabug/py3status

@@ -18,13 +18,13 @@ set $secondary VGA1
 set $menu rofi
 
 # reload the configuration file, debugging only
-bindsym $mod+Shift+o reload
+bindsym $mod+o+Shift reload
 # exit sway (logs you out of your wayland session)
-bindsym $mod+Shift+e exit
+bindsym $mod+e+Shift exit
 # lock screen
-bindsym $mod+Shift+Return exec "swaylock -te --image=eDP-1:~/.config/sway/animals.png"
+bindsym $mod+Return+Shift exec "swaylock -te --image=eDP-1:~/.config/sway/animals.png"
 # suspend
-bindsym $mod+Shift+Delete exec "systemctl suspend"
+bindsym $mod+Delete+Shift exec "systemctl suspend"
 
 # start a terminal
 bindsym $mod+Return exec $terminal -e "/bin/zsh"

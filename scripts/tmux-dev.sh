@@ -5,13 +5,13 @@ tmux new-session -d -s "$1" -n "$1"
 tmux send-keys "source activate ${1}" 'C-m' "clear" 'C-m'
 
 # second window (2)
-tmux new-window -n test 
+tmux new-window -n run
 tmux send-keys "source activate ${1}" 'C-m' "clear" 'C-m'
 tmux split-window -h 
 tmux send-keys "source activate ${1}" 'C-m' "clear" 'C-m'
-tmux split-window -v 
-tmux send-keys "source activate ${1}" 'C-m' "clear" 'C-m'
-tmux split-window -v 
-tmux send-keys "source activate ${1}" 'C-m' "clear" 'C-m'
+# tmux split-window -v
+# tmux send-keys "source activate ${1}" 'C-m' "clear" 'C-m'
+# tmux split-window -v
+# tmux send-keys "source activate ${1}" 'C-m' "clear" 'C-m'
 
 tmux attach-session -d 

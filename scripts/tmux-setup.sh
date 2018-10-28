@@ -8,6 +8,9 @@ tmux split-window -h
 # second window (2)
 if [ "$1" = "Desktop" ]; then
   tmux new-window -n control
+elif [ "$1" = "Darwin" ]; then
+  tmux rename-session -tfirst Darwin
+  tmux new-window -n Darwin 
 elif [ "$1" = "Data" ]; then
   tmux new-window -n transfer
 elif [ "$1" = "Clust" ]; then

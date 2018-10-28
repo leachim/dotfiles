@@ -18,7 +18,6 @@ fi
 # NON-INTERACTIVE SHELLS {{{
 _source () { [[ -f $1 ]] && source $1 }
 _source ~/.aliases
-_source ~/.desktop_aliases
 
 
 # Test for an interactive shell.

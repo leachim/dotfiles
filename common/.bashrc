@@ -188,10 +188,6 @@ if [ -f ~/.autocompletion/docker-machine.bash ]; then
     source ~/.autocompletion/docker-machine.bash
 fi
 
-if [ -f ~/.desktop_aliases ]; then
-    source ~/.desktop_aliases
-fi
-
 if [ -f ~/.profile ]; then
     source ~/.profile
 fi
