@@ -143,11 +143,14 @@ fi
 
 
 # Tab autocompletion functionality for bash emulating zsh behavior
-bind "TAB:menu-complete"
-bind "\e[Z: menu-complete-backward"
+bind 'TAB:menu-complete'
+bind '"\e[Z": menu-complete-backward'
 bind "set show-all-if-ambiguous on"
 bind "set show-all-if-unmodified off"
 bind "set menu-complete-display-prefix on"
+
+# Bash use vi style keybindings
+set -o vi
 
 # some more ls aliases
 alias lst="ls -lt"

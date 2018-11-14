@@ -1,6 +1,7 @@
 # settings
 set selection-clipboard   clipboard
 #set selection-clipboard primary
+set page-cache-size 100
 
 # strip file path from the title
 set window-title-basename false

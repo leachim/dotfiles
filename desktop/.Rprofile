@@ -1,3 +1,4 @@
+.libPaths(paste0(R.home(), "/library"))
 # Things you might want to change
 options(papersize="a4") 
 options(editor="vim") 

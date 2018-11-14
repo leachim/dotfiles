@@ -24,5 +24,5 @@ export DISPLAY=:0
 # export XAUTHORITY=/home/michael/.Xauthority
 # eval "export $(egrep -z DBUS_SESSION_BUS_ADDRESS /proc/$(pgrep -u $LOGNAME gnome-session)/environ)";
 # /usr/bin/python2.7 ~/.local/bin/gcalcli remind 10 "notify-send -u normal -c popup -a Calendar %s" #>/dev/null 2>&1
-/usr/bin/dbus-launch /usr/bin/python2.7 ~/.local/bin/gcalcli remind 15 "/usr/bin/notify-send -u normal -a calendar -t 0 %s"
+/usr/bin/dbus-launch /usr/bin/python2.7 ~/.local/bin/gcalcli --calendar Events --calendar work remind 15 "/usr/bin/notify-send -u normal -a calendar -t 0 %s"
 # /usr/bin/python2.7 ~/.local/bin/gcalcli remind 10 "/usr/bin/notify-send -u normal -a calendar -t 0 %s"

@@ -22,7 +22,7 @@ exec --no-startup-id xmodmap -e 'add Mod4 = Alt_R'
 # change modifier to windows key
 set $mod Mod4
 set $alt Mod1
-set $terminal urxvt
+set $terminal termite 
 set $primary eDP1
 set $secondary VGA1
 
@@ -31,8 +31,8 @@ floating_modifier $alt
 
 # start a terminal
 #bindsym $mod+Return exec i3-sensible-terminal
-bindsym $mod+Return exec $terminal
-bindsym $mod+s exec "rofi -show ssh -terminal urxvt"
+bindsym $mod+Return exec $terminal -e "/bin/zsh"
+bindsym $mod+s exec "rofi -show ssh -terminal $terminal"
 
 # background color
 exec --no-startup-id xsetroot -solid "#007799"
@@ -52,7 +52,7 @@ bindsym $mod+y floating disable
 bindsym $mod+Next floating disable
 
 bindsym $alt+b exec /usr/bin/chromium
-bindsym $alt+n exec /usr/bin/nautilus
+bindsym $alt+n exec /usr/bin/nautilus --no-desktop
 #bindsym $alt+m exec /usr/bin/icedove
 bindsym $alt+z exec /usr/bin/zotero
 
@@ -66,8 +66,18 @@ bindsym $alt+z exec /usr/bin/zotero
 
 #exec urxvt -name scratchpad -e zsh
 #exec --no-startup-id i3-msg 'workspace 7; exec /usr/bin/geary'
+<<<<<<< HEAD
+#exec --no-startup-id i3-msg 'workspace 4; exec /usr/bin/chromium-browser'
+#exec --no-startup-id i3-msg 'workspace 2; exec /usr/bin/firefox'
+#exec --no-startup-id i3-msg 'workspace 3; exec /usr/bin/urxvt -e zsh '
+||||||| merged common ancestors
 exec --no-startup-id i3-msg 'workspace 2; exec /usr/bin/chromium'
 exec --no-startup-id i3-msg 'workspace 3; exec /usr/bin/urxvt'
+=======
+exec --no-startup-id i3-msg 'workspace 4; exec /usr/bin/chromium-browser'
+exec --no-startup-id i3-msg 'workspace 2; exec /usr/bin/firefox'
+exec --no-startup-id i3-msg 'workspace 3; exec /usr/bin/urxvt -e zsh '
+>>>>>>> add desktop stuff
 #exec --no-startup-id i3-msg 'workspace 3; exec /usr/bin/urxvt -e /bin/bash -c "/usr/bin/tmux -q has-session && exec /usr/bin/tmux attach-session -d || exec /usr/bin/tmux new-session -n$USER -s$USER@$HOSTNAME"'
 
 
@@ -112,7 +122,8 @@ exec --no-startup-id dropbox start
 #bindsym $mod+Shift+d exec --no-startup-id dropbox start
 
 # keyboard layout
-exec --no-startup-id "/usr/bin/setxkbmap -model pc105 -layout us,de -option grp:alt_shift_toggle"
+#exec --no-startup-id "/usr/bin/setxkbmap -model pc105 -layout us,de -option grp:alt_shift_toggle"
+exec --no-startup-id "/usr/bin/setxkbmap -layout us,de -option grp:alt_shift_toggle"
 
 # network manager
 #exec --no-startup-id /usr/bin/wicd-gtk -t
@@ -397,7 +408,8 @@ bindsym $mod+Shift+Home exit
 # shutdown
 bindsym $mod+Shift+End exec systemctl poweroff
 # lock screen
-bindsym $mod+Shift+Return exec i3lock -tde --image=/home/michael/.i3/animals.png
+bindsym $mod+Shift+Return exec i3lock -tde --color=170838 
+#--image=/home/michael/.i3/animals.png
 #i3lock -ti ~/Bilder/rainbow_dash_wallpaper_by_ancientkale-d3tjto3.png
 # suspend
 bindsym $mod+Shift+Delete exec systemctl suspend
@@ -643,7 +655,7 @@ bar {
             #inactive_workspace #333333 #222222 #888888
             #urgent_workspace   #2f343a #900000 #ffffff
     }
-        output eDP1
+        output DP-2
         #tray_output primary
         # py3status
         output_format = "i3bar"
@@ -663,7 +675,7 @@ bar {
 }
 
 bar {
-    output DP1
+    output DP-3
     position top
     tray_output none
     workspace_buttons no

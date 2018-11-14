@@ -38,8 +38,15 @@ set autoread
 
 " timeout after key press
 " https://stackoverflow.com/questions/14737429/how-to-disable-the-timeout-on-the-vim-leader-key
-set notimeout 
+set notimeout
 set ttimeout
+augroup FastEscape
+    autocmd!
+    au InsertEnter * set timeoutlen=0
+    au InsertLeave * set timeoutlen=1000
+augroup END
+" try to fix esc issue
+" set timeoutlen=1000 ttimeoutlen=0
 "set ttimeoutlen=1000
 "set timeoutlen=2000 
 "set ttimeoutlen=1000
@@ -214,7 +221,7 @@ vnoremap <left> <nop>
 vnoremap <right> <nop>
 
 " With a map leader it's possible to do extra key combinations
-let mapleader = "\\"
+let mapleader = "'"
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Load plugins (using vim-plug)
@@ -233,7 +240,7 @@ Plug 'scrooloose/nerdcommenter'
 " Plug 'Shougo/deoplete.nvim'
 " Plug 'roxma/nvim-yarp'
 " Plug 'roxma/vim-hug-neovim-rpc'
-" Plug 'Valloric/YouCompleteMe' 
+" Plug 'Valloric/YouCompleteMe'
 Plug 'zxqfl/tabnine-vim'
 " Installation issue with YCM:
 " cd to plugged/YouCompleteMe/third_party/ycmd
@@ -329,6 +336,16 @@ colorscheme OceanicNext
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Shortcuts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" " Copy to clipboard
+vnoremap  <leader>y  "+y
+nnoremap  <leader>y  "+y
+
+" " Paste from clipboard
+nnoremap <leader>p "+p
+nnoremap <leader>P "+P
+vnoremap <leader>p "+p
+vnoremap <leader>P "+P
 
 " easy save and close
 map ZZ :w! <CR>
@@ -531,6 +548,8 @@ au FileType snakemake let Comment="#"
 " Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<cr>
 
+let g:python_host_prog='/home/schnei01/.anaconda3/bin/python'
+
 " Shortcuts using <leader>
 "map <leader>sn ]s
 "map <leader>sp [s
@@ -589,12 +608,11 @@ let g:airline#extensions#hunks#non_zero_only = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#formatter = 'default'
 
 " Show ale error in airline
 let g:airline#extensions#ale#enabled = 1
 
-" " Show just the filename
-let g:airline#extensions#tabline#fnamemod = ':t'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -630,11 +648,15 @@ nmap <C-N><C-N> :set invnumber<CR>
 
 " YCM - autocompletion
 map <F9> :YcmCompleter FixIt<CR>
+let g:ycm_autoclose_preview_window_after_completion=1
+nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <leader>jd :YcmCompleter GoTo<CR>
 nnoremap <leader>gl :YcmCompleter GoToDeclaration<CR>
 nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>
-nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
+"nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
+let g:ycm_server_keep_logfiles = 1
+let g:ycm_server_log_level = 'debug'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " scrooloose/nerdcommenter
@@ -737,9 +759,10 @@ let b:ale_warn_about_trailing_whitespace = 0
 let g:ale_lint_on_text_changed = 1
 " You can disable this option too
 " " if you don't want linters to run on opening a file
-" let g:ale_lint_on_enter = 0
+let g:ale_lint_on_enter = 0
 " Enable completion where available.
-let g:ale_completion_enabled = 1
+let g:ale_completion_enabled = 0
+autocmd BufEnter *.py ALEDisable
 
 let g:autopep8_ignore="C0103"
 

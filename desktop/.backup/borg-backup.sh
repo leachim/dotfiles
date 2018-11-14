@@ -2,26 +2,30 @@
 ## borg backup script
 LOG="~/Downloads/borgbackup.log"
 
-BBPATH=ssh://storagebox:23/./backup/$(hostname)/borg/
+export BORG_REMOTE_PATH="/home/${USER}/.local/bin/borg"
+
+BAPATH="ssh://nas1:22///mnt/data/fmlab/group_folders/${USER}/Backup/$(hostname)"
 # initialize backup repository, only needed for new installations, on one line, replace $(hostname) with actual value
-#BORG_RSH="ssh -i ~/.ssh/$(hostname)-borg" borg init --encryption=keyfile "$BBPATH" --debug
+#BORG_RSH="ssh -i ~/.ssh/id_rsa" borg init --encryption=keyfile "$BAPATH" --debug
 
 # list all archives in the repository:
-# BORG_RSH="ssh -i ~/.ssh/$(hostname)-borg" borg list "$BBPATH" 
+# BORG_RSH="ssh -i ~/.ssh/d_rsa" borg list "$BAPATH"
 
 # list the contents of the Monday archive:
-# BORG_RSH="ssh -i ~/.ssh/$(hostname)-borg" borg list "$BBPATH"::archivename
+# BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg" borg list ssh://storagebox:23/./backup/$(hostname)::archivename
 
 # restore archive, see https://borgbackup.readthedocs.io/en/stable/usage/extract.html for more examples, note to remove leading /
 # first, recreate repository
 # make sure to backup keys!
-# BORG_RSH="ssh -i ~/.ssh/$(hostname)-borg" borg key import "$BBPATH" path/to/key
-# BORG_RSH="ssh -i ~/.ssh/$(hostname)-borg" borg extract "$BBPATH"::glaux-laptop-2017-12-30T21:55:49 home/$(username)/src
+# BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg" borg key import ssh://storagebox:23/./backup/$(hostname) path/to/key
+# BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg" borg extract ssh://storagebox:23/./backup/$(hostname)::glaux-laptop-2017-12-30T21:55:49 home/$(username)/src
 
 
 # Setting this, so the repo does not need to be given on the commandline:
-export BORG_RSH="ssh -i ~/.ssh/$(hostname)-borg"
-export BORG_REPO="$BBPATH"
+#export BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg"
+#export BORG_REPO="$BBPATH"
+export BORG_RSH="ssh -i ~/.ssh/id_rsa"
+export BORG_REPO="$BAPATH"
 #ssh://username@example.com:2022/~/backup/main
 
 # # Setting this, so you won't be asked for your repository passphrase:
@@ -70,14 +74,17 @@ borg create                                 \
     --exclude '/etc/audisp'                 \
     --exclude '/etc/cups/*'                 \
     --exclude '/etc/docker*'                \
+    --exclude '/etc/docker/key.json'        \
+    --exclude '/etc/chatscripts'         \
     --exclude '/etc/default/cacerts'        \
     --exclude '/etc/exim4/passwd.client'    \
     --exclude '/etc/gshadow*'               \
     --exclude '/etc/ipsec*'                 \
+    --exclude '/etc/krb5.keytab'             \
     --exclude '/etc/logcheck/*'             \
     --exclude '/etc/lvm/backup'             \
     --exclude '/etc/NetworkManager/system-connections/*'\
-    --exclude '/etc/ppp/*-secrets'          \
+    --exclude '/etc/ppp/*'          \
     --exclude '/etc/polkit-1/localauthority'\
     --exclude '/etc/security/opasswd'       \
     --exclude '/etc/subuid*'                \
@@ -86,7 +93,10 @@ borg create                                 \
     --exclude '/etc/vpnc'                   \
     --exclude '/etc/subgid*'                \
     --exclude '/etc/shadow*'                \
+    --exclude '/etc/ssh/*'            \
     --exclude '/etc/ssl/private'            \
+    --exclude '/etc/sssd'            \
+    --exclude '/etc/ufw/*'                  \
     --exclude '/etc/wireguard/*'            \
                                             \
     --exclude '/home/*/.anaconda/*'         \
@@ -97,6 +107,7 @@ borg create                                 \
     --exclude '/home/*/.config/geany/*'     \
     --exclude '/home/*/.config/VirtualBox/*'\
     --exclude '/home/*/.dbus/*'             \
+    --exclude '/home/*/.docker/'            \
     --exclude '/home/*/.dockercfg'          \
     --exclude '/home/*/.dropbox/*'          \
     --exclude '/home/*/.dropbox.cache/*'    \
@@ -144,6 +155,9 @@ borg create                                 \
     --exclude '/home/*/.virtualbox/*'       \
                                             \
     --exclude '/home/*/Data/*'              \
+    --exclude '/home/*/Drive/*'             \
+    --exclude '/home/*/Images/*'            \
+    --exclude '/home/*/Software/*'          \
     --exclude '/home/*/Downloads/*'         \
     --exclude '/home/*/Drive/*'             \
     --exclude '/home/*/Images/*'            \
@@ -152,10 +166,13 @@ borg create                                 \
     --exclude '/home/*/VirtualBox VMs/*'    \
     --exclude '/opt/containerd'             \
                                             \
+    --exclude '/opt/quest/*'                \
+    --exclude '/opt/containerd'             \
+                                            \
     ::'{hostname}-{now}'                    \
     /opt                                    \
     /etc                                    \
-    /home                                   \
+    /home/schnei01                          \
 
 backup_exit=$?
 
