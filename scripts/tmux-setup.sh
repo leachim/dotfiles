@@ -19,7 +19,7 @@ else
   tmux new-window -n test
 fi
 tmux split-window -h
-tmux send-keys "clear" 'C-m' "htop" "C-m"
+tmux send-keys "clear" 'C-m' #"htop" "C-m"
 # tmux send-keys "clear" 'C-m'
 tmux split-window -v 
 tmux send-keys "clear" 'C-m'

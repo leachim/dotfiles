@@ -248,6 +248,24 @@
   urgency = normal
   timeout = 20
 
+[chrome]
+  appname = chromium
+  summary = "*Slack*"
+  urgency = normal
+  timeout = 0
+
+[slack]
+  appname = slack
+  summary = "*Slack*"
+  urgency = normal
+  timeout = 0
+
+[calendar]
+  appname = Calendar
+  summary = "*Calendar*"
+  urgency = normal
+  timeout = 0
+
 #[espeak]
 #    summary = "*"
 #    script = dunst_espeak.sh

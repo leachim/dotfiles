@@ -29,7 +29,7 @@ export CUDA_HOME=/usr/
 export BEEP=/home/michael/.dotfiles/files/soft_beep.way
 
 # create fixed tmux session directory, to restore tmux sessions remotely
-mkdir -p $HOME/.tmux_socket;
+#mkdir -p $HOME/.tmux_socket;
 export TMUX_TMPDIR=~/.tmux_socket
 
 # fzf environment variables
@@ -37,10 +37,7 @@ if [ -e ~/.fzf ]; then
 	export FZF_DEFAULT_COMMAND='ag --nocolor -g ""'
 	export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 	export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND"
-	export FZF_DEFAULT_OPTS='
-	--color fg:242,bg:236,hl:65,fg+:15,bg+:239,hl+:108
-	--color info:108,prompt:109,spinner:108,pointer:168,marker:168
-	'
+	export FZF_DEFAULT_OPTS=' --color fg:242,bg:236,hl:65,fg+:15,bg+:239,hl+:108 --color info:108,prompt:109,spinner:108,pointer:168,marker:168'
 fi
 
 # use fasd
@@ -52,55 +49,17 @@ eval "$(fasd --init auto)"
 TZ='Europe/London'; export TZ
 
 # if running from tty1 start sway  -> desktop session
-if [ $(tty) = "/dev/tty1" ]; then
-    export XKB_DEFAULT_LAYOUT=us,de
-    export XKB_DEFAULT_VARIANT=nodeadkeys
-    export XKB_DEFAULT_OPTIONS=grp:alt_shift_toggle
-
-    # export WLC_REPEAT_DELAY=100
-    # export WLC_REPEAT_RATE=1
-    # export SWAY_CURSOR_THEME=""
-    # export SWAY_CURSOR_SIZE=5
-    sway 
-    exit 0
-fi
-
-# check if running as a remote ssh session
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then # || [ "$(ps -o comm= -o $PPID)" = sshd ] || [ "$(ps -o comm= -o $PPID)" =~ "*\/sshd" ]; then
-  SESSION_TYPE=remote/ssh;
-  [ `alias | grep suspend | wc -l` != 0 ] && unalias suspend; 
-fi
-# many other tests omitted
-#else
-#  case $(ps -o comm= -p $PPID) in
-#    sshd|*/sshd) SESSION_TYPE=remote/ssh; unalias suspend;;;
-#  esac
+#if [ $(tty) = "/dev/tty1" ]; then
+#    export XKB_DEFAULT_LAYOUT=us,de
+#    export XKB_DEFAULT_VARIANT=nodeadkeys
+#    export XKB_DEFAULT_OPTIONS=grp:alt_shift_toggle
+#
+#    # export WLC_REPEAT_DELAY=100
+#    # export WLC_REPEAT_RATE=1
+#    # export SWAY_CURSOR_THEME=""
+#    # export SWAY_CURSOR_SIZE=5
+#    # sway 
+#    exit 0
 #fi
 #if [ -z ${SESSION_TYPE} ]; then unalias suspend; fi
-
-
-
-# start ssh agent
-SSH_ENV="$HOME/.ssh/environment"
-
-function start_agent {
-    #echo "Initialising new SSH agent..."
-    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
-    #echo succeeded
-    chmod 600 "${SSH_ENV}"
-    . "${SSH_ENV}" > /dev/null
-    /usr/bin/ssh-add;
-}
-
-# Source SSH settings, if applicable
-if [ -f "${SSH_ENV}" ]; then
-    . "${SSH_ENV}" > /dev/null
-    #ps ${SSH_AGENT_PID} doesn't work under cywgin
-    ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
-        start_agent;
-    }
-else
-    start_agent;
-fi
-
 
