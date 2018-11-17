@@ -120,7 +120,8 @@ function aws-login () { $(aws ecr get-login --no-include-email); }
 
 ## Docker
 alias d="docker"
-alias dim="docker images"
+alias dima="docker images"
+alias dim="docker images -f dangling=false"
 alias dps="docker ps"
 alias deb="docker run --rm -it test:latest /bin/bash"
 function dev () { docker build -t $1 . ; }
@@ -160,11 +161,13 @@ mformat-python () { PYTHONPATH=~/Software/yapf python ~/Software/yapf/yapf --sty
 alias j="julia"
 
 ## SSH
-ssi () { ssh "$1" -o "UserKnownHostsFile /dev/null"; }
+alias ssw="ssh -R 58439:127.0.0.1:58439"
+alias ssi="ssh -o \"UserKnownHostsFile /dev/null\""
+alias sst="ssh -R 58439:127.0.0.1:58439 -t tmux a"
+#sst () { ssh "$1" -t tmux a; }
 
 ## TMUX
 # connect to running tmux session on ssh host
-sst () { ssh "$1" -t tmux a; }
 alias t="tmux"
 alias ta="tmux attach"
 alias tma='tmux attach -d -t'
@@ -454,6 +457,7 @@ alias matlab-desktop="/home/michael/.matlab/bin/matlab &"
 
 # route through glaux-web
 alias proxyssh="ssh glaux-proxy -D 8080 -N -C -o \"UserKnownHostsFile /dev/null\""
+alias ssho="ssh -o \"UserKnownHostsFile /dev/null\""
 # -D: Tells SSH that we want a SOCKS tunnel on the specified port number (you can choose a number between 1025-65536)
 # -f: Forks the process to the background
 # -C: Compresses the data before sending it

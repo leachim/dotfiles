@@ -15,6 +15,7 @@ alias gb='git branch '
 alias gmo='git commit'
 alias gm='git commit -m'
 alias gd='git diff'
+alias gdc='git diff --cached'
 alias gc='git checkout '
 alias gcm='git checkout master'
 alias gcd="git checkout devel"

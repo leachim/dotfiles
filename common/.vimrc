@@ -234,6 +234,7 @@ Plug 'scrooloose/nerdcommenter'
 " Plug 'roxma/nvim-yarp'
 " Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'Valloric/YouCompleteMe' 
+Plug 'zxqfl/tabnine-vim'
 " Installation issue with YCM:
 " cd to plugged/YouCompleteMe/third_party/ycmd
 " git -c transfer.fsckobjects=false submodule update --init third_party/requests

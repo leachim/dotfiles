@@ -142,6 +142,7 @@ borg create                                 \
     --exclude '/home/*/Images/*'            \
     --exclude '/home/*/Software/*'          \
     --exclude '/home/*/VirtualBox VMs/*'    \
+    --exclude '/opt/containerd'             \
                                             \
     ::'{hostname}-{now}'                    \
     /opt                                    \

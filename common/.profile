@@ -18,6 +18,9 @@ export PATH=$PATH:/usr/lib/jvm/default-java/bin
 # fix CURL certificates path
 export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
+# node path
+export NODE_PATH=/usr/lib/node_modules:$NODE_PATH
+
 # export cuda
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib"
 export CUDA_HOME=/usr/
@@ -60,15 +63,17 @@ if [ $(tty) = "/dev/tty1" ]; then
 fi
 
 # check if running as a remote ssh session
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then # || [ "$(ps -o comm= -o $PPID)" = sshd ] || [ "$(ps -o comm= -o $PPID)" =~ "*\/sshd" ]; then
   SESSION_TYPE=remote/ssh;
-# many other tests omitted
-else
-  case $(ps -o comm= -p $PPID) in
-    sshd|*/sshd) SESSION_TYPE=remote/ssh;;
-  esac
+  [ `alias | grep suspend | wc -l` != 0 ] && unalias suspend; 
 fi
-if [ -z ${SESSION_TYPE+x} ]; then unalias suspend; fi
+# many other tests omitted
+#else
+#  case $(ps -o comm= -p $PPID) in
+#    sshd|*/sshd) SESSION_TYPE=remote/ssh; unalias suspend;;;
+#  esac
+#fi
+#if [ -z ${SESSION_TYPE} ]; then unalias suspend; fi
 
 
 
