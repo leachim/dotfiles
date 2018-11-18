@@ -1,0 +1,21 @@
+[Unit]
+# Create your systemd unit file under /etc/systemd/user
+Description=Notification daemon watching port for messages from remote ssh sessions
+# make sure we only start the service after network is up
+#Wants=network-online.target
+#After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/michael/.dotfiles/scripts/notifications.sh
+#ExecStop=pkill -9 notify-server
+# don't use 'nobody' if your script needs to access user files
+# (if User is not set the service will run as root)
+#User=nobody
+# Useful during debugging; remove it once the service is working
+#StandardOutput=console
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=default.target

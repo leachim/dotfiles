@@ -84,11 +84,12 @@ alias m-rsync="rsync -azP"
 m-filesize () { echo "df -h" | sftp $1 ;}
 
 ## Alerts, a set of flexible alerts to notify about the end of a computation in terminal and tmux
-alias alert-visual="echo -e '\a'"
-alias alert-all="echo -ne \"\033]777;notify-send;$(hostname);$(date '+%Y-%m-%d %H:%M:%S');Computation completed!;\007\007\""
-alias alert-sound="aplay -q $HOME/.dotfiles/files/soft_beep.way"
-alias talert-visual="echo -ne '\033Ptmux;\033\a\033\\'"
-alias talert-all="echo -ne '\033Ptmux;\033\033]777;notify-send;$(hostname);$(date '+%Y-%m-%d %H:%M:%S');Computation completed!;\007\007\\033\\'"
+alias dong="sleep 1; echo -e \"$(date '+%Y-%m-%d %H:%M:%S') - $(hostname) @$(echo \"$(tmux display-message -p \"#S\" 2>/dev/null)\");process finished [exit status $(echo $?)]\" | nc -q 1 127.0.0.1 58439"
+#alias alert-visual="echo -e '\a'"
+#alias alert-all="echo -ne \"\033]777;notify-send;$(hostname);$(date '+%Y-%m-%d %H:%M:%S');Computation completed!;\007\007\""
+#alias alert-sound="aplay -q $HOME/.dotfiles/files/soft_beep.way"
+#alias talert-visual="echo -ne '\033Ptmux;\033\a\033\\'"
+#alias talert-all="echo -ne '\033Ptmux;\033\033]777;notify-send;$(hostname);$(date '+%Y-%m-%d %H:%M:%S');Computation completed!;\007\007\\033\\'"
 
 # make shell alert if running finished
 alias alertify='PS1="$PS1\a"'
@@ -163,7 +164,7 @@ alias j="julia"
 ## SSH
 alias ssw="ssh -R 58439:127.0.0.1:58439"
 alias ssi="ssh -o \"UserKnownHostsFile /dev/null\""
-alias sst="ssh -R 58439:127.0.0.1:58439 -t tmux a"
+#alias sst="ssh -R 58439:127.0.0.1:58439 desktop -t tmux a"
 #sst () { ssh "$1" -t tmux a; }
 
 ## TMUX
