@@ -61,5 +61,3 @@ TZ='Europe/London'; export TZ
 #    # sway 
 #    exit 0
 #fi
-#if [ -z ${SESSION_TYPE} ]; then unalias suspend; fi
-
