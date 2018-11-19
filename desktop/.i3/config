@@ -66,18 +66,11 @@ bindsym $alt+z exec /usr/bin/zotero
 
 #exec urxvt -name scratchpad -e zsh
 #exec --no-startup-id i3-msg 'workspace 7; exec /usr/bin/geary'
-<<<<<<< HEAD
-#exec --no-startup-id i3-msg 'workspace 4; exec /usr/bin/chromium-browser'
-#exec --no-startup-id i3-msg 'workspace 2; exec /usr/bin/firefox'
-#exec --no-startup-id i3-msg 'workspace 3; exec /usr/bin/urxvt -e zsh '
-||||||| merged common ancestors
-exec --no-startup-id i3-msg 'workspace 2; exec /usr/bin/chromium'
-exec --no-startup-id i3-msg 'workspace 3; exec /usr/bin/urxvt'
-=======
-exec --no-startup-id i3-msg 'workspace 4; exec /usr/bin/chromium-browser'
-exec --no-startup-id i3-msg 'workspace 2; exec /usr/bin/firefox'
-exec --no-startup-id i3-msg 'workspace 3; exec /usr/bin/urxvt -e zsh '
->>>>>>> add desktop stuff
+# exec --no-startup-id i3-msg 'workspace 2; exec /usr/bin/chromium'
+# exec --no-startup-id i3-msg 'workspace 3; exec /usr/bin/urxvt'
+# exec --no-startup-id i3-msg 'workspace 4; exec /usr/bin/chromium-browser'
+# exec --no-startup-id i3-msg 'workspace 2; exec /usr/bin/firefox'
+# exec --no-startup-id i3-msg 'workspace 3; exec /usr/bin/urxvt -e zsh '
 #exec --no-startup-id i3-msg 'workspace 3; exec /usr/bin/urxvt -e /bin/bash -c "/usr/bin/tmux -q has-session && exec /usr/bin/tmux attach-session -d || exec /usr/bin/tmux new-session -n$USER -s$USER@$HOSTNAME"'
 
 
