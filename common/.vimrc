@@ -517,7 +517,12 @@ au BufNewFile,BufRead *.rules set syntax=snakemake
 au BufNewFile,BufRead *.snakefile set syntax=snakemake
 au BufNewFile,BufRead *.snake set syntax=snakemake
 au BufNewFile,BufRead *.smk set syntax=snakemake
-
+" crucially also update filetype
+autocmd BufNewFile,BufRead Snakefile setfiletype snakemake
+autocmd BufNewFile,BufRead *.rules setfiletype snakemake
+autocmd BufNewFile,BufRead *.snakefile setfiletype snakemake
+autocmd BufNewFile,BufRead *.snake setfiletype snakemake
+au FileType snakemake let Comment="#"
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Spell and Syntax checking
@@ -645,6 +650,13 @@ let g:NERDCommentEmptyLines = 1
 " " Enable trimming of trailing whitespace when uncommenting
 let g:NERDTrimTrailingWhitespace = 1
 
+"let NERDSpaceDelims=1
+"\ 'py' : { 'left': '#' },
+let g:NERDCustomDelimiters = {
+      \ 'snakemake' : { 'left': '#' },
+      \ 'sshconfig' : { 'left': '#' },
+      \ 'sshdconfig': { 'left': '#' }
+      \ }
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Syntastic - syntax highlighting 
