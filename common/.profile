@@ -9,7 +9,7 @@
 #umask 022
 
 # added by Anaconda3 installer
-export PATH="$HOME/.anaconda3/bin:/snap/bin:/opt/bin:$HOME/.local/bin:/opt/bin:$HOME/.dotfiles/bin:$PATH"
+export PATH="$HOME/.anaconda3/bin:.miniconda3/bin:/snap/bin:/opt/bin:$HOME/.local/bin:/opt/bin:$HOME/.dotfiles/bin:$PATH"
 
 # Java dependencies
 export JAVA_HOME=/usr/lib/jvm/default-java
@@ -42,6 +42,9 @@ if [ -e ~/.fzf ]; then
 	--color info:108,prompt:109,spinner:108,pointer:168,marker:168
 	'
 fi
+
+# use fasd
+eval "$(fasd --init auto)"
 
 # added by travis gem
 [ -f /home/michael/.travis/travis.sh ] && source /home/michael/.travis/travis.sh
@@ -99,3 +102,5 @@ if [ -f "${SSH_ENV}" ]; then
 else
     start_agent;
 fi
+
+

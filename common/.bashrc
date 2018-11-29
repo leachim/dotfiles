@@ -18,6 +18,7 @@ shopt -s no_empty_cmd_completion  # No empty completion
 shopt -s cmdhist
 # checks the window size after each command 
 shopt -s checkwinsize
+
 # don't put duplicate lines or lines starting with space in the history.
 # https://unix.stackexchange.com/questions/18212/bash-history-ignoredups-and-erasedups-setting-conflict-with-common-history
 HISTCONTROL=ignoredups:erasedups
@@ -170,6 +171,14 @@ alias .....="cd ../../../.."
 alias takeover="tmux detach -a"
 alias vi="vim"
 alias le="less"
+
+# quicker startup with fasd
+fasd_cache="$HOME/.fasd-init-bash"
+if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
+  fasd --init posix-alias bash-hook bash-ccomp bash-ccomp-install >| "$fasd_cache"
+fi
+source "$fasd_cache"
+unset fasd_cache
 
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e
 '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'

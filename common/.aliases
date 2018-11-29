@@ -2,6 +2,20 @@
 ###              ALIASES              ###
 #########################################
 
+# fasd shortcuts
+alias a='fasd -a'        # any
+alias s='fasd -si'       # show / search / select
+alias d='fasd -d'        # directory
+alias f='fasd -f'        # file
+alias sd='fasd -sid'     # interactive directory selection
+alias sf='fasd -sif'     # interactive file selection
+alias z='fasd_cd -d'     # cd, same functionality as j in autojump
+alias zz='fasd_cd -d -i' # cd with interactive selection
+alias v='f -e vim' # quick opening files with vim
+alias vv='f -e zathura' # quick opening files with zathura 
+alias j='fzf' # fuzzy search
+
+
 ## Shortcuts
 alias lst="ls -lt"
 alias sac="source activate"
@@ -39,6 +53,7 @@ alias .....="cd ../../../.."
 
 alias apu="sudo apt-get update"
 alias apg="sudo apt-get upgrade"
+alias apa="sudo apt-get update && sudo apt-get upgrade"
 alias api="sudo apt-get install"
 alias reboot="sudo systemctl reboot"
 alias poweroff="sudo systemctl poweroff"
@@ -97,6 +112,19 @@ alias alertify='PS1="$PS1\a"'
 ###########################
 ###       SERVICES      ###
 ###########################
+
+###        SLURM CLUSTER              ###
+#########################################
+alias squeuem="squeue -u $(whoami) -o \"%.14i %.5j %.2t %.10M %.9l %.5D %16R %5K %3C %o\""
+alias squeuea="squeue -o \"%.14i %.5j %.2t %.10M %.9l %.5D %16R %5K %3C %Q %o\""
+squeue-watch () { watch -n 3 -d "squeue -u $(whoami) --format=\"%.14i %.5j %.2t %.10M %.9l %.5D %16R %5K %3C %Q %o\"" ; }
+alias squeuewm="squeue-watch"
+
+alias latest="ls -ltr | tail -n 1 | awk '{print $NF}'"
+alias latest2="ls -ltr | tail -n 2 | head -n 1 | awk '{print $NF}'"
+
+#########################################
+
 
 ## Latex, Markdown & PDF viewer
 alias lat="latexmk"
@@ -157,9 +185,6 @@ alias i2="ipython2 -i --colors=Linux"
 alias i="ipython3 -i -c \"import numpy as np;import pandas as pd;from math import *;\" --colors=Linux"
 # program to format python files
 mformat-python () { PYTHONPATH=~/Software/yapf python ~/Software/yapf/yapf --style google $1 ; }
-
-## Julia
-alias j="julia"
 
 ## SSH
 alias ssw="ssh -R 58439:127.0.0.1:58439"
