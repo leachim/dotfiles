@@ -134,6 +134,8 @@ borg create                                 \
     --exclude '/home/*/.config/google-chrome/*'\
     --exclude '/home/*/.mozilla/*'          \
     --exclude '/home/*/.travis/*'           \
+    --exclude '/home/*/.singularity/*'      \
+    --exclude '/home/*/.snakemake/*'        \
     --exclude '/home/*/.virtualbox/*'       \
                                             \
     --exclude '/home/*/Data/*'              \

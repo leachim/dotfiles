@@ -1,0 +1,8 @@
+restart-times: 1
+jobscript: "slurm-jobscript.sh"
+cluster-status: "slurm-status.py"
+cluster-config: "/home/schnei01/.config/snakemake/slurm/slurm.json"
+max-jobs-per-second: 10
+max-status-checks-per-second: 10 
+local-cores: 2
+cluster: ".config/snakemake/slurm/slurm-submit.py --partition {cluster.partition} --error '{cluster.error}' --output '{cluster.output}' --job-name {cluster.jobname} --mail-user {cluster.mailuser} --mail-type {cluster.mailtype}"

@@ -29,6 +29,7 @@ export HISTIGNORE="&:ls:[bf]g:exit"
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTSIZE=10000
 HISTFILESIZE=20000
+IGNOREEOF=5   # Shell only exists after the 10th consecutive Ctrl-d<Paste>
 
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then

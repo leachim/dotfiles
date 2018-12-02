@@ -43,6 +43,9 @@ setopt autocd
 setopt autopushd
 setopt pushdsilent
 
+# ignore ctrl-d command to close terminal
+setopt ignoreeof
+
 # prompt
 setopt extendedglob
 setopt nolistambiguous
