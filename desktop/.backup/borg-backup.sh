@@ -4,7 +4,7 @@ LOG="~/Downloads/borgbackup.log"
 
 export BORG_REMOTE_PATH="/home/${USER}/.local/bin/borg"
 
-BAPATH="ssh://nas1:22///mnt/data/fmlab/group_folders/${USER}/Backup/$(hostname)"
+BAPATH="ssh://nas:22///mnt/data/fmlab/group_folders/${USER}/Backup/$(hostname)"
 # initialize backup repository, only needed for new installations, on one line, replace $(hostname) with actual value
 #BORG_RSH="ssh -i ~/.ssh/id_rsa" borg init --encryption=keyfile "$BAPATH" --debug
 
