@@ -29,9 +29,9 @@ KEYTIMEOUT=1
 stty -ixon -ixoff
 
 # history
-HISTSIZE=4000
+HISTSIZE=8000
 HISTFILE=$HOME/.zsh_history
-SAVEHIST=4000
+SAVEHIST=8000
 setopt hist_ignore_all_dups
 setopt hist_ignore_space
 # save every command before it is executed
@@ -74,9 +74,29 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
 ## share history between terminals
-unsetopt share_history
-#setopt share_history
+#unsetopt share_history
+setopt share_history
 
+# access global and local history for each shell
+# https://superuser.com/questions/446594/separate-up-arrow-lookback-for-local-and-global-zsh-history
+
+bindkey "<Up>" up-line-or-local-history
+bindkey "<Down>" down-line-or-local-history
+bindkey "^[[1;5A" up-line-or-history    # [CTRL] + Cursor up
+bindkey "^[[1;5B" down-line-or-history  # [CTRL] + Cursor down
+
+up-line-or-local-history() {
+    zle set-local-history 1
+    zle up-line-or-history
+    zle set-local-history 0
+}
+zle -N up-line-or-local-history
+down-line-or-local-history() {
+    zle set-local-history 1
+    zle down-line-or-history
+    zle set-local-history 0
+}
+zle -N down-line-or-local-history
 
 ### keep below
 

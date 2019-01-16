@@ -101,6 +101,10 @@ borg create                                 \
     --exclude '/home/*/.dropbox/*'          \
     --exclude '/home/*/.dropbox.cache/*'    \
     --exclude '/home/*/.dropbox-dist/*'     \
+    --exclude '/home/*/.fasd/*'             \
+    --exclude '/home/*/.fasd-init-bash/*'   \
+    --exclude '/home/*/.fzf.bash/*'         \
+    --exclude '/home/*/.fzf.zsh/*'          \
     --exclude '/home/*/.gcalcli_oauth'      \
     --exclude '/home/*/.gdfuse/*'           \
     --exclude '/home/*/.grip/*'             \
@@ -128,6 +132,7 @@ borg create                                 \
     --exclude '/home/*/.streisand/*'        \
     --exclude '/home/*/.ssh/*'              \
     --exclude '/home/*/streisand/global_vars/*'\
+    --exclude '/home/*/generated-docs/*'    \
     --exclude '/home/*/streisand/generated-docs/*'\
                                             \
     --exclude '/home/*/.config/chromium/*'  \
@@ -142,6 +147,7 @@ borg create                                 \
     --exclude '/home/*/Downloads/*'         \
     --exclude '/home/*/Drive/*'             \
     --exclude '/home/*/Images/*'            \
+    --exclude '/home/*/Github/*'            \
     --exclude '/home/*/Software/*'          \
     --exclude '/home/*/VirtualBox VMs/*'    \
     --exclude '/opt/containerd'             \

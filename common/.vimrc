@@ -260,6 +260,7 @@ Plug 'sheerun/vim-polyglot'
 Plug 'SirVer/ultisnips'
 " Snippets are separated from the engine. Add this if you want them:
 Plug 'honza/vim-snippets'
+Plug 'ekalinin/Dockerfile.vim'
 
 " flexible search 
 "Plugin 'kien/ctrlp.vim' -> replaced by fzf
@@ -541,13 +542,19 @@ map <leader>ss :setlocal spell!<cr>
 " => Custom commands
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "  " I always hit ":W" instead of ":w" because I linger on the shift key...
-"  command! Q q
-"  command! W w
+command! Q q
+command! W w
 
 "  " Trim spaces at EOL and retab. I run `:CLEAN` a lot to clean up files.
-"  command! TEOL %s/\s\+$//
-"  command! CLEAN retab | TEOL
+command! TEOL %s/\s\+$//
+command! CLEAN retab | TEOL
 
+set undofile
+set undodir=~/.vim/undodir
+
+let s:undos = split(globpath(&undodir, '*'), "\n")
+  call filter(s:undos, 'getftime(v:val) < localtime() - (60 * 60 * 24 * 90)')
+  call map(s:undos, 'delete(v:val)')
 "  " Close all buffers except this one
 "  command! BufCloseOthers %bd|e#
 

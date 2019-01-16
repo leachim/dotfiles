@@ -19,18 +19,16 @@ shopt -s cmdhist
 # checks the window size after each command 
 shopt -s checkwinsize
 
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=10000
+HISTFILESIZE=20000
 # don't put duplicate lines or lines starting with space in the history.
 # https://unix.stackexchange.com/questions/18212/bash-history-ignoredups-and-erasedups-setting-conflict-with-common-history
 HISTCONTROL=ignoredups:erasedups
 shopt -s histappend
-PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
 export HISTIGNORE="&:ls:[bf]g:exit"
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=10000
-HISTFILESIZE=20000
 IGNOREEOF=5   # Shell only exists after the 10th consecutive Ctrl-d<Paste>
-
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
@@ -143,11 +141,6 @@ if [ -f ~/.dotfiles/files/git-prompt.sh ]; then
     source ~/.dotfiles/files/git-prompt.sh
 fi
 
-# PROMPT_COMMAND='history -a; printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1) ($(date +%m/%d\ %H:%M:%S))"'
-PROMPT_COMMAND='history -a; printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1)"'
-PS1="\[\e[34m\]\u\[\e[1;32m\]@\[\e[0;33m\]\h\[\e[35m\]:"
-PS1="$PS1\[\e[m\]\w\[\e[1;31m\]> \[\e[0m\]"
-#PS1="$PS1\[\e[0;38m\]\w\[\e[1;35m\]> \[\e[0m\]"
 
 # Tab autocompletion functionality for bash emulating zsh behavior
 bind "TAB:menu-complete"
@@ -186,6 +179,13 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 # some cluster aliases
 alias bstat="sstat -p --format=AveCPU,AvePages,AveRSS,AveVMSize,JobID,MaxVMSize,MaxVMSizeTask,AveDiskWrite,MaxDiskWrite,MaxDiskWriteNode -j $1"
+
+# PROMPT_COMMAND='history -a; printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1) ($(date +%m/%d\ %H:%M:%S))"'
+PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND printf \"\[\e[38;5;59m\]%$(($COLUMNS -
+4))s\r\" \"$(__git_ps1)\""
+PS1="\[\e[34m\]\u\[\e[1;32m\]@\[\e[0;33m\]\h\[\e[35m\]:"
+PS1="$PS1\[\e[m\]\w\[\e[1;31m\]> \[\e[0m\]"
+#PS1="$PS1\[\e[0;38m\]\w\[\e[1;35m\]> \[\e[0m\]"
 
 # Load paths and variables
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
