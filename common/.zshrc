@@ -92,10 +92,15 @@ down-line-or-local-history() {
 }
 zle -N down-line-or-local-history
 
+autoload -U up-line-or-beginning-search
+autoload -U down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+
 bindkey "^[0A" up-line-or-local-history
 bindkey "^[0B" down-line-or-local-history
-bindkey "^[[1;5A" up-line-or-history    # [CTRL] + Cursor up
-bindkey "^[[1;5B" down-line-or-history  # [CTRL] + Cursor down
+bindkey "^[[1;5A" up-line-or-beginning-search # [CTRL] + Cursor up
+bindkey "^[[1;5B" down-line-or-beginning-search # [CTRL] + Cursor down
 
 ### keep below
 

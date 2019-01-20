@@ -233,7 +233,7 @@ Plug 'scrooloose/nerdcommenter'
 " Plug 'Shougo/deoplete.nvim'
 " Plug 'roxma/nvim-yarp'
 " Plug 'roxma/vim-hug-neovim-rpc'
-Plug 'Valloric/YouCompleteMe' 
+" Plug 'Valloric/YouCompleteMe' 
 Plug 'zxqfl/tabnine-vim'
 " Installation issue with YCM:
 " cd to plugged/YouCompleteMe/third_party/ycmd
@@ -624,6 +624,9 @@ vnoremap <C-c> "*y
 " map <leader>pp :r!xsel -p<CR>
 " map <leader>ps :r!xsel -s<CR>
 "map <leader>vv :r!xsel -b<CR>
+
+" toggle nonumbers/numbers
+nmap <C-N><C-N> :set invnumber<CR>
 
 " YCM - autocompletion
 map <F9> :YcmCompleter FixIt<CR>

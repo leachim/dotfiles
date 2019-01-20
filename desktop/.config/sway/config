@@ -20,7 +20,7 @@ set $menu rofi
 # reload the configuration file, debugging only
 bindsym $mod+o+Shift reload
 # exit sway (logs you out of your wayland session)
-bindsym $mod+e+Shift exit
+bindsym $mod+End+Shift exit
 # lock screen
 bindsym $mod+Return+Shift exec "swaylock -te --image=eDP-1:~/.config/sway/animals.png"
 # suspend
@@ -400,7 +400,7 @@ mode "fineresize" {
 	bindsym Return mode "default"
 	bindsym Escape mode "default"
 }
-bindsym $mod+Shift+r mode "fineresize"
+bindsym $mod+Shift+t mode "fineresize"
 
 # system
 set $mode_system (l) lock, (o) logout, (s) suspend, (r) reboot, (p) poweroff
