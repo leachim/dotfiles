@@ -183,11 +183,6 @@ alias bstat="sstat -p --format=AveCPU,AvePages,AveRSS,AveVMSize,JobID,MaxVMSize,
 #######################################################
 # BEGIN PROMPT DEFINITION
 
-GIT_PS1_SHOWCOLORHINTS=1
-GIT_PS1_SHOWDIRTYSTATE=1
-GIT_PS1_SHOWSTASHSTATE=1
-GIT_PS1_SHOWUNTRACKEDFILES=0
-GIT_PS1_SHOWUPSTREAM=git
 # Highlight the user name when logged in as root.
 if [[ "${USER}" == "root" ]]; then
 	userStyle="\e[1;31m"; # red
@@ -198,7 +193,14 @@ fi;
 hostStyle="\e[1;33m"; # yellow
 gitStyle="\e[38;5;64m"; # green
 
-PROMPT_COMMAND='history -n; history -w; history -c; history -r;'
+if type _fasd_prompt_func | grep -i function > /dev/null; then
+    # per terminal history
+    #PROMPT_COMMAND='history -w; history -c; history -r; _fasd_prompt_func;'
+    # shared history
+    PROMPT_COMMAND='history -n; history -w; history -c; history -r; _fasd_prompt_func;'
+else
+    PROMPT_COMMAND='history -n; history -w; history -c; history -r;'
+fi
 PROMPT_COMMAND+='__git_ps1 "\[${userStyle}\]\u\[\e[1;32m\]@\[${hostStyle}\]\h\[\e[35;m\]:'
 
 # choice between short and long version of path:
