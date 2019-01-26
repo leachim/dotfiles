@@ -206,12 +206,10 @@ PROMPT_COMMAND+='\[\e[m\]$(sed -e "s:$HOME:~:" -e "s:\(\.\?[^/]\)[^/]*/:\1/:g" <
 #PROMPT_COMMAND+='\[\e[m\]\w\[\e[1;31m\]'
 
 # git line
-PROMPT_COMMAND+='\[\e[0m\]" "\[${gitStyle}\]\]\[\e[m\]'
+PROMPT_COMMAND+='\[\e[0m\]" "\[${gitStyle}\]\[\e[m\]'
 PROMPT_COMMAND+='\[\e[1;31m\]> ' 
 
-# should be equivalent:
 PROMPT_COMMAND+='\[\e[0m\]"'
-#PROMPT_COMMAND+='\[$(tput sgr0)\]"' 
 
 # END PROMPT DEFINITION
 #########################################
