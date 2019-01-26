@@ -180,11 +180,41 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # some cluster aliases
 alias bstat="sstat -p --format=AveCPU,AvePages,AveRSS,AveVMSize,JobID,MaxVMSize,MaxVMSizeTask,AveDiskWrite,MaxDiskWrite,MaxDiskWriteNode -j $1"
 
-# PROMPT_COMMAND='history -a; printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1) ($(date +%m/%d\ %H:%M:%S))"'
-PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND printf \"\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r\" \"$(__git_ps1)\""
-PS1="\[\e[34m\]\u\[\e[1;32m\]@\[\e[0;33m\]\h\[\e[35m\]:"
-PS1="$PS1\[\e[m\]\w\[\e[1;31m\]> \[\e[0m\]"
-#PS1="$PS1\[\e[0;38m\]\w\[\e[1;35m\]> \[\e[0m\]"
+#######################################################
+# BEGIN PROMPT DEFINITION
+
+GIT_PS1_SHOWCOLORHINTS=1
+GIT_PS1_SHOWDIRTYSTATE=1
+GIT_PS1_SHOWSTASHSTATE=1
+GIT_PS1_SHOWUNTRACKEDFILES=0
+GIT_PS1_SHOWUPSTREAM=git
+# Highlight the user name when logged in as root.
+if [[ "${USER}" == "root" ]]; then
+	userStyle="\e[1;31m"; # red
+else
+    userStyle="\e[38;5;33m"; # blue
+    #userStyle="\e[38;5;166m"; # orange
+fi;
+hostStyle="\e[1;33m"; # yellow
+gitStyle="\e[38;5;64m"; # green
+
+PROMPT_COMMAND='history -n; history -w; history -c; history -r;'
+PROMPT_COMMAND+='__git_ps1 "\[${userStyle}\]\u\[\e[1;32m\]@\[${hostStyle}\]\h\[\e[35;m\]:'
+
+# choice between short and long version of path:
+PROMPT_COMMAND+='\[\e[m\]$(sed -e "s:$HOME:~:" -e "s:\(\.\?[^/]\)[^/]*/:\1/:g" <<<$PWD)'
+#PROMPT_COMMAND+='\[\e[m\]\w\[\e[1;31m\]'
+
+# git line
+PROMPT_COMMAND+='\[\e[0m\]" "\[${gitStyle}\]\]\[\e[m\]'
+PROMPT_COMMAND+='\[\e[1;31m\]> ' 
+
+# should be equivalent:
+PROMPT_COMMAND+='\[\e[0m\]"'
+#PROMPT_COMMAND+='\[$(tput sgr0)\]"' 
+
+# END PROMPT DEFINITION
+#########################################
 
 # Load paths and variables
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
