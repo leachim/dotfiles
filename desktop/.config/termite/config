@@ -1,0 +1,132 @@
+[options]
+font = DejaVu Sans Mono 16
+scrollback_lines = 10000
+clickable_url    = true
+browser          = chromium
+allow_bold       = true
+allow_italic     = true
+visible_bell     = false
+audible_bell     = false
+mouse_autohide   = true
+dynamic_title = true
+cursor_blink = system
+
+[colors]
+# Base16 Google Dark
+# Author: Seth Wright (http://sethawright.com)
+
+foreground          = #c5c8c6
+foreground_bold     = #e0e0e0
+cursor              = #e0e0e0
+cursor_foreground   = #1d1f21
+background          = rgba(29, 31, 33)
+
+# 16 color space
+
+# Black, Gray, Silver, White
+color0  = #1d1f21
+color8  = #969896
+color7  = #c5c8c6
+color15 = #ffffff
+
+# Red
+color1  = #CC342B
+color9  = #CC342B
+
+# Green
+color2  = #198844
+color10 = #198844
+
+# Yellow
+color3  = #FBA922
+color11 = #FBA922
+
+# Blue
+color4  = #3971ED
+color12 = #3971ED
+
+# Purple
+color5  = #A36AC7
+color13 = #A36AC7
+
+# Teal
+color6  = #3971ED
+color14 = #3971ED
+
+# Extra colors
+color16 = #F96A38
+color17 = #3971ED
+color18 = #282a2e
+color19 = #373b41
+color20 = #b4b7b4
+color21 = #e0e0e0
+
+
+# Base16 Oceanic Next
+# Scheme: Dmitri Voronianski (http://pixelhunter.me)
+
+#foreground      = #C0C5CE
+#foreground_bold = #C0C5CE
+#cursor          = #C0C5CE
+#background      = #1B2B34
+
+# 16 color space
+#color0  = #1B2B34
+#color1  = #EC5f67
+#color2  = #99C794
+#color3  = #FAC863
+#color4  = #6699CC
+#color5  = #C594C5
+#color6  = #5FB3B3
+#color7  = #C0C5CE
+#color8  = #65737E
+#color9  = #EC5f67
+#color10 = #99C794
+#color11 = #FAC863
+#color12 = #6699CC
+#color13 = #C594C5
+#color14 = #5FB3B3
+#color15 = #D8DEE9
+
+# 256 color space
+#color16 = #F99157
+#color17 = #AB7967
+#color18 = #343D46
+#color19 = #4F5B66
+#color20 = #A7ADBA
+#color21 = #CDD3DE
+
+# Base16 Solarized
+# Scheme: Ethan Schoonover (http://ethanschoonover.com/solarized)
+
+#foreground      = #93a1a1
+#foreground_bold = #93a1a1
+#cursor          = #93a1a1
+#background      = #002b36
+
+# 16 color space
+#color0  = #002b36
+#color1  = #dc322f
+#color2  = #859900
+#color3  = #b58900
+#color4  = #268bd2
+#color5  = #6c71c4
+#color6  = #2aa198
+#color7  = #93a1a1
+#color8  = #657b83
+#color9  = #dc322f
+#color10 = #859900
+#color11 = #b58900
+#color12 = #268bd2
+#color13 = #6c71c4
+#color14 = #2aa198
+#color15 = #fdf6e3
+
+# 256 color space
+#color16 = #cb4b16
+#color17 = #d33682
+#color18 = #073642
+#color19 = #586e75
+#color20 = #839496
+#color21 = #eee8d5
+

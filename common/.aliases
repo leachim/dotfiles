@@ -51,10 +51,10 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
-alias apu="sudo apt-get update"
-alias apg="sudo apt-get upgrade"
-alias apa="sudo apt-get update && sudo apt-get upgrade"
-alias api="sudo apt-get install"
+alias apu="sudo apt update"
+alias apg="sudo apt upgrade"
+alias apa="sudo apt update && sudo apt upgrade"
+alias api="sudo apt install"
 alias reboot="sudo systemctl reboot"
 alias poweroff="sudo systemctl poweroff"
 
@@ -87,7 +87,7 @@ function daily-quote () {
 alias clock="date | cut -d ' ' -f 4"
 alias daily-cal="ncal -A 1 -M -b -w"
 alias upip="conda list | grep \"<pip>\" | awk '{print $1}' | xargs pip install -U"
-alias doremi="apt-mark showhold && sudo apt-get update && sudo apt-get upgrade && conda update conda --yes && conda update --all --yes && sudo apt-get autoremove && echo \"\" && weather && echo \"Tage im Mai: $(datediff 04/29/2018)\tTage im September: $(datediff 06/23/2016)\tWintertage: $(datediff 01/16/2019)\" && daily-cal && daily-quote"
+alias doremi="apt-mark showhold && sudo apt update && sudo apt upgrade && conda update conda --yes && conda update --all --yes && sudo apt autoremove && echo \"\" && weather && echo \"Tage im Mai: $(datediff 04/29/2018)\tTage im September: $(datediff 06/23/2016)\tWintertage: $(datediff 01/16/2019)\" && daily-cal && daily-quote"
 alias daily-info="weather && echo \"Tage im Mai: $(datediff 08/14/2018)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
 alias ugit="git pull && git submodule update --recursive"
 function update-git () { for i in **; do cd $i; ugit; cd ..; done ; }
@@ -115,10 +115,10 @@ alias alertify='PS1="$PS1\a"'
 
 ###        SLURM CLUSTER              ###
 #########################################
-alias squeuem="squeue -u $(whoami) -o \"%.14i %.5j %.2t %.10M %.9l %.5D %16R %5K %3C %o\""
-alias squeuea="squeue -o \"%.14i %.5j %.2t %.10M %.9l %.5D %16R %5K %3C %Q %o\""
+alias m-squeuei="squeue -u $(whoami) -o \"%.14i %.5j %.2t %.10M %.9l %.5D %16R %5K %3C %o\""
+alias m-squeuea="squeue -o \"%.14i %.5j %.2t %.10M %.9l %.5D %16R %5K %3C %Q %o\""
 squeue-watch () { watch -n 3 -d "squeue -u $(whoami) --format=\"%.14i %.5j %.2t %.10M %.9l %.5D %16R %5K %3C %Q %o\"" ; }
-alias squeuewm="squeue-watch"
+alias m-squeuew="squeue-watch"
 
 alias latest="ls -ltr | tail -n 1 | awk '{print $NF}'"
 alias latest2="ls -ltr | tail -n 2 | head -n 1 | awk '{print $NF}'"
@@ -189,6 +189,7 @@ mformat-python () { PYTHONPATH=~/Software/yapf python ~/Software/yapf/yapf --sty
 ## SSH
 alias ssw="ssh -R 58439:127.0.0.1:58439"
 alias ssi="ssh -o \"UserKnownHostsFile /dev/null\""
+alias ssa='function _ssa(){ ssh -t $1 "tmux attach-session -t $1 || tmux new-session -s $1"; }; _ssa'
 #alias sst="ssh -R 58439:127.0.0.1:58439 desktop -t tmux a"
 #sst () { ssh "$1" -t tmux a; }
 
@@ -287,6 +288,7 @@ function mpdf-tosvg () { for var in "$@"; do pdf2svg $var ${var%.pdf}.svg ; done
 
 # convert pdf to png
 function mpdf-topng () { for var in "$@"; do pdftoppm $var ${var%.pdf} -png -r 300 -singlefile ; done ; }
+function mpdf-splitToPNG () { for var in "$@"; do pdftk $var burst output ${var%.pdf}_%03d.pdf ; rm -f doc_data.txt; files=(${var%.pdf}_*.pdf); for f in ${files}; do echo $f; pdftoppm $f ${f%.pdf} -png -r 300 -singlefile ; done ; done ; }
 
 # convert pdf to png, specify resolution
 function mpdf-topng-res () { pdftoppm $1 ${1%.pdf} -png -r $2 -singlefile ; }
@@ -469,6 +471,9 @@ present () { xrandr --output DP1 --auto ; xrandr --output DP2 --auto;}
 darken () { brightnessctl set 0% ; }
 lighten () { brightnessctl set 100% ;}
 
+# battery status
+alias m-battery="upower -i $(upower -e | grep BAT) | grep --color=never -E \"state|to\ full|to\ empty|percentage\""
+
 ### Internet and proxy commands ###
 alias wgup="sudo systemctl restart wg-quick@wg0-client"
 alias wgdown="sudo systemctl stop wg-quick@wg0-client"
@@ -496,7 +501,8 @@ proxyvpn () { sudo openvpn --remote proxy.$(hostname | sed -e "s/[-][[:alnum:]]\
 
 # route through work
 alias proxywork="ssh desktop -D 8079 -N -C"
-alias proxyrstudio="ssh -X -N -L localhost:8787:localhost:8787 desktop" 
+alias proxyrstudio="ssh -Y -N -L localhost:8787:localhost:8787 desktop" 
+alias proxyjupyter="ssh -Y -N -L localhost:8785:localhost:8888 desktop" 
 alias proxyrdocker="ssh -N -L localhost:8786:localhost:8786 desktop" 
 
 ################################
@@ -505,7 +511,7 @@ alias proxyrdocker="ssh -N -L localhost:8786:localhost:8786 desktop"
 
 # Backup routine
 alias fasollati="bash $HOME/.backup/local-backup.sh && echo \"df -h\" | sftp storagebox:"
-alias jour="sudo apt-get autoclean && bash $HOME/.backup/borg-backup.sh && sleep 5 && doremi"
+alias jour="sudo apt autoclean && bash $HOME/.backup/borg-backup.sh && sleep 5 && doremi"
 alias check-storage="echo \"df -h\" | sftp storagebox"
 
 ## Backup management
