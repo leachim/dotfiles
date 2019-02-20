@@ -31,7 +31,7 @@ bindsym $mod+Return exec $terminal -e "/bin/zsh"
 bindsym $mod+s exec "rofi -show ssh -terminal urxvt"
 
 # take screenshot
-bindsym Print exec "swaygrab"
+bindsym Print exec grim ~/"screenshot_$(date '+%F-%H-%M-%S')".png
 
 # move the currently focused window to the scratchpad
 bindsym $mod+slash move scratchpad
