@@ -6,20 +6,32 @@ tmux send-keys "clear" 'C-m'
 tmux split-window -h
 
 # second window (2)
-if [ "$1" = "Desktop" ]; then
+if [ "$1" = "desktop" ]; then
   tmux new-window -n control
-elif [ "$1" = "Data" ]; then
+elif [ "$1" = "darwin" ]; then
+  tmux new-window -n home 
+elif [ "$1" = "data" ]; then
   tmux new-window -n transfer
-elif [ "$1" = "Clust" ]; then
-  tmux new-window -n monitor
+elif [ "$1" = "cpuclust" ]; then
+  tmux new-window -n execute 
+elif [ "$1" = "clust1" ]; then
+  tmux new-window -n execute 
+elif [ "$1" = "server" ]; then
+  tmux new-window -n run
 else
   tmux new-window -n test
 fi
 tmux split-window -h
-tmux send-keys "clear" 'C-m' "htop" "C-m"
-# tmux send-keys "clear" 'C-m'
-tmux split-window -v 
 tmux send-keys "clear" 'C-m'
+# tmux send-keys "clear" 'C-m'
+# Split pane 1 horizontal by 65%, start redis-server
+tmux split-window -v -p 70 
+tmux send-keys "clear" 'C-m'
+
+tmux select-window -t $1
+
+# Select pane 1
+tmux selectp -t 1
 
 # third window (3)
 #tmux new-window -n jupyter 

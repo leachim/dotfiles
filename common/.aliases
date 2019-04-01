@@ -25,6 +25,7 @@ alias vi="nvim"
 alias vim="nvim"
 alias le="less"
 alias c="clear"
+alias diff='diff --color=auto'
 alias cdp="cd -P"
 alias pack="tar -zcvf"
 alias pingg="ping 8.8.8.8"
@@ -87,8 +88,8 @@ function daily-quote () {
 alias clock="date | cut -d ' ' -f 4"
 alias daily-cal="ncal -A 1 -M -b -w"
 alias upip="conda list | grep \"<pip>\" | awk '{print $1}' | xargs pip install -U"
-alias doremi="apt-mark showhold && sudo apt update && sudo apt upgrade && conda update conda --yes && conda update --all --yes && sudo apt autoremove && echo \"\" && weather && echo \"Tage im Mai: $(datediff 04/29/2018)\tTage im September: $(datediff 06/23/2016)\tWintertage: $(datediff 01/16/2019)\" && daily-cal && daily-quote"
-alias daily-info="weather && echo \"Tage im Mai: $(datediff 08/14/2018)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
+alias doremi="apt-mark showhold && sudo apt update && sudo apt upgrade && conda update conda --yes && conda update --all --yes && sudo apt autoremove && echo \"\" && weather && echo \"Tage im Mai: $(datediff 03/31/2019)\tTage im September: $(datediff 06/23/2016)\tWintertage: $(datediff 09/01/2019)\" && daily-cal && daily-quote"
+alias daily-info="weather && echo \"Tage im Mai: $(datediff 02/22/2018)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
 alias ugit="git pull && git submodule update --recursive"
 function update-git () { for i in **; do cd $i; ugit; cd ..; done ; }
 alias timestamp="date +%Y_%m_%d-%H_%M"
@@ -475,11 +476,12 @@ lighten () { brightnessctl set 100% ;}
 alias m-battery="upower -i $(upower -e | grep BAT) | grep --color=never -E \"state|to\ full|to\ empty|percentage\""
 
 ### Internet and proxy commands ###
-alias wgup="sudo systemctl restart wg-quick@wg0-client"
-alias wgdown="sudo systemctl stop wg-quick@wg0-client"
-alias wgstatus="systemctl status wg-quick@wg0-client"
-alias caup="sudo ipsec up CAM"
-alias cadown="sudo ipsec down CAM"
+alias wgup="sudo wg-quick up wg0"
+alias wgdown="sudo wg-quick down wg0"
+alias wgstatus="systemctl status wg-quick@wg0"
+alias caup="sudo ipsec up CAM && touch /tmp/vpn.lock"
+alias cadown="sudo ipsec down CAM && rm -f /tmp/vpn.lock"
+alias browsh="docker run --rm -it browsh/browsh"
 
 ###########################
 ###       SERVICES      ###
@@ -496,8 +498,8 @@ alias ssho="ssh -o \"UserKnownHostsFile /dev/null\""
 # -C: Compresses the data before sending it
 # -q: Uses quiet mode
 # -N: Tells SSH that no command will be sent once the tunnel is up
-proxyshadow () { ss-local -l 8080 -c /etc/shadowsocks.json -s proxy.$(hostname | sed -e "s/[-][[:alnum:]]\+$//")lab.org ; }
-proxyvpn () { sudo openvpn --remote proxy.$(hostname | sed -e "s/[-][[:alnum:]]\+$//" | awk '{print $1}')lab.org 443 --config ~/.ssh/client1.ovpn ; }
+proxyshadow () { ss-local -l 8080 -c /etc/shadowsocks.json -s streisand.proxy.$(hostname | sed -e "s/[-][[:alnum:]]\+$//")lab.org ; }
+proxyvpn () { sudo openvpn --remote streisand.proxy.$(hostname | sed -e "s/[-][[:alnum:]]\+$//" | awk '{print $1}')lab.org 443 --config ~/.ssh/client1.ovpn ; }
 
 # route through work
 alias proxywork="ssh desktop -D 8079 -N -C"
