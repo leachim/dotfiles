@@ -69,9 +69,11 @@ borg create                                 \
     --exclude '/etc/.pwd.lock'              \
     --exclude '/etc/apparmor.d/*'           \
     --exclude '/etc/at.deny'                \
+    --exclude '/etc/brlapi.key'             \
     --exclude '/etc/docker/*'               \
     --exclude '/etc/audit'                  \
     --exclude '/etc/audisp'                 \
+    --exclude '/etc/chatscripts'            \
     --exclude '/etc/cups/*'                 \
     --exclude '/etc/docker*'                \
     --exclude '/etc/docker/key.json'        \
@@ -80,9 +82,9 @@ borg create                                 \
     --exclude '/etc/exim4/passwd.client'    \
     --exclude '/etc/gshadow*'               \
     --exclude '/etc/ipsec*'                 \
-    --exclude '/etc/krb5.keytab'             \
+    --exclude '/etc/krb5.keytab*'           \
     --exclude '/etc/logcheck/*'             \
-    --exclude '/etc/lvm/backup'             \
+    --exclude '/etc/lvm/*'                  \
     --exclude '/etc/NetworkManager/system-connections/*'\
     --exclude '/etc/ppp/*'          \
     --exclude '/etc/polkit-1/localauthority'\
@@ -119,10 +121,12 @@ borg create                                 \
     --exclude '/home/*/.gcalcli_oauth'      \
     --exclude '/home/*/.gdfuse/*'           \
     --exclude '/home/*/.grip/*'             \
+    --exclude '/home/*/.jupyter/*'          \
     --exclude '/home/*/.kube/*'             \
-    --exclude '/home/*/.local/*/Trash/*'    \
+    --exclude '/home/*/.local/*'            \
     --exclude '/home/*/.miniconda3/*'       \
     --exclude '/home/*/.miniconda/*'        \
+    --exclude '/home/*/.rstudio/*'          \
     --exclude '/home/*/.xsession-errors'    \
     --exclude '/home/*/.zcompdump'          \
     --exclude '/home/*/.zcompcache'         \
@@ -133,6 +137,7 @@ borg create                                 \
                                             \
     --exclude '/home/*/.aws/*'              \
     --exclude '/home/*/.backup/*'           \
+    --exclude '/home/*/.dbus/*'             \
     --exclude '/home/*/.dotfiles/*/.backup' \
     --exclude '/home/*/.dotfiles/*/.config' \
     --exclude '/home/*/.dotfiles/.git/*'    \
@@ -142,6 +147,7 @@ borg create                                 \
     --exclude '/home/*/.pki/*'              \
     --exclude '/home/*/.streisand/*'        \
     --exclude '/home/*/.ssh/*'              \
+    --exclude '/home/*/.vim/undodir/*'      \
     --exclude '/home/*/streisand/global_vars/*'\
     --exclude '/home/*/generated-docs/*'    \
     --exclude '/home/*/streisand/generated-docs/*'\
@@ -153,6 +159,7 @@ borg create                                 \
     --exclude '/home/*/.singularity/*'      \
     --exclude '/home/*/.snakemake/*'        \
     --exclude '/home/*/.virtualbox/*'       \
+    --exclude '/home/*/.vim/*'              \
                                             \
     --exclude '/home/*/Data/*'              \
     --exclude '/home/*/Drive/*'             \
