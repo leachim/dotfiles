@@ -307,6 +307,9 @@ Plug 'altercation/vim-colors-solarized'
 " julia language support
 Plug 'JuliaEditorSupport/julia-vim'
 
+" Latex support
+Plug 'lervag/vimtex'
+
 call plug#end()
 
 
@@ -737,6 +740,14 @@ let g:gitgutter_sign_modified_removed = '∙'
 
 " " Highlight YAML frontmatter in Markdown files
 " let g:vim_markdown_frontmatter = 1
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vimtex settings
+let g:tex_flavor='latex'
+let g:vimtex_view_method='zathura'
+let g:vimtex_quickfix_mode=0
+set conceallevel=1
+let g:tex_conceal='abdmg'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ALE
