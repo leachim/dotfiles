@@ -73,11 +73,12 @@ borg create                                 \
     --exclude '/etc/cups/*'                 \
     --exclude '/etc/docker*'                \
     --exclude '/etc/docker/key.json'        \
+    --exclude '/etc/chatscripts'         \
     --exclude '/etc/default/cacerts'        \
     --exclude '/etc/exim4/passwd.client'    \
     --exclude '/etc/gshadow*'               \
     --exclude '/etc/ipsec*'                 \
-    --exclude '/etc/krb5.keytab*'           \
+    --exclude '/etc/krb5.keytab'             \
     --exclude '/etc/logcheck/*'             \
     --exclude '/etc/lvm/*'                  \
     --exclude '/etc/NetworkManager/system-connections/*'\
@@ -118,6 +119,7 @@ borg create                                 \
     --exclude '/home/*/.grip/*'             \
     --exclude '/home/*/.jupyter/*'          \
     --exclude '/home/*/.kube/*'             \
+    --exclude '/home/*/.local/*/Trash/*'    \
     --exclude '/home/*/.local/*'            \
     --exclude '/home/*/.miniconda3/*'       \
     --exclude '/home/*/.miniconda/*'        \
@@ -132,6 +134,7 @@ borg create                                 \
                                             \
     --exclude '/home/*/.aws/*'              \
     --exclude '/home/*/.backup/*'           \
+    --exclude '/home/*/.dbus'               \
     --exclude '/home/*/.dotfiles/*/.backup' \
     --exclude '/home/*/.dotfiles/*/.config' \
     --exclude '/home/*/.dotfiles/.git/*'    \
@@ -142,6 +145,7 @@ borg create                                 \
     --exclude '/home/*/.pki/*'              \
     --exclude '/home/*/.streisand/*'        \
     --exclude '/home/*/.ssh/*'              \
+    --exclude '/home/*/.vim/undodir*'       \
     --exclude '/home/*/streisand/global_vars/*'\
     --exclude '/home/*/generated-docs/*'    \
     --exclude '/home/*/streisand/generated-docs/*'\

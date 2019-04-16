@@ -28,6 +28,9 @@ export CUDA_HOME=/usr/
 # soft notification sound
 export BEEP=/home/michael/.dotfiles/files/soft_beep.way
 
+# 
+#export XDF_CONFIG_HOME=$HOME/.config
+
 # create fixed tmux session directory, to restore tmux sessions remotely
 #mkdir -p $HOME/.tmux_socket;
 export TMUX_TMPDIR=~/.tmux_socket

@@ -653,7 +653,7 @@ bar {
         # py3status
         output_format = "i3bar"
         # n option: update interval
-        status_command py3status -c ~/.i3/i3status.conf -i ~/.i3/py3status/py3status/modules/ -i ~/.i3/modules/
+        status_command py3status -c ~/.i3/i3status.conf -i ~/.i3/py3status/py3status/modules/ 
         # status_command i3status --config ~/.i3/i3status.conf | ~/.i3/my_i3status.py
         # simpler information, less cpu
         #status_command i3status --config ~/.i3/i3status.conf
@@ -668,7 +668,7 @@ bar {
 }
 
 bar {
-    output DP-3
+    output DP-4
     position top
     tray_output none
     workspace_buttons no
