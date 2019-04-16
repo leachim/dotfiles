@@ -21,7 +21,7 @@ dir="$HOME/.dotfiles/common"
 echo "backing up existing dotfiles..."
 for dotfile in ${HOME}/.*; 
 do 
-  if [ "$dotfile" != "${HOME}/.dotfiles" ]; 
+  if [ "$dotfile" != "${HOME}/.dotfiles" ] && [ "$dotfile" != "${HOME}/.ssh" ] ; 
   then
     echo "backing up $dotfile"
     mv $dotfile "$dotfile.bak"
