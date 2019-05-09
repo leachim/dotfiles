@@ -12,7 +12,7 @@ syntax on
 set history=3000
 
 " copy paste to system clipboard, no vim registers
-set clipboard=unnamed
+set clipboard=unnamedplus
 
 " When scrolling always center view
 set scrolloff=15
@@ -368,6 +368,7 @@ map ZX :wq <CR>
 
 " remap esc to jk combination -> better than using Ctrl-c
 inoremap jk <Esc>
+inoremap fj <Esc> :w! <CR>
 " Treat long lines as break lines (useful when moving around in them)
 noremap j gj
 noremap k gk
@@ -648,7 +649,9 @@ map <leader>d :NERDTreeToggle<CR>
 
 " Copy Paste clipboard
 " Copy to X CLIPBOARD
-vnoremap <C-c> "*y
+" vnoremap <C-c> "*y
+" https://github.com/thestinger/termite/issues/620
+xnoremap <C-c> y:!wl-copy <C-r>"<cr><cr>gv
 "map <leader>cc :w !xsel -i -b<CR>
 "map <leader>cp :w !xsel -i -p<CR>
 "map <leader>cs :w !xsel -i -s<CR>

@@ -32,6 +32,11 @@ export BEEP=/home/michael/.dotfiles/files/soft_beep.way
 #mkdir -p $HOME/.tmux_socket;
 export TMUX_TMPDIR=~/.tmux_socket
 
+# load arbitrary API environment variables
+if [ -e ~/.env ]; then
+    source ~/.env
+fi
+
 # fzf environment variables
 if [ -e ~/.fzf ]; then
 	export FZF_DEFAULT_COMMAND='ag --nocolor -g ""'
@@ -41,23 +46,23 @@ if [ -e ~/.fzf ]; then
 fi
 
 # use fasd
-eval "$(fasd --init auto)"
+if [ -e ~/.fasd ]; then
+    eval "$(fasd --init auto)"
+fi
 
 # added by travis gem
 [ -f /home/michael/.travis/travis.sh ] && source /home/michael/.travis/travis.sh
 
-TZ='Europe/London'; export TZ
-
 # if running from tty1 start sway  -> desktop session
-#if [ $(tty) = "/dev/tty1" ]; then
-#    export XKB_DEFAULT_LAYOUT=us,de
-#    export XKB_DEFAULT_VARIANT=nodeadkeys
-#    export XKB_DEFAULT_OPTIONS=grp:alt_shift_toggle
-#
-#    # export WLC_REPEAT_DELAY=100
-#    # export WLC_REPEAT_RATE=1
-#    # export SWAY_CURSOR_THEME=""
-#    # export SWAY_CURSOR_SIZE=5
-#    # sway 
-#    exit 0
-#fi
+if [ $(tty) = "/dev/tty1" ]; then
+   export XKB_DEFAULT_LAYOUT=us,de
+   export XKB_DEFAULT_VARIANT=nodeadkeys
+   export XKB_DEFAULT_OPTIONS=grp:alt_shift_toggle
+
+   # export WLC_REPEAT_DELAY=100
+   # export WLC_REPEAT_RATE=1
+   # export SWAY_CURSOR_THEME=""
+   # export SWAY_CURSOR_SIZE=5
+   exec sway
+   # exit 0
+fi

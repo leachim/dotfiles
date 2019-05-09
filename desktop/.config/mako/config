@@ -1,0 +1,39 @@
+font=DejaVu Sans Mono 16
+background-color=#000000
+text-color=#ffffff
+border-color=#333333
+border-size=10
+#border-color=#00000055
+margin=25
+width=640
+padding=8
+# margin=4
+default-timeout=5000
+
+# Display on laptop screen (necessary in case of presentations)
+output=eDP-1
+
+[urgency=low]
+background-color=#333333
+text-color=#AAAAAA
+default-timeout=5
+
+[urgency=high]
+background-color=#E41C28
+#border-color=#ff0000
+default-timeout=0
+ignore-timeout=1
+
+[hidden]
+format=(and %h more)
+text-color=#777777
+default-timeout=3
+
+# App specific settings
+[app-name=Slack]
+#font=monospace 12
+text-color=#00FF00
+background-color=#0000FF
+format="%a %s %b"
+margin=10
+default-timeout=30

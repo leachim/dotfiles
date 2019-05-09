@@ -22,7 +22,7 @@ bindsym $mod+o+Shift reload
 # exit sway (logs you out of your wayland session)
 bindsym $mod+End+Shift exit
 # lock screen
-bindsym $mod+Return+Shift exec "swaylock -te --image=eDP-1:~/.config/sway/animals.png"
+bindsym $mod+Return+Shift exec "swaylock -te --image=eDP-1:~/.config/sway/animals.png --color=\"#0e2d2a\""
 # suspend
 bindsym $mod+Delete+Shift exec "systemctl suspend"
 
@@ -32,6 +32,7 @@ bindsym $mod+s exec "rofi -show ssh -terminal urxvt"
 
 # take screenshot
 bindsym Print exec grim ~/"screenshot_$(date '+%F-%H-%M-%S')".png
+bindsym $mod+Print exec grim -g "$(slurp)" ~/"screenshot_$(date '+%F-%H-%M-%S')".png
 
 # move the currently focused window to the scratchpad
 bindsym $mod+slash move scratchpad
@@ -58,6 +59,9 @@ bindsym $mod+Shift+r move workspace to output right
 output eDP-1 scale 1.4
 
 ### Input configuration
+input "1578:16642:MOSART_Semi._2.4G_Wireless_Mouse_Mouse" {
+    accel_profile adaptive 
+}
 #input 2:7:SynPS/2_Synaptics_TouchPad {
 #	dwt disabled
 #	drag_lock disabled
@@ -115,7 +119,7 @@ bindsym $mod+u [urgent="oldest"] focus
 
 # settings
 exec --no-startup-id /usr/bin/gnome-keyring-daemon
-exec --no-startup-id /usr/bin/dunst -config $HOME/.config/dunst/dunstrc
+exec --no-startup-id /usr/local/bin/mako
 
 exec --no-startup-id dropbox start
 # exec --no-startup-id owncloud

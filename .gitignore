@@ -3,6 +3,7 @@ desktop/.backup/duplicity.sh
 !desktop/.config/sway/py3status
 
 # do not store all configurations
+common/.env
 common/.vim
 common/.config/*
 !common/.config/nvim/

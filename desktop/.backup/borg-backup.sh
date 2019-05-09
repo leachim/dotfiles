@@ -93,7 +93,9 @@ borg create                                 \
     --exclude '/etc/ssh/*'                  \
     --exclude '/etc/ssl/private'            \
     --exclude '/etc/sssd'                   \
+    --exclude '/etc/tripwire'               \
     --exclude '/etc/ufw/*'                  \
+    --exclude '/etc/wicd/*'                 \
     --exclude '/etc/wireguard/*'            \
                                             \
     --exclude '/home/*/.anaconda/*'         \
