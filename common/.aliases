@@ -102,13 +102,20 @@ m-filesize () { echo "df -h" | sftp $1 ;}
 
 ## Alerts, a set of flexible alerts to notify about the end of a computation in terminal and tmux
 print-tmux-session-info () { 
-     if [ -e "$HOME/.tmux_socket/tmux-1000/default" ]; then
-        exit 0 
-     fi  
-    for s in $(tmux list-sessions -F '#{session_name}'); 
-        do
-            tmux list-panes -F '#{pane_tty} #{session_name}' -t "$s"
-        done | grep "$(tty)" | awk '{print $2}' &2>/dev/null ; }
+    if type tmux >/dev/null 2>/dev/null; then
+        if tmux info &> /dev/null; then 
+            if ! { [ "$TERM" = "screen" ] && [ -n "$TMUX" ]; } then
+                for s in $(tmux list-sessions -F '#{session_name}'); do
+                    tmux list-panes -F '#{pane_tty} #{session_name}' -t "$s"
+                done | grep "$(tty)" | awk '{print $2}' #&2>/dev/null
+            else
+                echo "elsewhere";
+            fi;
+        else
+            echo "none";
+        fi;
+    fi;
+}
 
 print-process-info () {
         # date '+%Y-%m-%d %H:%M:%S %Z'
