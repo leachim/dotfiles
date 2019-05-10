@@ -20,3 +20,8 @@ nbdime
 ## python stack via conda
 # conda install -c conda-forge jupyter-lab
 # 
+# ansible and aws module dependencies for aws
+ansible
+boto
+boto3
+botocore
