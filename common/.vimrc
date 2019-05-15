@@ -739,16 +739,20 @@ syntax on
 " let g:syntastic_python_checker_args = '--ignore=E402'
 " let g:syntastic_python_flake8_post_args='--ignore=E402'
 
-" Neomake
-function! MyOnBattery()
-  return readfile('/sys/class/power_supply/AC/online') == ['0']
-endfunction
+" Host dependent stuff 
+let hostname = substitute(system('hostname'), '\n', '', '')
+if hostname == "gl"
+    function! MyOnBattery()
+      return readfile('/sys/class/power_supply/AC/online') == ['0']
+    endfunction
 
-if MyOnBattery()
-  call neomake#configure#automake('w')
-else
-  call neomake#configure#automake('nw', 1000)
+    if MyOnBattery()
+      call neomake#configure#automake('w')
+    else
+      call neomake#configure#automake('nw', 1000)
+    endif
 endif
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " FZF (replaces Ctrl-P, FuzzyFinder and Command-T)
 if (executable('ag'))
