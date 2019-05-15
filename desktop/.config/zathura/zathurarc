@@ -27,7 +27,7 @@ set page-padding 5
 set pages-per-row 1
 set scroll-page-aware true
 set scroll-wrap false
-set scroll-full-overlap 0.1
+set scroll-full-overlap 0.2
 set scroll-step 50
 set smooth-scroll "true"
 set show-scrollbars false
@@ -44,8 +44,8 @@ map <C-g> abort
 map <Space> navigate next
 map <BackSpace> navigate previous
 map <S-Space> navigate previous
-# map <PageUp> scroll full_up
-# map <PageDown> scroll full_down
+map > half-up
+map < half-down 
 # map <BackSpace> scroll full_up all
 map <M-v> scroll full_up
 map <C-v> scroll full_down
@@ -57,7 +57,7 @@ map w adjust_window width
 map z adjust_window bestfit
 
 # appearance
-set font                   "monaco 12"
+set font                   "monaco 14"
 #set font 				   "monospace 13"
 #set font 				   "fixedzero normal 9"
 

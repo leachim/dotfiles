@@ -258,7 +258,8 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 " syntax highlighting
 " Plugin 'vim-syntastic/syntastic'
 " more modern async alternative
-"Plugin 'neomake/neomake'
+Plug 'neomake/neomake'
+
 " Plugin 'nvie/vim-flake8'
 Plug 'w0rp/ale'
 " general syntax support
@@ -676,6 +677,12 @@ let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_level = 'debug'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Nerdtree
+let NERDTreeShowHidden=1
+" close NERDTree after a file is opened
+let g:NERDTreeQuitOnOpen=1
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " scrooloose/nerdcommenter
 
 " Add spaces after comment delimiters by default
@@ -732,11 +739,25 @@ syntax on
 " let g:syntastic_python_checker_args = '--ignore=E402'
 " let g:syntastic_python_flake8_post_args='--ignore=E402'
 
+" Neomake
+function! MyOnBattery()
+  return readfile('/sys/class/power_supply/AC/online') == ['0']
+endfunction
+
+if MyOnBattery()
+  call neomake#configure#automake('w')
+else
+  call neomake#configure#automake('nw', 1000)
+endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " FZF (replaces Ctrl-P, FuzzyFinder and Command-T)
+if (executable('ag'))
+    let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g ""'
+endif
 set rtp+=~/.dotfiles/dependencies/fzf
 nmap ; :buffers<CR>
 nmap <Leader>f :files<CR>
+" nnoremap <C-p> :Files<CR>
 nmap <Leader>a :ag<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -896,11 +917,16 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 " Toggle linting
 map <leader>at :ALEToggle<CR>
 
-let g:ale_sign_warning = '▲'
-let g:ale_sign_error = '✗'
+let g:ale_sign_warning = '⚠\ '
+let g:ale_sign_error = '✗\ '
 highlight link ALEWarningSign String
 highlight link ALEErrorSign Title
 
+" fix files on save
+let g:ale_fix_on_save = 1
+" lint after 1000ms after changes are made both on insert mode and normal mode
+let g:ale_lint_on_text_changed = 'always'
+let g:ale_lint_delay = 1000
 " Check Python files with flake8 and pylint.
 let b:ale_linters = ['autopep8', 'flake8', 'pylint']
 " Fix Python files with autopep8 and yapf.
@@ -908,12 +934,15 @@ let b:ale_fixers = ['autopep8', 'yapf']
 " Disable warnings about trailing whitespace for Python files.
 let b:ale_warn_about_trailing_whitespace = 0
 "let g:ale_lint_on_save = 1
-let g:ale_lint_on_text_changed = 1
 " You can disable this option too
 " " if you don't want linters to run on opening a file
 let g:ale_lint_on_enter = 0
 " Enable completion where available.
 let g:ale_completion_enabled = 0
+" fixer configurations
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+\}
 autocmd BufEnter *.py ALEDisable
 
 let g:autopep8_ignore="C0103"

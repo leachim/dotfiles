@@ -40,35 +40,28 @@ bindsym $mod+slash move scratchpad
 # If there are multiple scratchpad windows, this command cycles through them.
 bindsym $mod+Prior scratchpad show
 
-
-### Output configuration
-
-# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-# output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
-output "*" bg #007799 solid_color 
-
 # move workspace output left
 # bindsym $mod+m move workspace to output left
 # move workspace left and right
 bindsym $mod+Shift+e move workspace to output left
 bindsym $mod+Shift+r move workspace to output right
 
-
-# output eDP-1 resolution 1920x1080 position 1920,0
-#output eDP-1 pos 0 0 res 2560x1440
-output eDP-1 scale 1.4
-
 ### Input configuration
 input "1578:16642:MOSART_Semi._2.4G_Wireless_Mouse_Mouse" {
     accel_profile adaptive 
 }
-#input 2:7:SynPS/2_Synaptics_TouchPad {
-#	dwt disabled
-#	drag_lock disabled
-	#tap enabled
-	#natural_scroll enabled
-	#middle_emulation enabled
-#}
+input 1739:0:Synaptics_TM3288-011 {
+    natural_scroll enabled
+    middle_emulation enabled
+    click_method clickfinger
+}
+
+input "1452:597:Vinpok_Taptek" {
+    xkb_options "altwin:swap_lalt_lwin,ctrl:ralt_rctrl"
+}
+input "1452:598:SONiX_USB_DEVICE" {
+    xkb_options "altwin:swap_lalt_lwin,ctrl:ralt_rctrl"
+}
 
 # use Mouse+Mod1 to drag floating windows to their wanted position
 floating_modifier $alt normal
@@ -527,3 +520,13 @@ bindsym XF86AudioLowerVolume exec pulsemixer --change-volume -5
 bindsym XF86AudioMute exec pulsemixer --toggle-mute 
 bindsym XF86AudioMicMute exec amixer -q -D pulse sset 'Capture' toggle
 
+## External monitors and output
+output * bg #007799 solid_color 
+# Default wallpaper (more resolutions available in /usr/share/backgrounds/sway/)
+# output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+
+#output eDP-1 pos 0 0 res 2560x1440
+output eDP-1 scale 1.6
+output eDP-1 pos 0 0 res 2560x1440
+# note that x-pos of DP-2 is 1600=2560/1.6
+output DP-2 pos 1600 0 res 1920x1080

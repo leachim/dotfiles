@@ -37,3 +37,10 @@ background-color=#0000FF
 format="%a %s %b"
 margin=10
 default-timeout=30
+
+[summary=glauxlab]
+background-color=#C40023
+border-color=#EB0000
+ignore-timeout=1
+format="%a %s %b"
+margin=10
