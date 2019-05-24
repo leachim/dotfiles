@@ -174,8 +174,10 @@ fasd_cache="$HOME/.fasd-init-bash"
 if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
   fasd --init posix-alias bash-hook bash-ccomp bash-ccomp-install >| "$fasd_cache"
 fi
-source "$fasd_cache"
-unset fasd_cache
+if [ -e $fasd_cache ]; then
+    source "$fasd_cache"
+    unset fasd_cache
+fi
 
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e
 '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'

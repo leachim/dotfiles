@@ -104,10 +104,10 @@ bindkey "^[[1;5B" down-line-or-beginning-search # [CTRL] + Cursor down
 
 ### keep below
 
-# For renaming groups of files. Examples: 
+# For renaming groups of files. Examples:
 # zmv  'juliet-(*)' 'prospera-$1'
 # zmv '(*).sh' '$1'
-# Passing -n to zmv will show you what zmv would do, without doing anything. 
+# Passing -n to zmv will show you what zmv would do, without doing anything.
 autoload zmv
 
 ################################################
@@ -196,6 +196,15 @@ zbell_end() {
 # register the functions as hooks
 add-zsh-hook preexec zbell_begin
 add-zsh-hook precmd zbell_end
+
+# add some function to remove whitespace and line breaks when copying text
+pasteline () {
+    text_to_add=$(which wl-paste > /dev/null && wl-paste | tr -d '\n' | sed -n -e 's/ \+/ /g;s/\r//g;s/\\//gp;' | tr -s ' ')
+    LBUFFER=${text_to_add}${RBUFFER}
+}
+zle -N pasteline
+# paste without newlines
+bindkey '^P' pasteline
 ################################################
 
 export NVM_DIR="$HOME/.nvm"
@@ -208,6 +217,5 @@ PERL5LIB="/home/michael/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5L
 PERL_LOCAL_LIB_ROOT="/home/michael/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
 PERL_MB_OPT="--install_base \"/home/michael/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/home/michael/perl5"; export PERL_MM_OPT;
-
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
