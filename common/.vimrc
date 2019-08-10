@@ -662,7 +662,7 @@ xnoremap <C-c> y:!wl-copy <C-r>"<cr><cr>gv
 "map <leader>vv :r!xsel -b<CR>
 
 " toggle nonumbers/numbers
-nmap <C-N><C-N> :set invnumber<CR>
+nmap <C-N><C-N> :set invnumber<CR> :GitGutterToggle <CR>
 
 " YCM - autocompletion
 map <F9> :YcmCompleter FixIt<CR>

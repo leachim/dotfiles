@@ -124,6 +124,7 @@ print-process-info () {
 
 alias ding='sleep 1; curl -s --output /dev/null -X POST --data-urlencode "payload={\"channel\": \"#notifications\", \"username\": \"glauxbot\", \"text\": \"$(print-process-info)\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/${NOTIFICATION_HOOK} 2>/dev/null'
 alias dong="sleep 1; notify-send -u \"normal\" \"$(print-process-info)\""
+alias ring='sleep 1; curl -s --output /dev/null -X POST --data-urlencode "payload={\"channel\": \"#notifications\", \"username\": \"glauxbot\", \"text\": \"$(print-process-info) RingRing! \", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/${NOTIFICATION_HOOK} 2>/dev/null'
 alias tam="aplay -q $HOME/.dotfiles/files/soft_beep.way"
 
 ###########################
@@ -206,6 +207,9 @@ mformat-python () { PYTHONPATH=~/Software/yapf python ~/Software/yapf/yapf --sty
 ## SSH
 alias ssa="ssh -o \"UserKnownHostsFile /dev/null\""
 alias sst='function _sst(){ ssh -t $1 "tmux attach-session -t $1 || tmux new-session -s $1"; }; _sst'
+alias desktop="ssh desktop -t tmux a -t desktop"
+alias clust1="ssh clust1 -t tmux a -t clust1"
+alias juno="ssh juno -t tmux a -t juno"
 
 ## TMUX
 # connect to running tmux session on ssh host
@@ -309,7 +313,7 @@ function mpdf-tosvg () { for var in "$@"; do pdf2svg $var ${var%.pdf}.svg ; done
 
 # convert pdf to png
 function mpdf-topng () { for var in "$@"; do pdftoppm $var ${var%.pdf} -png -r 300 -singlefile ; done ; }
-function mpdf-splitToPNG () { for var in "$@"; do pdftk $var burst output ${var%.pdf}_%03d.pdf ; rm -f doc_data.txt; files=(${var%.pdf}_*.pdf); for f in ${files}; do echo $f; pdftoppm $f ${f%.pdf} -png -r 300 -singlefile ; done ; done ; }
+function mpdf-splitToPNG () { for var in "$@"; do pdftk $var burst output ${var%.pdf}_%04d.pdf ; rm -f doc_data.txt; files=(${var%.pdf}_*.pdf); for f in ${files}; do echo $f; pdftoppm $f ${f%.pdf} -png -r 300 -singlefile ; done ; done ; }
 
 # convert pdf to png, specify resolution
 function mpdf-topng-res () { pdftoppm $1 ${1%.pdf} -png -r $2 -singlefile ; }

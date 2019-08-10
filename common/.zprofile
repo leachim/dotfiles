@@ -66,7 +66,6 @@ fi
 #
 # Temporary Files
 #
-
 if [[ ! -d "$TMPDIR" ]]; then
   export TMPDIR="/tmp/$USER"
   mkdir -p -m 700 "$TMPDIR"
@@ -77,10 +76,3 @@ if [[ ! -d "$TMPPREFIX" ]]; then
   mkdir -p "$TMPPREFIX"
 fi
 
-## add .R to the R path, 
-if [ -n $R_LIBS ]; then
-    export R_LIBS=~/.R:$R_LIBS
-else
-    export R_LIBS=~/.R
-fi
- 

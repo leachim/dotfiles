@@ -20,15 +20,14 @@ shopt -s cmdhist
 shopt -s checkwinsize
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=10000
-HISTFILESIZE=20000
+HISTSIZE=50000
+HISTFILESIZE=100000
 # don't put duplicate lines or lines starting with space in the history.
 # https://unix.stackexchange.com/questions/18212/bash-history-ignoredups-and-erasedups-setting-conflict-with-common-history
 HISTCONTROL=ignoredups:erasedups
 shopt -s histappend
 export HISTIGNORE="&:ls:[bf]g:exit"
-
-IGNOREEOF=5   # Shell only exists after the 10th consecutive Ctrl-d<Paste>
+export IGNOREEOF=5   # Shell only exists after the 10th consecutive Ctrl-d<Paste>
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
@@ -67,8 +66,8 @@ fi
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
+case "$TERM" in 
+    xterm*|rxvt*)
     PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
     ;;
 *)
@@ -77,7 +76,7 @@ esac
 
 # If set, the pattern "**" used in a pathname expansion context will
 # match all files and zero or more directories and subdirectories.
-#shopt -s globstar
+shopt -s globstar
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
@@ -86,8 +85,8 @@ esac
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
 
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
@@ -176,14 +175,8 @@ if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
 fi
 if [ -e $fasd_cache ]; then
     source "$fasd_cache"
-    unset fasd_cache
 fi
-
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e
-'\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-# some cluster aliases
-alias bstat="sstat -p --format=AveCPU,AvePages,AveRSS,AveVMSize,JobID,MaxVMSize,MaxVMSizeTask,AveDiskWrite,MaxDiskWrite,MaxDiskWriteNode -j $1"
+unset fasd_cache
 
 #######################################################
 # BEGIN PROMPT DEFINITION
@@ -221,6 +214,10 @@ PROMPT_COMMAND+='\[\e[0m\]"'
 # END PROMPT DEFINITION
 #########################################
 
+if [ -n "$SINGULARITY_CONTAINER" ]; then
+    PS1=$SINGULARITY_CONTAINER":"$PS1
+fi
+
 # Load paths and variables
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
@@ -230,13 +227,5 @@ fi
 
 if [ -f ~/.autocompletion/docker-machine.bash ]; then 
     source ~/.autocompletion/docker-machine.bash
-fi
-
-if [ -f ~/.profile ]; then
-    source ~/.profile
-fi
-
-if [ -f ~/.miniconda3 ]; then
-    export PATH="$HOME/.miniconda3/bin:$PATH"
 fi
 

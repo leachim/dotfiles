@@ -1,43 +1,47 @@
 # sources.list
 
 #### testing ########
+deb http://ftp.us.debian.org/debian/ testing main contrib non-free
+deb-src http://ftp.us.debian.org/debian/ testing main contrib non-free
 
-deb http://ftp.debian.org/debian/ testing main contrib non-free
-deb-src http://ftp.debian.org/debian/ testing main contrib non-free
+#deb http://security.us.debian.org/ testing/updates main contrib non-free
+#deb-src http://security.debian.org/ testing/updates main contrib non-free
 
-deb http://security.debian.org/ testing/updates main contrib non-free
-deb-src http://security.debian.org/ testing/updates main contrib non-free
-
-deb http://ftp.debian.org/debian/ testing-updates main contrib non-free
-deb-src http://ftp.debian.org/debian/ testing-updates main contrib non-free
+deb http://ftp.us.debian.org/debian/ testing-updates main contrib non-free
+deb-src http://ftp.us.debian.org/debian/ testing-updates main contrib non-free
 
 # security
-deb http://security.debian.org/ stretch/updates main contrib non-free
-deb-src http://security.debian.org/ stretch/updates main contrib non-free
+deb http://security.us.debian.org/ stable/updates main contrib non-free
+deb http://security.us.debian.org/debian-security stable/updates main contrib non-free
+deb-src http://security.us.debian.org/ stable/updates main contrib non-free
 
 #### stable and unstable #########
 
-deb http://ftp.debian.org/debian unstable main contrib non-free
-#deb-src http://ftp.debian.org/debian unstable main contrib non-free
+deb http://ftp.us.debian.org/debian unstable main contrib non-free
+#deb-src http://ftp.us.debian.org/debian unstable main contrib non-free
 
-deb http://ftp.debian.org/debian stable main contrib non-free
-#deb-src http://ftp.debian.org/debian unstable main contrib non-free
+deb http://ftp.us.debian.org/debian stable main contrib non-free
+#deb-src http://ftp.us.debian.org/debian unstable main contrib non-free
+
+#### experimental ########
+
+deb http://deb.debian.org/debian experimental main 
 
 #### other packages ########
+
+# Opera browser
+deb http://deb.opera.com/opera-stable/ stable non-free
 
 # Google Chrome support
 deb http://dl.google.com/linux/deb/ stable main
 
 # Docker CE
-deb [arch=amd64] https://download.docker.com/linux/debian stretch stable
-# deb-src [arch=amd64] https://download.docker.com/linux/debian stretch stable
+deb [arch=amd64] https://download.docker.com/linux/debian buster stable
+# deb-src [arch=amd64] https://download.docker.com/linux/debian buster stable
 # deb-src http://packages.x2go.org/debian wheezy main
 
 # Google Cloud
 deb http://packages.cloud.google.com/apt cloud-sdk-buster main
-
-# Oracle Virtualbox
-deb http://download.virtualbox.org/virtualbox/debian stretch contrib
 
 # Vagga, https://github.com/tailhook/vagga
 deb [arch=amd64 trusted=yes] http://ubuntu.zerogw.com vagga main
@@ -46,12 +50,9 @@ deb [arch=amd64 trusted=yes] http://ubuntu.zerogw.com vagga main
 # https://github.com/astrada/google-drive-ocamlfuse/wiki/Installation
 deb http://ppa.launchpad.net/alessandro-strada/ppa/ubuntu bionic main
 
+# Typora
+deb https://typora.io/linux ./
+
 # Tor http://www.torproject.org/docs/debian.html.en
 #deb http://deb.torproject.org/torproject.org stretch main
 
-# X2Go - everywhere@home : http://www.x2go.org/doku.php/start
-# Secure APT: apt-key adv --recv-keys --keyserver keys.gnupg.net E1F958385BFE2B6E
-# X2Go Repository
-#deb http://packages.x2go.org/debian wheezy main
-# X2Go Repository (sources)
-#deb-src http://packages.x2go.org/debian wheezy main

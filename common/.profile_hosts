@@ -1,0 +1,120 @@
+#!/bin/bash
+# custom profile options for different hosts
+
+HOSTNAME=`hostname`
+USER=`whoami`
+
+if [ "$HOSTNAME" = "glaux-clio" ]; then
+
+    # soft notification sound
+    export BEEP=$HOME/.dotfiles/files/soft_beep.way
+
+    # if running from tty1 start sway  -> desktop session
+    if [ $(tty) = "/dev/tty1" ]; then
+       export XKB_DEFAULT_LAYOUT=us,de
+       export XKB_DEFAULT_VARIANT=nodeadkeys
+       export XKB_DEFAULT_OPTIONS=grp:alt_shift_toggle
+
+       # export WLC_REPEAT_DELAY=100
+       # export WLC_REPEAT_RATE=1
+       # export SWAY_CURSOR_THEME=""
+       # export SWAY_CURSOR_SIZE=5
+       exec sway
+    fi
+
+    # add .R to the R path, 
+    if [ -n $R_LIBS ]; then
+        export R_LIBS=~/.R:$R_LIBS
+    else
+        export R_LIBS=~/.R
+    fi
+ 
+    # >>> conda initialize >>>
+    # !! Contents within this block are managed by 'conda init' !!
+    __conda_setup="$('/home/${USER}/.anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/home/$USER/.anaconda3/etc/profile.d/conda.sh" ]; then
+            . "/home/$USER/.anaconda3/etc/profile.d/conda.sh"
+        else
+            export PATH="/home/$USER/.anaconda3/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
+    # <<< conda initialize <<<
+
+
+elif [ "$HOSTNAME" = "nm14cs004273" ]; then
+
+    # fix CURL certificates path
+    export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+
+    # node path
+    export NODE_PATH=/usr/lib/node_modules:$NODE_PATH
+
+    # export cuda
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib"
+    export CUDA_HOME=/usr/
+
+    # use different backup script
+    alias jour="sudo apt autoclean && bash $HOME/.backup/borg-backup-desktop.sh && sleep 5 && doremi"
+    ulimit -s 16384 
+
+    # >>> conda initialize >>>
+    # !! Contents within this block are managed by 'conda init' !!
+    __conda_setup="$('/home/${USER}/.anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/home/$USER/.anaconda3/etc/profile.d/conda.sh" ]; then
+            . "/home/$USER/.anaconda3/etc/profile.d/conda.sh"
+        else
+            export PATH="/home/$USER/.anaconda3/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
+    # <<< conda initialize <<<
+
+
+elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" = "clust1-headnode-1" ]; then
+
+    ulimit -s 64000; ulimit -n 4096; ulimit -u 64000;
+    export SINGULARITY_CACHEDIR="/mnt/scratcha/fmlab/schnei01/Images/cache"
+    export SINGULARITY_TMPDIR="/mnt/scratcha/fmlab/schnei01/Images/tmp/"
+
+	export JAVA_HOME=/usr/lib/jvm/default-java
+	export PATH=$PATH:/usr/lib/jvm/default-java/bin
+	export IGNOREEOF=5
+
+    # >>> conda initialize >>>
+    # !! Contents within this block are managed by 'conda init' !!
+    __conda_setup="$('/mnt/scratchb/fmlab/schnei01/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/mnt/scratchb/fmlab/schnei01/miniconda3/etc/profile.d/conda.sh" ]; then
+            . "/mnt/scratchb/fmlab/schnei01/miniconda3/etc/profile.d/conda.sh"
+        else
+            export PATH="/mnt/scratchb/fmlab/schnei01/miniconda3/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
+    # <<< conda initialize <<<
+
+fi
+
+
+# # Java dependencies
+# export JAVA_HOME=/usr/lib/jvm/default-java
+# export PATH=$PATH:/usr/lib/jvm/default-java/bin
+#
+# # fix CURL certificates path
+# export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+#
+# # node path
+# export NODE_PATH=/usr/lib/node_modules:$NODE_PATH
+#
+# # export cuda
+# export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib"
+# export CUDA_HOME=/usr/

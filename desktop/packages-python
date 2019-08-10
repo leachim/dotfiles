@@ -5,13 +5,12 @@ awscli
 pydbus
 i3ipc # window title i3status bar
 ## google calendar support (reminders in dunst)
-# !!! currently only works with python 2.7
 gcalcli
 vobject
 parsedatetime
 ## atom python syntax checking
 flake8
-flake8-docstring
+#flake8-docstring
 ## streisand setup
 ansible
 markupsafe
@@ -25,3 +24,5 @@ ansible
 boto
 boto3
 botocore
+# 
+pynvim

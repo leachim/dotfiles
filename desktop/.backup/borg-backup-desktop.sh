@@ -2,26 +2,30 @@
 ## borg backup script
 LOG="~/Downloads/borgbackup.log"
 
-BBPATH=ssh://storagebox:23/./backup/$(hostname)/borg/
+export BORG_REMOTE_PATH="/home/${USER}/.local/bin/borg"
+
+BAPATH="ssh://nas:22///mnt/data/fmlab/group_folders/${USER}/Backup/$(hostname)"
 # initialize backup repository, only needed for new installations, on one line, replace $(hostname) with actual value
-#BORG_RSH="ssh -i ~/.ssh/$(hostname)-borg" borg init --encryption=keyfile "$BBPATH" --debug
+#BORG_RSH="ssh -i ~/.ssh/id_rsa" borg init --encryption=keyfile "$BAPATH" --debug
 
 # list all archives in the repository:
-# BORG_RSH="ssh -i ~/.ssh/$(hostname)-borg" borg list "$BBPATH" 
+# BORG_RSH="ssh -i ~/.ssh/d_rsa" borg list "$BAPATH"
 
 # list the contents of the Monday archive:
-# BORG_RSH="ssh -i ~/.ssh/$(hostname)-borg" borg list "$BBPATH"::archivename
+# BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg" borg list ssh://storagebox:23/./backup/$(hostname)::archivename
 
 # restore archive, see https://borgbackup.readthedocs.io/en/stable/usage/extract.html for more examples, note to remove leading /
 # first, recreate repository
 # make sure to backup keys!
-# BORG_RSH="ssh -i ~/.ssh/$(hostname)-borg" borg key import "$BBPATH" path/to/key
-# BORG_RSH="ssh -i ~/.ssh/$(hostname)-borg" borg extract "$BBPATH"::glaux-laptop-2017-12-30T21:55:49 home/$(username)/src
+# BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg" borg key import ssh://storagebox:23/./backup/$(hostname) path/to/key
+# BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg" borg extract ssh://storagebox:23/./backup/$(hostname)::glaux-laptop-2017-12-30T21:55:49 home/$(username)/src
 
 
 # Setting this, so the repo does not need to be given on the commandline:
-export BORG_RSH="ssh -i ~/.ssh/$(hostname)-borg"
-export BORG_REPO="$BBPATH"
+#export BORG_RSH="ssh -i ~/.ssh/$(hostname)_borg"
+#export BORG_REPO="$BBPATH"
+export BORG_RSH="ssh -i ~/.ssh/id_rsa"
+export BORG_REPO="$BAPATH"
 #ssh://username@example.com:2022/~/backup/main
 
 # # Setting this, so you won't be asked for your repository passphrase:
@@ -73,6 +77,7 @@ borg create                                 \
     --exclude '/etc/cups/*'                 \
     --exclude '/etc/docker*'                \
     --exclude '/etc/docker/key.json'        \
+    --exclude '/etc/chatscripts'         \
     --exclude '/etc/default/cacerts'        \
     --exclude '/etc/exim4/passwd.client'    \
     --exclude '/etc/gshadow*'               \
@@ -93,7 +98,6 @@ borg create                                 \
     --exclude '/etc/ssh/*'                  \
     --exclude '/etc/ssl/private'            \
     --exclude '/etc/sssd'                   \
-    --exclude '/etc/tripwire'               \
     --exclude '/etc/ufw/*'                  \
     --exclude '/etc/wicd/*'                 \
     --exclude '/etc/wireguard/*'            \
@@ -106,7 +110,7 @@ borg create                                 \
     --exclude '/home/*/.config/geany/*'     \
     --exclude '/home/*/.config/VirtualBox/*'\
     --exclude '/home/*/.dbus/*'             \
-    --exclude '/home/*/.docker/*'           \
+    --exclude '/home/*/.docker/'            \
     --exclude '/home/*/.dockercfg'          \
     --exclude '/home/*/.dropbox/*'          \
     --exclude '/home/*/.dropbox.cache/*'    \
@@ -134,20 +138,20 @@ borg create                                 \
                                             \
     --exclude '/home/*/.aws/*'              \
     --exclude '/home/*/.backup/*'           \
+    --exclude '/home/*/.dbus/*'             \
     --exclude '/home/*/.dotfiles/*/.backup' \
     --exclude '/home/*/.dotfiles/*/.config' \
     --exclude '/home/*/.dotfiles/.git/*'    \
-    --exclude '/home/*/.dbus/*'             \
     --exclude '/home/*/.encrypted/*'        \
     --exclude '/home/*/.gmvault/*'          \
     --exclude '/home/*/.gnupg/*'            \
     --exclude '/home/*/.pki/*'              \
     --exclude '/home/*/.streisand/*'        \
     --exclude '/home/*/.ssh/*'              \
+    --exclude '/home/*/.vim/undodir/*'      \
     --exclude '/home/*/streisand/global_vars/*'\
     --exclude '/home/*/generated-docs/*'    \
     --exclude '/home/*/streisand/generated-docs/*'\
-    --exclude '/home/*/.vim/undodir/*'      \
                                             \
     --exclude '/home/*/.config/chromium/*'  \
     --exclude '/home/*/.config/google-chrome/*'\
@@ -157,16 +161,19 @@ borg create                                 \
     --exclude '/home/*/.snakemake/*'        \
     --exclude '/home/*/.virtualbox/*'       \
     --exclude '/home/*/.vim/*'              \
+    --exclude '/home/*/.vim/undodir'        \
                                             \
     --exclude '/home/*/Data/*'              \
-    --exclude '/home/*/Downloads/*'         \
     --exclude '/home/*/Drive/*'             \
     --exclude '/home/*/Images/*'            \
-    --exclude '/home/*/Github/*'            \
     --exclude '/home/*/Software/*'          \
+    --exclude '/home/*/Downloads/*'         \
+    --exclude '/home/*/Github/*'            \
     --exclude '/home/*/VirtualBox VMs/*'    \
     --exclude '/opt/containerd'             \
+                                            \
     --exclude '/opt/quest/*'                \
+    --exclude '/opt/containerd'             \
                                             \
     ::'{hostname}-{now}'                    \
     /opt                                    \
