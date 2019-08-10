@@ -87,6 +87,9 @@ elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" = "clust1-headnode-1" ]; then
 	export PATH=$PATH:/usr/lib/jvm/default-java/bin
 	export IGNOREEOF=5
 
+    unalias jour
+    unalias apa
+
     # >>> conda initialize >>>
     # !! Contents within this block are managed by 'conda init' !!
     __conda_setup="$('/mnt/scratchb/fmlab/schnei01/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
