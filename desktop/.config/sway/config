@@ -499,7 +499,7 @@ bar {
         # inactive_workspace #32323200 #32323200 #5c5c5c
     }
     # n option: update interval
-    status_command py3status -b -c ~/.config/sway/status.conf -i ~/.config/sway/py3status/py3status/modules/
+    status_command /home/${USER}/.anaconda3/bin/py3status --wm sway -b -s -c ~/.config/sway/status.conf -i ~/.config/sway/py3status/py3status/modules/ 
 }
 
 bar {

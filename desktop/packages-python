@@ -4,6 +4,7 @@ i3-py
 awscli
 pydbus
 i3ipc # window title i3status bar
+tzlocal
 ## google calendar support (reminders in dunst)
 gcalcli
 vobject

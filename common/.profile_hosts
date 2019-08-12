@@ -4,7 +4,7 @@
 HOSTNAME=`hostname`
 USER=`whoami`
 
-if [ "$HOSTNAME" = "glaux-clio" ]; then
+if [ "$HOSTNAME" == "glaux-clio" ]; then
 
     # soft notification sound
     export BEEP=$HOME/.dotfiles/files/soft_beep.way
@@ -12,13 +12,13 @@ if [ "$HOSTNAME" = "glaux-clio" ]; then
     # if running from tty1 start sway  -> desktop session
     if [ $(tty) = "/dev/tty1" ]; then
        export XKB_DEFAULT_LAYOUT=us,de
-       export XKB_DEFAULT_VARIANT=nodeadkeys
        export XKB_DEFAULT_OPTIONS=grp:alt_shift_toggle
 
        # export WLC_REPEAT_DELAY=100
        # export WLC_REPEAT_RATE=1
        # export SWAY_CURSOR_THEME=""
        # export SWAY_CURSOR_SIZE=5
+       # exec sway -d 2> ~/sway.log
        exec sway
     fi
 
@@ -31,7 +31,7 @@ if [ "$HOSTNAME" = "glaux-clio" ]; then
  
     # >>> conda initialize >>>
     # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/home/${USER}/.anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    __conda_setup="$('/home/'${USER}'/.anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
     else
@@ -45,7 +45,7 @@ if [ "$HOSTNAME" = "glaux-clio" ]; then
     # <<< conda initialize <<<
 
 
-elif [ "$HOSTNAME" = "nm14cs004273" ]; then
+elif [ "$HOSTNAME" == "nm14cs004273" ]; then
 
     # fix CURL certificates path
     export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
@@ -77,7 +77,7 @@ elif [ "$HOSTNAME" = "nm14cs004273" ]; then
     # <<< conda initialize <<<
 
 
-elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" = "clust1-headnode-1" ]; then
+elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
 
     ulimit -s 64000; ulimit -n 4096; ulimit -u 64000;
     export SINGULARITY_CACHEDIR="/mnt/scratcha/fmlab/schnei01/Images/cache"
