@@ -307,7 +307,8 @@ Plug 'junegunn/goyo.vim'
 " Plug 'tpope/vim-sleuth'
 
 " color scheme
-"Plug 'othree/yajs.vim' " syntax support for oceanic next
+Plug 'othree/yajs.vim' " syntax support for oceanic next
+Plug 'norcalli/nvim-colorizer.lua'
 Plug 'mhartington/oceanic-next'
 Plug 'altercation/vim-colors-solarized'
 

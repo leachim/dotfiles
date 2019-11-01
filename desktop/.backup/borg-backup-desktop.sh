@@ -109,7 +109,7 @@ borg create                                 \
     --exclude '/home/*/.config/gcloud/*'    \
     --exclude '/home/*/.config/geany/*'     \
     --exclude '/home/*/.config/VirtualBox/*'\
-    --exclude '/home/*/.dbus/*'             \
+    --exclude '/home/*/.dbus'               \
     --exclude '/home/*/.docker/'            \
     --exclude '/home/*/.dockercfg'          \
     --exclude '/home/*/.dropbox/*'          \
@@ -178,7 +178,7 @@ borg create                                 \
     ::'{hostname}-{now}'                    \
     /opt                                    \
     /etc                                    \
-    /home                                   \
+    /home/schnei01                          \
 
 backup_exit=$?
 
@@ -219,6 +219,8 @@ fi
 rm -f ~/manual_installed_packages_*
 rm -f ~/all_installed_packages_*
 rm -f ~/conda-$(date +%Y-%m-%d).zip 
+
+echo "Backup to $BAPATH"
 
 # unset -v $BORG_PASSPHRASE
 exit ${global_exit}

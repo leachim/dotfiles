@@ -58,8 +58,14 @@ elif [ "$HOSTNAME" == "nm14cs004273" ]; then
     export CUDA_HOME=/usr/
 
     # use different backup script
+    unalias jour
     alias jour="sudo apt autoclean && bash $HOME/.backup/borg-backup-desktop.sh && sleep 5 && doremi"
     ulimit -s 16384 
+
+    if [ $(tty) = "/dev/tty1" ]; then
+       export XKB_DEFAULT_LAYOUT="us,de"
+       export XKB_DEFAULT_OPTIONS="grp:alt_shift_toggle"
+    fi
 
     # conda initialize
     # !! Contents within this block are managed by 'conda init' !!
@@ -73,6 +79,7 @@ elif [ "$HOSTNAME" == "nm14cs004273" ]; then
             export PATH="/home/$USER/.anaconda3/bin:$PATH"
         fi
     fi
+    export PATH="/home/$USER/.anaconda3/bin:$PATH"
     unset __conda_setup
     # end conda initialize
 
