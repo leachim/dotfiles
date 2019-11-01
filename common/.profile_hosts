@@ -100,7 +100,7 @@ elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
     # export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib"
     # export CUDA_HOME=/usr/
 
-	export IGNOREEOF=5
+	export IGNOREEOF=100
 
     export TERM=xterm
 
