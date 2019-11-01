@@ -29,7 +29,7 @@ if [ "$HOSTNAME" == "glaux-clio" ]; then
         export R_LIBS=~/.R
     fi
  
-    # >>> conda initialize >>>
+    # conda initialize
     # !! Contents within this block are managed by 'conda init' !!
     __conda_setup="$('/home/'${USER}'/.anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
@@ -42,7 +42,7 @@ if [ "$HOSTNAME" == "glaux-clio" ]; then
         fi
     fi
     unset __conda_setup
-    # <<< conda initialize <<<
+    # end conda initialize
 
 
 elif [ "$HOSTNAME" == "nm14cs004273" ]; then
@@ -61,7 +61,7 @@ elif [ "$HOSTNAME" == "nm14cs004273" ]; then
     alias jour="sudo apt autoclean && bash $HOME/.backup/borg-backup-desktop.sh && sleep 5 && doremi"
     ulimit -s 16384 
 
-    # >>> conda initialize >>>
+    # conda initialize
     # !! Contents within this block are managed by 'conda init' !!
     __conda_setup="$('/home/${USER}/.anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
@@ -74,23 +74,30 @@ elif [ "$HOSTNAME" == "nm14cs004273" ]; then
         fi
     fi
     unset __conda_setup
-    # <<< conda initialize <<<
+    # end conda initialize
 
 
 elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
 
     ulimit -s 64000; ulimit -n 4096; ulimit -u 64000;
-    export SINGULARITY_CACHEDIR="/mnt/scratcha/fmlab/schnei01/Images/cache"
-    export SINGULARITY_TMPDIR="/mnt/scratcha/fmlab/schnei01/Images/tmp/"
+    export SINGULARITY_CACHEDIR="/mnt/scratchb/fmlab/schnei01/Singularity/cache"
+    export SINGULARITY_TMPDIR="/mnt/scratchb/fmlab/schnei01/Singularity/tmp/"
 
 	export JAVA_HOME=/usr/lib/jvm/default-java
 	export PATH=$PATH:/usr/lib/jvm/default-java/bin
+
+    # # fix CURL certificates path
+    # export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+
+    # # export cuda
+    # export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib"
+    # export CUDA_HOME=/usr/
+
 	export IGNOREEOF=5
 
-    unalias jour
-    unalias apa
+    export TERM=xterm
 
-    # >>> conda initialize >>>
+    # conda initialize 
     # !! Contents within this block are managed by 'conda init' !!
     __conda_setup="$('/mnt/scratchb/fmlab/schnei01/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
@@ -103,21 +110,6 @@ elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
         fi
     fi
     unset __conda_setup
-    # <<< conda initialize <<<
+    # end conda initialize
 
 fi
-
-
-# # Java dependencies
-# export JAVA_HOME=/usr/lib/jvm/default-java
-# export PATH=$PATH:/usr/lib/jvm/default-java/bin
-#
-# # fix CURL certificates path
-# export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
-#
-# # node path
-# export NODE_PATH=/usr/lib/node_modules:$NODE_PATH
-#
-# # export cuda
-# export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib"
-# export CUDA_HOME=/usr/
