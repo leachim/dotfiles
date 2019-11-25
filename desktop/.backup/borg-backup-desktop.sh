@@ -104,6 +104,7 @@ borg create                                 \
                                             \
     --exclude '/home/*/.anaconda/*'         \
     --exclude '/home/*/.anaconda3/*'        \
+    --exclude '/home/*/.go/*'               \
     --exclude '/home/*/.config/borg/*'      \
     --exclude '/home/*/.config/doctl/*'     \
     --exclude '/home/*/.config/gcloud/*'    \

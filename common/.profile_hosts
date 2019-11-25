@@ -57,12 +57,18 @@ elif [ "$HOSTNAME" == "nm14cs004273" ]; then
     export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib"
     export CUDA_HOME=/usr/
 
+    # Go environment
+    export GOPATH=${HOME}/.go
+    export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin
+
     # use different backup script
-    unalias jour
-    alias jour="sudo apt autoclean && bash $HOME/.backup/borg-backup-desktop.sh && sleep 5 && doremi"
+    # unalias jour
+    # unalias doremi
+    alias doremi="apt-mark showhold && daily-cal && daily-quote"
+    alias jour="bash $HOME/.backup/borg-backup-desktop.sh && sleep 5 && doremi"
     ulimit -s 16384 
 
-    if [ $(tty) = "/dev/tty1" ]; then
+    if [ "$(tty)" = "/dev/tty1" ]; then
        export XKB_DEFAULT_LAYOUT="us,de"
        export XKB_DEFAULT_OPTIONS="grp:alt_shift_toggle"
     fi
