@@ -99,6 +99,13 @@ elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
 	export JAVA_HOME=/usr/lib/jvm/default-java
 	export PATH=$PATH:/usr/lib/jvm/default-java/bin
 
+    MODULEPATH="/home/software/modules/linux-centos7-haswell"
+
+    module load tmux-2.8-gcc-9.2.0-gwgyxny
+    # module load neovim-0.3.4-gcc-9.2.0-26fizq6
+    module load zsh-5.4.2-gcc-9.2.0-psefm6q
+    module load git-2.21.0-gcc-9.2.0-6btnbtx
+
     # # fix CURL certificates path
     # export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
