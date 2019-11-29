@@ -806,7 +806,7 @@ set cmdheight=2
 set updatetime=300
 
 " don't give |ins-completion-menu| messages.
-set shortmess+=c
+" set shortmess+=c
 
 " always show signcolumns
 set signcolumn=yes
@@ -884,19 +884,6 @@ command! -nargs=0 Format :call CocAction('format')
 
 " Use `:Fold` for fold current buffer
 command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
-
-" Add diagnostic info for https://github.com/itchyny/lightline.vim
-let g:lightline = {
-      \ 'colorscheme': 'wombat',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'cocstatus': 'coc#status'
-      \ },
-      \ }
 
 " Using CocList
 " Show all diagnostics
