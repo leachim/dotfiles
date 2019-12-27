@@ -27,7 +27,6 @@ alias vimdiff="nvim -d"
 alias le="less"
 alias fe="feh --conversion-timeout 1"
 alias c="clear"
-alias diff='diff --color=auto'
 alias cdp="cd -P"
 alias pack="tar -zcvf"
 alias pingg="ping 8.8.8.8"
@@ -90,7 +89,7 @@ function daily-quote () {
 alias clock="date | cut -d ' ' -f 4"
 alias daily-cal="ncal -A 1 -M -b -w"
 alias upip="conda list | grep \"<pip>\" | awk '{print $1}' | xargs pip install -U"
-alias doremi="apt-mark showhold && sudo apt update && sudo apt upgrade && echo \"\" && weather && echo \"Tage im Mai: $(datediff 04/26/2019)\tTage im September: $(datediff 06/23/2016)\tWintertage: $(datediff 11/09/2017)\" && daily-cal && daily-quote"
+alias doremi="apt-mark showhold && sudo apt update && sudo apt upgrade && echo \"\" && weather && echo \"Tage im Mai: $(datediff 04/26/2019)\tTage im September: $(datediff 06/23/2016)\tWintertage: $(datediff 11/15/2019)\" && daily-cal && daily-quote"
 alias daily-info="weather && daily-cal && daily-quote"
 alias ugit="git pull && git submodule update --recursive"
 function update-git () { for i in **; do cd $i; ugit; cd ..; done ; }
@@ -497,7 +496,7 @@ darken () { brightnessctl set 0% ; }
 lighten () { brightnessctl set 100% ;}
 
 # battery status
-alias m-battery="upower -i $(upower -e | grep BAT) | grep --color=never -E \"state|to\ full|to\ empty|percentage\""
+function m-battery () { upower -i $(upower -e | grep BAT) | grep --color=never -E "state|to\ full|to\ empty|percentage" ; }
 
 ### Internet and proxy commands ###
 alias wgup="sudo wg-quick up wg0"
@@ -506,6 +505,10 @@ alias wgstatus="systemctl status wg-quick@wg0"
 alias caup="sudo ipsec up CAM && touch /tmp/vpn.lock"
 alias cadown="sudo ipsec down CAM && rm -f /tmp/vpn.lock"
 alias browsh="docker run --rm -it browsh/browsh"
+alias nmshow="nmcli device wifi list"
+alias nmlist="nmcli con show --active"
+alias nmup="nmcli connection up"
+alias nmdown="nmcli connection down"
 
 ###########################
 ###       SERVICES      ###

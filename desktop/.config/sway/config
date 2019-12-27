@@ -103,6 +103,9 @@ bindsym $mod+Shift+Tab exec "rofi -now -show window -font 'Inconsolata 16' -fg '
 bindsym $mod+q exec "rofi -rnow -show run -font 'Inconsolata 16' -fg '#9f9f9f' -bg '#2c2c2e' -hlfg '#2c2c2e' -hlbg '#ccdc90' -o 85"
 bindsym $mod+p exec "dmenu_run"
 
+# remove notification
+bindsym $mod+d exec "makoctl dismiss -a"
+
 # urgency support
 bindsym $mod+u [urgent="oldest"] focus
 
@@ -115,6 +118,11 @@ exec --no-startup-id /usr/bin/gnome-keyring-daemon
 exec --no-startup-id /usr/local/bin/mako
 
 exec --no-startup-id dropbox start
+
+# needed for lock service
+exec --no-startup-id systemctl import-environment SWAYSOCK
+
+# exec --no-startup-id nm-tray
 # exec --no-startup-id owncloud
 
 # network manager

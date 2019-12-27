@@ -96,7 +96,9 @@ borg create                                 \
     --exclude '/etc/tripwire'               \
     --exclude '/etc/ufw/*'                  \
     --exclude '/etc/wicd/*'                 \
+    --exclude '/etc/usbguard/*'             \
     --exclude '/etc/wireguard/*'            \
+    --exclude '*.netdev'                    \
                                             \
     --exclude '/home/*/.anaconda/*'         \
     --exclude '/home/*/.anaconda3/*'        \
@@ -141,6 +143,7 @@ borg create                                 \
     --exclude '/home/*/.encrypted/*'        \
     --exclude '/home/*/.gmvault/*'          \
     --exclude '/home/*/.gnupg/*'            \
+    --exclude '/home/*/.mail/*'             \
     --exclude '/home/*/.pki/*'              \
     --exclude '/home/*/.streisand/*'        \
     --exclude '/home/*/.ssh/*'              \
