@@ -29,9 +29,9 @@ KEYTIMEOUT=1
 stty -ixon -ixoff
 
 # history
-HISTSIZE=20000
+HISTSIZE=100000
 HISTFILE=$HOME/.zsh_history
-SAVEHIST=20000
+SAVEHIST=200000
 setopt hist_ignore_all_dups
 setopt hist_ignore_space
 # save every command before it is executed

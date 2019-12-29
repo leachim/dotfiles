@@ -2,19 +2,20 @@
 ###              ALIASES              ###
 #########################################
 
-# fasd shortcuts
-alias a='fasd -a'        # any
-alias s='fasd -si'       # show / search / select
-alias d='fasd -d'        # directory
-alias f='fasd -f'        # file
-alias sd='fasd -sid'     # interactive directory selection
-alias sf='fasd -sif'     # interactive file selection
-alias z='fasd_cd -d'     # cd, same functionality as j in autojump
-alias zz='fasd_cd -d -i' # cd with interactive selection
-alias v='f -e vim' # quick opening files with vim
-alias vv='f -e zathura' # quick opening files with zathura 
+if [ -x "$(command -v fasd)" ]; then
+    # fasd shortcuts
+    alias a='fasd -a'        # any
+    alias s='fasd -si'       # show / search / select
+    alias d='fasd -d'        # directory
+    alias f='fasd -f'        # file
+    alias sd='fasd -sid'     # interactive directory selection
+    alias sf='fasd -sif'     # interactive file selection
+    alias z='fasd_cd -d'     # cd, same functionality as j in autojump
+    alias zz='fasd_cd -d -i' # cd with interactive selection
+    alias v='f -e vim' # quick opening files with vim
+    alias vv='f -e zathura' # quick opening files with zathura 
+fi
 alias j='fzf' # fuzzy search
-
 
 ## Shortcuts
 alias lst="ls -lt"
@@ -136,6 +137,7 @@ alias m-squeuei="squeue -u $(whoami) -o \"%.14i %.5j %.2t %.10M %.9l %.5D %16R %
 alias m-squeuea="squeue -o \"%.14i %.5j %.2t %.10M %.9l %.5D %16R %5K %3C %Q %o\""
 squeue-watch () { watch -n 3 -d "squeue -u $(whoami) --format=\"%.14i %.5j %.2t %.10M %.9l %.5D %16R %5K %3C %Q %o\"" ; }
 alias m-squeuew="squeue-watch"
+alias clusterquota='lfs quota -h -g fmlab'
 
 alias latest="ls -ltr | tail -n 1 | awk '{print $NF}'"
 alias latest2="ls -ltr | tail -n 2 | head -n 1 | awk '{print $NF}'"

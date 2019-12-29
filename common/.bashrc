@@ -168,15 +168,17 @@ alias takeover="tmux detach -a"
 alias vi="vim"
 alias le="less"
 
-# quicker startup with fasd
-fasd_cache="$HOME/.fasd-init-bash"
-if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
-  fasd --init posix-alias bash-hook bash-ccomp bash-ccomp-install >| "$fasd_cache"
+if [ -x "$(command -v fasd)" ]; then
+    # quicker startup with fasd
+    fasd_cache="$HOME/.fasd-init-bash"
+    if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
+      fasd --init posix-alias bash-hook bash-ccomp bash-ccomp-install >| "$fasd_cache"
+    fi
+    if [ -e $fasd_cache ]; then
+        source "$fasd_cache"
+    fi
+    unset fasd_cache
 fi
-if [ -e $fasd_cache ]; then
-    source "$fasd_cache"
-fi
-unset fasd_cache
 
 #######################################################
 # BEGIN PROMPT DEFINITION
@@ -191,7 +193,7 @@ fi;
 hostStyle="\e[1;33m"; # yellow
 gitStyle="\e[38;5;64m"; # green
 
-if type _fasd_prompt_func | grep -i function > /dev/null; then
+if [ -x "$(command -v fasd)" ] && type _fasd_prompt_func | grep -i function > /dev/null; then
     # per terminal history
     #PROMPT_COMMAND='history -w; history -c; history -r; _fasd_prompt_func;'
     # shared history
