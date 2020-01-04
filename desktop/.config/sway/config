@@ -26,6 +26,11 @@ bindsym $mod+Return+Shift exec "swaylock -te --image=eDP-1:~/.config/sway/animal
 # suspend
 bindsym $mod+Delete+Shift exec "systemctl suspend"
 
+# lock screen when suspending
+exec swayidle -w \
+	before-sleep 'loginctl lock-session $XDG_SESSION_ID' \
+	lock 'swaylock -te --color="#0e1d1a"'
+
 # start a terminal
 bindsym $mod+Return exec $terminal -e "/bin/zsh"
 bindsym $mod+s exec "rofi -show ssh -terminal urxvt"
