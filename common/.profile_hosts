@@ -95,7 +95,7 @@ elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
 
     ulimit -s 64000; ulimit -n 4096; ulimit -u 64000;
     export SINGULARITY_CACHEDIR="/mnt/scratchb/fmlab/schnei01/Singularity/cache"
-    export SINGULARITY_TMPDIR="/mnt/scratchb/fmlab/schnei01/Singularity/tmp/"
+    export SINGULARITY_TMPDIR="/mnt/scratchb/fmlab/schnei01/Singularity/tmp"
 
 	export JAVA_HOME=/usr/lib/jvm/default-java
 	export PATH=$PATH:/usr/lib/jvm/default-java/bin
@@ -107,6 +107,7 @@ elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
     # module load neovim-0.3.4-gcc-9.2.0-26fizq6
     module load zsh-5.4.2-gcc-9.2.0-psefm6q
     module load git-2.21.0-gcc-9.2.0-6btnbtx
+    module load singularity-3.4.1-gcc-9.2.0-w62nicu
 
     # # fix CURL certificates path
     # export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
