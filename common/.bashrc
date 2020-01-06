@@ -24,7 +24,7 @@ HISTSIZE=50000
 HISTFILESIZE=100000
 # don't put duplicate lines or lines starting with space in the history.
 # https://unix.stackexchange.com/questions/18212/bash-history-ignoredups-and-erasedups-setting-conflict-with-common-history
-HISTCONTROL=ignoredups:erasedups
+HISTCONTROL=ignoreboth
 shopt -s histappend
 export HISTIGNORE="&:ls:[bf]g:exit"
 export IGNOREEOF=5   # Shell only exists after the 10th consecutive Ctrl-d<Paste>
