@@ -94,12 +94,14 @@ elif [ "$HOSTNAME" == "nm14cs004273" ]; then
 elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
 
     ulimit -s 64000; ulimit -n 4096; ulimit -u 64000;
-    export SINGULARITY_CACHEDIR="/mnt/scratchb/fmlab/schnei01/Singularity/cache"
-    export SINGULARITY_TMPDIR="/mnt/scratchb/fmlab/schnei01/Singularity/tmp"
+    export SINGULARITY_CACHEDIR="/mnt/scratchb/fmlab/$USER/Singularity/cache"
+    export SINGULARITY_TMPDIR="/mnt/scratchb/fmlab/$USER/Singularity/tmp"
 
 	export JAVA_HOME=/usr/lib/jvm/default-java
 	export PATH=$PATH:/usr/lib/jvm/default-java/bin
-    export TMUX_TMPDIR="/home/schnei01/.tmux_socket/"
+    export TMUX_TMPDIR="/home/$USER/.tmux_socket/"
+
+    export HOME="/home/$USER"
 
     MODULEPATH="/home/software/modules/linux-centos7-haswell"
 
@@ -123,14 +125,14 @@ elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
 
     # conda initialize 
     # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/mnt/scratchb/fmlab/schnei01/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    __conda_setup="$('/mnt/scratchb/fmlab/$USER/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
     else
-        if [ -f "/mnt/scratchb/fmlab/schnei01/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/mnt/scratchb/fmlab/schnei01/miniconda3/etc/profile.d/conda.sh"
+        if [ -f "/mnt/scratchb/fmlab/$USER/miniconda3/etc/profile.d/conda.sh" ]; then
+            . "/mnt/scratchb/fmlab/$USER/miniconda3/etc/profile.d/conda.sh"
         else
-            export PATH="/mnt/scratchb/fmlab/schnei01/miniconda3/bin:$PATH"
+            export PATH="/mnt/scratchb/fmlab/$USER/miniconda3/bin:$PATH"
         fi
     fi
     unset __conda_setup
