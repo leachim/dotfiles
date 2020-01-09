@@ -14,26 +14,38 @@ set $terminal termite
 set $primary e-DP1
 set $secondary VGA1
 
-# your preferred application launcher
-set $menu rofi
-
 # reload the configuration file, debugging only
 bindsym $mod+o+Shift reload
 # exit sway (logs you out of your wayland session)
 bindsym $mod+End+Shift exit
 # lock screen
-bindsym $mod+Return+Shift exec "swaylock -te --image=eDP-1:~/.config/sway/animals.png --color=\"#0e2d2a\""
+bindsym --release $mod+Return+Shift exec loginctl lock-session
+# bindsym $mod+Return+Shift exec "swaylock -te --image=eDP-1:~/.config/sway/animals.png --color=\"#0e2d2a\""
 # suspend
 bindsym $mod+Delete+Shift exec "systemctl suspend"
 
 # lock screen when suspending
 exec swayidle -w \
-	before-sleep 'loginctl lock-session $XDG_SESSION_ID' \
-	lock 'swaylock -te --color="#0e1d1a"'
+    before-sleep 'swaylock -te -f -c 0e1d1a'
+    # before-sleep 'loginctl lock-session $XDG_SESSION_ID' \
+    # lock 'swaylock -te --color="#0e1d1a"'
+
+# # lock screen with screensaver timeout
+# exec swayidle -w \
+         # timeout 60 'swaylock -f -c 000000' \
+         # timeout 90 'swaymsg "output * dpms off"' \
+              # resume 'swaymsg "output * dpms on"' \
+         # before-sleep 'swaylock -f -c 000000' \
+         # lock 'swaylock -f -c 000000'
+
+
+# clamshell mode
+bindswitch --reload lid:on output $primary disable
+bindswitch --reload lid:off output $primary enable
 
 # start a terminal
 bindsym $mod+Return exec $terminal -e "/bin/zsh"
-bindsym $mod+s exec "rofi -show ssh -terminal urxvt"
+bindsym $mod+s exec "wofi -show ssh -terminal urxvt"
 
 # take screenshot
 bindsym Print exec grim ~/"screenshot_$(date '+%F-%H-%M-%S')".png
@@ -104,8 +116,8 @@ bindsym $mod+Tab focus right
 bindsym $mod+Shift+w focus up
 
 # often changing commands
-bindsym $mod+Shift+Tab exec "rofi -now -show window -font 'Inconsolata 16' -fg '#9f9f9f' -bg '#2c2c2e' -hlfg '#2c2c2e' -hlbg '#ccdc90' -o 85"
-bindsym $mod+q exec "rofi -rnow -show run -font 'Inconsolata 16' -fg '#9f9f9f' -bg '#2c2c2e' -hlfg '#2c2c2e' -hlbg '#ccdc90' -o 85"
+bindsym $mod+Shift+Tab exec "wofi -now -show window -font 'Inconsolata 16' -fg '#9f9f9f' -bg '#2c2c2e' -hlfg '#2c2c2e' -hlbg '#ccdc90' -o 85"
+bindsym $mod+q exec "wofi -rnow -show run -font 'Inconsolata 16' -fg '#9f9f9f' -bg '#2c2c2e' -hlfg '#2c2c2e' -hlbg '#ccdc90' -o 85"
 bindsym $mod+p exec "dmenu_run"
 
 # remove notification

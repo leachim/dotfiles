@@ -32,16 +32,24 @@ stty -ixon -ixoff
 HISTSIZE=100000
 HISTFILE=$HOME/.zsh_history
 SAVEHIST=200000
-setopt hist_ignore_all_dups
-setopt hist_ignore_space
-# save every command before it is executed
-setopt inc_append_history
+
+## set zsh options / setopt
+setopt histignorespace
 setopt incappendhistory
+# improvements to history handling
+setopt extendedhistory
+setopt histexpiredupsfirst
+setopt histignoredups
+setopt histignorespace
+setopt histverify
 
 # cd
 setopt autocd
+setopt autonamedirs
 setopt autopushd
 setopt pushdsilent
+setopt pushdignoredups
+setopt cdablevars
 
 # ignore ctrl-d command to close terminal
 setopt ignoreeof
@@ -56,7 +64,10 @@ setopt nobeep
 setopt nohup
 setopt nocheckjobs
 setopt nobgnice
-# }}}
+#
+## share history between terminals
+#unsetopt share_history
+setopt share_history
 
 # IMPORTS {{{
 _source ~/.zsh/aliases
@@ -73,9 +84,6 @@ zstyle ':completion:*' menu select
 # case-insensitive -> partial-word -> substring completion
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
-## share history between terminals
-#unsetopt share_history
-setopt share_history
 
 # access global and local history for each shell
 # https://superuser.com/questions/446594/separate-up-arrow-lookback-for-local-and-global-zsh-history

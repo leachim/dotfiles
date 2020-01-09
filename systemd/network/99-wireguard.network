@@ -1,0 +1,12 @@
+[Match]
+Name=wg0
+
+[Network]
+Address=10.192.122.3/32
+DNS=10.192.122.3
+
+[Route]
+Gateway=10.192.122.1
+Destination=10.192.122.0/24
+GatewayOnlink=true
+DNSSEC=allow-downgrade

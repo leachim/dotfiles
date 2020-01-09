@@ -1,0 +1,9 @@
+[Match]
+Name=en*
+
+[Network]
+DHCP=yes
+LLDP=false
+RouteMetric=10
+IPv6PrivacyExtension=true
+UseDNS=false

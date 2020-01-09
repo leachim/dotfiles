@@ -1,0 +1,10 @@
+[Match]
+Name=wwa*
+
+[Network]
+DHCP=yes
+LLDP=false
+RouteMetric=15
+IPv6PrivacyExtensions=true
+DNSSEC=allow-downgrade
+UseDNS=false
