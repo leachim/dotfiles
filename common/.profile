@@ -38,7 +38,7 @@ if [ -f ~/.cargo/bin/broot ]; then
 fi
 
 # added by travis gem
-[ -f /home/michael/.travis/travis.sh ] && source /home/michael/.travis/travis.sh
+[ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
 
 # per host configuration
 if [ -f ~/.profile_hosts ]; then

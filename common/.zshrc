@@ -220,7 +220,7 @@ export NVM_DIR="$HOME/.nvm"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-[ -f ~/.cargo/bin/broot ] && source /home/michael/.config/broot/launcher/bash/br
+[ -f ~/.cargo/bin/broot ] && source ~/.config/broot/launcher/bash/br
 
 # PATH="/home/michael/perl5/bin${PATH:+:${PATH}}"; export PATH;
 # PERL5LIB="/home/michael/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
