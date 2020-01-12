@@ -97,6 +97,7 @@ elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
     export SINGULARITY_TMPDIR="/mnt/scratchb/fmlab/$USER/Singularity/tmp"
 
 	export JAVA_HOME=/usr/lib/jvm/default-java
+    export PERL5LIB=/mnt/scratchb/fmlab/schnei01/miniconda3/lib/site_perl/5.26.2
 	export PATH=$PATH:/usr/lib/jvm/default-java/bin
     export TMUX_TMPDIR="/home/$USER/.tmux_socket/"
 
