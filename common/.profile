@@ -3,6 +3,7 @@
 
 export PATH="/snap/bin:/opt/bin:$HOME/.local/bin:/opt/bin:$HOME/.dotfiles/bin:$PATH"
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+export PATH="/home/$USER/.cargo/bin:$PATH"
 export EDITOR='vim'
 export VISUAL='vim'
 export PAGER='less'
@@ -29,6 +30,11 @@ fi
 # fasd
 if [ -e ~/.fasd ]; then
     eval "$(fasd --init auto)"
+fi
+
+# broot
+if [ -f ~/.cargo/bin/broot ]; then
+    source ~/.config/broot/launcher/bash/br
 fi
 
 # added by travis gem

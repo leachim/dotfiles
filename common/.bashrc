@@ -231,3 +231,7 @@ if [ -f ~/.autocompletion/docker-machine.bash ]; then
     source ~/.autocompletion/docker-machine.bash
 fi
 
+if [ -f ~/.cargo/bin/broot ]; then
+    source /home/michael/.config/broot/launcher/bash/br
+fi
+

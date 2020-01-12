@@ -8,7 +8,6 @@ if [ "$HOSTNAME" == "glaux-clio" ]; then
 
     # soft notification sound
     export BEEP=$HOME/.dotfiles/files/soft_beep.way
-    export PATH="/home/$USER/.cargo/bin:$PATH"
 
     # if running from tty1 start sway  -> desktop session
     if [ $(tty) = "/dev/tty1" ]; then

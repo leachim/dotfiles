@@ -26,9 +26,8 @@ bindsym $mod+Delete+Shift exec "systemctl suspend"
 
 # lock screen when suspending
 exec swayidle -w \
-    before-sleep 'swaylock -te -f -c 0e1d1a'
-    # before-sleep 'loginctl lock-session $XDG_SESSION_ID' \
-    # lock 'swaylock -te --color="#0e1d1a"'
+    before-sleep 'loginctl lock-session $XDG_SESSION_ID' \
+    lock 'swaylock -te --color="#0e1d1a"'
 
 # # lock screen with screensaver timeout
 # exec swayidle -w \
