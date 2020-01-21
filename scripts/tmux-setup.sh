@@ -2,7 +2,7 @@
 
 # setup session and first window
 tmux new-session -d -s "$1" -n "$1" 
-tmux send-keys "clear" 'C-m'
+tmux send-keys "clear" 'C-m' "cd $HOME" 'C-m' 
 tmux split-window -h
 
 # second window (2)
@@ -19,10 +19,10 @@ else
   tmux new-window -n test
 fi
 tmux split-window -h
-tmux send-keys "clear" 'C-m' #"htop" "C-m"
+tmux send-keys "clear" 'C-m' "cd $HOME" 'C-m' #"htop" "C-m"
 # tmux send-keys "clear" 'C-m'
 tmux split-window -v 
-tmux send-keys "clear" 'C-m'
+tmux send-keys "clear" 'C-m' "cd $HOME" 'C-m' 
 
 # third window (3)
 #tmux new-window -n jupyter 
