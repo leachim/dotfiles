@@ -66,10 +66,12 @@ bindsym $mod+Shift+r move workspace to output right
 input "1578:16642:MOSART_Semi._2.4G_Wireless_Mouse_Mouse" {
     accel_profile adaptive 
 }
+
 input 1739:0:Synaptics_TM3288-011 {
     natural_scroll enabled
     middle_emulation enabled
     click_method clickfinger
+    accel_profile adaptive
 }
 
 input "1452:597:Vinpok_Taptek" {
