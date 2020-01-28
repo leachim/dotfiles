@@ -93,13 +93,6 @@ elif [ "$HOSTNAME" == "nm14cs004273" ]; then
 elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
 
     ulimit -s 64000; ulimit -n 4096; ulimit -u 64000;
-    export SINGULARITY_CACHEDIR="/mnt/scratchb/fmlab/$USER/Singularity/cache"
-    export SINGULARITY_TMPDIR="/mnt/scratchb/fmlab/$USER/Singularity/tmp"
-
-	export JAVA_HOME=/usr/lib/jvm/default-java
-    export PERL5LIB=/mnt/scratchb/fmlab/schnei01/miniconda3/lib/site_perl/5.26.2
-	export PATH=$PATH:/usr/lib/jvm/default-java/bin
-    export TMUX_TMPDIR="/home/$USER/.tmux_socket/"
 
     export HOME="/home/$USER"
 
@@ -111,6 +104,13 @@ elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
     module load git-2.21.0-gcc-9.2.0-6btnbtx
     module load singularity-3.4.1-gcc-9.2.0-w62nicu
 
+    export SINGULARITY_CACHEDIR="/mnt/scratchb/fmlab/$USER/Singularity/cache"
+    export SINGULARITY_TMPDIR="/mnt/scratchb/fmlab/$USER/Singularity/tmp"
+
+	export JAVA_HOME=/usr/lib/jvm/default-java
+    export PERL5LIB=/mnt/scratchb/fmlab/schnei01/miniconda3/lib/site_perl/5.26.2
+	export PATH="$PATH:/usr/lib/jvm/default-java/bin"
+    export TMUX_TMPDIR="/home/$USER/.tmux_socket/"
     # # fix CURL certificates path
     # export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 

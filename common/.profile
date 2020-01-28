@@ -45,3 +45,7 @@ if [ -f ~/.profile_hosts ]; then
     source ~/.profile_hosts
 fi
 
+# make sure conda base environment is activated in default shell
+if type "conda" > /dev/null; then
+    conda activate 
+fi
