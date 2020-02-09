@@ -10,6 +10,7 @@ alias tagcommit='git rev-list -n 1'
 
 alias ga='git add '
 alias gb='git branch '
+alias gpf='git push --follow-tags'
 
 # Commit (m)
 alias gmo='git commit'
