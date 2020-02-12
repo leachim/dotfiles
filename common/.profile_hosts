@@ -8,6 +8,8 @@ if [ "$HOSTNAME" == "glaux-clio" ]; then
 
     # soft notification sound
     export BEEP=$HOME/.dotfiles/files/soft_beep.way
+    export TERM="xterm-256color"
+
 
     # if running from tty1 start sway  -> desktop session
     if [ $(tty) = "/dev/tty1" ]; then
@@ -19,7 +21,19 @@ if [ "$HOSTNAME" == "glaux-clio" ]; then
        # export SWAY_CURSOR_THEME=""
        # export SWAY_CURSOR_SIZE=5
        # exec sway -d 2> ~/sway.log
-       exec sway
+       # wayland support
+       # https://github.com/swaywm/sway/wiki/Running-programs-natively-under-wayland
+       # export QT_QPA_PLATFORM=wayland-egl
+       # export QT_WAYLAND_FORCE_DPI=physical
+       # export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+       # export ECORE_EVAS_ENGINE=wayland_egl
+       # export ELM_ENGINE=wayland_egl
+       # export SDL_VIDEODRIVER=wayland
+       # export _JAVA_AWT_WM_NONREPARENTING=1
+       # export MOZ_ENABLE_WAYLAND=1
+       # export GDK_BACKEND=wayland
+       exec env QT_WAYLAND_FORCE_DPI=physical QT_QPA_PLATFORM=wayland-egl CLUTTER_BACKEND=wayland SDL_VIDEODRIVER=wayland BEMENU_BACKEND=wayland MOZ_ENABLE_WAYLAND=1 sway
+       # exec sway
     fi
 
     # add .R to the R path, 

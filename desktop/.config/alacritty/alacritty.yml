@@ -100,7 +100,7 @@
 #tabspaces: 8
 
 # Font configuration
-#font:
+font:
   # Normal (roman) font face
   #normal:
     # Font family
@@ -148,7 +148,7 @@
     #style: Bold Italic
 
   # Point size
-  #size: 16.0
+  size: 16.0
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
@@ -249,15 +249,28 @@
   # #  magenta: '0x80638e'
   # #  cyan:    '0x497e7a'
   # #  white:   '0x9a9a9a'
+  # # Indexed Colors
+  # #
+  # # The indexed colors include all colors from 16 to 256.
+  # # When these are not set, they're filled with sensible defaults.
+  # #
+  # # Example:
+  # #   `- { index: 16, color: '0xff00ff' }`
+  # #
+  # #indexed_colors: []
 
-# Colors (Gruvbox dark)
+# Base16 Google Dark - alacritty color config
+# Seth Wright (http://sethawright.com)
 colors:
   # Default colors
   primary:
-    # hard contrast: background = '0x1d2021'
     background: '0x1d1f21'
-    # soft contrast: background = '0x32302f'
     foreground: '0xc5c8c6'
+
+  # Colors the cursor will use if `custom_cursor_colors` is true
+  cursor:
+    text: '0x1d1f21'
+    cursor: '0xc5c8c6'
 
   # Normal colors
   normal:
@@ -268,27 +281,20 @@ colors:
     blue:    '0x3971ed'
     magenta: '0xa36ac7'
     cyan:    '0x3971ed'
-    white:   '0xffffff'
+    white:   '0xc5c8c6'
 
   # Bright colors
   bright:
-    black:   '0x928374'
-    red:     '0xfb4934'
-    green:   '0xb8bb26'
-    yellow:  '0xfabd2f'
-    blue:    '0x83a598'
-    magenta: '0xd3869b'
-    cyan:    '0x8ec07c'
-    white:   '0xebdbb2'
-  # Indexed Colors
-  #
-  # The indexed colors include all colors from 16 to 256.
-  # When these are not set, they're filled with sensible defaults.
-  #
-  # Example:
-  #   `- { index: 16, color: '0xff00ff' }`
-  #
-  #indexed_colors: []
+    black:   '0x969896'
+    red:     '0xf96a38'
+    green:   '0x282a2e'
+    yellow:  '0x373b41'
+    blue:    '0xb4b7b4'
+    magenta: '0xe0e0e0'
+    cyan:    '0x3971ed'
+    white:   '0xffffff'
+
+draw_bold_text_with_bright_colors: false
 
 # Visual Bell
 #

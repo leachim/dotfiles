@@ -5,12 +5,13 @@
 #exec --no-startup-id xmodmap -e 'keycode 108 = Alt_R' && xset -r 108
 #exec --no-startup-id xmodmap -e 'remove Mod1 = Alt_R'
 #exec --no-startup-id xmodmap -e 'add Mod4 = Alt_R'
+# xwayland disable
 
 # change modifier to windows key
 set $mod Mod4
 set $alt Mod1
 
-set $terminal termite 
+set $terminal alacritty
 set $primary e-DP1
 set $secondary VGA1
 
@@ -471,7 +472,7 @@ for_window [class="(?i)Zathura"] border pixel 1
 for_window [instance="zotero"] border 1pixel
 
 for_window [instance="urxvt"] border 1pixel
-for_window [instance="termite"] border 1pixel
+for_window [instance="alacritty"] border 1pixel
 for_window [instance="^(?i)firefox"] border none 
 for_window [class="^(?i)chromium"] border none
 for_window [class="(?i)google-chrome"] border none 
@@ -552,7 +553,7 @@ output * bg #007799 solid_color
 # output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 
 #output eDP-1 pos 0 0 res 2560x1440
-output eDP-1 scale 1.6
+output eDP-1 scale 1.4
 output eDP-1 pos 0 0 res 2560x1440
 # note that x-pos of DP-2 is 1600=2560/1.6
 output DP-2 pos 1600 0 res 1920x1080

@@ -1,5 +1,5 @@
 [options]
-font = DejaVu Sans Mono 14
+font = DejaVu Sans Mono 16
 scrollback_lines = 10000
 clickable_url    = true
 browser          = chromium
