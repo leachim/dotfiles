@@ -24,7 +24,10 @@ if [ -e ~/.fzf ]; then
 	export FZF_DEFAULT_COMMAND='ag --nocolor -g ""'
 	export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 	export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND"
-	export FZF_DEFAULT_OPTS=' --color fg:242,bg:236,hl:65,fg+:15,bg+:239,hl+:108 --color info:108,prompt:109,spinner:108,pointer:168,marker:168'
+    export FZF_DEFAULT_OPTS=' 
+                    --color=dark
+                    --color fg:124,bg:16,hl:202,fg+:214,bg+:52,hl+:231
+                    --color info:52,prompt:196,spinner:208,pointer:196,marker:208'
 fi
 
 # fasd

@@ -9,7 +9,7 @@ fi
 
 # setup session and first window
 tmux new-session -d -s "$1" -n "$1" 
-tmux send-keys "$shell" 'C-m' "clear" 'C-m' "cd $HOME" 'C-m' "clear" 'C-m' 
+tmux send-keys "$shell" 'C-m' "clear" 'C-m' "cd $(pwd -P)" 'C-m' "clear" 'C-m' 
 # tmux split-window -h
 
 # second window (2)
@@ -28,10 +28,15 @@ elif [ "$1" = "server" ]; then
 else
   tmux new-window -n test
 fi
-tmux send-keys "$shell" 'C-m' "clear" 'C-m' "cd $HOME" 'C-m' "clear" 'C-m' 
+tmux send-keys "$shell" "cd $(pwd -P)" 'C-m' "clear" 'C-m' 
+tmux split-window -h 
+tmux send-keys "$shell" "cd $(pwd -P)" 'C-m' "clear" 'C-m' 
 
-tmux split-window -h
-tmux send-keys "$shell" 'C-m' "clear" 'C-m' "cd $HOME" 'C-m' "clear" 'C-m' 
+# # Select pane 1 again
+# tmux select-window -t 2
+# tmux selectp -t 1
+# tmux send-keys 'C-m' "clear" 'C-m' Enter
+
 # tmux send-keys "clear" 'C-m'
 # Split pane 1 horizontal by 65%, start redis-server
 # tmux split-window -v -p 70
