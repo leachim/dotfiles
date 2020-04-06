@@ -90,7 +90,11 @@ function daily-quote () {
 alias clock="date | cut -d ' ' -f 4"
 alias daily-cal="ncal -A 1 -M -b -w"
 alias upip="conda list | grep \"<pip>\" | awk '{print $1}' | xargs pip install -U"
-alias doremi="apt-mark showhold && sudo apt update && sudo apt upgrade && echo \"\" && weather && echo \"Tage im Mai: $(datediff 01/25/2020)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
+
+if ! type "doremi" > /dev/null 2>&1; then
+    alias doremi="apt-mark showhold && sudo apt update && sudo apt upgrade && echo \"\" && weather && echo \"Tage im Mai: $(datediff 01/25/2020)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
+fi
+
 alias daily-info="weather && daily-cal && daily-quote"
 alias ugit="git pull && git submodule update --recursive"
 function update-git () { for i in **; do cd $i; ugit; cd ..; done ; }
@@ -165,6 +169,7 @@ alias apm-import="apm install --packages-file"
 
 ## AWS
 function aws-login () { $(aws ecr get-login --no-include-email); }
+function ecr-login () { export SINGULARITY_DOCKER_USERNAME=AWS SINGULARITY_DOCKER_PASSWORD=$(aws ecr get-login | sed 's/^.*-p //' | sed 's/\(.*\)\( -e\).*/\1/'); }
 
 ## Docker
 alias d="docker"
@@ -542,7 +547,9 @@ alias proxyrdocker="ssh -N -L localhost:8786:localhost:8786 desktop"
 
 # Backup routine
 alias fasollati="bash $HOME/.backup/local-backup.sh && echo \"df -h\" | sftp storagebox:"
-alias jour="bash $HOME/.backup/borg-backup.sh && sleep 3 && doremi"
+if ! type "jour" > /dev/null 2>&1; then
+    alias jour="bash $HOME/.backup/borg-backup.sh && sleep 3 && doremi"
+fi
 alias check-storage="echo \"df -h\" | sftp storagebox"
 
 ## Backup management

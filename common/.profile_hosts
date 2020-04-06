@@ -135,7 +135,7 @@ elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
 
 	export IGNOREEOF=100
 
-    export TERM=xterm
+    export TERM=xterm-256color
 
     # conda initialize 
     # !! Contents within this block are managed by 'conda init' !!
