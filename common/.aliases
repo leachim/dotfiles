@@ -97,7 +97,7 @@ fi
 
 alias daily-info="weather && daily-cal && daily-quote"
 alias ugit="git pull && git submodule update --recursive"
-function update-git () { for i in **; do cd $i; ugit; cd ..; done ; }
+function ugit-iterate () { for i in */ ; do cd $i; pwd -P; ugit; echo ""; cd ..; done ; }
 alias timestamp="date +%Y_%m_%d-%H_%M"
 alias suspend="systemctl suspend"
 alias m-timezone="timedatectl"
@@ -547,10 +547,10 @@ alias proxyrdocker="ssh -N -L localhost:8786:localhost:8786 desktop"
 ################################
 
 # Backup routine
-alias fasollati="bash $HOME/.backup/local-backup.sh && echo \"df -h\" | sftp storagebox:"
-if ! type "jour" > /dev/null 2>&1; then
-    alias jour="bash $HOME/.backup/borg-backup.sh && sleep 3 && doremi"
-fi
+# alias fasollati="bash $HOME/.backup/local-backup.sh && echo \"df -h\" | sftp storagebox:"
+# if ! type "jour" > /dev/null 2>&1; then
+    # alias jour="sleep 3 && doremi"
+# fi
 alias check-storage="echo \"df -h\" | sftp storagebox"
 
 ## Backup management
