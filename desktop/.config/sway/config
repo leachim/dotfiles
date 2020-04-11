@@ -530,7 +530,7 @@ bar {
 }
 
 bar {
-    output dp1
+    output DP-2
     position top
     workspace_buttons no
     mode hide
@@ -553,7 +553,8 @@ output * bg #007799 solid_color
 # output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 
 #output eDP-1 pos 0 0 res 2560x1440
-output eDP-1 scale 1.4
+output eDP-1 scale 1.6
 output eDP-1 pos 0 0 res 2560x1440
 # note that x-pos of DP-2 is 1600=2560/1.6
 output DP-2 pos 1600 0 res 1920x1080
+workspace 11 output DP-2

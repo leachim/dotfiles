@@ -44,8 +44,8 @@ map <C-g> abort
 map <Space> navigate next
 map <BackSpace> navigate previous
 map <S-Space> navigate previous
-map > half-up
-map < half-down 
+# map > half-up
+# map < half-down
 # map <BackSpace> scroll full_up all
 map <M-v> scroll full_up
 map <C-v> scroll full_down

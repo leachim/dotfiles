@@ -506,9 +506,9 @@ lighten () { brightnessctl set 100% ;}
 function m-battery () { upower -i $(upower -e | grep BAT) | grep --color=never -E "state|to\ full|to\ empty|percentage" ; }
 
 ### Internet and proxy commands ###
-alias wgup="sudo wg-quick up wg0"
-alias wgdown="sudo wg-quick down wg0"
-alias wgstatus="systemctl status wg-quick@wg0"
+alias wgup="sudo wg-quick up "
+alias wgdown="sudo wg-quick down "
+alias wgstatus="sudo wg"
 alias caup="sudo ipsec up CAM && touch /tmp/vpn.lock"
 alias cadown="sudo ipsec down CAM && rm -f /tmp/vpn.lock"
 alias browsh="docker run --rm -it browsh/browsh"
@@ -523,6 +523,7 @@ alias nmdown="nmcli connection down"
 
 alias zotero="/opt/Zotero_linux-x86_64/zotero"
 alias matlab-desktop="/home/michael/.matlab/bin/matlab &"
+alias m-generate-password="openssl rand -base64"
 
 # route through glaux-web
 alias proxyssh="ssh glaux-proxy -D 8080 -N -C -o \"UserKnownHostsFile /dev/null\""
@@ -604,9 +605,23 @@ function backup-restore-unsigned {
     duplicity --gpg-options "--skip-verify" "file://$1" $2
 }
 
-## secure tresor operations
-backup-secure_shredFile () { echo "Are you sure, shredding may not work on SSD? [y/N] "; read response ; if [[ $response =~ ^(yes|y)$ ]]; then shred -n 30 -z -u  $1 ; else echo "exited"; fi ; }
-backup-secure_encrypt-sign () { tar czvpf - $1 | gpg --cipher-algo aes256 -o safe.tar.gz.gpg --symmetric && gpg --armor --detach-sign safe.tar.gz.gpg; }
-backup-secure_encrypt-only () { tar czvpf - $1 | gpg --cipher-algo aes256 -o safe.tar.gz.gpg --symmetric ; }
-backup-secure_decrypt-signed () { gpg --verify $1.asc $1 && gpg -d $1 | tar xzvf - ; }
-backup-secure_decrypt-nocheck () { gpg -d $1 | tar xzvf - ; }
+## backup operations
+# NOTE run inside .encrypted folder
+backup-secure_compress () { zip -9 -r "EncryptedBackupDocuments_$(date +%Y-%m-%d).zip" $@ ; }
+# NOTE compress files before encrypting
+backup-secure_encrypt () { echo "Encrypting $1" && \
+    gpg --symmetric \
+    --cipher-algo aes256 \
+    --digest-algo sha512 \
+    --cert-digest-algo sha512 \
+    --s2k-mode 3 \
+    --s2k-digest-algo sha512 \
+    --s2k-cipher-algo aes256 \
+    --s2k-count 65011712 \
+    --compress-algo zip -z 8 \
+    --no-greeting \
+    -o "${1}.enc.gpg" $1 && \
+    echo "Encrypting ${1} as ${1}.enc.gpg\n$(date +\"%Y-%m-%d_%H-%M-%S\")\nSHA512:\n$(sha512sum $1.enc.gpg)" | tee -a "$1.enc.gpg.info" ; }
+backup-secure_checkhash () { sha512sum $1; cat "${1}.info" ; }
+backup-secure_droppw () { gpgconf --reload gpg-agent ; }
+backup-secure_decrypt () { echo "Decrypting $1" && gpg -d $1 > "${1%.enc.gpg}" ; }
