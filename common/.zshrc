@@ -7,7 +7,6 @@
 
 # NON-INTERACTIVE SHELLS {{{
 _source () { [[ -f $1 ]] && source $1 }
-_source ~/.aliases
 
 # source profile file
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
@@ -227,5 +226,6 @@ export NVM_DIR="$HOME/.nvm"
 # PERL_LOCAL_LIB_ROOT="/home/michael/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
 # PERL_MB_OPT="--install_base \"/home/michael/perl5\""; export PERL_MB_OPT;
 # PERL_MM_OPT="INSTALL_BASE=/home/michael/perl5"; export PERL_MM_OPT;
-#
 
+# source at the end to overwrite other aliases
+_source ~/.aliases

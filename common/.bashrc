@@ -223,15 +223,15 @@ fi
 # Load paths and variables
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-if [ -f ~/.aliases ]; then
-    source ~/.aliases
-fi
-
 if [ -f ~/.autocompletion/docker-machine.bash ]; then 
     source ~/.autocompletion/docker-machine.bash
 fi
 
 if [ -f ~/.cargo/bin/broot ]; then
     source ~/.config/broot/launcher/bash/br
+fi
+
+if [ -f ~/.aliases ]; then
+    source ~/.aliases
 fi
 
