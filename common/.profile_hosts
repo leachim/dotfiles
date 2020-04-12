@@ -155,9 +155,6 @@ elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
 
 elif [ "$(echo $HOSTNAME)" == "login-e-11" ]; then
 
-    module load zsh-5.3.1-gcc-5.4.0-u6oz7fw
-    export SHELL=`which zsh`
-    [ -z "$ZSH_VERSION" ] && exec "$SHELL" -l
     set -o ignoreeof
 	export IGNOREEOF=100
 
