@@ -17,8 +17,8 @@ if [ -x "$(command -v fasd)" ]; then
 fi
 alias j='fzf' # fuzzy search
 
-if [ -x "$(command -v broot)" ]; then
-    alias l="broot"
+if [ -x "$(command -v br)" ]; then
+    alias l="br"
 fi
 
 ## Shortcuts
