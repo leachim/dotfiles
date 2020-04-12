@@ -100,7 +100,7 @@ if ! type "doremi" > /dev/null 2>&1; then
 fi
 
 alias daily-info="weather && daily-cal && daily-quote"
-alias ugit="git pull && git submodule update --recursive"
+alias ugit="git pull origin master && git submodule update --recursive"
 function ugit-iterate () { for i in */ ; do cd $i; pwd -P; ugit; echo ""; cd ..; done ; }
 alias timestamp="date +%Y_%m_%d-%H_%M"
 alias suspend="systemctl suspend"
