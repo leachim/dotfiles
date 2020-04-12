@@ -1,6 +1,7 @@
 # Do not automatically add changes in duplicity script
 desktop/.backup/duplicity.sh
 !desktop/.config/sway/py3status
+common/.gitconfig
 
 # do not store all configurations
 common/.env

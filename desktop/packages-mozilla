@@ -5,56 +5,22 @@
 ##
 ##
 
-## Thunderbird
-==firetray
-Enigmail
-ImportExportTools
-SOGo Connector // Inverse SOGo Connector
-Lightning Calendar / Iceowl
-==Saved Password Editor
-==Secure Addressing
-==Show Address Only
-==ThreadVis (probably incompatible with Thunderbird Conversations)
-Thunderbird Conversations
-
 ## Firefox
-Adblock Edge
-NoScript
-RequestPolicy
+Disconnect
+Firefox Multi-Account Containers
 HTTPS Everywhere
-Vimperator
-FoxyProxy Basic
+Linguee it
+uBlock Origin
+Zotero Connector
+==CanvasBlocker
+==NoScript
+==Tree Style Tab
+==Vimium
 
 ## Zotero plugins and add-ons
 Zotfile 
-Zotero Better Bib(La)Tex
-Zotero Autoexport
-Zotero Scholar Citations
+Better BibTex for Zotero
+==Zotero Better Bib(La)Tex
+==Zotero Autoexport
 Zutilo Utility for Zotero
 
-## Chromium
-AdBlock Plus
-Disconnect
-Google Analytics Opt-out Add-on (by Google)
-Google Calendar (by Google)
-Google Docs Offline
-Google Scholar Button
-Google Keep
-Quick Tabs
-HTTPS Everywhere
-Inbox by Gmail
-New Tab Redirect (Jim Schubert)
-Password Alert
-Privacy Badger
-Proxy SwitchOmega
-Quick Tabs
-Save to Google
-Save to Pocket
-Session Buddy
-Signal Private Messenger
-The Great Suspender
-ublock origin
-Unpaywall
-Vimium
-WebRTC Network Limiter
-Zotero Connector
