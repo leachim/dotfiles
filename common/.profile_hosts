@@ -118,7 +118,7 @@ elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
     module load git-2.21.0-gcc-9.2.0-6btnbtx
     module load singularity-3.4.1-gcc-9.2.0-w62nicu
 
-    export SINGULARITY_CACHEDIR="/mnt/scratchb/fmlab/$USER/Singularity/cache"
+    export SINGULARITY_CACHEDIR="/mnt/scratchb/fmlab/$USER/Singularity"
     export SINGULARITY_TMPDIR="/mnt/scratchb/fmlab/$USER/Singularity/tmp"
 
 	export JAVA_HOME=/usr/lib/jvm/default-java
@@ -131,10 +131,11 @@ elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
     # # export cuda
     # export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib"
     # export CUDA_HOME=/usr/
+    export SHELL=`which zsh`
+    [ -z "$ZSH_VERSION" ] && exec "$SHELL" -l
+
     set -o ignoreeof
-
 	export IGNOREEOF=100
-
     export TERM=xterm-256color
 
     # conda initialize 
@@ -154,6 +155,8 @@ elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
 
 elif [ "$(echo $HOSTNAME)" == "login-e-11" ]; then
 
+    export SHELL=`which zsh`
+    [ -z "$ZSH_VERSION" ] && exec "$SHELL" -l
     set -o ignoreeof
 	export IGNOREEOF=100
 
