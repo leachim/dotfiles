@@ -75,6 +75,12 @@ elif [ "$HOSTNAME" == "nm14cs004273" ]; then
     export GOPATH=${HOME}/.go
     export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin
 
+    # ZSH shell
+    export SHELL=`which zsh`
+    [ -z "$ZSH_VERSION" ] && exec "$SHELL" -l
+    set -o ignoreeof
+	export IGNOREEOF=100
+
     # use different backup script
     # unalias jour
     # unalias doremi
