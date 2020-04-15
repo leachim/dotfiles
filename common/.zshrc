@@ -135,6 +135,9 @@ _my_generic () {
 }
 bindkey '^X^a' all-matches
 
+# ctrl-Y from bash - replicate in zsh
+bindkey "^Y" yank
+
 # break of in the middle of writing command
 # https://sgeb.io/posts/2016/11/til-bash-zsh-half-typed-commands/
 bindkey '^q' push-line-or-edit
@@ -219,7 +222,7 @@ export NVM_DIR="$HOME/.nvm"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-[ -f ~/.cargo/bin/broot ] && source ~/.config/broot/launcher/bash/br
+[ -f ~/.cargo/bin/broot ] && source ~/.broot/br
 
 [ -f ~/.aliases ] && source ~/.aliases
 

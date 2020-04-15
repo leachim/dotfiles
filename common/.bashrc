@@ -228,7 +228,7 @@ if [ -f ~/.autocompletion/docker-machine.bash ]; then
 fi
 
 if [ -f ~/.cargo/bin/broot ]; then
-    source $HOME/.config/broot/launcher/bash/br
+    source $HOME/.broot/br
 fi
 
 if [ -f ~/.aliases ]; then

@@ -37,7 +37,7 @@ fi
 
 # broot
 if [ -f ~/.cargo/bin/broot ]; then
-    source ~/.config/broot/launcher/bash/br
+    source ~/.broot/br
 fi
 
 # added by travis gem
