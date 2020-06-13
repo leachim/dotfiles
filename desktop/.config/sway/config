@@ -554,7 +554,7 @@ output * bg #007799 solid_color
 
 #output eDP-1 pos 0 0 res 2560x1440
 output eDP-1 scale 1.6
-output eDP-1 pos 1600 0 res 2560x1440
+output eDP-1 pos 1080 0 res 2560x1440
 # note that x-pos of DP-2 is 1600=2560/1.6
 output DP-1 pos 0 0 res 1920x1080
-workspace 11 output DP-1
+# workspace 11 output DP-1

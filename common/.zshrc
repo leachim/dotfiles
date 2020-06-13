@@ -140,19 +140,6 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 # other themes: avit, sorin,
 
 
-
-## load more stuff
-zinit wait lucid for \
-    zdharma/history-search-multi-word \
-  atinit"zicompinit; zicdreplay"  \
-        OMZ::plugins/colorize/colorize.plugin.zsh \
-        OMZ::plugins/fzf/fzf.plugin.zsh \
-  as"completion" \
-        OMZ::plugins/urltools/urltools.plugin.zsh \
-        OMZ::plugins/web-search/web-search.plugin.zsh \
-        OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh \
-        OMZ::plugins/git-flow/git-flow.plugin.zsh
-
 ## Completion block
 zi_completion() {
     zinit ice lucid wait'5' as'completion' blockf "$@"
@@ -215,6 +202,17 @@ zinit light greymd/tmux-xpanes
 zinit ice from"gh-r" as"program" bpick"*appimage*" mv"nvim* -> nvim" pick"nvim"
 zinit light neovim/neovim
 
+## load more stuff
+zinit wait lucid for \
+    zdharma/history-search-multi-word \
+  atinit"zicompinit; zicdreplay"  \
+        OMZ::plugins/colorize/colorize.plugin.zsh \
+        OMZ::plugins/fzf/fzf.plugin.zsh \
+  as"completion" \
+        OMZ::plugins/urltools/urltools.plugin.zsh \
+        OMZ::plugins/web-search/web-search.plugin.zsh \
+        OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh \
+        OMZ::plugins/git-flow/git-flow.plugin.zsh
 
 # TAB COMPLETIONS
 #
@@ -253,6 +251,9 @@ zinit wait lucid light-mode for \
 # https://github.com/zdharma/zinit/issues/68
 zplugin light romkatv/zsh-defer
 zsh-defer +a -p -t 3 -c "source ~/.conda_startup"
+
+# 
+POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
 
 export NVM_DIR="$HOME/.nvm"
 [ -f "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
