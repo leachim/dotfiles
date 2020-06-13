@@ -101,7 +101,13 @@ zi_completion has'wl-copy'
 zinit snippet https://github.com/bugaevc/wl-clipboard/blob/master/completions/zsh/_wl-copy
 
 zi_completion has'wl-paste'
+zinit snippet https://github.com/bugaevc/wl-clipboard/blob/master/completions/zsh/_wl-paste
 
+zi_completion has'fzf'
+zinit snippet https://github.com/junegunn/fzf/blob/master/shell/key-bindings.zsh
+
+zi_completion has'fzf'
+zinit snippet https://github.com/junegunn/fzf/blob/master/shell/completion.zsh
 
 ## Compile programs
 
