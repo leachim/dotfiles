@@ -13,7 +13,7 @@ if [ -x "$(command -v fasd)" ]; then
     alias z='fasd_cd -d'     # cd, same functionality as j in autojump
     alias zz='fasd_cd -d -i' # cd with interactive selection
     alias v='f -e vim' # quick opening files with vim
-    alias vv='f -e zathura' # quick opening files with zathura 
+    alias vv='f -e zathura' # quick opening files with zathura
 fi
 alias j='fzf' # fuzzy search
 
@@ -23,6 +23,7 @@ fi
 
 ## Shortcuts
 alias lst="ls -lt"
+alias ls="ls --color=auto"
 alias sac="source activate"
 alias logoff="pkill -KILL -u $USER"
 alias takeover="tmux detach -a"
@@ -39,6 +40,11 @@ alias s="dirs -v" # zprezto directory module
 alias f='fasd_cd -i' # zprezto fasd module
 alias agenda="gcalcli agenda"
 do-most_recent_container() { docker exec -it `docker ps -a --no-trunc -q | head -n 1` bash; }
+
+alias newest_ls="ls -lh --sort date -r --color=always | head -25"
+alias cpfile="rsync --progress"
+alias recently_changed='find . -newerct "15 minute ago" -print'
+recently_changed_x() { find . -newerct "$1 minute ago" -print; }
 
 alias tailwatch="watch -n 1 'tail $(ls -lA -t | head -n 1)'"
 alias brd="bash runDocker.sh"
@@ -86,10 +92,10 @@ function wttr () {
     # change Paris to your default location
     curl -s -S -H "Accept-Language: en" wttr.in/"${1:-London}" | head -q -n -3 ; }
 alias weather="curl -s -S http://wttr.in/London | head -q -n -3"
-function daily-quote () { 
+function daily-quote () {
   source ~/.dotfiles/common/quotes.dec
   n_quotes=${#quotearray[@]}+1
-  rand=$(($RANDOM%$n_quotes)) 
+  rand=$(($RANDOM%$n_quotes))
   echo ${quotearray[$rand]} ; }
 alias clock="date | cut -d ' ' -f 4"
 alias daily-cal="ncal -A 1 -M -b -w"
@@ -110,9 +116,9 @@ alias m-rsync="rsync -azP"
 m-filesize () { echo "df -h" | sftp $1 ;}
 
 ## Alerts, a set of flexible alerts to notify about the end of a computation in terminal and tmux
-print-tmux-session-info () { 
+print-tmux-session-info () {
     (if type tmux >/dev/null 2>/dev/null; then
-        if tmux info &> /dev/null; then 
+        if tmux info &> /dev/null; then
             if ! { [ "$TERM" = "screen" ] && [ -n "$TMUX" ]; } then
                 for s in $(tmux list-sessions -F '#{session_name}'); do
                     tmux list-panes -F '#{pane_tty} #{session_name}' -t "$s"
@@ -191,13 +197,13 @@ function do-export () { docker save $1 > $1.tar; }
 
 ## Digital Ocean
 function dig-create() { doctl compute droplet create glaux-web --image debian-9-x64 --region $1 --size 1gb --ssh-keys 8c:7e:36:3e:d0:f5:98:d7:46:86:b5:78:7d:2e:9a:1e &&
-sleep 5 && doctl compute firewall add-droplets de489db5-1e04-40e6-891c-8bdfa47745c8 --droplet-ids $(doctl compute droplet list | tail -n 1 |  awk '{print $1}') && sleep 10 ; } 
+sleep 5 && doctl compute firewall add-droplets de489db5-1e04-40e6-891c-8bdfa47745c8 --droplet-ids $(doctl compute droplet list | tail -n 1 |  awk '{print $1}') && sleep 10 ; }
 function dig-connect() { ss-local -c /etc/shadowsocks.json -s $(doctl compute droplet list | tail -n 1 |  awk '{print $3}') ; }
 function dig-domain() { doctl compute domain records create $(doctl compute domain list | tail -n 1 | awk '{print $1}') --record-type A --record-name web --record-data $(doctl compute droplet list | tail -n 1 |  awk '{print $3}') --record-ttl 180 ; }
 function dig-close () { doctl compute droplet delete $(doctl compute droplet list | tail -n 1 |  awk '{print $1}') && sleep 10 && doctl compute domain records delete $(doctl compute domain list | tail -n 1 | awk '{print $1}') $(doctl compute domain records list $(doctl compute domain list | tail -n 1 | awk '{print $1}') | grep "A" |  awk '{print $1}') && doctl compute droplet list ; }
 alias dig-status="doctl compute droplet list"
-dig-domain-status() { doctl compute domain records list $(doctl compute domain list | tail -n 1 | awk '{print $1}') ; } 
-function dig-access () { doctl compute ssh $(doctl compute droplet list | tail -n 1 |  awk '{print $1}') ; } 
+dig-domain-status() { doctl compute domain records list $(doctl compute domain list | tail -n 1 | awk '{print $1}') ; }
+function dig-access () { doctl compute ssh $(doctl compute droplet list | tail -n 1 |  awk '{print $1}') ; }
 function dig-reboot() { doctl compute droplet-action reboot $(doctl compute droplet list | tail -n 1 | awk '{print $1}') ; }
 
 ## Git
@@ -262,15 +268,15 @@ function de-archive () {
 }
 
 function wc-dir () {
-    for dir in $( find . -type d -print ); do 
-        files=$( find $dir -maxdepth 1 -type f | wc -l ); 
-        echo "$dir : $files"; 
+    for dir in $( find . -type d -print ); do
+        files=$( find $dir -maxdepth 1 -type f | wc -l );
+        echo "$dir : $files";
     done
 }
 
 alias scrotclip="scrot -s ~/.temp.png && xclip -selection clipboard -t image/png -i ~/.temp.png && rm -f ~/.temp.png"
 function screenshot_to_text () {
-    bash ~/.dotfiles/scripts/screenshot_to_text.sh; 
+    bash ~/.dotfiles/scripts/screenshot_to_text.sh;
 }
 
 # compression on linux
@@ -332,6 +338,9 @@ function mpdf-topng-res () { pdftoppm $1 ${1%.pdf} -png -r $2 -singlefile ; }
 # convert pdf to eps
 function mpdf-toeps () { for var in "$@"; do inkscape $var --export-eps=${var%.pdf}.eps; done ; }
 
+# convert pdf to multipage tif
+function mpdf-totif () { for var in "$@"; do \gs -q -dNOPAUSE -sDEVICE=tiff24nc -sOutputFile=${var%.pdf}.ucompress.tif $var -c quit; convert ${var%.pdf}.ucompress.tif -compress lzw -quality 80% ${var%.pdf}.tif; rm -f ${var%.pdf}.ucompress.tif; done ; }
+
 # count words in pdf
 function mpdf-wordcount () { for var in "$@"; do pdftotext $var - | wc -w ; done ; }
 
@@ -370,7 +379,7 @@ function mpdf-webify(){
     for var in "$@"; do convert -verbose -density 200 -trim $var -quality 100 ${var%.pdf}.png; done ; }
 
 function mfigure (){
-    pdftk A=$1 cat end output $2 
+    pdftk A=$1 cat end output $2
     mpdf-crop $2;
     mv -f ${2%.pdf}-crop.pdf $2;
     mpdf-convertToPNG $2;
@@ -400,6 +409,10 @@ mcheck-zerowidth () { grep "$(printf %b '\u200b')" $1 ; }
 #########################################
 ### Helper functions                  ###
 #########################################
+
+function pdhist () {
+    source ~/.dotfiles/common/.per-directory-history.zsh ;
+}
 
 function countdown () {
    date1=$((`date +%s` + $1));
@@ -490,7 +503,7 @@ alias mount-library="sshfs -o allow_other -o ro storagebox:/library ~/mount"
 capsfix () { /usr/bin/python3 -c "from ctypes import *; X11 = cdll.LoadLibrary(\"libX11.so.6\"); display = X11.XOpenDisplay(None); X11.XkbLockModifiers(display, c_uint(0x0100), c_uint(2), c_uint(0)); X11.XCloseDisplay(display)" ; }
 CAPSFIX () { /usr/bin/python3 -c "from ctypes import *; X11 = cdll.LoadLibrary(\"libX11.so.6\"); display = X11.XOpenDisplay(None); X11.XkbLockModifiers(display, c_uint(0x0100), c_uint(2), c_uint(0)); X11.XCloseDisplay(display)" ; }
 
-m-mode-present () { xrandr --output DP1 --auto ; xrandr --output DP2 --auto ; } 
+m-mode-present () { xrandr --output DP1 --auto ; xrandr --output DP2 --auto ; }
 m-mode-savepower() { if [ ! -f /tmp/savedata.lock ]; then systemctl stop bluetooth.service && brightnessctl set 10% && touch /tmp/savedata.lock; else systemctl start bluetooth.service && brightnessctl set 30% && sleep 3 && rm -f /tmp/savedata.lock; fi; }
 m-mode-flightmode() { if [ ! -f /tmp/flightmode.lock ]; then nmcli radio wifi off && touch /tmp/flightmode.lock; echo "Turning flight mode on"; else nmcli radio wifi on && rm -f /tmp/flightmode.lock; echo "Turning flight mode off"; fi; }
 m-mode-quiet() { if [ ! -f /tmp/quiet.lock ]; then killall -SIGUSR1 dunst; touch /tmp/quiet.lock; echo "Turning quiet mode on"; else killall -SIGUSR2 dunst; rm -f /tmp/quiet.lock; echo "Turning quiet mode off"; fi; }
@@ -543,9 +556,12 @@ proxyvpn () { sudo openvpn --remote streisand.proxy.$(hostname | sed -e "s/[-][[
 
 # route through work
 alias proxywork="ssh desktop -D 8079 -N -C"
-alias proxyrstudio="ssh -Y -N -L localhost:8787:localhost:8787 desktop" 
-alias proxyjupyter="ssh -Y -N -L localhost:8785:localhost:8888 desktop" 
-alias proxyrdocker="ssh -N -L localhost:8786:localhost:8786 desktop" 
+alias proxyrstudio="ssh -Y -N -L localhost:8787:localhost:8787 desktop"
+alias proxyjupyter="ssh -Y -N -L localhost:8785:localhost:8888 desktop"
+alias proxyrdocker="ssh -N -L localhost:8786:localhost:8786 desktop"
+
+# copy only bam files
+alias m-rsync-bam="rsync -zarvP --prune-empty-dirs --include='*/\' --include='*.bam' --exclude='*'"
 
 ################################
 ###  BACKUP & System updates ###

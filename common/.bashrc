@@ -234,3 +234,12 @@ fi
 if [ -f ~/.aliases ]; then
     source ~/.aliases
 fi
+
+if [ -f ~/.anaconda3/bin/conda ]; then
+  source ~/.conda_startup
+fi
+
+if [ -f ~/.miniconda3/bin/conda ]; then
+  source ~/.conda_startup
+fi
+

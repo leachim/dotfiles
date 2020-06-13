@@ -13,3 +13,6 @@
 [submodule "desktop/.config/sway/py3status"]
 	path = desktop/.config/sway/py3status
 	url = https://github.com/ultrabug/py3status
+[submodule "common/.zinit/bin"]
+	path = common/.zinit/bin
+	url = https://github.com/zdharma/zinit.git

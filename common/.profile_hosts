@@ -36,27 +36,12 @@ if [ "$HOSTNAME" == "glaux-clio" ]; then
        # exec sway
     fi
 
-    # add .R to the R path, 
+    # add .R to the R path,
     if [ -n $R_LIBS ]; then
         export R_LIBS=~/.R:$R_LIBS
     else
         export R_LIBS=~/.R
     fi
- 
-    # conda initialize
-    # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/home/'${USER}'/.anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/home/$USER/.anaconda3/etc/profile.d/conda.sh" ]; then
-            . "/home/$USER/.anaconda3/etc/profile.d/conda.sh"
-        else
-            export PATH="/home/$USER/.anaconda3/bin:$PATH"
-        fi
-    fi
-    unset __conda_setup
-    # end conda initialize
 
 
 elif [ "$HOSTNAME" == "nm14cs004273" ]; then
@@ -86,28 +71,12 @@ elif [ "$HOSTNAME" == "nm14cs004273" ]; then
     # unalias doremi
     alias doremi="apt-mark showhold && daily-cal && daily-quote"
     alias jour="bash $HOME/.backup/borg-backup-desktop.sh && sleep 5 && doremi"
-    ulimit -s 16384 
+    ulimit -s 16384
 
     if [ "$(tty)" = "/dev/tty1" ]; then
        export XKB_DEFAULT_LAYOUT="us,de"
        export XKB_DEFAULT_OPTIONS="grp:alt_shift_toggle"
     fi
-
-    # conda initialize
-    # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/home/${USER}/.anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/home/$USER/.anaconda3/etc/profile.d/conda.sh" ]; then
-            . "/home/$USER/.anaconda3/etc/profile.d/conda.sh"
-        else
-            export PATH="/home/$USER/.anaconda3/bin:$PATH"
-        fi
-    fi
-    export PATH="/home/$USER/.anaconda3/bin:$PATH"
-    unset __conda_setup
-    # end conda initialize
 
 
 elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
@@ -128,7 +97,7 @@ elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
     export SINGULARITY_TMPDIR="/mnt/scratchb/fmlab/$USER/Singularity/tmp"
 
 	export JAVA_HOME=/usr/lib/jvm/default-java
-    export PERL5LIB=/mnt/scratchb/fmlab/schnei01/miniconda3/lib/site_perl/5.26.2
+    export PERL5LIB=/mnt/scratchb/fmlab/$USER/miniconda3/lib/site_perl/5.26.2
 	export PATH="$PATH:/usr/lib/jvm/default-java/bin"
     export TMUX_TMPDIR="/home/$USER/.tmux_socket/"
     # # fix CURL certificates path
@@ -144,39 +113,10 @@ elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
 	export IGNOREEOF=100
     export TERM=xterm-256color
 
-    # conda initialize 
-    # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/mnt/scratchb/fmlab/$USER/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/mnt/scratchb/fmlab/$USER/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/mnt/scratchb/fmlab/$USER/miniconda3/etc/profile.d/conda.sh"
-        else
-            export PATH="/mnt/scratchb/fmlab/$USER/miniconda3/bin:$PATH"
-        fi
-    fi
-    unset __conda_setup
-    # end conda initialize
 
 elif [ "$(echo $HOSTNAME)" == "login-e-11" ]; then
 
     set -o ignoreeof
 	export IGNOREEOF=100
-
-    # >>> conda initialize >>>
-    # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/home/ms2556/.miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/home/ms2556/.miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/home/ms2556/.miniconda3/etc/profile.d/conda.sh"
-        else
-            export PATH="/home/ms2556/.miniconda3/bin:$PATH"
-        fi
-    fi
-    unset __conda_setup
-    # <<< conda initialize <<<
 
 fi

@@ -3,6 +3,11 @@ desktop/.backup/duplicity.sh
 !desktop/.config/sway/py3status
 common/.gitconfig
 
+# zinit
+common/.zinit/completions/
+common/.zinit/plugins/
+common/.zinit/snippets
+
 # do not store all configurations
 common/.env
 common/.vim
