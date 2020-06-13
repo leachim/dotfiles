@@ -7,6 +7,7 @@ common/.gitconfig
 common/.zinit/completions/
 common/.zinit/plugins/
 common/.zinit/snippets
+common/.zinit/polaris
 
 # do not store all configurations
 common/.env

@@ -139,7 +139,6 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
     # OMZT::sorin
 # other themes: avit, sorin,
 
-
 ## Completion block
 zi_completion() {
     zinit ice lucid wait'5' as'completion' blockf "$@"
@@ -181,6 +180,7 @@ zinit ice as"program" atclone"rm -f src/auto/config.cache; ./configure" \
 zinit light vim/vim
 
 # junegunn/fzf-bin
+zinit pack for fzf
 zinit ice from"gh-r" as"program"
 zinit light junegunn/fzf-bin
 
@@ -259,6 +259,8 @@ export NVM_DIR="$HOME/.nvm"
 [ -f "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
 [ -f ~/.aliases ] && source ~/.aliases
+
+[ -f ~/.dotfiles/common/.gitalias ] && source ~/.dotfiles/common/.gitalias
 
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
 
