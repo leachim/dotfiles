@@ -113,6 +113,11 @@ elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
 	export IGNOREEOF=100
     export TERM=xterm-256color
 
+    if [ -f ~/.dotfiles/common/.per-directory-history.zsh ]; then
+        unalias mkdir
+        source ~/.dotfiles/common/.per-directory-history.zsh
+    fi
+
 
 elif [ "$(echo $HOSTNAME)" == "login-e-11" ]; then
 

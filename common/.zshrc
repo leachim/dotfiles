@@ -238,11 +238,11 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|[._-]=* r:|=*' 'l:|=* r:
 zstyle ':completion:*' completer _expand _complete _ignored _approximate
 zstyle ':completion::complete:*' use-cache 1
 zstyle ':completion:*' menu select=2
-zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
+zstyle ':completion:*' select-prompt '%Scrolling active: current selection at %p%s'
 zstyle ':completion:*:descriptions' format '-- %d --'
 zstyle ':completion:*:processes' command 'ps -au$USER'
 zstyle ':completion:complete:*:options' sort false
-zstyle ':fzf-tab:complete:_zlua:*' query-string input
+# zstyle ':fzf-tab:complete:_zlua:*' query-string input
 zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm,cmd -w -w"
 zstyle ':fzf-tab:complete:kill:argument-rest' extra-opts --preview=$extract'ps --pid=$in[(w)1] -o cmd --no-headers -w -w' --preview-window=down:3:wrap
 zstyle ':fzf-tab:complete:cd:*' extra-opts --preview=$extract'exa -1 --color=always ${~ctxt[hpre]}$in'
