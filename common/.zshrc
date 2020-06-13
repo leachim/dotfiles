@@ -18,11 +18,17 @@ source ~/.zinit/bin/zinit.zsh
 setopt promptsubst
 
 # Fast-syntax-highlighting & autosuggestions
+# zinit wait lucid for \
+  # atinit"zicompinit; zicdreplay" \
+      # zdharma/fast-syntax-highlighting \
+  # atload"_zsh_autosuggest_start" \
+      # zsh-users/zsh-autosuggestions \
+  # blockf atpull'zinit creinstall -q .' \
+      # zsh-users/zsh-completions
+
 zinit wait lucid for \
   atinit"zicompinit; zicdreplay" \
       zdharma/fast-syntax-highlighting \
-  atload"_zsh_autosuggest_start" \
-      zsh-users/zsh-autosuggestions \
   blockf atpull'zinit creinstall -q .' \
       zsh-users/zsh-completions
 
@@ -34,8 +40,21 @@ zinit wait lucid for \
 PS1=">" # provide a simple prompt till the theme loads
 
 ### THEME ###
-zinit ice wait'!' lucid atload'source ~/.p10k.zsh; _p9k_precmd' nocd
-zinit light romkatv/powerlevel10k
+zinit ice depth=1; zinit light-mode lucid wait for \
+    ver"801bfbb2946b10527e75e77838a3657d78cb92e5" \
+    romkatv/powerlevel10k
+# v1.11.0
+
+# Load within zshrc – for the instant prompt
+zinit atload'!source ~/.p10k.zsh' lucid nocd for \
+    romkatv/powerlevel10k
+
+# Load ~/.p10k.zsh when in any other directory
+zinit id-as'normal-prompt' nocd lucid \
+    atload'!source ~/.p10k.zsh; _p9k_precmd' for \
+        zdharma/null
+
+# other themes
 
 # zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
 # zinit light sindresorhus/pure
@@ -69,7 +88,7 @@ zi_completion has'cargo'
 zinit snippet https://github.com/rust-lang/cargo/blob/master/src/etc/_cargo
 
 zi_completion has'rustc'
-zinit snippet OMZP::rust
+zinit snippet https://github.com/rust-lang/zsh-config/blob/master/_rust
 
 zi_completion has'docker'
 zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
@@ -119,7 +138,7 @@ zinit light mptre/yank
 zinit light greymd/tmux-xpanes
 
 # NEOVIM
-zinit ice from"gh-r" as"program" bpick"*appimage*" mv"nvim* -> nvim" pick"nvim"
+zinit ice from"gh-r" as"program" bpick"*appimage*" ver"v0.4.3" mv"nvim* -> nvim" pick"nvim"
 zinit light neovim/neovim
 
 ## load more stuff
