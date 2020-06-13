@@ -115,6 +115,7 @@ zinit wait lucid for \
         OMZ::plugins/history-substring-search/history-substring-search.zsh \
   atload"unalias grv" \
   atload"unalias gc" \
+  atload"unalias gm" \
         OMZ::plugins/git/git.plugin.zsh
 
 # too verbose
@@ -254,7 +255,7 @@ zplugin light romkatv/zsh-defer
 zsh-defer +a -p -t 3 -c "source ~/.conda_startup"
 
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -f "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
 [ -f ~/.aliases ] && source ~/.aliases
 
