@@ -40,24 +40,24 @@ zinit wait lucid for \
 PS1=">" # provide a simple prompt till the theme loads
 
 ### THEME ###
-zinit ice depth=1; zinit light-mode lucid wait for \
-    ver"801bfbb2946b10527e75e77838a3657d78cb92e5" \
-    romkatv/powerlevel10k
-# v1.11.0
-
-# Load within zshrc – for the instant prompt
-zinit atload'!source ~/.p10k.zsh' lucid nocd for \
-    romkatv/powerlevel10k
-
-# Load ~/.p10k.zsh when in any other directory
-zinit id-as'normal-prompt' nocd lucid \
-    atload'!source ~/.p10k.zsh; _p9k_precmd' for \
-        zdharma/null
+# zinit ice depth=1; zinit light-mode lucid wait for \
+    # ver"801bfbb2946b10527e75e77838a3657d78cb92e5" \
+    # romkatv/powerlevel10k
+# # v1.11.0
+#
+# # Load within zshrc – for the instant prompt
+# zinit atload'!source ~/.p10k.zsh' lucid nocd for \
+    # romkatv/powerlevel10k
+#
+# # Load ~/.p10k.zsh when in any other directory
+# zinit id-as'normal-prompt' nocd lucid \
+    # atload'!source ~/.p10k.zsh; _p9k_precmd' for \
+        # zdharma/null
 
 # other themes
 
-# zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
-# zinit light sindresorhus/pure
+zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
+zinit light sindresorhus/pure
 
 # zinit wait'!' lucid for \
     # halfo/lambda-mod-zsh-theme
@@ -140,6 +140,10 @@ zinit light greymd/tmux-xpanes
 # NEOVIM
 zinit ice from"gh-r" as"program" bpick"*appimage*" ver"v0.4.3" mv"nvim* -> nvim" pick"nvim"
 zinit light neovim/neovim
+
+# git extras
+zinit ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
+zinit light tj/git-extras
 
 ## load more stuff
 zinit wait lucid for \
