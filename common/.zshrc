@@ -8,6 +8,131 @@ export XDG_CACHE_HOME=${XDG_CACHE_HOME:=~/.cache}
 typeset -g HISTSIZE=500000 SAVEHIST=500000 HISTFILE=~/.zhistory
 
 
+##
+## zinit
+##
+
+## http://zdharma.org/zinit
+source ~/.zinit/bin/zinit.zsh
+
+setopt promptsubst
+
+# Fast-syntax-highlighting & autosuggestions
+zinit wait lucid for \
+  atinit"zicompinit; zicdreplay" \
+      zdharma/fast-syntax-highlighting \
+  atload"_zsh_autosuggest_start" \
+      zsh-users/zsh-autosuggestions \
+  blockf atpull'zinit creinstall -q .' \
+      zsh-users/zsh-completions
+
+
+# too verbose
+# OMZ::plugins/per-directory-history/per-directory-history.zsh \
+# Press ^G (the Control and G keys simultaneously) to toggle between local and global histories. If you would prefer a different shortcut to toggle set the PER_DIRECTORY_HISTORY_TOGGLE environment variable.
+
+PS1=">" # provide a simple prompt till the theme loads
+
+### THEME ###
+zinit ice wait'!' lucid atload'source ~/.p10k.zsh; _p9k_precmd' nocd
+zinit light romkatv/powerlevel10k
+
+# zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
+# zinit light sindresorhus/pure
+
+# zinit wait'!' lucid for \
+    # halfo/lambda-mod-zsh-theme
+     # atload'!_agkozak_precmd' nocd atinit'AGKOZAK_FORCE_ASYNC_METHOD=subst-async' for \
+        # agkozak/agkozak-zsh-theme
+    # OMZT::sorin
+# other themes: avit, sorin,
+
+zinit wait lucid for \
+        OMZ::lib/git.zsh \
+        OMZ::lib/prompt_info_functions.zsh \
+        OMZ::lib/clipboard.zsh \
+        OMZ::plugins/git-prompt/git-prompt.plugin.zsh \
+        OMZ::plugins/common-aliases/common-aliases.plugin.zsh \
+        OMZ::plugins/vi-mode/vi-mode.plugin.zsh \
+        OMZ::plugins/history-substring-search/history-substring-search.zsh \
+  atload"unalias grv gc gm" \
+        OMZ::plugins/git/git.plugin.zsh
+
+# Extensions
+zinit light zinit-zsh/z-a-patch-dl
+
+## Completion block
+zi_completion() {
+    zinit ice lucid wait'5' as'completion' blockf "$@"
+}
+zi_completion has'cargo'
+zinit snippet https://github.com/rust-lang/cargo/blob/master/src/etc/_cargo
+
+zi_completion has'rustc'
+zinit snippet OMZP::rust
+
+zi_completion has'docker'
+zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
+
+zi_completion has'alacritty'
+zinit snippet https://github.com/alacritty/alacritty/blob/master/extra/completions/_alacritty
+
+zi_completion has'wl-copy'
+zinit snippet https://github.com/bugaevc/wl-clipboard/blob/master/completions/zsh/_wl-copy
+
+zi_completion has'wl-paste'
+
+
+## Compile programs
+
+# LS_COLORS Explanation
+zinit ice atclone"dircolors -b LS_COLORS > clrs.zsh" \
+    atpull'%atclone' pick"clrs.zsh" nocompile'!' \
+    atload'zstyle ":completion:*" list-colors “${(s.:.)LS_COLORS}”'
+zinit light trapd00r/LS_COLORS
+
+# Direnv Explanation
+zinit as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' \
+        atpull'%atclone' pick"direnv" src"zhook.zsh" for \
+                direnv/direnv
+
+# # vim
+# zinit ice as"program" atclone"rm -f src/auto/config.cache; ./configure" \
+    # atpull"%atclone" make pick"src/vim"
+# zinit light vim/vim
+
+# junegunn/fzf-bin
+zinit pack'binary' for fzf
+
+# sharkdp/fd
+zinit ice as"command" from"gh-r" mv"fd* -> fd" pick"fd/fd"
+zinit light sharkdp/fd
+
+# sharkdp/bat
+zinit ice as"command" from"gh-r" mv"bat* -> bat" pick"bat/bat"
+zinit light sharkdp/bat
+
+zinit ice as"program" pick"yank" make
+zinit light mptre/yank
+
+# tmux-panes
+zinit light greymd/tmux-xpanes
+
+# NEOVIM
+zinit ice from"gh-r" as"program" bpick"*appimage*" mv"nvim* -> nvim" pick"nvim"
+zinit light neovim/neovim
+
+## load more stuff
+zinit wait lucid for \
+    zdharma/history-search-multi-word \
+  atinit"zicompinit; zicdreplay"  \
+        OMZ::plugins/colorize/colorize.plugin.zsh \
+  as"completion" \
+        OMZ::plugins/urltools/urltools.plugin.zsh \
+        OMZ::plugins/web-search/web-search.plugin.zsh \
+        OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh \
+        OMZ::plugins/git-flow/git-flow.plugin.zsh
+
 #
 # Setopts
 #
@@ -39,12 +164,6 @@ setopt nohup nocheckjobs nobgnice
 #unsetopt share_history
 setopt share_history
 
-## autocompletion and history search
-zstyle ':completion::complete:*' use-cache 1
-zstyle ':completion:*' menu select
-
-# case-insensitive -> partial-word -> substring completion
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
 # access global and local history for each shell
 # https://superuser.com/questions/446594/separate-up-arrow-lookback-for-local-and-global-zsh-history
@@ -85,131 +204,6 @@ zstyle ":plugin:zconvey" greeting "none"
 zstyle ':notify:*' command-complete-timeout 3
 zstyle ':notify:*' notifier plg-zsh-notify
 
-
-
-##
-## zinit
-##
-
-## http://zdharma.org/zinit
-source ~/.zinit/bin/zinit.zsh
-
-setopt promptsubst
-
-# Fast-syntax-highlighting & autosuggestions
-zinit wait lucid for \
- atinit"ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay" \
-    zdharma/fast-syntax-highlighting \
- atload"!_zsh_autosuggest_start" \
-    zsh-users/zsh-autosuggestions \
- blockf \
-    zsh-users/zsh-completions
-
-zinit wait lucid for \
-        OMZ::lib/git.zsh \
-        OMZ::lib/prompt_info_functions.zsh \
-        OMZ::lib/clipboard.zsh \
-        OMZ::plugins/git-prompt/git-prompt.plugin.zsh \
-        OMZ::plugins/common-aliases/common-aliases.plugin.zsh \
-        OMZ::plugins/vi-mode/vi-mode.plugin.zsh \
-        OMZ::plugins/history-substring-search/history-substring-search.zsh \
-  atload"unalias grv gc gm" \
-        OMZ::plugins/git/git.plugin.zsh
-
-# too verbose
-# OMZ::plugins/per-directory-history/per-directory-history.zsh \
-# Press ^G (the Control and G keys simultaneously) to toggle between local and global histories. If you would prefer a different shortcut to toggle set the PER_DIRECTORY_HISTORY_TOGGLE environment variable.
-
-PS1=">" # provide a simple prompt till the theme loads
-
-### THEME ###
-zinit ice depth=1; zinit light romkatv/powerlevel10k
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.dotfiles/common/.p10k.zsh ]] || source ~/.dotfiles/common/.p10k.zsh
-
-# zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
-# zinit light sindresorhus/pure
-
-# zinit wait'!' lucid for \
-    # halfo/lambda-mod-zsh-theme
-     # atload'!_agkozak_precmd' nocd atinit'AGKOZAK_FORCE_ASYNC_METHOD=subst-async' for \
-        # agkozak/agkozak-zsh-theme
-    # OMZT::sorin
-# other themes: avit, sorin,
-
-## Completion block
-zi_completion() {
-    zinit ice lucid wait'5' as'completion' blockf "$@"
-}
-zi_completion has'cargo'
-zinit snippet https://github.com/rust-lang/cargo/blob/master/src/etc/_cargo
-
-zi_completion has'rustc'
-zinit snippet OMZP::rust
-
-zi_completion has'docker'
-zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
-
-zi_completion has'alacritty'
-zinit snippet https://github.com/alacritty/alacritty/blob/master/extra/completions/_alacritty
-
-zi_completion has'wl-copy'
-zinit snippet https://github.com/bugaevc/wl-clipboard/blob/master/completions/zsh/_wl-copy
-
-zi_completion has'wl-paste'
-
-
-# Compiling programs
-
-# LS_COLORS Explanation
-zinit ice atclone"dircolors -b LS_COLORS > clrs.zsh" \
-    atpull'%atclone' pick"clrs.zsh" nocompile'!' \
-    atload'zstyle ":completion:*" list-colors “${(s.:.)LS_COLORS}”'
-zinit light trapd00r/LS_COLORS
-
-# Direnv Explanation
-zinit as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' \
-        atpull'%atclone' pick"direnv" src"zhook.zsh" for \
-                direnv/direnv
-
-# vim
-zinit ice as"program" atclone"rm -f src/auto/config.cache; ./configure" \
-    atpull"%atclone" make pick"src/vim"
-zinit light vim/vim
-
-# junegunn/fzf-bin
-zinit pack'binary' for fzf
-
-# sharkdp/fd
-zinit ice as"command" from"gh-r" mv"fd* -> fd" pick"fd/fd"
-zinit light sharkdp/fd
-
-# sharkdp/bat
-zinit ice as"command" from"gh-r" mv"bat* -> bat" pick"bat/bat"
-zinit light sharkdp/bat
-
-zinit ice as"program" pick"yank" make
-zinit light mptre/yank
-
-# tmux-panes
-zinit light greymd/tmux-xpanes
-
-# NEOVIM
-zinit ice from"gh-r" as"program" bpick"*appimage*" mv"nvim* -> nvim" pick"nvim"
-zinit light neovim/neovim
-
-## load more stuff
-zinit wait lucid for \
-    zdharma/history-search-multi-word \
-  atinit"zicompinit; zicdreplay"  \
-        OMZ::plugins/colorize/colorize.plugin.zsh \
-  as"completion" \
-        OMZ::plugins/urltools/urltools.plugin.zsh \
-        OMZ::plugins/web-search/web-search.plugin.zsh \
-        OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh \
-        OMZ::plugins/git-flow/git-flow.plugin.zsh
-
-
 #
 # TAB COMPLETIONS
 #
@@ -249,15 +243,15 @@ zinit wait lucid light-mode for \
 zplugin light romkatv/zsh-defer
 zsh-defer +a -p -t 3 -c "source ~/.conda_startup"
 
-# 
 POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+setopt HIST_IGNORE_SPACE
 
 export NVM_DIR="$HOME/.nvm"
 [ -f "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
 [ -f ~/.aliases ] && source ~/.aliases
 
-[ -f ~/.dotfiles/common/.gitalias ] && source ~/.dotfiles/common/.gitalias
+[ -f ~/.gitalias ] && source ~/.gitalias
 
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
 
