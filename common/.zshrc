@@ -181,6 +181,7 @@ zinit light vim/vim
 
 # junegunn/fzf-bin
 zinit pack for fzf
+export FZF_BASE="~/.zinit/plugins/junegunn---fzf-bin/fzf"
 zinit ice from"gh-r" as"program"
 zinit light junegunn/fzf-bin
 
