@@ -208,7 +208,6 @@ function dig-reboot() { doctl compute droplet-action reboot $(doctl compute drop
 
 ## Git
 alias g="git"
-source $HOME/.gitalias
 function gtrack () { git ls-files $1 --error-unmatch; echo $? ; }
 
 ## Jupyter

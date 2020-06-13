@@ -73,9 +73,10 @@ zinit wait lucid for \
         OMZ::plugins/git-prompt/git-prompt.plugin.zsh \
         OMZ::plugins/common-aliases/common-aliases.plugin.zsh \
         OMZ::plugins/vi-mode/vi-mode.plugin.zsh \
-        OMZ::plugins/history-substring-search/history-substring-search.zsh \
-  atload"unalias grv gc gm" \
-        OMZ::plugins/git/git.plugin.zsh
+        OMZ::plugins/history-substring-search/history-substring-search.zsh
+  # atload"unalias grv" \
+  # I don't like these aliases
+        # OMZ::plugins/git/git.plugin.zsh
 
 # Extensions
 zinit light zinit-zsh/z-a-patch-dl
