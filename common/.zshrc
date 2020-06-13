@@ -113,9 +113,7 @@ zinit wait lucid for \
         OMZ::plugins/common-aliases/common-aliases.plugin.zsh \
         OMZ::plugins/vi-mode/vi-mode.plugin.zsh \
         OMZ::plugins/history-substring-search/history-substring-search.zsh \
-  atload"unalias grv" \
-  atload"unalias gc" \
-  atload"unalias gm" \
+  atload"unalias grv gc gm" \
         OMZ::plugins/git/git.plugin.zsh
 
 # too verbose
@@ -180,9 +178,7 @@ zinit ice as"program" atclone"rm -f src/auto/config.cache; ./configure" \
 zinit light vim/vim
 
 # junegunn/fzf-bin
-zinit pack for fzf
-zinit ice from"gh-r" as"program"
-zinit light junegunn/fzf-bin
+zinit pack'binary' for fzf
 
 # sharkdp/fd
 zinit ice as"command" from"gh-r" mv"fd* -> fd" pick"fd/fd"
