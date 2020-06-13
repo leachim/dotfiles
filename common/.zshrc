@@ -181,7 +181,6 @@ zinit light vim/vim
 
 # junegunn/fzf-bin
 zinit pack for fzf
-export FZF_BASE="~/.zinit/plugins/junegunn---fzf-bin/"
 zinit ice from"gh-r" as"program"
 zinit light junegunn/fzf-bin
 
@@ -208,13 +207,14 @@ zinit wait lucid for \
     zdharma/history-search-multi-word \
   atinit"zicompinit; zicdreplay"  \
         OMZ::plugins/colorize/colorize.plugin.zsh \
-        OMZ::plugins/fzf/fzf.plugin.zsh \
   as"completion" \
         OMZ::plugins/urltools/urltools.plugin.zsh \
         OMZ::plugins/web-search/web-search.plugin.zsh \
         OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh \
         OMZ::plugins/git-flow/git-flow.plugin.zsh
 
+
+#
 # TAB COMPLETIONS
 #
 
