@@ -413,6 +413,20 @@ function pdhist () {
     source ~/.dotfiles/common/.per-directory-history.zsh ;
 }
 
+function pdstate () {
+    if [ -z "$_per_directory_history_is_global" ]; then
+        echo "GLOBAL";
+        exit 0;
+    fi
+    if $(echo "$_per_directory_history_is_global"); then
+        echo "GLOBAL";
+        exit 0;
+    else
+        echo "LOCAL"
+        exit 0;
+    fi ;
+}
+
 function countdown () {
    date1=$((`date +%s` + $1));
    while [ "$date1" -ne `date +%s` ]; do
