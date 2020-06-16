@@ -121,11 +121,15 @@ elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
 
 elif [ "$(echo $HOSTNAME)" == "login-e-11" ]; then
 
-    if [ -x "$(command -v module)" ]; then
+    MODULEPATH=/usr/share/Modules/modulefiles:/etc/modulefiles:/usr/local/software/spack/current/share/spack/tcl/linux-rhel7-x86_64:/usr/local/software/modulefiles:/usr/local/Cluster-Config/modulefiles:$MODULEPATH
+    MODULESHOME=/usr/share/Modules:$MODULESHOME
+
+    if type module > /dev/null; then
         module load zsh-5.3.1-gcc-5.4.0-u6oz7fw
         export SHELL=`which zsh`
         exec "$SHELL" -l
     fi
+
     set -o ignoreeof
 	export IGNOREEOF=100
 
