@@ -154,7 +154,11 @@ zinit light tj/git-extras
 
 # broot
 zinit ice from"gh-r" as"program" pick"build/x86_64-linux/broot"
-zinit load Canop/broot
+zinit light Canop/broot
+
+# tmux
+zinit ice from"gh-r" as"program" bpick"*[Aa]pp[Ii]mage*" ver"3.0a" mv"tmux* -> tmux" pick"tmux"
+zinit light tmux/tmux
 
 ## load more stuff
 zinit wait lucid for \
