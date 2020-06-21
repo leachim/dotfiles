@@ -152,6 +152,10 @@ zinit light neovim/neovim
 zinit ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
 zinit light tj/git-extras
 
+# broot
+zinit ice from"gh-r" as"program" pick"build/x86_64-linux/broot"
+zinit load Canop/broot
+
 ## load more stuff
 zinit wait lucid for \
     zdharma/history-search-multi-word \
@@ -284,4 +288,3 @@ export NVM_DIR="$HOME/.nvm"
 [ -f ~/.gitalias ] && source ~/.gitalias
 
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
-

@@ -43,8 +43,8 @@ if [ -e ~/.fasd ]; then
 fi
 
 # broot
-if [ -f ~/.cargo/bin/broot ]; then
-    source ~/.broot/br
+if [ -f "$HOME/.config/broot/launcher/bash/br" ]; then
+    source "$HOME/.config/broot/launcher/bash/br"
 fi
 
 # added by travis gem
