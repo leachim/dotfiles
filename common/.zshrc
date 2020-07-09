@@ -153,7 +153,7 @@ zinit ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
 zinit light tj/git-extras
 
 # broot
-zinit ice from"gh-r" as"program" pick"build/x86_64-linux/broot"
+zinit ice from"gh-r" as"program" pick"build/x86_64-linux/broot" ver"v0.18.5"
 zinit light Canop/broot
 
 # tmux
