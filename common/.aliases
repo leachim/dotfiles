@@ -329,7 +329,7 @@ function mpdf-tosvg () { for var in "$@"; do pdf2svg $var ${var%.pdf}.svg ; done
 
 # convert pdf to png
 function mpdf-topng () { for var in "$@"; do pdftoppm $var ${var%.pdf} -png -r 300 -singlefile ; done ; }
-function mpdf-splitToPNG () { for var in "$@"; do pdftk $var burst output ${var%.pdf}_%04d.pdf ; rm -f doc_data.txt; files=(${var%.pdf}_*.pdf); for f in ${files}; do echo $f; pdftoppm $f ${f%.pdf} -png -r 300 -singlefile ; done ; done ; }
+function mpdf-splitToPNG () { for var in "$@"; do pdftk $var burst output ${var%.pdf}_%04d.pdf ; rm -f doc_data.txt; files=(${var%.pdf}_*.pdf); for f in ${files}; do echo $f; pdftoppm $f ${f%.pdf} -png -r 300 -singlefile ; rm -f $f; done ; done ; }
 
 # convert pdf to png, specify resolution
 function mpdf-topng-res () { pdftoppm $1 ${1%.pdf} -png -r $2 -singlefile ; }

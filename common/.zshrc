@@ -127,6 +127,10 @@ zinit as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' \
     # atpull"%atclone" make pick"src/vim"
 # zinit light vim/vim
 
+# fasd
+zinit ice as"program" pick"fasd" make
+zinit light clvv/fasd
+
 # junegunn/fzf-bin
 zinit pack'binary' for fzf
 
@@ -153,7 +157,7 @@ zinit ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
 zinit light tj/git-extras
 
 # broot
-zinit ice from"gh-r" as"program" pick"build/x86_64-linux/broot" ver"v0.18.5"
+zinit ice from"gh-r" as"program" pick"build/x86_64-linux/broot" ver"v0.19.4"
 zinit light Canop/broot
 
 # tmux
@@ -278,7 +282,8 @@ zinit wait lucid light-mode for \
 
 # Conda issue -> avoid long startup time by lazy loading conda environment
 # https://github.com/zdharma/zinit/issues/68
-zplugin light romkatv/zsh-defer
+# zplugin light romkatv/zsh-defer
+zinit light romkatv/zsh-defer
 zsh-defer +a -p -t 3 -c "source ~/.conda_startup"
 
 POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
