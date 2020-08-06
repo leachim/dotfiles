@@ -147,7 +147,7 @@ alias tam="aplay -q $HOME/.dotfiles/files/soft_beep.way"
 
 ###        SLURM CLUSTER              ###
 #########################################
-alias squeue="squeue --format=\"%.18i %.9P %.18j %.8u %.2t %.10M %.6D %R\""
+alias squeue="squeue --format=\"%.18i %.9P %.27j %.8u %.2t %.10M %.6D %R\""
 alias m-squeuei="squeue -u $(whoami) -o \"%.14i %.5j %.2t %.10M %.9l %.5D %16R %5K %3C %o\""
 alias m-squeuea="squeue -o \"%.14i %.5j %.2t %.10M %.9l %.5D %16R %5K %3C %Q %o\""
 squeue-watch () { watch -n 3 -d "squeue -u $(whoami) --format=\"%.14i %.5j %.2t %.10M %.9l %.5D %16R %5K %3C %Q %o\"" ; }
