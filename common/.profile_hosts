@@ -90,11 +90,12 @@ elif [ "$(echo $HOSTNAME | cut -f 1 -d ".")" == "clust1-headnode-1" ]; then
     # module load tmux-2.8-gcc-9.2.0-gwgyxny
     # module load neovim-0.3.4-gcc-9.2.0-26fizq6
     module load zsh-5.4.2-gcc-9.2.0-psefm6q
-    module load git-2.21.0-gcc-9.2.0-6btnbtx
-    module load singularity-3.4.1-gcc-9.2.0-w62nicu
+    module load git-2.27.0-gcc-9.2.0-r4hwrbn
+    module load singularity-3.5.3-gcc-9.2.0-ypqw3gx
 
     export SINGULARITY_CACHEDIR="/mnt/scratchb/fmlab/$USER/Singularity"
     export SINGULARITY_TMPDIR="/mnt/scratchb/fmlab/$USER/Singularity/tmp"
+    # export TMPDIR="/mnt/scratchb/fmlab/$USER/Data/tmp/tmpdir"
 
 	export JAVA_HOME=/usr/lib/jvm/default-java
     export PERL5LIB=/mnt/scratchb/fmlab/$USER/miniconda3/lib/site_perl/5.26.2
