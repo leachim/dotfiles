@@ -66,16 +66,20 @@ elif [ "$HOSTNAME" == "nm14cs004273" ]; then
     set -o ignoreeof
 	export IGNOREEOF=100
 
+    export HOME="/home/$(whoami)"
+
     # use different backup script
     # unalias jour
     # unalias doremi
-    alias doremi="apt-mark showhold && daily-cal && daily-quote"
-    alias jour="bash $HOME/.backup/borg-backup-desktop.sh && sleep 5 && doremi"
+    # alias doremi="apt-mark showhold && daily-cal && daily-quote"
+    # alias jour="bash $HOME/.backup/borg-backup-desktop.sh && sleep 5 && doremi"
     ulimit -s 16384
 
+    # if [[ -z "$DISPLAY" ]] && [[ "$(tty)" = "/dev/tty1" ]]; then
     if [ "$(tty)" = "/dev/tty1" ]; then
        export XKB_DEFAULT_LAYOUT="us,de"
        export XKB_DEFAULT_OPTIONS="grp:alt_shift_toggle"
+       exec startx
     fi
 
 
