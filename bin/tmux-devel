@@ -1,36 +1,36 @@
-#!/bin/sh 
+#!/bin/sh
 
 if [ -z "$2" ]
   then
-    shell="zsh" 
+    shell="zsh"
 else
 	shell="$2"
 fi
 
 # setup session and first window
-tmux new-session -d -s "$1" -n "$1" 
-tmux send-keys "$shell" 'C-m' "clear" 'C-m' "cd $(pwd -P)" 'C-m' "clear" 'C-m' 
+tmux new-session -d -s "$1" -n "$1"
+tmux send-keys "$shell" 'C-m' 'clear' 'C-m' 'cd $(pwd -P)' 'C-m' 'clear' 'C-m'
 # tmux split-window -h
 
 # second window (2)
 if [ "$1" = "desktop" ]; then
   tmux new-window -n control
 elif [ "$1" = "darwin" ]; then
-  tmux new-window -n home 
+  tmux new-window -n home
 elif [ "$1" = "data" ]; then
   tmux new-window -n transfer
 elif [ "$1" = "cpuclust" ]; then
-  tmux new-window -n execute 
+  tmux new-window -n execute
 elif [ "$1" = "clust1" ]; then
-  tmux new-window -n execute 
+  tmux new-window -n execute
 elif [ "$1" = "server" ]; then
   tmux new-window -n run
 else
   tmux new-window -n test
 fi
-tmux send-keys "$shell" "cd $(pwd -P)" 'C-m' "clear" 'C-m' 
-tmux split-window -h 
-tmux send-keys "$shell" "cd $(pwd -P)" 'C-m' "clear" 'C-m' 
+tmux send-keys "$shell" 'C-m' 'clear' "cd $(pwd -P)" 'C-m' "clear" 'C-m'
+tmux split-window -h
+tmux send-keys "$shell" 'C-m' 'clear' "cd $(pwd -P)" 'C-m' "clear" 'C-m'
 
 # # Select pane 1 again
 # tmux select-window -t 2
@@ -48,8 +48,8 @@ tmux select-window -t $1
 tmux selectp -t 1
 
 # third window (3)
-#tmux new-window -n jupyter 
+#tmux new-window -n jupyter
 #tmux send-keys "clear" 'C-m'
 #tmux send-keys "cd ~/current/lab" "C-m" "jupyter lab" 'C-m'
 
-tmux attach-session -d 
+tmux attach-session -d
