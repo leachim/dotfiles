@@ -8,7 +8,6 @@ esac
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-eval "$(fasd --init auto)"
 
 # BASH OPTIONS {{{
 shopt -s cdspell                 # Correct cd typos
