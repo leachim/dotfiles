@@ -149,7 +149,7 @@ zinit light mptre/yank
 zinit light greymd/tmux-xpanes
 
 # NEOVIM
-zinit ice from"gh-r" as"program" bpick"*appimage*" ver"v0.4.3" mv"nvim* -> nvim" pick"nvim"
+zinit ice from"gh-r" as"program" bpick"*appimage*" ver"v0.4.4" mv"nvim* -> nvim" pick"nvim"
 zinit light neovim/neovim
 
 # git extras
@@ -157,7 +157,7 @@ zinit ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
 zinit light tj/git-extras
 
 # broot
-zinit ice from"gh-r" as"program" pick"build/x86_64-linux/broot" ver"v0.19.4"
+zinit ice from"gh-r" as"program" pick"build/x86_64-linux/broot" ver"v1.0.0"
 zinit light Canop/broot
 
 # tmux

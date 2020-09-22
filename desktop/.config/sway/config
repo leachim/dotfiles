@@ -17,13 +17,13 @@ set $secondary DP-1
 
 # reload the configuration file, debugging only
 bindsym $mod+o+Shift reload
-# exit sway (logs you out of your wayland session)
-bindsym $mod+End+Shift exit
+# # exit sway (logs you out of your wayland session)
+# bindsym $mod+End+Shift exit
 # lock screen
 # bindsym --release $mod+Return+Shift exec loginctl lock-sessions
 bindsym $mod+Return+Shift exec "swaylock -te --image=eDP-1:~/.config/sway/animals.png --color=\"#0e2d2a\""
 # suspend
-bindsym $mod+Delete+Shift exec "systemctl suspend"
+# bindsym $mod+Delete+Shift exec "systemctl suspend"
 
 # lock screen when suspending
 exec swayidle -w \
