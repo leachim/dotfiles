@@ -7,7 +7,6 @@ export PATH="/home/$USER/.cargo/bin:$PATH"
 export EDITOR='vim'
 export VISUAL='vim'
 export PAGER='less'
-alias tmux='TERM=xterm-256color tmux'
 
 # create fixed tmux session directory, to restore tmux sessions remotely
 if [ -e ~/.tmux_conf ]; then

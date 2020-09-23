@@ -161,7 +161,7 @@ zinit ice from"gh-r" as"program" pick"build/x86_64-linux/broot" ver"v1.0.0"
 zinit light Canop/broot
 
 # tmux
-zinit ice from"gh-r" as"program" bpick"*[Aa]pp[Ii]mage*" ver"3.1b" mv"tmux* -> tmux" pick"tmux"
+zinit ice from"gh-r" as"program" bpick"*[Aa]pp[Ii]mage*" ver"3.0a" mv"tmux* -> tmux" pick"tmux"
 zinit light tmux/tmux
 
 ## load more stuff
