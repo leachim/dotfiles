@@ -20,10 +20,6 @@ set scrolloff=15
 " do not store global and local values in a session
 " set ssop-=options
 
-" Enable filetype plugins
-filetype plugin on
-filetype indent on
-
 " Leave curser at the point where it was before editing (VimTip1142)
 nmap . .`[
 
@@ -132,15 +128,15 @@ set lbr
 set textwidth=120
 
 " Enable autoindent
-set autoindent
-set nosmartindent
+" set autoindent
+" set nosmartindent
 "Wrap lines
 set wrap
 
 " Show unfinished commands
 set showcmd
 
-filetype indent on
+" filetype indent on
 filetype plugin on
 
 set foldmethod=indent   " fold based on indent level
@@ -186,8 +182,8 @@ augroup configgroup
 augroup END
 
 " add yaml stuffs
-au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldmethod=indent
-autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+" au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldmethod=indent
+" autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 
 " configure expanding of tabs for various file types
 au BufRead,BufNewFile *.py set expandtab

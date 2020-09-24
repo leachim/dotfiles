@@ -180,7 +180,7 @@ alias apm-export="apm list --installed --bare"
 alias apm-import="apm install --packages-file"
 
 ## AWS
-function aws-login () { $(aws ecr get-login --no-include-email); }
+function aws-login () { $(aws ecr get-login-password | docker login --username AWS --password-stdin "$AWS_ACCOUNT" ) ; }
 function ecr-login () { export SINGULARITY_DOCKER_USERNAME=AWS SINGULARITY_DOCKER_PASSWORD=$(aws ecr get-login-password) ; }
 
 ## Docker
