@@ -136,9 +136,6 @@ set wrap
 " Show unfinished commands
 set showcmd
 
-" filetype indent on
-filetype plugin on
-
 set foldmethod=indent   " fold based on indent level
 set foldnestmax=10      " max 10 depth
 set foldenable          " don't fold files by default on open
@@ -605,9 +602,6 @@ autocmd FileType conf,fstab       let b:comment_leader = '# '
 autocmd FileType tex              let b:comment_leader = '% '
 autocmd FileType mail             let b:comment_leader = '> '
 autocmd FileType vim              let b:comment_leader = '" '
-
-filetype plugin indent on
-
 
 """"""""""""""""""""""""""""""
 " => Status line
