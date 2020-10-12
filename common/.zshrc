@@ -157,7 +157,7 @@ zinit ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
 zinit light tj/git-extras
 
 # broot
-zinit ice from"gh-r" as"program" pick"build/x86_64-linux/broot" ver"v1.0.0"
+zinit ice from"gh-r" as"program" pick"build/x86_64-linux/broot" ver"v1.0.2"
 zinit light Canop/broot
 
 # tmux
@@ -297,3 +297,4 @@ export NVM_DIR="$HOME/.nvm"
 [ -f ~/.gitalias ] && source ~/.gitalias
 
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
+

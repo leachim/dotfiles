@@ -163,26 +163,6 @@ augroup vimrc_autocmds
     autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab
     augroup END
 
-augroup configgroup
-    autocmd!
-    autocmd VimEnter * highlight clear SignColumn
-    autocmd BufWritePre *.php,*.py,*.js,*.txt,*.hs,*.java,*.md,*.rb :call <SID>StripTrailingWhitespaces()
-    autocmd BufEnter *.cls setlocal filetype=java
-    autocmd BufEnter *.zsh-theme setlocal filetype=zsh
-    autocmd BufEnter Makefile setlocal noexpandtab
-    autocmd BufEnter *.sh setlocal tabstop=2
-    autocmd BufEnter *.sh setlocal shiftwidth=2
-    autocmd BufEnter *.sh setlocal softtabstop=2
-    " autocmd BufEnter *.py setlocal tabstop=4
-    " autocmd BufEnter *.py setlocal expandtab
-    autocmd BufEnter *.md setlocal ft=markdown
-augroup END
-
-" add yaml stuffs
-" au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldmethod=indent
-" autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
-
-" configure expanding of tabs for various file types
 au BufRead,BufNewFile *.py set expandtab
 au BufRead,BufNewFile *.c set noexpandtab
 au BufRead,BufNewFile *.h set noexpandtab
@@ -351,8 +331,8 @@ colorscheme OceanicNext
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " " Copy to clipboard
-vnoremap  <leader>y  "+y
-nnoremap  <leader>y  "+y
+vnoremap  <leader>y "+y
+nnoremap  <leader>y "+y
 
 " " Paste from clipboard
 nnoremap <leader>p "+p
@@ -415,28 +395,11 @@ nnoremap <S-Tab> <C-w>w
 " Close all the buffers
 "map <leader>ba :bufdo bd<cr>
 
-" nnoremap <leader>m :silent make\|redraw!\|cw<CR>
-" nnoremap <leader>h :A<CR>
-" nnoremap <leader>ev :vsp $MYVIMRC<CR>
-" nnoremap <leader>et :exec ":vsp /Users/dblack/notes/vim/" . strftime('%m-%d-%y') . ".md"<CR>
-" nnoremap <leader>ez :vsp ~/.zshrc<CR>
-" nnoremap <leader>sv :source $MYVIMRC<CR>
-" nnoremap <leader>l :call ToggleNumber()<CR>
-" nnoremap <leader><space> :noh<CR>
-" nnoremap <leader>s :mksession<CR>
-" nnoremap <leader>a :Ag
-" nnoremap <leader>c :SyntasticCheck<CR>:Errors<CR>
-" nnoremap <leader>1 :set number!<CR>
-" nnoremap <leader>d :Make!
-" nnoremap <leader>r :TestFile<CR>
-" nnoremap <leader>g :call RunGoFile()<CR>
-" vnoremap <leader>y "+y
-
 " tabs movement
-nnoremap <C-t>h  :tabfirst<CR>
-nnoremap <C-t>j  :tabnext<CR>
-nnoremap <C-t>k  :tabprev<CR>
-nnoremap <C-t>l  :tablast<CR>
+nnoremap <C-t>h :tabfirst<CR>
+nnoremap <C-t>j :tabnext<CR>
+nnoremap <C-t>k :tabprev<CR>
+nnoremap <C-t>l :tablast<CR>
 
 map <leader>te :tabedit<cr>
 map <leader>tn :tabnext<cr>
@@ -483,8 +446,8 @@ nnoremap <buffer> <leader>p :exec '!python' shellescape(@%, 1)<cr>
 nnoremap <buffer> <leader>o :exec '!julia' shellescape(@%, 1)<cr>
 
 " commenting
-noremap <silent> <leader>nc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
-noremap <silent> <leader>nn :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
+" noremap <silent> <leader>nc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
+" noremap <silent> <leader>nn :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
 
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
@@ -501,11 +464,6 @@ noremap <silent> <leader>nn :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader
 " "nnoremap <silent> <A-Left> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
 "nnoremap <silent> <A-Right> :execute 'silent! tabmove ' . tabpagenr()<CR>
 
-" Let 'tl' toggle between this and the last accessed tab
-" let g:lasttab = 1
-" nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
-" au TabLeave * let g:lasttab = tabpagenr()
-
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
 " map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
@@ -521,10 +479,10 @@ noremap <silent> <leader>nn :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader
 " endtry
 
 " Return to last edit position when opening files (You want this!)
-autocmd BufReadPost *
-      \ if line("'\"") > 0 && line("'\"") <= line("$") |
-      \   exe "normal! g`\"" |
-      \ endif
+" autocmd BufReadPost *
+"      \ if line("'\"") > 0 && line("'\"") <= line("$") |
+"      \   exe "normal! g`\"" |
+"      \ endif
 " Remember info about open buffers on close
 set viminfo^=%
 
@@ -535,13 +493,13 @@ set viminfo^=%
 "vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 " Delete trailing white space on save, useful for Python and CoffeeScript ;)
-func! DeleteTrailingWS()
-  exe "normal mz"
-  %s/\s\+$//ge
-  exe "normal `z"
-endfunc
-autocmd BufWrite *.py :call DeleteTrailingWS()
-autocmd BufWrite *.coffee :call DeleteTrailingWS()
+"func! DeleteTrailingWS()
+"  exe "normal mz"
+"  %s/\s\+$//ge
+"  exe "normal `z"
+"endfunc
+"autocmd BufWrite *.py :call DeleteTrailingWS()
+"autocmd BufWrite *.coffee :call DeleteTrailingWS()
 
 " support snakemake syntax
 au BufNewFile,BufRead Snakefile set syntax=snakemake
@@ -562,14 +520,11 @@ au FileType snakemake let Comment="#"
 " Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<cr>
 
-let g:python_host_prog='/home/schnei01/.anaconda3/bin/python'
-
 " Shortcuts using <leader>
 "map <leader>sn ]s
 "map <leader>sp [s
 "map <leader>sa zg
 "map <leader>s? z=
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Custom commands
@@ -579,8 +534,8 @@ command! Q q
 command! W w
 
 "  " Trim spaces at EOL and retab. I run `:CLEAN` a lot to clean up files.
-command! TEOL %s/\s\+$//
-command! CLEAN retab | TEOL
+"command! TEOL %s/\s\+$//
+"command! CLEAN retab | TEOL
 
 set undofile
 set undodir=~/.vim/undodir
@@ -668,8 +623,8 @@ nnoremap <leader>gl :YcmCompleter GoToDeclaration<CR>
 nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>
 "nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
-let g:ycm_server_keep_logfiles = 1
-let g:ycm_server_log_level = 'debug'
+"let g:ycm_server_keep_logfiles = 1
+"let g:ycm_server_log_level = 'debug'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Nerdtree
@@ -904,7 +859,7 @@ match ExtraWhitespace /\s\+$/
 autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-autocmd BufWinLeave * call clearmatches()
+"autocmd BufWinLeave * call clearmatches()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

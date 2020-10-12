@@ -24,7 +24,7 @@ fi
 ## Shortcuts
 alias lst="ls -lt"
 alias ls="ls --color=auto"
-alias sac="source activate"
+alias sac="conda activate"
 alias logoff="pkill -KILL -u $USER"
 alias takeover="tmux detach -a"
 alias vi="nvim"
