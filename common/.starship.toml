@@ -1,0 +1,77 @@
+# Don't print a new line at the start of the prompt
+add_newline = false
+truncation_length = 8
+
+[line_break]
+disabled = true
+
+# Which is equivalent to
+format = """
+$username\
+$hostname\
+$shlvl\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status\
+$docker_context\
+$julia\
+$python\
+$conda\
+$memory_usage\
+$aws\
+$gcloud\
+$env_var\
+$cmd_duration\
+$custom\
+$line_break\
+$jobs\
+$battery\
+$time\
+$status\
+$character"""
+
+[cmd_duration]
+min_time = 432000
+disabled = false
+
+[directory]
+format = " [$path]($style)[$read_only]($read_only_style)"
+
+[hostname]
+ssh_only = false
+format = "at [$hostname](bold dimmed green):"
+trim_at = "."
+disabled = false
+
+[username]
+style_user = "white bold"
+style_root = "black bold"
+format = "[$user]($style) "
+disabled = false
+show_always = true
+
+[aws]
+format = ''
+disabled = true
+
+[conda]
+format = "[$symbol$environment](dimmed green) "
+
+[docker_context]
+format = "via [🐋 $context](blue bold)"
+
+[gcloud]
+disabled = true
+
+[git_branch]
+symbol = "🌱 "
+format = " on [$symbol$branch]($style) "
+truncation_length = 12
+
+[julia]
+symbol = "∴ "
+
+[singularity]
+format = '[📦 \[$env\]]($style) '

@@ -40,19 +40,9 @@ zinit wait lucid for \
 PS1=">" # provide a simple prompt till the theme loads
 
 ### THEME ###
-zinit ice depth=1; zinit light-mode lucid wait for \
-    ver"v1.13.0" \
-    romkatv/powerlevel10k
-# v1.11.0
-
-# Load within zshrc – for the instant prompt
-zinit atload'!source ~/.p10k.zsh' lucid nocd for \
-    romkatv/powerlevel10k
-
-# Load ~/.p10k.zsh when in any other directory
-zinit id-as'normal-prompt' nocd lucid \
-    atload'!source ~/.p10k.zsh; _p9k_precmd' for \
-        zdharma/null
+# zinit light denysdovhan/spaceship-prompt
+zinit ice from"gh-r" as"command" atload'eval "$(starship init zsh)"'
+zinit load starship/starship
 
 # other themes
 
@@ -80,6 +70,12 @@ zinit wait lucid for \
 
 # Extensions
 zinit light zinit-zsh/z-a-patch-dl
+
+# required for rust + cargo dependencies
+zinit light zinit-zsh/z-a-rust
+# install starship (cargo dependency)
+zinit ice cargo'!starship'
+zinit load zdharma/null
 
 ## Completion block
 zi_completion() {
@@ -285,8 +281,7 @@ zinit wait lucid light-mode for \
 # zplugin light romkatv/zsh-defer
 zinit light romkatv/zsh-defer
 zsh-defer +a -p -t 3 -c "source ~/.conda_startup"
-
-POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+# POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
 setopt HIST_IGNORE_SPACE
 
 export NVM_DIR="$HOME/.nvm"

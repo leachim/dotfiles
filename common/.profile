@@ -7,6 +7,7 @@ export PATH="/home/$USER/.cargo/bin:$PATH"
 export EDITOR='vim'
 export VISUAL='vim'
 export PAGER='less'
+export STARSHIP_CONFIG=~/.starship.toml
 
 # create fixed tmux session directory, to restore tmux sessions remotely
 if [ -e ~/.tmux_conf ]; then

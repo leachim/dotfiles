@@ -244,3 +244,7 @@ if [ -f ~/.miniconda3/bin/conda ]; then
   source ~/.conda_startup
 fi
 
+if [ -f ~/.starship.toml ]; then
+    eval "$(starship init bash)"
+fi
+
