@@ -41,7 +41,7 @@ PS1=">" # provide a simple prompt till the theme loads
 
 ### THEME ###
 zinit ice depth=1; zinit light-mode lucid wait for \
-    ver"v1.12.0" \
+    ver"v1.13.0" \
     romkatv/powerlevel10k
 # v1.11.0
 
