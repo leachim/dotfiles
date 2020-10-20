@@ -57,7 +57,8 @@ format = ''
 disabled = true
 
 [conda]
-format = "[$symbol$environment](dimmed green) "
+format = " [$symbol$environment](dimmed green) "
+ignore_base = false
 
 [docker_context]
 format = "via [🐋 $context](blue bold)"
