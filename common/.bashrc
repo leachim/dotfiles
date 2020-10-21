@@ -236,12 +236,16 @@ if [ -f ~/.aliases ]; then
     source ~/.aliases
 fi
 
+if [ -z "$BASH" ] & [ -f ~/.gitalias ]; then
+    source ~/.gitalias
+fi
+
 if [ -f ~/.anaconda3/bin/conda ]; then
-  source ~/.conda_startup
+  source ~/.conda_startup 2>/dev/null
 fi
 
 if [ -f ~/.miniconda3/bin/conda ]; then
-  source ~/.conda_startup
+  source ~/.conda_startup 2>/dev/null
 fi
 
 if [ -f ~/.starship.toml ]; then
