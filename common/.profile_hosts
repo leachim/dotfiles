@@ -32,7 +32,7 @@ if [ "$HOSTNAME" == "glaux-clio" ]; then
        # export _JAVA_AWT_WM_NONREPARENTING=1
        # export MOZ_ENABLE_WAYLAND=1
        # export GDK_BACKEND=wayland
-       exec env QT_WAYLAND_FORCE_DPI=physical QT_QPA_PLATFORM=wayland-egl CLUTTER_BACKEND=wayland SDL_VIDEODRIVER=wayland BEMENU_BACKEND=wayland MOZ_ENABLE_WAYLAND=1 sway
+       exec env MESA_LOADER_DRIVER_OVERRIDE=i965 QT_WAYLAND_FORCE_DPI=physical QT_QPA_PLATFORM=wayland-egl CLUTTER_BACKEND=wayland SDL_VIDEODRIVER=wayland BEMENU_BACKEND=wayland MOZ_ENABLE_WAYLAND=1 sway
        # exec sway
     fi
 

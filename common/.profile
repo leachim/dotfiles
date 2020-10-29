@@ -26,7 +26,6 @@ fi
 # export DISABLE_FZF_AUTO_COMPLETION="true"
 # Uncomment the following line to disable key bindings (CTRL-T, CTRL-R, ALT-C)
 # export DISABLE_FZF_KEY_BINDINGS="true"
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 if [ -e ~/.fzf ]; then
 	export FZF_DEFAULT_COMMAND='ag --nocolor -g ""'
 	export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
