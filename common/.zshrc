@@ -128,7 +128,7 @@ zinit ice as"program" pick"fasd" make
 zinit light clvv/fasd
 
 # junegunn/fzf-bin
-zinit pack'binary' for fzf
+zinit pack'binary' ver'0.24.2' for fzf
 
 # sharkdp/fd
 zinit ice as"command" from"gh-r" mv"fd* -> fd" pick"fd/fd"
@@ -153,7 +153,7 @@ zinit ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
 zinit light tj/git-extras
 
 # broot
-zinit ice from"gh-r" as"program" pick"build/x86_64-linux/broot" ver"v1.0.4"
+zinit ice from"gh-r" as"program" pick"build/x86_64-linux/broot" ver"v1.0.8"
 zinit light Canop/broot
 
 # tmux

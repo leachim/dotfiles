@@ -22,6 +22,7 @@ if [ -x "$(command -v br)" ]; then
 fi
 
 ## Shortcuts
+alias google-chrome="google-chrome -enable-features=UseOzonePlatform -ozone-platform=wayland"
 alias lst="ls -lt"
 alias ls="ls --color=auto"
 alias sac="conda activate"

@@ -21,14 +21,26 @@ bindsym $mod+o+Shift reload
 # bindsym $mod+End+Shift exit
 # lock screen
 # bindsym --release $mod+Return+Shift exec loginctl lock-sessions
-bindsym $mod+Return+Shift exec "swaylock -te --image=eDP-1:~/.config/sway/animals.png --color=\"#0e2d2a\""
+set $lock_command swaylock --daemonize --ignore-empty-password --show-failed-attempts --image=eDP-1:~/.config/sway/animals.png --color="#0e2d2a"
+# set $lock_command "swaylock -t --image=eDP-1:~/.config/sway/animals.png --color=\"#0e2d2a\" --daemonize --ignore-empty-password --show-failed-attempts"
+
+bindsym $mod+Return+Shift exec $lock_command
+bindsym $mod+End+Shift exec swayidle -w \
+    timeout 1 'swaymsg "output * dpms off"' \
+    timeout 4 "$lock_command" \
+    timeout 3 'if pgrep -x swaylock; then swaymsg "output * dpms off"; fi' \
+    resume 'swaymsg "output * dpms on"; pkill -nx swayidle' \
+    before-sleep "$lock_command"
+
+#"swaylock -te --image=eDP-1:~/.config/sway/animals.png --color=\"#0e2d2a\""
 # suspend
 # bindsym $mod+Delete+Shift exec "systemctl suspend"
 
 # lock screen when suspending
-exec swayidle -w \
-    before-sleep 'loginctl lock-session $XDG_SESSION_ID' \
-    lock 'swaylock -te --color="#0e1d1a"'
+# exec swayidle -w \
+    # timeout 900 'swaymsg "output * dpms off"' \
+    # before-sleep 'loginctl lock-session $XDG_SESSION_ID' \
+    # lock 'swaylock -te --color="#0e1d1a"'
 
 # # lock screen with screensaver timeout
 # exec swayidle -w \
