@@ -571,7 +571,7 @@ proxyvpn () { sudo openvpn --remote streisand.proxy.$(hostname | sed -e "s/[-][[
 
 # route through work
 alias proxywork="ssh desktop -D 8079 -N -C"
-alias proxyrstudio="ssh -Y -N -L localhost:8787:localhost:8787 desktop"
+alias proxyrstudio="ssh -Y -N -L localhost:8787:localhost:8787 -L localhost:8001:localhost:8001 desktop"
 alias proxyjupyter="ssh -Y -N -L localhost:8785:localhost:8888 desktop"
 alias proxyrdocker="ssh -N -L localhost:8786:localhost:8786 desktop"
 

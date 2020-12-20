@@ -41,7 +41,7 @@ PS1=">" # provide a simple prompt till the theme loads
 
 ### THEME ###
 # zinit light denysdovhan/spaceship-prompt
-zinit ice from"gh-r" as"command" atload'eval "$(starship init zsh)"'
+zinit ice from"gh-r" as"command" ver"v0.47.0" atload'eval "$(starship init zsh)"'
 zinit load starship/starship
 
 # other themes

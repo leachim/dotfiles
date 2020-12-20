@@ -1,9 +1,6 @@
 # Don't print a new line at the start of the prompt
-add_newline = false
+add_newline = true
 truncation_length = 8
-
-[line_break]
-disabled = true
 
 # Which is equivalent to
 format = """
@@ -32,12 +29,17 @@ $time\
 $status\
 $character"""
 
+[line_break]
+disabled = true
+
 [cmd_duration]
 min_time = 432000
 disabled = false
 
 [directory]
 format = " [$path]($style)[$read_only]($read_only_style)"
+fish_style_pwd_dir_length = 3
+truncation_length = 3
 
 [hostname]
 ssh_only = false
