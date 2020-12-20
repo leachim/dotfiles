@@ -1,5 +1,5 @@
 # Don't print a new line at the start of the prompt
-add_newline = true
+add_newline = false
 truncation_length = 8
 
 # Which is equivalent to
