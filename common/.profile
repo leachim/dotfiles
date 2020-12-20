@@ -20,9 +20,10 @@ export PAGER='less'
 export STARSHIP_CONFIG=~/.starship.toml
 
 # create fixed tmux session directory, to restore tmux sessions remotely
+export USER=`whoami`
 if [ -e ~/.tmux_conf ]; then
     # mkdir -p $HOME/.tmux_socket;
-    export TMUX_TMPDIR=~/.tmux_socket
+    export TMUX_TMPDIR=/home/$USER/.tmux_socket
 fi
 
 # load arbitrary API environment variables
@@ -59,6 +60,8 @@ fi
 
 # added by travis gem
 [ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
+
+[ -f ~/.aliases ] && source ~/.aliases
 
 [ -f ~/.gitalias ] && source ~/.gitalias
 
