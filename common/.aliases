@@ -53,6 +53,11 @@ alias dun="du -chs | sort -h"
 alias dfn="df -Tha --total"
 #alias webify="mogrify -resize 690\> *.png"
 alias myip="curl http://ipecho.net/plain; echo"
+function myco () {
+    IP=$(curl 'http://ipecho.net/plain' 2>/dev/null) ;
+    # echo $IP ;
+    curl 'http://www.geoplugin.net/json.gp?ip=$IP' 2>/dev/null| jq -r '"\(.geoplugin_city), \(.geoplugin_countryCode)"' ;
+    }
 alias wgetNice="wget --cut-dirs=100 -nH -np -r -c"
 alias mkdir="mkdir -pv"
 alias psn="ps auxf"
