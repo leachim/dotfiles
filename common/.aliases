@@ -108,7 +108,7 @@ alias daily-cal="ncal -A 1 -M -b -w"
 alias upip="conda list | grep \"<pip>\" | awk '{print $1}' | xargs pip install -U"
 
 if ! type "doremi" > /dev/null 2>&1; then
-    alias doremi="apt-mark showhold && sudo apt update && sudo apt upgrade && echo \"\" && weather && echo \"Tage im Mai: $(datediff 12/22/2020)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
+    alias doremi="apt-mark showhold && sudo apt update && sudo apt upgrade && echo \"\" && weather && echo \"Tage im Mai: $(datediff 12/29/2020)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
 fi
 
 alias daily-info="weather && daily-cal && daily-quote"

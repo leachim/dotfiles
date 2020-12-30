@@ -82,8 +82,10 @@ input "1578:16642:MOSART_Semi._2.4G_Wireless_Mouse_Mouse" {
 
 input 1739:0:Synaptics_TM3288-011 {
     natural_scroll enabled
+    tap enabled
+    tap_button_map lrm
     middle_emulation enabled
-    click_method clickfinger
+    click_method button_areas
     accel_profile adaptive
 }
 
