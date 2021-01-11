@@ -30,18 +30,19 @@ zinit wait lucid for \
   atinit"zicompinit; zicdreplay" \
       zdharma/fast-syntax-highlighting \
   blockf atpull'zinit creinstall -q .' \
-      zsh-users/zsh-completions
+      zsh-users/zsh-completions \
+      OMZ::plugins/per-directory-history/per-directory-history.zsh
 
 
 # too verbose
-# OMZ::plugins/per-directory-history/per-directory-history.zsh \
+# OMZ::plugins/per-directory-history/per-directory-history.zsh
 # Press ^G (the Control and G keys simultaneously) to toggle between local and global histories. If you would prefer a different shortcut to toggle set the PER_DIRECTORY_HISTORY_TOGGLE environment variable.
 
 PS1=">" # provide a simple prompt till the theme loads
 
 ### THEME ###
 # zinit light denysdovhan/spaceship-prompt
-zinit ice from"gh-r" as"command" ver"v0.47.0" atload'eval "$(starship init zsh)"'
+zinit ice from"gh-r" as"command" ver"v0.48.0" atload'eval "$(starship init zsh)"'
 zinit load starship/starship
 
 # other themes
@@ -153,7 +154,7 @@ zinit ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
 zinit light tj/git-extras
 
 # broot
-zinit ice from"gh-r" as"program" pick"build/x86_64-linux/broot" ver"v1.0.8"
+zinit ice from"gh-r" as"program" pick"build/x86_64-linux/broot" ver"v1.1.11"
 zinit light Canop/broot
 
 # tmux
