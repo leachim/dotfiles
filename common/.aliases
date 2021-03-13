@@ -108,7 +108,7 @@ alias daily-cal="ncal -A 1 -M -b -w"
 alias upip="conda list | grep \"<pip>\" | awk '{print $1}' | xargs pip install -U"
 
 if ! type "doremi" > /dev/null 2>&1; then
-    alias doremi="apt-mark showhold && sudo apt update && sudo apt upgrade && echo \"\" && weather && echo \"Tage im Mai: $(datediff 12/29/2020)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
+    alias doremi="apt-mark showhold && sudo apt update && sudo apt upgrade && echo \"\" && weather && echo \"Tage im Mai: $(datediff 03/13/2021)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
 fi
 
 alias daily-info="weather && daily-cal && daily-quote"
@@ -582,6 +582,10 @@ alias proxyrdocker="ssh -N -L localhost:8786:localhost:8786 desktop"
 
 # copy only bam files
 alias m-rsync-bam="rsync -zarvP --prune-empty-dirs --include='*/\' --include='*.bam' --exclude='*'"
+
+alias m-connect-ext="nmcli device wifi connect 44:A5:6E:57:23:C6"
+alias m-connect-fre="nmcli device wifi connect AC:F8:CC:02:60:F5"
+alias m-connect-list="nmcli dev wifi list"
 
 ################################
 ###  BACKUP & System updates ###

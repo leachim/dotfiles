@@ -270,7 +270,7 @@ Plug 'terryma/vim-multiple-cursors'
 
 " vim improvements
 Plug 'tpope/vim-repeat'
-"Plug 'tpope/vim-surround' -> conflict with coc.nvim
+Plug 'tpope/vim-surround' " # -> conflict with coc.nvim
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-commentary'
 
