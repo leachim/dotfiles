@@ -25,6 +25,7 @@ fi
 alias google-chrome="google-chrome -enable-features=UseOzonePlatform -ozone-platform=wayland"
 alias lst="ls -lt"
 alias ls="ls --color=auto"
+alias gs="git status"
 alias sac="conda activate"
 alias logoff="pkill -KILL -u $USER"
 alias takeover="tmux detach -a"
@@ -177,6 +178,7 @@ alias vd="zathura *.pdf"
 alias arw="arara *.tex && evince *(.om[1])"
 alias ara="arara *.tex"
 function vm () { pandoc -s -f markdown -t man $1 | man -l - ;}
+function vmd () { pandoc $1 | lynx -stdin ;}
 
 ## Latex stuff
 alias latex-duplicate-labels="zsh -c \"perl -nE 'say $1 if /(\\label[^}]*})/' **/*.tex | sort | uniq -c | sort -n\""

@@ -42,7 +42,7 @@ PS1=">" # provide a simple prompt till the theme loads
 
 ### THEME ###
 # zinit light denysdovhan/spaceship-prompt
-zinit ice from"gh-r" as"command" ver"v0.50.0" atload'eval "$(starship init zsh)"'
+zinit ice from"gh-r" as"command" ver"v0.52.1" atload'eval "$(starship init zsh)"'
 zinit load starship/starship
 
 # other themes
@@ -129,7 +129,7 @@ zinit ice as"program" pick"fasd" make
 zinit light clvv/fasd
 
 # junegunn/fzf-bin
-zinit pack'binary' ver'0.25.1' for fzf
+zinit pack'binary' ver'0.27.0' for fzf
 
 # sharkdp/fd
 zinit ice as"command" from"gh-r" mv"fd* -> fd" pick"fd/fd"
@@ -154,7 +154,7 @@ zinit ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
 zinit light tj/git-extras
 
 # broot
-zinit ice from"gh-r" as"program" pick"build/x86_64-linux/broot" ver"v1.2.1"
+zinit ice from"gh-r" as"program" pick"build/x86_64-linux/broot" ver"v1.3.1"
 zinit light Canop/broot
 
 # tmux
