@@ -10,12 +10,11 @@ if [ -x "$(command -v fasd)" ]; then
     alias f='fasd -f'        # file
     alias sd='fasd -sid'     # interactive directory selection
     alias sf='fasd -sif'     # interactive file selection
-    alias z='fasd_cd -d'     # cd, same functionality as j in autojump
-    alias zz='fasd_cd -d -i' # cd with interactive selection
+    alias zz='fasd_cd -d'     # cd, same functionality as j in autojump
+    alias z='fasd_cd -d -i' # cd with interactive selection
     alias v='f -e vim' # quick opening files with vim
     alias vv='f -e zathura' # quick opening files with zathura
 fi
-alias j='fzf' # fuzzy search
 
 if [ -x "$(command -v br)" ]; then
     alias l="br"
@@ -585,9 +584,10 @@ alias proxyrdocker="ssh -N -L localhost:8786:localhost:8786 desktop"
 # copy only bam files
 alias m-rsync-bam="rsync -zarvP --prune-empty-dirs --include='*/\' --include='*.bam' --exclude='*'"
 
-alias m-connect-ext="nmcli device wifi connect 44:A5:6E:57:23:C6"
+alias m-connect-ext="nmcli device wifi connect 00:5F:67:13:6C:3A"
 alias m-connect-fre="nmcli device wifi connect AC:F8:CC:02:60:F5"
 alias m-connect-list="nmcli dev wifi list"
+alias m-connect-scan="nmcli dev wifi rescan"
 
 ################################
 ###  BACKUP & System updates ###

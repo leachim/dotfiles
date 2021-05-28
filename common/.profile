@@ -38,8 +38,8 @@ if [ -e ~/.fzf ]; then
 fi
 
 # fasd
-if [ command -v COMMAND &> /dev/null ]; then
-# if [ -e ~/.fasd ]; then
+# if [ command -v COMMAND &> /dev/null ]; then
+if [ -e ~/.fasd ]; then
     eval "$(fasd --init auto)"
 fi
 
