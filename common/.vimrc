@@ -299,6 +299,8 @@ call plug#end()
 
 
 " conflict with coc vim tab binding
+let g:latex_to_unicode_keymap = 1
+let g:latex_to_unicode_file_types = ".jl"
 let g:latex_to_unicode_tab = 0
 " unicode latex completion for julia with Control-Q
 inoremap <C-Q> <C-X><C-O>

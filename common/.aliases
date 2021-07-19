@@ -586,6 +586,7 @@ alias m-rsync-bam="rsync -zarvP --prune-empty-dirs --include='*/\' --include='*.
 
 alias m-connect-ext="nmcli device wifi connect 00:5F:67:13:6C:3A"
 alias m-connect-fre="nmcli device wifi connect AC:F8:CC:02:60:F5"
+alias m-connect-new="nmcli device wifi connect"
 alias m-connect-list="nmcli dev wifi list"
 alias m-connect-scan="nmcli dev wifi rescan"
 

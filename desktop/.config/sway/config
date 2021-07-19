@@ -132,8 +132,8 @@ bindsym $mod+Tab focus right
 bindsym $mod+Shift+w focus up
 
 # often changing commands
-bindsym $mod+Shift+Tab exec "wofi -now -show window -font 'Inconsolata 16' -fg '#9f9f9f' -bg '#2c2c2e' -hlfg '#2c2c2e' -hlbg '#ccdc90' -o 85"
-bindsym $mod+q exec "wofi -rnow -show run -font 'Inconsolata 16' -fg '#9f9f9f' -bg '#2c2c2e' -hlfg '#2c2c2e' -hlbg '#ccdc90' -o 85"
+bindsym $mod+Shift+Tab exec "wofi -now -show window -font 'Inconsolata 16' -o 85"
+bindsym $mod+q exec "wofi -rnow -show run -font 'Inconsolata 16' -o 85"
 bindsym $mod+p exec "dmenu_run"
 
 # remove notification
@@ -142,6 +142,11 @@ bindsym $mod+d exec "makoctl dismiss -a"
 # urgency support
 bindsym $mod+u [urgent="oldest"] focus
 
+# For primary clipboard support
+# exec wl-paste -p -t text --watch clipman store --histpath="~/.local/share/clipman-primary.json"
+bindsym $mod+n exec clipman --histpath="~/.local/share/clipman.json" pick --max-items=300 --tool="wofi" --tool-args="-show window --gtk-dark"
+# --histpath=\"~/.local/share/clipman.json\"
+
 #=====================================================================================
 # Load external programs
 #=====================================================================================
@@ -149,8 +154,11 @@ bindsym $mod+u [urgent="oldest"] focus
 # settings
 exec --no-startup-id /usr/bin/gnome-keyring-daemon
 exec --no-startup-id /usr/local/bin/mako
+# exec --no-startup-id dropbox start
 
-exec --no-startup-id dropbox start
+# clipboard manager with history (clipman)
+# https://github.com/yory8/clipman
+exec --no-startup-id wl-paste -t text --watch clipman --histpath="~/.local/share/clipman.json" store --no-persist --max-items=300
 
 # needed for lock service
 exec --no-startup-id systemctl import-environment SWAYSOCK
