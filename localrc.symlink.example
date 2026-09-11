@@ -1,90 +1,24 @@
-# Machine-specific environment variables.
-# Sourced by both bash and zsh. Keep secrets and per-machine config here.
-# This file is symlinked to ~/.localrc — do not commit secrets.
-# Copy to localrc.symlink and fill in values for your machine.
-
-# =============================================
-# Agent-safe variables (exposed to AI agents)
-# Every agent sets AI_AGENT to its own name: Claude Code its own identifier,
-# "codex" and "opencode" from the wrappers in aliases/aliases.symlink.
-# Anything in this section stays visible to them -- put credentials the agent
-# tools themselves need to run here, not below.
-# =============================================
+# Machine-specific, non-secret environment variables.
+# Copy to localrc.symlink; script/bootstrap symlinks it to ~/.localrc.
+#
+# Sourced by bash and zsh, inherited by every child process. Keep credentials
+# out of here -- they go in ~/.secrets/<service> (dir 700, files 600, one file
+# per service) and are loaded on demand:
+#
+#   secrets                     every service, into your interactive shell
+#   secrets openrouter          just that one
+#   claude-op / opencode /      each names the services its tool needs, in a
+#   gemini-api                    subshell
+#   bin/push                    reads ~/.secrets/pushover directly
 
 # --- GitHub ---
-# Personal access token (fine-grained or classic)
-# Generate at: https://github.com/settings/tokens
-# export GH_TOKEN=""
-# export GITHUB_PAT=""        # used by Claude Code MCP github plugin
-# export GH_USER=""           # org/repo for default operations
+# org/repo for default gh operations. The token is stored by `gh auth login`;
+# an exported GH_TOKEN overrides that, so leave it unset.
+# export GH_USER=""
 
-# --- Context7 (Claude Code plugin) ---
-# The context7 MCP server reads CONTEXT7_API_KEY straight from the environment;
-# it must be exported before launching Claude Code. Do NOT set it in
-# claude/settings.json -- values in its "env" block are literal strings, so a
-# "${VAR}" there is passed through unexpanded.
-# Optional: without a key the plugin connects anonymously on shared rate limits.
-# Get one at: https://context7.com/dashboard
-# export CONTEXT7_API_KEY=""
+# --- AWS ---
+# ECR registry account id, used by aws-login.
+# export AWS_ACCOUNT=""
 
-
-# =============================================
-# Per-agent variables (one named agent only)
-# =============================================
-# Exported only when AI_AGENT names that one agent, so a credential a single
-# tool needs does not land in every other agent's environment.
-#
-# A guard here cannot do this by itself: the login shell sources this file
-# before any agent exists, with AI_AGENT unset. It works because the wrappers in
-# aliases/aliases.symlink re-source ~/.localrc in a subshell with AI_AGENT
-# already set -- see opencode(). Claude Code's identifier is versioned
-# (claude-code_<version>_agent), so use a glob if you add a branch for it.
-case "$AI_AGENT" in
-    claude-code*)
-        # Matches both the name claude() exports before exec and the versioned
-        # identifier (claude-code_<version>_agent) Claude Code sets for the shells
-        # it spawns. Requires the re-sourcing in claude() -- a branch alone would
-        # reach nested shells only, never the claude process itself.
-        # export SOME_CLAUDE_ONLY_KEY=""
-        ;;
-    opencode)
-        # Read by opencode/opencode.jsonc as {env:OR_OPENCODE_API_KEY}.
-        # Separate from OR_API_KEY, which claude-op uses.
-        # Get one at: https://openrouter.ai/keys
-        # export OR_OPENCODE_API_KEY=""
-        ;;
-esac
-
-# =============================================
-# Restricted variables (hidden from AI agents)
-# Skipped whenever AI_AGENT is set to anything non-empty.
-# =============================================
-# Any non-empty AI_AGENT means an agent is driving this shell. Each tool sets its
-# own name -- Claude Code its own identifier, "codex" and "opencode" from the
-# wrappers in aliases/aliases.symlink -- so test for "set at all", never for one
-# specific value. Set AI_AGENT=0 to force the human path.
-if [ -z "$AI_AGENT" ] || [ "$AI_AGENT" = "0" ]; then
-
-    # --- Pushover (push notifications) ---
-    # Do NOT export these. bin/push reads ~/.secrets/pushover (chmod 600) at call time.
-    # Anything exported here is inherited by every agent you launch -- the AI_AGENT
-    # guard cannot help, it runs before the agent exists. Keys: https://pushover.net/apps/build
-
-    # --- Slack ---
-    # Incoming webhook URL suffix (after hooks.slack.com/services/)
-    # Create at: https://api.slack.com/messaging/webhooks
-    # export NOTIFICATION_HOOK=""
-
-    # --- Google Gemini ---
-    # API key from: https://aistudio.google.com/apikey
-    # export GEMINI_API_KEY=""
-
-    # --- AWS ---
-    # ECR account ID for docker login
-    # export AWS_ACCOUNT=""
-
-    # --- Anthropic ---
-    # export ANTHROPIC_API_KEY=""
-
-    :  # placeholder — remove when you uncomment exports above
-fi
+# --- Claude Code ---
+export CLAUDE_CODE_NO_FLICKER=1

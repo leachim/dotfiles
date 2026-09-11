@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+#
+# Refresh symlinks after a pull. Idempotent, non-interactive, no package updates.
+#
+#   git pull && script/link
+
+set -e
+cd "$(dirname "$0")"/..
+DOTFILES_ROOT="$(pwd -P)"
+BACKUP_DIR="$HOME/.dotfiles_backup/$(date +%Y%m%d_%H%M%S)"
+
+info ()    { printf "\r  [ \033[00;34m..\033[0m ] %s\n" "$1"; }
+success () { printf "\r\033[2K  [ \033[00;32mOK\033[0m ] %s\n" "$1"; }
+
+link_file () {
+  local src=$1 dst=$2
+  if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$src" ]; then
+    return
+  fi
+  if [ -e "$dst" ] || [ -L "$dst" ]; then
+    mkdir -p "$BACKUP_DIR"
+    mv "$dst" "$BACKUP_DIR/$(basename "$dst")"
+    success "backed up $dst"
+  fi
+  ln -s "$src" "$dst"
+  success "linked $(basename "$src")"
+}
+
+info "refreshing *.symlink"
+for src in $(find -H "$DOTFILES_ROOT" -maxdepth 2 -name '*.symlink' -not -path '*.git*'); do
+  link_file "$src" "$HOME/.$(basename "${src%.*}")"
+done
+
+# Per-tool config linking. Each installer is idempotent and only links what the
+# host already has; claude/install.sh also folds back a settings.json that was
+# replaced by a regular file.
+for installer in claude codex opencode; do
+  script="$DOTFILES_ROOT/$installer/install.sh"
+  [ -f "$script" ] || continue
+  info "$installer config"
+  if [ -x "$script" ]; then "$script"; else bash "$script"; fi
+done
+
+[ -d "$BACKUP_DIR" ] && info "replaced files backed up to $BACKUP_DIR"
+success "symlinks up to date"

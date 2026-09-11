@@ -12,8 +12,9 @@
   "$schema": "https://opencode.ai/config.json",
 
   // OpenRouter. The key itself is never stored here — it is read at startup
-  // from $OR_OPENCODE_API_KEY, which belongs in the agent-safe section of
-  // ~/.localrc. Resolves to "" if unset, so opencode still starts.
+  // from $OR_OPENCODE_API_KEY, which belongs in ~/.secrets and is loaded into
+  // the environment by the opencode() wrapper. Resolves to "" if unset, so
+  // opencode still starts.
   "provider": {
     "openrouter": {
       "options": { "apiKey": "{env:OR_OPENCODE_API_KEY}" }
@@ -29,24 +30,31 @@
   "permission": {
     "edit": "allow",
     "webfetch": "allow",
+
+    // Credential files are not readable. grep gets the same list: searching a
+    // file returns its contents just as reading it does.
+    "read": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.secrets": "deny",
+      "*.secrets.*": "deny",
+      "*.secrets/*": "deny"
+    },
+    "grep": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.secrets": "deny",
+      "*.secrets.*": "deny",
+      "*.secrets/*": "deny"
+    },
     "bash": {
       "*": "allow",
 
-      // The user does all commits and pushes themselves.
-      "git commit *": "ask",
-      "git push *": "ask",
-
-      // Destructive git operations.
-      "git reset --hard*": "ask",
-      "git checkout *": "ask",
-      "git restore *": "ask",
-      "git stash*": "ask",
-
       // Destructive filesystem operations.
-      "rm *": "ask",
+      "rm -r *": "ask",
       "rmdir *": "ask",
-      "mv *": "ask",
-      "chmod *": "ask",
 
       // Irreversible GitHub operations.
       "gh pr close*": "ask",
@@ -55,7 +63,6 @@
 
       // SLURM job submission always needs explicit per-invocation approval.
       "srun *": "ask",
-      "sbatch *": "ask",
 
       // Privilege escalation and host control.
       "sudo *": "deny",

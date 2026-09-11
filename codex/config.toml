@@ -9,51 +9,33 @@
 model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 
-# Mark shells codex spawns as agent-driven, so ~/.localrc and hosts/*.sh skip
-# exporting restricted secrets and skip slow cluster init. The codex() wrapper
-# in aliases/aliases.symlink sets this too; this covers codex started elsewhere.
+# Deny reads of credential files. Sandbox mode alone does not do this: every
+# mode permits reads outside the workspace, so the filesystem deny list is what
+# blocks them. Globs, not absolute paths, so the same config works on the
+# cluster where $HOME differs.
+default_permissions = "no-credentials"
+
+# Mark shells codex spawns as agent-driven, so hosts/*.sh skip slow cluster init.
+# The codex() wrapper in aliases/aliases.symlink sets this too; this covers codex
+# started elsewhere.
 [shell_environment_policy]
 set = { AI_AGENT = "codex" }
 
+[permissions.no-credentials]
+description = "Workspace defaults, minus credential files."
+extends = ":workspace"
+
+[permissions.no-credentials.filesystem]
+# Paths must be absolute, ~/-relative, or :-prefixed -- codex rejects bare globs.
+"~/**/.env" = "deny"
+"~/**/.env.*" = "deny"
+"~/**/*.env" = "deny"
+"~/**/.secrets" = "deny"
+"~/**/.secrets.*" = "deny"
+"~/**/.secrets/**" = "deny"
+
 # Trusted projects. Entries are per-machine; ones whose path does not exist on
 # the current host are simply inert, so the union across machines is harmless.
-[projects."/Users/michaes"]
-trust_level = "trusted"
-
-[projects."/Users/michaes/.dotfiles"]
-trust_level = "trusted"
-
-[projects."/Users/michaes/Github/VoiceInk"]
-trust_level = "trusted"
-
-[projects."/Users/michaes/Github/homeassistant"]
-trust_level = "trusted"
-
-[projects."/Users/michaes/Downloads/Reviews"]
-trust_level = "trusted"
-
-[projects."/Users/michaes/Downloads/original_performance_takehome_2"]
-trust_level = "trusted"
-
-[projects."/cluster/home/michaes/.dotfiles"]
-trust_level = "trusted"
-
-[projects."/cluster/home/michaes/CoRA"]
-trust_level = "trusted"
-
-[projects."/cluster/home/michaes/hyperion"]
-trust_level = "trusted"
-
-[projects."/home/michaes/hyperion"]
-trust_level = "trusted"
-
-[projects."/users/mschneider/CoRA"]
-trust_level = "trusted"
-
-[projects."/users/mschneider/niobe"]
-trust_level = "trusted"
-
-# Codex-managed bookkeeping below; it rewrites these itself.
 [notice.model_migrations]
 "gpt-5.2-codex" = "gpt-5.3-codex"
 "gpt-5.3-codex" = "gpt-5.4"
@@ -62,4 +44,14 @@ trust_level = "trusted"
 [tui.model_availability_nux]
 "gpt-5.5" = 4
 "gpt-5.6-sol" = 2
-gpt-6-astra = 1
+gpt-6-astra = 3
+
+[desktop]
+followUpQueueMode = "steer"
+conversationDetailMode = "STEPS_COMMANDS"
+ambient-suggestions-enabled = false
+[mcp_servers.computer-use]
+command = "./Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"
+args = ["mcp"]
+cwd = "."
+enabled = false

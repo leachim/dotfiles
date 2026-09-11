@@ -26,20 +26,20 @@ storing it:
 "provider": { "openrouter": { "options": { "apiKey": "{env:OR_OPENCODE_API_KEY}" } } }
 ```
 
-Set `OR_OPENCODE_API_KEY` in the **agent-safe** section of `~/.localrc`. It has to
-be agent-safe: the `opencode()` wrapper sets `AI_AGENT`, and the restricted section
-of `~/.localrc` is skipped for any agent shell, so a key placed there would never
-reach opencode. It resolves to `""` when unset, so opencode still starts.
+Set `OR_OPENCODE_API_KEY` in `~/.secrets/opencode`. The `opencode()` wrapper is
+a subshell running `secrets opencode`, so opencode's environment gets that one
+key and nothing else. It resolves to `""` when unset, so opencode still starts.
 
-`OR_OPENCODE_API_KEY` is deliberately separate from `OR_API_KEY`, which the
-`claude-op` function uses for Claude Code via Cloudflare AI Gateway.
+`OR_OPENCODE_API_KEY` is separate from `OR_API_KEY`, which `claude-op` uses for
+Claude Code via Cloudflare AI Gateway.
 
 ## AI_AGENT
 
 opencode has no `env` key in its config, so the `opencode()` wrapper in
-`aliases/aliases.symlink` sets `AI_AGENT=opencode`. That makes `~/.localrc` and
-`hosts/*.sh` withhold restricted secrets and skip slow cluster init in opencode's
-shells. Launching the binary directly, bypassing the wrapper, skips this.
+`aliases/aliases.symlink` sets `AI_AGENT=opencode`. That makes `hosts/*.sh` skip
+slow cluster init in opencode's shells. Launching the binary directly, bypassing
+the wrapper, skips this and also skips loading `~/.secrets/opencode`, so
+opencode starts without its OpenRouter key.
 
 ## Adding an agent
 

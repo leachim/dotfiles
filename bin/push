@@ -1,15 +1,8 @@
 #!/bin/bash
 # Send push notifications via Pushover API
 #
-# Credentials are read from a file, NOT inherited from the environment.
-# ~/.localrc cannot hide them from an agent: it is sourced by the login shell
-# before any agent exists, so anything it exports is inherited by every child --
-# claude included -- no matter how the AI_AGENT guard is written. Keeping the
-# tokens in a 600 file read at call time means they are never in any process
-# environment, and the Claude Code hooks still work on every launch path.
-#
-# Override the location with PUSHOVER_CREDENTIALS. Pre-set env vars win, so
-# one-off overrides still work.
+# Credentials are read from ~/.secrets/pushover at call time; nothing exports
+# them. Override the location with PUSHOVER_CREDENTIALS. Pre-set env vars win.
 
 PUSHOVER_CREDENTIALS="${PUSHOVER_CREDENTIALS:-$HOME/.secrets/pushover}"
 

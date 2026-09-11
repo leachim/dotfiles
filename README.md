@@ -30,6 +30,11 @@ Bootstrap will prompt you for:
 
 ## Updating
 
+After pulling on a machine that is already set up, run `script/link`. It refreshes
+the `*.symlink` files and re-runs the claude/codex/opencode config linkers, so new
+files in this repo (a new skill, a new config) get linked. It is idempotent,
+non-interactive, and installs no packages.
+
 Run `script/update` to update an existing installation. It refreshes symlinks, then
 updates whatever it finds installed: Homebrew, rustup and cargo binaries, vim/nvim
 plugins, Oh My Zsh, starship (Linux) and pixi. Anything absent is skipped, so it is
@@ -47,7 +52,7 @@ re-run the optional installers -- use `script/install` for those.
 ├── autocompletion/    Shell completion scripts
 ├── bash/              Bash config (bash_profile, bashrc)
 ├── bin/               Executables added to $PATH (dot, utilities)
-├── claude/            Claude Code config (CLAUDE.md, settings.base.json)
+├── claude/            Claude Code config (CLAUDE.md, settings.json)
 ├── codex/             Codex CLI config (config.toml)
 ├── opencode/          opencode config (opencode.jsonc, agents, commands)
 ├── docker/            Docker aliases (*.zsh, auto-sourced)
@@ -144,15 +149,15 @@ agents and slash commands -- see `opencode/README.md`.
 
 No credentials are tracked. Each machine authenticates on its own:
 `~/.local/share/opencode/auth.json` for opencode, and the respective login flow
-for the others. To use OpenRouter with opencode, set `OR_OPENCODE_API_KEY` in the
-agent-safe section of `~/.localrc`; `opencode.jsonc` reads it as
-`{env:OR_OPENCODE_API_KEY}` and never stores the key itself.
+for the others. To use OpenRouter with opencode, set `OR_OPENCODE_API_KEY` in
+`~/.secrets/opencode`; the `opencode()` wrapper loads that file in a subshell and
+`opencode.jsonc` reads it as `{env:OR_OPENCODE_API_KEY}`, never storing the key.
 
 #### AI_AGENT
 
-`AI_AGENT` marks a shell as agent-driven and names the tool. `~/.localrc` and
-`hosts/*.sh` check it to skip exporting restricted secrets (Pushover, Slack) and
-to skip slow cluster module loads.
+`AI_AGENT` marks a shell as agent-driven and names the tool. `hosts/*.sh` check
+it to skip slow cluster module loads. It does not gate credentials — see
+[Credentials](#credentials).
 
 | Tool | Value | Set by |
 |------|-------|--------|
@@ -161,16 +166,14 @@ to skip slow cluster module loads.
 | opencode | `opencode` | `opencode()` wrapper in `aliases/aliases.symlink` |
 
 The checks test whether `AI_AGENT` is set at all, not for one specific value,
-because the tools name themselves differently. This matters: the checks used to
-compare against exactly `1`, which Claude Code's own identifier never matches, so
-they failed open and exported the restricted secrets into every Claude Code
-session. Set `AI_AGENT=0` to force the human path.
+because the tools name themselves differently. Set `AI_AGENT=0` to force the
+human path.
 
 Verify from inside an agent session:
 
 ```sh
 echo "$AI_AGENT"                       # names the tool
-echo "${PUSHOVER_API_TOKEN:-hidden}"   # should print: hidden
+env | grep -cE '_(TOKEN|KEY)='         # should print: 0
 ```
 
 ### Machine roles
@@ -189,11 +192,33 @@ Add new roles by creating a file in `hosts/` and selecting it during bootstrap.
 
 ### Per-machine overrides
 
-For variables specific to a single machine (API keys, one-off paths), use `~/.localrc`. It is sourced by zsh and not tracked in git.
+Non-secret per-machine variables (one-off paths, feature flags, account ids) go
+in `~/.localrc`. It is sourced by bash and zsh, inherited by every child
+process, and not tracked. See `localrc.symlink.example`.
 
-### Private environment
+### Credentials
 
-API keys and secrets go in `~/.dotfiles/private/env` (gitignored). Sourced by `profile.symlink`.
+Credentials go in `~/.secrets/<service>` — one file per service, dir 700, files
+600, outside the repo. Nothing exports them, so they are absent from a shell
+until asked for:
+
+```sh
+secrets                 # every service, into your interactive shell
+secrets openrouter      # just that one
+```
+
+| File | Used by |
+|------|---------|
+| `~/.secrets/cloudflare` | `claude-op`, wrangler |
+| `~/.secrets/openrouter` | `claude-op` |
+| `~/.secrets/opencode` | `opencode()` |
+| `~/.secrets/gemini` | `gemini-api` |
+| `~/.secrets/pushover` | `bin/push`, which reads the file directly |
+| `~/.secrets/github` | nothing — drop it once `gh auth login` is in use |
+
+Each wrapper names only the services its tool needs, so no tool sees another
+tool's keys. `claude/settings.json` denies Claude Code read access to `.env` and
+`.secrets` files.
 
 ## Platform Support
 

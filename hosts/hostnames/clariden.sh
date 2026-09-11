@@ -25,7 +25,8 @@ if [ -z "$AI_AGENT" ] || [ "$AI_AGENT" = "0" ]; then
 fi
 
 # Podman-based container runtime (no Docker daemon on Clariden)
-function aws-login () { aws ecr get-login-password | podman login --username AWS --password-stdin "$AWS_ACCOUNT" ; }
+# AWS_ACCOUNT is an ECR registry account id, set in ~/.localrc.
+aws-login() { aws ecr get-login-password | podman login --username AWS --password-stdin "$AWS_ACCOUNT" ; }
 alias d="podman"
 alias dima="podman images"
 alias dim="podman images -f dangling=false"

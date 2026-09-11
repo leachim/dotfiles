@@ -27,13 +27,36 @@ backup_claude_item () {
     fi
 }
 
+# settings.json is symlinked, so UI changes land in the repo and show up in
+# `git diff`. The whole file is tracked, machine-specific keys included (model,
+# effortLevel, theme, enabledPlugins, autoMode) -- expect those to churn between
+# machines.
+#
+# Claude Code may rewrite settings.json with a temp-file+rename, replacing the
+# symlink with a regular file. When that has happened, copy it back into the repo
+# and re-link rather than backing it up and discarding it. Re-run this script to
+# reattach.
+absorb_and_link () {
+    src=$1
+    dst=$2
+    if [ ! -L "$dst" ] && [ -f "$dst" ]; then
+        cp "$dst" "$src"
+        echo "  Absorbed $dst into $src (it had been replaced by a regular file)"
+        rm "$dst"
+    fi
+}
+
 # Symlink files
-for file in CLAUDE.md; do
+for file in CLAUDE.md settings.json; do
     src="$DOTFILES_CLAUDE/$file"
     dst="$CLAUDE_DIR/$file"
 
     if [ ! -f "$src" ]; then
         continue
+    fi
+
+    if [ "$file" = settings.json ]; then
+        absorb_and_link "$src" "$dst"
     fi
 
     if [ -L "$dst" ]; then
@@ -64,40 +87,3 @@ for dir in commands agents skills; do
     ln -s "$src" "$dst"
     echo "  Linked $src -> $dst"
 done
-
-# settings.json is NOT symlinked. Claude Code owns that file -- /model, /effort,
-# /config, plugin changes and the learned autoMode environment all rewrite it, and
-# the rewrite is an atomic temp-file+rename that silently replaces a symlink with a
-# regular file. (Evidence: CLAUDE.md, agents, skills and commands were all still
-# symlinks here while settings.json was not, with no .backup beside it.)
-#
-# So dotfiles owns a SUBSET of keys instead. settings.base.json is authoritative for
-# every top-level key it DECLARES; a key it does not declare is not owned and is
-# left untouched (model, effortLevel, theme, enabledPlugins, the learned autoMode
-# environment). To clear a key rather than leave it stale, declare it empty -- that
-# is why "env" is {} here: AI_AGENT in it is dead (Claude Code sets its own, and
-# claude() names it at launch) and CONTEXT7_API_KEY="${CONTEXT7_API}" is the
-# literal-string bug b31aa2d documented; that one belongs in ~/.localrc.
-merge_claude_settings () {
-    src="$DOTFILES_CLAUDE/settings.base.json"
-    dst="$CLAUDE_DIR/settings.json"
-
-    [ -f "$src" ] || return 0
-    if ! command -v jq > /dev/null 2>&1; then
-        echo "  settings.base.json needs jq to merge -- skipped"
-        return 0
-    fi
-    [ -f "$dst" ] || echo '{}' > "$dst"
-
-    owned=$(jq -c 'keys' "$src")
-    if jq -s --argjson owned "$owned" \
-        '(.[0] | delpaths([$owned[] | [.]])) * .[1]' "$dst" "$src" > "$dst.tmp"; then
-        mv "$dst.tmp" "$dst"
-        echo "  Merged $(echo "$owned" | tr -d '[]"' ) into $dst"
-    else
-        rm -f "$dst.tmp"
-        echo "  Failed to merge settings -- left $dst untouched"
-    fi
-}
-
-merge_claude_settings

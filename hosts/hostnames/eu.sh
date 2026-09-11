@@ -31,7 +31,8 @@ if [ -n "$BASH_VERSION" ]; then
     fi
 fi
 
-alias gemini-api="GEMINI_API_KEY=\$GEMINI_API_KEY gemini"
+# Loads GEMINI_API_KEY from ~/.secrets/gemini for this one process.
+gemini-api() ( secrets gemini; command gemini "$@" )
 
 _dotfiles_is_login_shell=false
 if [ -n "$BASH_VERSION" ]; then

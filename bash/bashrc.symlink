@@ -246,31 +246,6 @@ export NVM_DIR="$HOME/.config/nvm"
 # opencode (installed per-machine; path added by hosts/*.sh where present)
 [ -d "$HOME/.opencode/bin" ] && export PATH="$HOME/.opencode/bin:$PATH"
 
-# claude/opencode crashes on the login nodes write multi-GB core_<host>_<pid> files
-# into the cwd (core_pattern=core_%h_%p, login ulimit -c unlimited). The sbatch scripts
-# already run `ulimit -c 0`; that cannot reach an interactive process, so shadow the binary
-# with a function that does. `command` skips the function for callers that set it themselves.
-claude() {
-    (
-        # Inside the subshell so the limit dies with it. Raising a soft limit back
-        # is allowed, but silently lowering it for the rest of an interactive shell
-        # is a surprise nobody asked for.
-        ulimit -c 0 2>/dev/null || true
-
-        # Claude Code names itself only for the shells it spawns -- its own process
-        # environ has no AI_AGENT (verified: /proc/<claude>/environ). So name it here,
-        # before exec, which is what lets the per-agent `case` in ~/.localrc gate a
-        # key to Claude Code. Re-sourcing with the name set is the whole mechanism;
-        # the login shell could not do it, it ran before any agent existed.
-        # `claude-code*` in that case block matches both this and the versioned
-        # identifier (claude-code_<version>_agent) seen in nested shells.
-        export AI_AGENT=claude-code
-        [ -r ~/.localrc ] && . ~/.localrc
-
-        agent_env claude "$@"
-    )
-}
-
 # Codex installer (was hardcoded to /users/mschneider/.local/bin -- another host)
 [ -d "$HOME/.local/bin" ] && export PATH="$HOME/.local/bin:$PATH"
 

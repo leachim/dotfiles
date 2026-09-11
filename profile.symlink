@@ -32,11 +32,6 @@ export CLUSTER_NAME
 export TMUX_TMPDIR="$HOME/.tmux_server/$CLUSTER_NAME"
 mkdir -p "$TMUX_TMPDIR"
 
-# load arbitrary API environment variables
-if [ -f ~/.dotfiles/private/env ]; then
-    source ~/.dotfiles/private/env
-fi
-
 [ -f ~/.aliases ] && source ~/.aliases
 
 [ -f ~/.gitaliases ] && source ~/.gitaliases

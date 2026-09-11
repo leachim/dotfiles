@@ -1,4 +1,23 @@
 {
+  "model": "opus[1m]",
+  "enabledPlugins": {
+    "code-review": false,
+    "codex@openai-codex": true
+  },
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "xhigh",
+  "pluginConfigs": {},
+  "autoUpdatesChannel": "latest",
+  "skipWorkflowUsageWarning": true,
+  "theme": "dark",
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true,
+  "autoMode": {
+    "soft_deny": [
+      "$defaults"
+    ],
+    "environment": []
+  },
   "permissions": {
     "allow": [
       "Bash(awk:*)",
@@ -45,17 +64,24 @@
       "Bash(shutdown:*)",
       "Bash(su:*)",
       "Bash(sudo:*)",
-      "Bash(systemctl:*)"
+      "Bash(systemctl:*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/*.env)",
+      "Read(~/.env)",
+      "Read(~/.env.*)",
+      "Read(**/.secrets)",
+      "Read(**/.secrets.*)",
+      "Read(**/.secrets/**)",
+      "Read(**/*.secrets)",
+      "Read(~/.secrets)",
+      "Read(~/.secrets.*)",
+      "Read(~/.secrets/**)"
     ],
     "ask": [
-      "Bash(chmod:*)",
       "Bash(gh pr close:*)",
       "Bash(gh pr merge:*)",
-      "Bash(git checkout:*)",
-      "Bash(git reset --hard:*)",
-      "Bash(git restore:*)",
-      "Bash(mv:*)",
-      "Bash(rm:*)",
+      "Bash(rm -r:*)",
       "Bash(rmdir:*)",
       "Bash(srun:*)"
     ],
