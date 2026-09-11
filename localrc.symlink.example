@@ -28,12 +28,32 @@
 # export CONTEXT7_API_KEY=""
 
 
-# --- OpenRouter (opencode) ---
-# Read by opencode/opencode.jsonc as {env:OR_OPENCODE_API_KEY}.
-# Must stay agent-safe: opencode runs with AI_AGENT set and cannot authenticate
-# without it. Separate from OR_API_KEY, which claude-op uses.
-# Get one at: https://openrouter.ai/keys
-# export OR_OPENCODE_API_KEY=""
+# =============================================
+# Per-agent variables (one named agent only)
+# =============================================
+# Exported only when AI_AGENT names that one agent, so a credential a single
+# tool needs does not land in every other agent's environment.
+#
+# A guard here cannot do this by itself: the login shell sources this file
+# before any agent exists, with AI_AGENT unset. It works because the wrappers in
+# aliases/aliases.symlink re-source ~/.localrc in a subshell with AI_AGENT
+# already set -- see opencode(). Claude Code's identifier is versioned
+# (claude-code_<version>_agent), so use a glob if you add a branch for it.
+case "$AI_AGENT" in
+    claude-code*)
+        # Matches both the name claude() exports before exec and the versioned
+        # identifier (claude-code_<version>_agent) Claude Code sets for the shells
+        # it spawns. Requires the re-sourcing in claude() -- a branch alone would
+        # reach nested shells only, never the claude process itself.
+        # export SOME_CLAUDE_ONLY_KEY=""
+        ;;
+    opencode)
+        # Read by opencode/opencode.jsonc as {env:OR_OPENCODE_API_KEY}.
+        # Separate from OR_API_KEY, which claude-op uses.
+        # Get one at: https://openrouter.ai/keys
+        # export OR_OPENCODE_API_KEY=""
+        ;;
+esac
 
 # =============================================
 # Restricted variables (hidden from AI agents)
@@ -46,9 +66,9 @@
 if [ -z "$AI_AGENT" ] || [ "$AI_AGENT" = "0" ]; then
 
     # --- Pushover (push notifications) ---
-    # Create app + get keys at: https://pushover.net/apps/build
-    # export PUSHOVER_API_TOKEN=""
-    # export PUSHOVER_USER_KEY=""
+    # Do NOT export these. bin/push reads ~/.secrets/pushover (chmod 600) at call time.
+    # Anything exported here is inherited by every agent you launch -- the AI_AGENT
+    # guard cannot help, it runs before the agent exists. Keys: https://pushover.net/apps/build
 
     # --- Slack ---
     # Incoming webhook URL suffix (after hooks.slack.com/services/)

@@ -1,9 +1,26 @@
 #!/bin/bash
 # Send push notifications via Pushover API
-# Requires: PUSHOVER_API_TOKEN, PUSHOVER_USER_KEY in ~/.localrc
+#
+# Credentials are read from a file, NOT inherited from the environment.
+# ~/.localrc cannot hide them from an agent: it is sourced by the login shell
+# before any agent exists, so anything it exports is inherited by every child --
+# claude included -- no matter how the AI_AGENT guard is written. Keeping the
+# tokens in a 600 file read at call time means they are never in any process
+# environment, and the Claude Code hooks still work on every launch path.
+#
+# Override the location with PUSHOVER_CREDENTIALS. Pre-set env vars win, so
+# one-off overrides still work.
+
+PUSHOVER_CREDENTIALS="${PUSHOVER_CREDENTIALS:-$HOME/.secrets/pushover}"
 
 if [ -z "$PUSHOVER_API_TOKEN" ] || [ -z "$PUSHOVER_USER_KEY" ]; then
-    echo "Error: PUSHOVER_API_TOKEN and PUSHOVER_USER_KEY must be set" >&2
+    if [ -r "$PUSHOVER_CREDENTIALS" ]; then
+        . "$PUSHOVER_CREDENTIALS"
+    fi
+fi
+
+if [ -z "$PUSHOVER_API_TOKEN" ] || [ -z "$PUSHOVER_USER_KEY" ]; then
+    echo "Error: no Pushover credentials (looked in $PUSHOVER_CREDENTIALS)" >&2
     exit 1
 fi
 

@@ -47,7 +47,7 @@ re-run the optional installers -- use `script/install` for those.
 ├── autocompletion/    Shell completion scripts
 ├── bash/              Bash config (bash_profile, bashrc)
 ├── bin/               Executables added to $PATH (dot, utilities)
-├── claude/            Claude Code config (CLAUDE.md, settings.json)
+├── claude/            Claude Code config (CLAUDE.md, settings.base.json)
 ├── codex/             Codex CLI config (config.toml)
 ├── opencode/          opencode config (opencode.jsonc, agents, commands)
 ├── docker/            Docker aliases (*.zsh, auto-sourced)
@@ -156,7 +156,7 @@ to skip slow cluster module loads.
 
 | Tool | Value | Set by |
 |------|-------|--------|
-| Claude Code | `claude-code_<version>_agent` | Claude Code itself (overrides `claude/settings.json`) |
+| Claude Code | `claude-code_<version>_agent` | Claude Code itself; its own value wins over any `env` in settings |
 | Codex | `codex` | `codex()` wrapper, plus `shell_environment_policy` in `codex/config.toml` |
 | opencode | `opencode` | `opencode()` wrapper in `aliases/aliases.symlink` |
 

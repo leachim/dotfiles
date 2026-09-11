@@ -2,9 +2,30 @@
 # Push notification wrapper for Claude Code hooks.
 # Adds origin context: hostname, tmux session:window, project dir.
 #
-# Usage: claude-notify "Task completed"        (hook JSON on stdin, optional)
+# Usage:
+#   claude-notify --mark                        (UserPromptSubmit: start the clock)
+#   claude-notify --min-seconds 60 "Done"       (Stop: notify only for long turns)
+#   claude-notify "Awaiting your input"         (Notification: always notify)
+#
 # The hook's own `message` field wins over the argument when present.
+#
+# Why --mark exists: Stop fires at the end of EVERY assistant turn -- and also on
+# /clear, resume and compact -- so an unconditional Stop hook pushes on every
+# reply. UserPromptSubmit drops a timestamp; Stop consumes it and notifies only if
+# the turn outlived the threshold. No timestamp means no user turn happened
+# (/clear, resume, compact), so nothing is sent. One push per real turn, at most.
 
+STATE_DIR="${XDG_RUNTIME_DIR:-/tmp}/claude-notify-$(id -u)"
+
+MODE=notify
+MIN_SECONDS="${CLAUDE_NOTIFY_MIN_SECONDS:-0}"
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --mark)        MODE=mark; shift ;;
+        --min-seconds) MIN_SECONDS="$2"; shift 2 ;;
+        *)             break ;;
+    esac
+done
 FALLBACK="${1:-Claude Code}"
 
 # Hooks feed JSON on stdin; guard against a terminal so manual runs don't hang.
@@ -21,6 +42,31 @@ json_str() {
             sed -n 's/.*"'"$1"'"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1
     fi
 }
+
+SESSION=$(json_str session_id)
+SESSION="${SESSION//[^A-Za-z0-9_-]/}"          # it lands in a path; keep it boring
+MARK="$STATE_DIR/${SESSION:-nosession}.start"
+
+if [ "$MODE" = mark ]; then
+    mkdir -p "$STATE_DIR" 2>/dev/null && chmod 700 "$STATE_DIR" 2>/dev/null
+    date +%s > "$MARK" 2>/dev/null
+    # opportunistic sweep so abandoned sessions do not accumulate
+    find "$STATE_DIR" -maxdepth 1 -name '*.start' -mtime +1 -delete 2>/dev/null
+    exit 0
+fi
+
+ELAPSED=""
+if [ "$MIN_SECONDS" -gt 0 ] 2>/dev/null; then
+    [ -r "$MARK" ] || exit 0                    # no user turn -> /clear, resume, compact
+    START=$(cat "$MARK" 2>/dev/null)
+    rm -f "$MARK" 2>/dev/null                   # consume: one push per turn, at most
+    case "$START" in ''|*[!0-9]*) exit 0 ;; esac
+    SECS=$(( $(date +%s) - START ))
+    [ "$SECS" -lt "$MIN_SECONDS" ] && exit 0
+    if   [ "$SECS" -ge 3600 ]; then ELAPSED=$(printf '%dh%02dm' $((SECS/3600)) $((SECS%3600/60)))
+    elif [ "$SECS" -ge 60 ];   then ELAPSED=$(printf '%dm%02ds' $((SECS/60)) $((SECS%60)))
+    else                            ELAPSED="${SECS}s"; fi
+fi
 
 MESSAGE=$(json_str message)
 MESSAGE="${MESSAGE:-$FALLBACK}"
@@ -42,5 +88,6 @@ CWD=$(json_str cwd)
 CWD="${CWD:-$PWD}"
 PROJECT=$(basename "$CWD")
 [ -n "$PROJECT" ] && MESSAGE="$MESSAGE — $PROJECT"
+[ -n "$ELAPSED" ] && MESSAGE="$MESSAGE (${ELAPSED})"
 
 exec ~/.dotfiles/bin/push "$MESSAGE" "Claude Code · $WHERE"

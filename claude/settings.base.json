@@ -1,0 +1,107 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(awk:*)",
+      "Bash(cat:*)",
+      "Bash(cd:*)",
+      "Bash(cp:*)",
+      "Bash(curl:*)",
+      "Bash(diff:*)",
+      "Bash(echo:*)",
+      "Bash(file:*)",
+      "Bash(find:*)",
+      "Bash(gh:*)",
+      "Bash(git:*)",
+      "Bash(grep:*)",
+      "Bash(gunzip:*)",
+      "Bash(gzip:*)",
+      "Bash(head:*)",
+      "Bash(ls:*)",
+      "Bash(man:*)",
+      "Bash(mkdir:*)",
+      "Bash(pwd:*)",
+      "Bash(sed:*)",
+      "Bash(sort:*)",
+      "Bash(tail:*)",
+      "Bash(tar:*)",
+      "Bash(test:*)",
+      "Bash(timeout:*)",
+      "Bash(touch:*)",
+      "Bash(tree:*)",
+      "Bash(uniq:*)",
+      "Bash(unzip:*)",
+      "Bash(wc:*)",
+      "Bash(wget:*)",
+      "Bash(whereis:*)",
+      "Bash(which:*)",
+      "MCP(context7:*)",
+      "WebFetch(domain:raw.githubusercontent.com)"
+    ],
+    "deny": [
+      "Bash(chown:*)",
+      "Bash(gh repo delete:*)",
+      "Bash(reboot:*)",
+      "Bash(service:*)",
+      "Bash(shutdown:*)",
+      "Bash(su:*)",
+      "Bash(sudo:*)",
+      "Bash(systemctl:*)"
+    ],
+    "ask": [
+      "Bash(chmod:*)",
+      "Bash(gh pr close:*)",
+      "Bash(gh pr merge:*)",
+      "Bash(git checkout:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git restore:*)",
+      "Bash(mv:*)",
+      "Bash(rm:*)",
+      "Bash(rmdir:*)",
+      "Bash(srun:*)"
+    ],
+    "defaultMode": "auto"
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.dotfiles/bin/claude-notify --min-seconds 60 \"Task completed\"",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.dotfiles/bin/claude-notify \"Awaiting your input\"",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.dotfiles/bin/claude-notify --mark"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.dotfiles/bin/statusline.sh",
+    "padding": 0
+  },
+  "env": {}
+}

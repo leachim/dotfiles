@@ -28,7 +28,7 @@ backup_claude_item () {
 }
 
 # Symlink files
-for file in CLAUDE.md settings.json; do
+for file in CLAUDE.md; do
     src="$DOTFILES_CLAUDE/$file"
     dst="$CLAUDE_DIR/$file"
 
@@ -64,3 +64,40 @@ for dir in commands agents skills; do
     ln -s "$src" "$dst"
     echo "  Linked $src -> $dst"
 done
+
+# settings.json is NOT symlinked. Claude Code owns that file -- /model, /effort,
+# /config, plugin changes and the learned autoMode environment all rewrite it, and
+# the rewrite is an atomic temp-file+rename that silently replaces a symlink with a
+# regular file. (Evidence: CLAUDE.md, agents, skills and commands were all still
+# symlinks here while settings.json was not, with no .backup beside it.)
+#
+# So dotfiles owns a SUBSET of keys instead. settings.base.json is authoritative for
+# every top-level key it DECLARES; a key it does not declare is not owned and is
+# left untouched (model, effortLevel, theme, enabledPlugins, the learned autoMode
+# environment). To clear a key rather than leave it stale, declare it empty -- that
+# is why "env" is {} here: AI_AGENT in it is dead (Claude Code sets its own, and
+# claude() names it at launch) and CONTEXT7_API_KEY="${CONTEXT7_API}" is the
+# literal-string bug b31aa2d documented; that one belongs in ~/.localrc.
+merge_claude_settings () {
+    src="$DOTFILES_CLAUDE/settings.base.json"
+    dst="$CLAUDE_DIR/settings.json"
+
+    [ -f "$src" ] || return 0
+    if ! command -v jq > /dev/null 2>&1; then
+        echo "  settings.base.json needs jq to merge -- skipped"
+        return 0
+    fi
+    [ -f "$dst" ] || echo '{}' > "$dst"
+
+    owned=$(jq -c 'keys' "$src")
+    if jq -s --argjson owned "$owned" \
+        '(.[0] | delpaths([$owned[] | [.]])) * .[1]' "$dst" "$src" > "$dst.tmp"; then
+        mv "$dst.tmp" "$dst"
+        echo "  Merged $(echo "$owned" | tr -d '[]"' ) into $dst"
+    else
+        rm -f "$dst.tmp"
+        echo "  Failed to merge settings -- left $dst untouched"
+    fi
+}
+
+merge_claude_settings

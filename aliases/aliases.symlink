@@ -116,21 +116,46 @@ alias .....="cd ../../../.."
 ###              CODING               ###
 #########################################
 
+# Strip restricted secrets at the agent launch boundary.
+#
+# ~/.localrc cannot do this itself: the login shell sources it before any agent
+# exists, so whatever it exports is already inherited by the time claude/codex/
+# opencode start. The AI_AGENT guard only gates *re-sourcing* in nested shells --
+# it can never retract a variable from a parent process.
+#
+# `env` also execs the real binary, so it bypasses these wrappers without needing
+# `command`. Anything an agent's own hooks need (see bin/push) must read its
+# credentials from a file, not from here.
+agent_env() {
+    env -u OR_API_KEY -u CF_TOKEN -u CF_ACCOUNT_ID -u CF_GATEWAY_NAME "$@"
+}
+
 # AI_AGENT names the tool driving this shell. ~/.localrc and hosts/*.sh treat any
 # non-empty value as an agent: they withhold restricted secrets and skip slow
 # cluster init. Claude Code sets its own identifier; codex and opencode do not,
 # so these wrappers name them.
 codex() {
     if [ "$PWD" = "/cluster/home" ]; then
-        AI_AGENT=codex command codex -C "$HOME" "$@"
+        agent_env AI_AGENT=codex codex -C "$HOME" "$@"
     else
-        AI_AGENT=codex command codex "$@"
+        agent_env AI_AGENT=codex codex "$@"
     fi
 }
 
-# opencode has no env setting in opencode.jsonc, so set it here.
+# opencode has no env setting in opencode.jsonc, so name it here.
+#
+# Re-sourcing ~/.localrc with AI_AGENT already set is what lets its per-agent
+# `case` block hand opencode its key: the login shell could not, it ran before
+# any agent existed and with AI_AGENT unset. The subshell keeps the key out of
+# the interactive shell, and it reaches opencode through the environment rather
+# than argv -- /proc/PID/cmdline is world-readable on these login nodes,
+# /proc/PID/environ is not.
 opencode() {
-    AI_AGENT=opencode command opencode "$@"
+    (
+        export AI_AGENT=opencode
+        [ -r ~/.localrc ] && . ~/.localrc
+        agent_env opencode "$@"
+    )
 }
 
 # Run Claude Code against OpenRouter via Cloudflare AI Gateway. Default model: DeepSeek V4 Pro.
@@ -190,6 +215,14 @@ EOF
 
     echo "→ claude-code | OpenRouter via Cloudflare AI Gateway | $model" >&2
 
+    # agent_env execs the binary directly, so it bypasses the interactive `claude()`
+    # wrapper in bashrc -- set the core limit here too, or this launcher still dumps
+    # cores on a crash. Assignments go to `env`, not the shell: a bash prefix
+    # assignment on a function call would persist in the interactive shell and leak
+    # ANTHROPIC_AUTH_TOKEN into the next plain `claude`.
+    ulimit -c 0 2>/dev/null || true
+
+    agent_env \
     ANTHROPIC_BASE_URL="https://gateway.ai.cloudflare.com/v1/$CF_ACCOUNT_ID/$CF_GATEWAY_NAME/openrouter" \
     ANTHROPIC_AUTH_TOKEN="$OR_API_KEY" \
     ANTHROPIC_CUSTOM_HEADERS="cf-aig-authorization: Bearer $CF_TOKEN" \
@@ -198,7 +231,7 @@ EOF
     ANTHROPIC_DEFAULT_SONNET_MODEL="$model" \
     ANTHROPIC_DEFAULT_HAIKU_MODEL="${ANTHROPIC_DEFAULT_HAIKU_MODEL:-deepseek/deepseek-v4-flash}" \
     CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 \
-    command claude "$@"
+    claude "$@"
 }
 
 
