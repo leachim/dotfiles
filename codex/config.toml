@@ -27,6 +27,12 @@ extends = ":workspace"
 
 [permissions.no-credentials.filesystem]
 # Paths must be absolute, ~/-relative, or :-prefixed -- codex rejects bare globs.
+#
+# Linux sandboxing (bubblewrap/landlock) cannot evaluate `**` live, so codex
+# pre-expands these globs at sandbox startup and needs a depth cap; macOS
+# seatbelt matches live and ignores it. 4 covers ~/.secrets/* and .env files in
+# a repo up to three directories below $HOME; anything deeper is not denied.
+glob_scan_max_depth = 4
 "~/**/.env" = "deny"
 "~/**/.env.*" = "deny"
 "~/**/*.env" = "deny"
