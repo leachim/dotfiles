@@ -1,23 +1,5 @@
 {
-  "model": "opus[1m]",
-  "enabledPlugins": {
-    "code-review": false,
-    "codex@openai-codex": true
-  },
-  "alwaysThinkingEnabled": true,
-  "effortLevel": "xhigh",
-  "pluginConfigs": {},
-  "autoUpdatesChannel": "latest",
-  "skipWorkflowUsageWarning": true,
-  "theme": "dark",
-  "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true,
-  "autoMode": {
-    "soft_deny": [
-      "$defaults"
-    ],
-    "environment": []
-  },
+  "env": {},
   "permissions": {
     "allow": [
       "Bash(awk:*)",
@@ -57,7 +39,6 @@
       "WebFetch(domain:raw.githubusercontent.com)"
     ],
     "deny": [
-      "Bash(chown:*)",
       "Bash(gh repo delete:*)",
       "Bash(reboot:*)",
       "Bash(service:*)",
@@ -65,15 +46,10 @@
       "Bash(su:*)",
       "Bash(sudo:*)",
       "Bash(systemctl:*)",
-      "Read(**/.env)",
-      "Read(**/.env.*)",
-      "Read(**/*.env)",
-      "Read(~/.env)",
-      "Read(~/.env.*)",
-      "Read(**/.secrets)",
-      "Read(**/.secrets.*)",
-      "Read(**/.secrets/**)",
-      "Read(**/*.secrets)",
+      "Read(~/**/.secrets)",
+      "Read(~/**/.secrets.*)",
+      "Read(~/**/.secrets/**)",
+      "Read(~/**/*.secrets)",
       "Read(~/.secrets)",
       "Read(~/.secrets.*)",
       "Read(~/.secrets/**)"
@@ -87,6 +63,7 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "opus[1m]",
   "hooks": {
     "Stop": [
       {
@@ -129,5 +106,29 @@
     "command": "~/.dotfiles/bin/statusline.sh",
     "padding": 0
   },
-  "env": {}
+  "enabledPlugins": {
+    "code-review": false,
+    "codex@openai-codex": true
+  },
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "xhigh",
+  "modelSettings": {
+    "claude-fable-5-1": {
+      "effortLevel": "high"
+    }
+  },
+  "pluginConfigs": {},
+  "autoUpdatesChannel": "latest",
+  "skipWorkflowUsageWarning": true,
+  "theme": "dark",
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true,
+  "autoMode": {
+    "soft_deny": [
+      "$defaults",
+      "Bash(sbatch:*) in /users/mschneider/niobe — SLURM job submission is flagged explicitly in ~/.claude/CLAUDE.md as requiring prior approval; treat as soft block pending explicit written confirmation",
+      "Bash(scancel:*) in /users/mschneider/niobe — cancels shared-cluster jobs; frequent in history (35×) but destructive to running work without confirmation"
+    ],
+    "environment": []
+  }
 }

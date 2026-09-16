@@ -64,8 +64,10 @@ Don't run these commands unless the user explicitly requests them in writing:
 
 Credentials live in `~/.secrets/<service>` and are exported by nothing. Load them with
 `secrets <service>` (or `secrets` for all) — see `aliases/aliases.symlink`. `~/.localrc`
-is for non-secret per-machine config only. Reads of `.env` and `.secrets` files are denied
-for Claude Code, codex and opencode; that is deliberate, not a misconfiguration.
+is for non-secret per-machine config only. Reads of `~/.secrets` are denied for Claude
+Code, codex and opencode; that is deliberate, not a misconfiguration. All three may read
+`.env` files — job environment variables live there — but their values are credentials:
+use them in commands and job scripts, never echo them into output or send them anywhere.
 
 # General Guidelines
 

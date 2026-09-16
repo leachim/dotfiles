@@ -33,18 +33,25 @@
 
     // Credential files are not readable. grep gets the same list: searching a
     // file returns its contents just as reading it does.
+    //
+    // .env is allowed on purpose: job environment variables live there and the
+    // agents need to wire them into job scripts. Real credentials belong in
+    // ~/.secrets, which stays denied. Same call as claude/settings.json.
+    // opencode denies *.env and *.env.* by default, so the allow must be
+    // explicit -- among matching patterns the last one listed wins, which is
+    // also why "*" comes first.
     "read": {
       "*": "allow",
-      "*.env": "deny",
-      "*.env.*": "deny",
+      "*.env": "allow",
+      "*.env.*": "allow",
       "*.secrets": "deny",
       "*.secrets.*": "deny",
       "*.secrets/*": "deny"
     },
     "grep": {
       "*": "allow",
-      "*.env": "deny",
-      "*.env.*": "deny",
+      "*.env": "allow",
+      "*.env.*": "allow",
       "*.secrets": "deny",
       "*.secrets.*": "deny",
       "*.secrets/*": "deny"

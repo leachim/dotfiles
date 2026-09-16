@@ -217,8 +217,9 @@ secrets openrouter      # just that one
 | `~/.secrets/github` | nothing — drop it once `gh auth login` is in use |
 
 Each wrapper names only the services its tool needs, so no tool sees another
-tool's keys. `claude/settings.json` denies Claude Code read access to `.env` and
-`.secrets` files.
+tool's keys. All three agent configs deny read access to `.secrets` and leave `.env`
+readable, so job environment variables can be wired up; opencode denies `.env` out of
+the box, so `opencode.jsonc` allows it back explicitly.
 
 ## Platform Support
 

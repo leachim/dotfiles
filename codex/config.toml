@@ -6,8 +6,8 @@
 # Only config.toml is tracked -- the rest of ~/.codex is auth, session history
 # and ~850MB of installed packages, none of which belong in git.
 
-model = "gpt-5.6-terra"
-model_reasoning_effort = "medium"
+model = "gpt-5.6-sol"
+model_reasoning_effort = "high"
 
 # Deny reads of credential files. Sandbox mode alone does not do this: every
 # mode permits reads outside the workspace, so the filesystem deny list is what
@@ -30,12 +30,13 @@ extends = ":workspace"
 #
 # Linux sandboxing (bubblewrap/landlock) cannot evaluate `**` live, so codex
 # pre-expands these globs at sandbox startup and needs a depth cap; macOS
-# seatbelt matches live and ignores it. 4 covers ~/.secrets/* and .env files in
-# a repo up to three directories below $HOME; anything deeper is not denied.
+# seatbelt matches live and ignores it. 4 covers ~/.secrets/* and a .secrets
+# directory up to three levels below $HOME; anything deeper is not denied.
+#
+# .env is deliberately NOT denied: job environment variables live there and the
+# agents need to wire them into job scripts. Real credentials belong in
+# ~/.secrets, which stays unreadable. Same call as claude/settings.json.
 glob_scan_max_depth = 4
-"~/**/.env" = "deny"
-"~/**/.env.*" = "deny"
-"~/**/*.env" = "deny"
 "~/**/.secrets" = "deny"
 "~/**/.secrets.*" = "deny"
 "~/**/.secrets/**" = "deny"
@@ -50,7 +51,7 @@ glob_scan_max_depth = 4
 [tui.model_availability_nux]
 "gpt-5.5" = 4
 "gpt-5.6-sol" = 2
-gpt-6-astra = 3
+gpt-6-astra = 4
 
 [desktop]
 followUpQueueMode = "steer"
@@ -61,3 +62,6 @@ command = "./Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.
 args = ["mcp"]
 cwd = "."
 enabled = false
+
+[projects."/users/mschneider/niobe"]
+trust_level = "trusted"
