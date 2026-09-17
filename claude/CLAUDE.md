@@ -60,6 +60,24 @@ Don't run these commands unless the user explicitly requests them in writing:
 - `srun` or `sbatch` — any SLURM job submission, including short debug and one-shot
   commands. Without prior approval, print the exact command for the user to run.
 
+# Job Submissions
+
+Every job must be reproducible from files on disk, not from a Claude session.
+
+- The run must be driven by a config file written into the repo before submission
+  (its path passed to the job), never by ad-hoc command-line overrides that exist
+  only in the transcript. If a setting needs changing, edit the config.
+- The submission script (`sbatch` file or equivalent) is also a file in the repo, not
+  a heredoc or inline command.
+- Name configs and output directories so a run can be traced back later; record the
+  config path and job ID in the session output so the user can find them.
+- The only exception is a throwaway debug job (interactive `srun`, a one-off sanity
+  check that produces no results to keep). Say explicitly when you treat a job as debug.
+
+Login nodes are shared: never run tests, data processing or any other compute on them at
+a parallelism that loads the node — keep worker/job counts low, and move anything heavier to a SLURM job.
+Also avoid working with a very large number of files and notify the user in these cases.
+
 # Credentials
 
 Credentials live in `~/.secrets/<service>` and are exported by nothing. Load them with
