@@ -322,3 +322,23 @@ set-option -g allow-passthrough on
 # off = compatible with iTerm2 and grouped sessions
 # on = better for multi-monitor setups when each client shows different windows
 setw -g aggressive-resize off
+
+## Per host background color - for easier window switching
+%if "#{m:*eu-login*,#{host}}"
+set -g window-style        'bg=#152d45'
+set -g window-active-style 'bg=#152d45'
+set -g status-style        'bg=#1d3f60,fg=#dde3ea'
+%elif "#{m:*bs-slogin*,#{host}}"
+set -g window-style        'bg=#3f1616'
+set -g window-active-style 'bg=#3f1616'
+set -g status-style        'bg=#561d1d,fg=#eadddd'
+%elif "#{m:*daint*,#{host}}"
+set -g window-style        'bg=#173a24'
+set -g window-active-style 'bg=#173a24'
+set -g status-style        'bg=#1f4f30,fg=#dceae1'
+%elif "#{m:*clariden*,#{host}}"
+set -g window-style        'bg=#2d1f4d'
+set -g window-active-style 'bg=#2d1f4d'
+set -g status-style        'bg=#3f2c6a,fg=#e3ddea'
+%endif
+
