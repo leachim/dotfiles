@@ -171,7 +171,7 @@ bind "set menu-complete-display-prefix on"
 # mouse moves get echoed into the shell as `^[[<35;..M` sequences. Runs before
 # every prompt (starship preserves PROMPT_COMMAND). Safe inside tmux: it only
 # tells tmux this pane wants no mouse events, which is the shell default.
-__reset_mouse_reporting() { [ -t 1 ] && printf '\033[?1000l\033[?1002l\033[?1003l\033[?1006l'; }
+__reset_mouse_reporting() { [ -t 1 ] && printf '\033[?1000l\033[?1002l\033[?1003l\033[?1004l\033[?1006l'; }
 
 # Only keep history management, let Starship handle prompt rendering
 # Keep history synced without rewriting/reloading the full history file each prompt.
@@ -210,6 +210,15 @@ fi
 if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
+
+# On the BSSE cluster (bs-*), /etc/bashrc overwrites PROMPT_COMMAND with its own
+# legacy prompt, which drops the history sync and the mouse-reporting reset above.
+# Re-assert ours here, before starship init captures PROMPT_COMMAND into
+# STARSHIP_PROMPT_COMMAND. Scoped to bs-* so other hosts keep whatever their
+# /etc/bashrc set up.
+case "${HOSTNAME:-$(hostname 2>/dev/null)}" in
+	bs-*) PROMPT_COMMAND='history -a; history -n; __reset_mouse_reporting' ;;
+esac
 
 # Optional tool initialization (guarded for portability)
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"

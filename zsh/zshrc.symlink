@@ -136,7 +136,7 @@ command -v uv &> /dev/null && eval "$(uv generate-shell-completion zsh)"
 # mouse moves get echoed into the shell as `^[[<35;..M` sequences. Runs before
 # every prompt. Safe inside tmux: it only tells tmux this pane wants no mouse
 # events, which is the shell default.
-__reset_mouse_reporting() { [ -t 1 ] && printf '\033[?1000l\033[?1002l\033[?1003l\033[?1006l'; }
+__reset_mouse_reporting() { [ -t 1 ] && printf '\033[?1000l\033[?1002l\033[?1003l\033[?1004l\033[?1006l'; }
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd __reset_mouse_reporting
 
