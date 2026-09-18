@@ -206,9 +206,16 @@ fi
 
 
 
-# Source global definitions
+# Source global definitions. A hosts/ file (sourced via ~/.profile at the top of
+# this file) may have claimed a variable that a /etc/profile.d script insists on
+# setting; it then sets DOTFILES_ETC_BASHRC_QUIET so the losing script's
+# "readonly variable" complaint does not print at every shell start.
 if [ -f /etc/bashrc ]; then
-	. /etc/bashrc
+	if [ -n "$DOTFILES_ETC_BASHRC_QUIET" ]; then
+		. /etc/bashrc 2>/dev/null
+	else
+		. /etc/bashrc
+	fi
 fi
 
 # On the BSSE cluster (bs-*), /etc/bashrc overwrites PROMPT_COMMAND with its own
