@@ -1,0 +1,53 @@
+#!/bin/bash
+# Pushover alert to the Alerts delivery group -- for things worth interrupting for.
+#
+# Thin wrapper over bin/push: it supplies the group key and a "host · project"
+# title, so callers only write the message.
+#
+#   push-alert "training diverged at step 4100 (loss 8.3)"
+#   push-alert "allocation expires in 10 min" -p 1
+#   push-alert "run finished" "custom title"
+#
+# The key is PUSHOVER_ALERTS (~/.localrc): the delivery GROUP, i.e. who receives
+# the alert, which Pushover takes in `user=`, not `token=`. The app token stays
+# in ~/.secrets/pushover and bin/push reads it on its own. ~/.localrc is not
+# sourced by non-interactive shells or SLURM jobs, so the key is picked out of
+# the file here when it is not already in the environment. It is a credential:
+# it is never printed, only handed to push through the environment.
+
+[[ "$1" == "-h" || "$1" == "--help" ]] && {
+    sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'
+    exit 0
+}
+
+if [ -z "${PUSHOVER_ALERTS:-}" ] && [ -r "$HOME/.localrc" ]; then
+    # just this assignment, not the whole file -- sourcing ~/.localrc would drag
+    # in whatever else a machine puts there
+    eval "$(sed -n 's/^[[:space:]]*\(export[[:space:]]\{1,\}\)\{0,1\}\(PUSHOVER_ALERTS=.*\)$/\2/p' "$HOME/.localrc" | tail -1)"
+fi
+
+if [ -z "${PUSHOVER_ALERTS:-}" ]; then
+    echo "push-alert: PUSHOVER_ALERTS is unset (set it in ~/.localrc)" >&2
+    exit 1
+fi
+
+if [ $# -eq 0 ]; then
+    echo "push-alert: no message (try --help)" >&2
+    exit 1
+fi
+
+MESSAGE="$1"; shift
+
+# Optional title, then everything else goes to push (-p, -s, -u, ...).
+if [ $# -gt 0 ] && [ "${1#-}" = "$1" ]; then
+    TITLE="$1"; shift
+else
+    HOST=$(hostname -s 2>/dev/null || hostname)
+    TITLE="$HOST · $(basename "$PWD")"
+fi
+
+SELF_DIR=$(cd "$(dirname "$0")" 2>/dev/null && pwd)
+PUSH="$SELF_DIR/push"
+[ -x "$PUSH" ] || PUSH="$HOME/.dotfiles/bin/push"
+
+PUSHOVER_USER_KEY="$PUSHOVER_ALERTS" exec "$PUSH" "$MESSAGE" "$TITLE" "$@"

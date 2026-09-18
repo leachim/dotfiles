@@ -11,6 +11,16 @@
 #   gemini-api                    subshell
 #   bin/push                    reads ~/.secrets/pushover directly
 
+# The one exception is PUSHOVER_ALERTS below: it is a credential, but it lives
+# here because the tools that must send alerts cannot read ~/.secrets.
+
+# --- Pushover ---
+# Delivery GROUP key for bin/push-alert -- it decides who receives an alert and
+# goes in Pushover's `user=` field, not `token=` (the app token stays in
+# ~/.secrets/pushover, which bin/push reads on its own). Treat it as a secret:
+# pass it by name, never echo it into a log, a commit or a job script.
+# export PUSHOVER_ALERTS=""
+
 # --- GitHub ---
 # org/repo for default gh operations. The token is stored by `gh auth login`;
 # an exported GH_TOKEN overrides that, so leave it unset.

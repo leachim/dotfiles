@@ -94,6 +94,16 @@ use them in commands and job scripts, never echo them into output or send them a
 - Do not change git branches without confirmation or run git stash
 - When asking questions, state nuanced pros and cons for each decision and critically discuss the options
 
+# Notifications
+
+Pushover alerts reach my phone, so send one only for what is worth interrupting me for: a long job
+that finished, failed, diverged or is about to lose its allocation; a result that changes what I do
+next; or a decision you are genuinely blocked on. Never for end-of-turn pings (the `claude-notify`
+Stop hook handles those), progress updates, tool failures you can recover from, or anything I will
+read in the terminal anyway — if in doubt, don't. Send it with
+`push-alert "<outcome, with the number>"`: one line per event that stands on its own on a lock
+screen, not "job done". 
+
 # Workflow
 
 - **Understand First:** Read existing code, understand architecture before making changes
