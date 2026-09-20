@@ -21,8 +21,10 @@
       "Bash(man:*)",
       "Bash(mkdir:*)",
       "Bash(pwd:*)",
+      "Bash(sbatch:*)",
       "Bash(sed:*)",
       "Bash(sort:*)",
+      "Bash(srun:*)",
       "Bash(tail:*)",
       "Bash(tar:*)",
       "Bash(test:*)",
@@ -58,8 +60,7 @@
       "Bash(gh pr close:*)",
       "Bash(gh pr merge:*)",
       "Bash(rm -r:*)",
-      "Bash(rmdir:*)",
-      "Bash(srun:*)"
+      "Bash(rmdir:*)"
     ],
     "defaultMode": "auto"
   },
