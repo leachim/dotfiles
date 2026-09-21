@@ -59,6 +59,8 @@
     "ask": [
       "Bash(gh pr close:*)",
       "Bash(gh pr merge:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push --force-with-lease:*)",
       "Bash(rm -r:*)",
       "Bash(rmdir:*)"
     ],
@@ -125,11 +127,43 @@
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "autoMode": {
+    "allow": [
+      "$defaults",
+      "Bash(git commit:*) — standing permission per the ~/.claude/CLAUDE.md Safety section; it does not expire at the end of a message. Feature branch first when HEAD is on the default branch",
+      "Bash(git push:*) of a non-default branch — standing permission per the ~/.claude/CLAUDE.md Safety section; force-push and pushing main/master are excluded and stay gated",
+      "Bash(gh pr create:*) — standing permission to open PRs on behalf of the user; the PR body says it was opened on their behalf",
+      "Bash(sbatch:*) and Bash(srun:*) for jobs of 4 node-hours or less — short debug and test runs are routine; anything larger still needs explicit written confirmation"
+    ],
     "soft_deny": [
       "$defaults",
-      "Bash(sbatch:*) in /users/mschneider/niobe — SLURM job submission is flagged explicitly in ~/.claude/CLAUDE.md as requiring prior approval; treat as soft block pending explicit written confirmation",
-      "Bash(scancel:*) in /users/mschneider/niobe — cancels shared-cluster jobs; frequent in history (35×) but destructive to running work without confirmation"
+      "Bash(scancel:*) in /users/mschneider/niobe — cancels shared-cluster jobs; destructive to running work without confirmation"
     ],
-    "environment": []
+    "environment": [
+      "### Org-wide",
+      "**Organization**: None configured",
+      "**Cloud provider(s)**: None configured",
+      "**Repository visibility**: not queryable via gh (marked \"not queryable here\") — assume private per shipped default, no signal of public status found",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: Credentials live in `~/.secrets/<service>`, loaded via `secrets <service>`; Claude Code is explicitly denied read access to `~/.secrets`; `.env` files may be read but their values are credentials — use in commands/job scripts, never echo or transmit them",
+      "**Default / protected branches**: main (default); no rulesets or classic protections listed by gh — treat as unprotected",
+      "**CI/CD deploy targets**: None configured",
+      "**Network posture**: None configured",
+      "**Host containment**: None configured — assume Claude Code runs on an ordinary developer machine with open internet",
+      "**Source control**: leachim/dotfiles2 (github.com) and its remote(s) only — no additional orgs configured",
+      "**Trusted internal domains**: None configured",
+      "**Trusted cloud buckets**: None configured",
+      "**Key internal services**: None configured",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: any file or store holding personal data, confidential business data, credentials, regulated data, or similarly sensitive material; preserve exact handles when known and share only with audiences cleared at the [named+specifics] bar; `private/*` is gitignored in this repo and should be treated as sensitive",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment",
+      "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development (dotfiles / environment configuration, per README and CLAUDE.md content)",
+      "**Trusted repo**: /users/mschneider/.dotfiles (github.com:leachim/dotfiles2), visibility unconfirmed — treat as private per shipped default; only this repo's own work belongs in it",
+      "**Org-specific CLIs**: None configured",
+      "**Routine under <user>/ prefix**: SLURM job submission (`sbatch`/`srun`) requires explicit written confirmation for jobs over 4 node-hours per ~/.claude/CLAUDE.md; short debug/test runs are routine; `scancel` on shared-cluster jobs (glauxlab HPC, e.g. ~/niobe) is frequent in history but destructive without confirmation"
+    ]
   }
 }

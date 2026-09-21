@@ -52,12 +52,21 @@ Don't run these commands unless the user explicitly requests them in writing:
 - `git reset --hard`
 - `git checkout <older-commit>`
 - `git restore` to revert files you didn't author
-- `git commit` / `git push` — the user does ALL commits/pushes themselves; never commit or push unless explicitly instructed to in the current message (a prior "you can commit" does not carry over)
+- `git push --force` / `git push --force-with-lease`
+- `git push` to the default branch (`main`/`master`)
 - `rm` on tracked files
 - `gh pr close`
 - `gh pr merge`
 - `gh repo delete`
 - `srun` or `sbatch` — this is more nuances: be careful with all SLURM job submission, require explicit confirmation from the user for any jobs that require substantial compute (more than 4 node hours). Short debug and test runs are okay to run to confirm code is correct and works as expected. 
+
+These are allowed without asking — standing permission, it does not expire at the
+end of a message:
+- `git commit` — brief single line explanation. If HEAD is on the default branch,
+  create a feature branch first and commit there.
+- `git push` — of the current feature branch. Pushing the default branch is in the
+  list above and still needs an explicit written request.
+- `gh pr create` — state in the PR body that it was opened on behalf of michael.
 
 # Job Submissions
 
