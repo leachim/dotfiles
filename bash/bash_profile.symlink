@@ -14,3 +14,10 @@ fi
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
+
+# hosts/hostnames/bs.sh: this login shell inherited a readonly TMOUT from
+# /etc/profile. Replace it with a non-login shell that starts without TMOUT.
+# Only for interactive terminal sessions, not `bash -lc cmd` or scp.
+if [ -n "$DOTFILES_TMOUT_REEXEC" ] && [[ $- == *i* ]] && [ -t 0 ] && [ -z "$BASH_EXECUTION_STRING" ]; then
+    exec env -u TMOUT "$BASH"
+fi

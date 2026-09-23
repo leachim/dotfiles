@@ -46,10 +46,20 @@ export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
 # deliberately not exported: TMOUT=0 is, so every new shell must re-claim it
 # before its own /etc/bashrc pass, while a second ~/.profile sourcing in the
 # same shell must not (re-claiming an already readonly TMOUT is an error).
+#
+# A login shell (ssh, tmux panes) is too late: /etc/profile has already run
+# profile.d and made TMOUT=1800 readonly, which bash cannot undo. There we only
+# set DOTFILES_TMOUT_REEXEC, and ~/.bash_profile finishes by exec'ing a
+# non-login shell with TMOUT removed from the environment, which then claims
+# TMOUT here before its own /etc/bashrc pass.
 if [ -z "$DOTFILES_TMOUT_CLAIMED" ]; then
     DOTFILES_TMOUT_CLAIMED=1
-    DOTFILES_ETC_BASHRC_QUIET=1
-    readonly TMOUT=0
+    if readonly -p | grep -q ' TMOUT='; then
+        [ "$TMOUT" != 0 ] && DOTFILES_TMOUT_REEXEC=1
+    else
+        DOTFILES_ETC_BASHRC_QUIET=1
+        readonly TMOUT=0
+    fi
 fi
 
 # Proxy settings (bs-* specific)

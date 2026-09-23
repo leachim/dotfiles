@@ -190,6 +190,10 @@ if [ -f ~/.autocompletion/docker-machine.bash ]; then
 fi
 
 if [ -f ~/.skim/shell/key-bindings.bash ]; then
+    # BSSE /etc/bashrc registers `complete -W "<hashed known_hosts>" ssh ping`;
+    # skim re-evals that spec through a filter that breaks its quoting
+    # ("eval: unexpected EOF"). Hashed hosts are useless as completions anyway.
+    complete -r ssh ping 2>/dev/null
     source ~/.skim/shell/key-bindings.bash
 fi
 
