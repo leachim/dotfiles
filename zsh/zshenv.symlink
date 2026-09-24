@@ -1,0 +1,3 @@
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+# x86_64 toolchain on the shared NFS home; only valid on x86 hosts ($CPUTYPE is a zsh builtin)
+[ "$CPUTYPE" = x86_64 ] && [ -f "$HOME/.cargo-x86_64/env" ] && . "$HOME/.cargo-x86_64/env"

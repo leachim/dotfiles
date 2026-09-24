@@ -5,6 +5,12 @@
 # only env vars are, so a guard on DOTFILES_PROFILE_LOADED would skip them.
 [ -f ~/.profile ] && source ~/.profile
 
+# Per-process marker (not exported, so child shells still load everything). On SUSE
+# /etc/profile already sources ~/.bashrc for login shells; ~/.bash_profile checks
+# this to avoid running the whole chain a second time. Manual `source ~/.bashrc`
+# still works because nothing here returns early on it.
+__DOTFILES_BASHRC_SOURCED=1
+
 # If not running interactively, don't do anything else
 case $- in
     *i*) ;;
@@ -260,7 +266,10 @@ fi
 [ -d "$HOME/.pixi/bin" ] && export PATH="$HOME/.pixi/bin:$PATH"
 
 export NVM_DIR="$HOME/.config/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# ~/.profile (sourced above) already loaded nvm and put the default node on PATH
+if ! command -v nvm >/dev/null 2>&1; then
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+fi
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # opencode (installed per-machine; path added by hosts/*.sh where present)

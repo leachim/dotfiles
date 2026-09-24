@@ -1,11 +1,9 @@
 ## Load profile and bashrc for bash login sessions (e.g. via ssh)
 
-if [ -f ~/.profile ]; then
-    source ~/.profile
-fi
-
-# Source bashrc for login shells (SSH, tmux) so interactive config is always loaded
-if [ -f ~/.bashrc ]; then
+# ~/.bashrc sources ~/.profile itself, so sourcing it covers both. Skip it when
+# /etc/profile already did (SUSE does for login shells) -- otherwise every SSH
+# login runs .profile 3x and .bashrc 2x.
+if [ -z "${__DOTFILES_BASHRC_SOURCED:-}" ] && [ -f ~/.bashrc ]; then
     source ~/.bashrc
 fi
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
