@@ -65,12 +65,3 @@ command = "./Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.
 args = ["mcp"]
 cwd = "."
 enabled = false
-
-[projects."/users/mschneider/niobe"]
-trust_level = "trusted"
-
-[projects."/users/mschneider"]
-trust_level = "trusted"
-
-[projects."/users/mschneider/paideia"]
-trust_level = "trusted"

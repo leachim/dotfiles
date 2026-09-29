@@ -109,8 +109,8 @@
     "padding": 0
   },
   "enabledPlugins": {
-    "code-review": false,
-    "codex@openai-codex": true
+    "bio-research@synced": false,
+    "data@synced": false
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
@@ -138,20 +138,20 @@
     ],
     "soft_deny": [
       "$defaults",
-      "Bash(scancel:*) in /users/mschneider/niobe — cancels shared-cluster jobs; destructive to running work without confirmation"
+      "Bash(scancel:*) in ~/niobe — cancels shared-cluster jobs; destructive to running work without confirmation"
     ],
     "environment": [
       "### Org-wide",
       "**Organization**: None configured",
       "**Cloud provider(s)**: None configured",
-      "**Repository visibility**: not queryable via gh (marked \"not queryable here\") — assume private per shipped default, no signal of public status found",
+      "**Repository visibility**: public — nothing sensitive belongs in it",
       "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
       "**Secrets management**: Credentials live in `~/.secrets/<service>`, loaded via `secrets <service>`; Claude Code is explicitly denied read access to `~/.secrets`; `.env` files may be read but their values are credentials — use in commands/job scripts, never echo or transmit them",
       "**Default / protected branches**: main (default); no rulesets or classic protections listed by gh — treat as unprotected",
       "**CI/CD deploy targets**: None configured",
       "**Network posture**: None configured",
       "**Host containment**: None configured — assume Claude Code runs on an ordinary developer machine with open internet",
-      "**Source control**: leachim/dotfiles2 (github.com) and its remote(s) only — no additional orgs configured",
+      "**Source control**: leachim/dotfiles (github.com) and its remote(s) only — no additional orgs configured",
       "**Trusted internal domains**: None configured",
       "**Trusted cloud buckets**: None configured",
       "**Key internal services**: None configured",
@@ -163,10 +163,16 @@
       "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
       "### User-specific",
       "**Primary use of Claude Code**: software development (dotfiles / environment configuration, per README and CLAUDE.md content)",
-      "**Trusted repo**: /users/mschneider/.dotfiles (github.com:leachim/dotfiles2), visibility unconfirmed — treat as private per shipped default; only this repo's own work belongs in it",
+      "**Trusted repo**: ~/.dotfiles (github.com:leachim/dotfiles), public; only this repo's own work belongs in it",
       "**Org-specific CLIs**: None configured",
-      "**Routine under <user>/ prefix**: SLURM job submission (`sbatch`/`srun`) requires explicit written confirmation for jobs over 4 node-hours per ~/.claude/CLAUDE.md; short debug/test runs are routine; `scancel` on shared-cluster jobs (glauxlab HPC, e.g. ~/niobe) is frequent in history but destructive without confirmation"
+      "**Routine under <user>/ prefix**: SLURM job submission (`sbatch`/`srun`) requires explicit written confirmation for jobs over 4 node-hours per ~/.claude/CLAUDE.md; short debug/test runs are routine; `scancel` on shared-cluster jobs (e.g. ~/niobe) is frequent in history but destructive without confirmation"
     ]
+  },
+  "skillOverrides": {
+    "morning": "off",
+    "skill-creator": "off",
+    "doc-coauthoring": "off",
+    "import-memory": "off"
   },
   "crossSessionInbound": "accept"
 }

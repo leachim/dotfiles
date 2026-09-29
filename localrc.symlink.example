@@ -32,3 +32,7 @@
 
 # --- Claude Code ---
 export CLAUDE_CODE_NO_FLICKER=1
+
+# --- Backups ---
+# GPG key id duplicity signs backups with, used by backup-restore-signed.
+# export BACKUP_SIGN_KEY=""

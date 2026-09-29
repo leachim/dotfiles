@@ -386,17 +386,6 @@ function do-stopall () { docker container stop $(docker container ls -a -q) ; }
 function do-cleanup () { docker rm $(docker ps -qa --no-trunc --filter "status=exited"); docker rmi $(docker images --filter "dangling=true" -q --no-trunc) ; }
 function do-export () { docker save $1 > $1.tar; }
 
-## Digital Ocean
-function dig-create() { doctl compute droplet create glaux-web --image debian-9-x64 --region $1 --size 1gb --ssh-keys 8c:7e:36:3e:d0:f5:98:d7:46:86:b5:78:7d:2e:9a:1e &&
-sleep 5 && doctl compute firewall add-droplets de489db5-1e04-40e6-891c-8bdfa47745c8 --droplet-ids $(doctl compute droplet list | tail -n 1 |  awk '{print $1}') && sleep 10 ; }
-function dig-connect() { ss-local -c /etc/shadowsocks.json -s $(doctl compute droplet list | tail -n 1 |  awk '{print $3}') ; }
-function dig-domain() { doctl compute domain records create $(doctl compute domain list | tail -n 1 | awk '{print $1}') --record-type A --record-name web --record-data $(doctl compute droplet list | tail -n 1 |  awk '{print $3}') --record-ttl 180 ; }
-function dig-close () { doctl compute droplet delete $(doctl compute droplet list | tail -n 1 |  awk '{print $1}') && sleep 10 && doctl compute domain records delete $(doctl compute domain list | tail -n 1 | awk '{print $1}') $(doctl compute domain records list $(doctl compute domain list | tail -n 1 | awk '{print $1}') | grep "A" |  awk '{print $1}') && doctl compute droplet list ; }
-alias dig-status="doctl compute droplet list"
-dig-domain-status() { doctl compute domain records list $(doctl compute domain list | tail -n 1 | awk '{print $1}') ; }
-function dig-access () { doctl compute ssh $(doctl compute droplet list | tail -n 1 |  awk '{print $1}') ; }
-function dig-reboot() { doctl compute droplet-action reboot $(doctl compute droplet list | tail -n 1 | awk '{print $1}') ; }
-
 ## Git
 alias g="git"
 function gtrack () { git ls-files $1 --error-unmatch; echo $? ; }
@@ -695,8 +684,8 @@ function hl () { grep -A1 "Host $1" $HOME/.ssh/config | awk '/HostName/{getline;
 
 alias m-generate-password="openssl rand -base64"
 
-# route through glaux-web
-alias proxyssh="ssh glaux-proxy -D 8080 -N -C -o \"UserKnownHostsFile /dev/null\""
+# route through the SOCKS proxy host
+alias proxyssh="ssh proxy -D 8080 -N -C -o \"UserKnownHostsFile /dev/null\""
 alias ssho="ssh -o \"UserKnownHostsFile /dev/null\""
 # -D: Tells SSH that we want a SOCKS tunnel on the specified port number (you can choose a number between 1025-65536)
 # -f: Forks the process to the background
@@ -736,7 +725,7 @@ backup-email () { gmvault sync -d $HOME/.mail --emails-only $1; }
 function backup-restore-signed {
     echo -e "Restore from $1 to $2"
     sleep 5
-    _SIGN_KEY=4FF90AD4
+    _SIGN_KEY="${BACKUP_SIGN_KEY:?set BACKUP_SIGN_KEY in ~/.localrc}"
     if [ ! -d $1 ]; then
         printf "Backup does not exist\n"
         return -1

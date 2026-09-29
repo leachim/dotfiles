@@ -275,7 +275,7 @@ fi
 # opencode (installed per-machine; path added by hosts/*.sh where present)
 [ -d "$HOME/.opencode/bin" ] && export PATH="$HOME/.opencode/bin:$PATH"
 
-# Codex installer (was hardcoded to /users/mschneider/.local/bin -- another host)
+# Codex installer
 [ -d "$HOME/.local/bin" ] && export PATH="$HOME/.local/bin:$PATH"
 
 # Deduplicate PATH, keeping the first (highest-priority) occurrence of each entry.
