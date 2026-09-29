@@ -63,5 +63,3 @@ args = ["mcp"]
 cwd = "."
 enabled = false
 
-[projects."/users/mschneider/niobe"]
-trust_level = "trusted"

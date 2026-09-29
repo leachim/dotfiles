@@ -17,7 +17,7 @@ export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
 export PATH=$CUDA_HOME/bin:$PATH
 
 # MMSEQ
-export PATH=/home/michaes/mmseqs/bin:$PATH
+export PATH=$HOME/mmseqs/bin:$PATH
 
 # GCC 12 environment (specific to bs-* Linux nodes)
 export PATH=$HOME/gcc-12/bin:$PATH
