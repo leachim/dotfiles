@@ -132,14 +132,6 @@ secrets() {
     unset _svc
 }
 
-# Suppress core dumps: a crash on the login nodes writes multi-GB core_<host>_<pid>
-# files into the cwd (core_pattern=core_%h_%p, login ulimit -c unlimited).
-# Subshell so the limit dies with it; `command` so this does not recurse.
-claude() (
-    ulimit -c 0 2>/dev/null || true
-    command claude "$@"
-)
-
 # AI_AGENT names the tool driving this shell; hosts/*.sh read it to skip slow
 # cluster init. Claude Code sets its own identifier, codex and opencode do not,
 # so these wrappers name them.
@@ -217,10 +209,6 @@ EOF
     model="${model:-${ANTHROPIC_MODEL:-deepseek/deepseek-v4-pro}}"
 
     echo "→ claude-code | OpenRouter via Cloudflare AI Gateway | $model" >&2
-
-    # This subshell bypasses the interactive `claude()` wrapper, so set the core
-    # limit here too or a crash still dumps multi-GB cores into the cwd.
-    ulimit -c 0 2>/dev/null || true
 
     exec env \
     ANTHROPIC_BASE_URL="https://gateway.ai.cloudflare.com/v1/$CF_ACCOUNT_ID/$CF_GATEWAY_NAME/openrouter" \

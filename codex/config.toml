@@ -48,6 +48,9 @@ glob_scan_max_depth = 4
 "gpt-5.3-codex" = "gpt-5.4"
 "gpt-5.4" = "gpt-5.6-terra"
 
+[tui]
+screen_reader_detection_done = true
+
 [tui.model_availability_nux]
 "gpt-5.5" = 4
 "gpt-5.6-sol" = 2
@@ -64,4 +67,10 @@ cwd = "."
 enabled = false
 
 [projects."/users/mschneider/niobe"]
+trust_level = "trusted"
+
+[projects."/users/mschneider"]
+trust_level = "trusted"
+
+[projects."/users/mschneider/paideia"]
 trust_level = "trusted"

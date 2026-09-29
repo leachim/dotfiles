@@ -1,6 +1,12 @@
 #!/bin/bash
 # Configuration for HPC cluster environments
 
+# Core dumps off. Login nodes have `ulimit -c unlimited` and core_pattern=core_%h_%p,
+# so any crash (python, an agent CLI, ...) writes a multi-GB core_<host>_<pid> into the
+# cwd on a shared filesystem. Set shell-wide so every child process inherits it.
+# Re-enable per shell with `ulimit -c unlimited` when a core is actually wanted.
+ulimit -c 0 2>/dev/null || true
+
 # Cluster-specific paths
 export PATH="$HOME/.local/bin:$PATH"
 export PATH=$HOME/cuda/bin:$HOME/.claude/local:$PATH

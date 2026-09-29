@@ -66,7 +66,6 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opus[1m]",
   "hooks": {
     "Stop": [
       {
@@ -124,6 +123,9 @@
   "autoUpdatesChannel": "latest",
   "skipWorkflowUsageWarning": true,
   "theme": "dark",
+  "switchModelsOnFlag": true,
+  "remoteControlAtStartup": true,
+  "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "autoMode": {
@@ -165,5 +167,6 @@
       "**Org-specific CLIs**: None configured",
       "**Routine under <user>/ prefix**: SLURM job submission (`sbatch`/`srun`) requires explicit written confirmation for jobs over 4 node-hours per ~/.claude/CLAUDE.md; short debug/test runs are routine; `scancel` on shared-cluster jobs (glauxlab HPC, e.g. ~/niobe) is frequent in history but destructive without confirmation"
     ]
-  }
+  },
+  "crossSessionInbound": "accept"
 }
