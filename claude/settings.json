@@ -170,5 +170,6 @@
     "skill-creator": "off",
     "doc-coauthoring": "off",
     "import-memory": "off"
-  }
+  },
+  "remoteControlAtStartup": true
 }

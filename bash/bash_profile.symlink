@@ -1,5 +1,19 @@
 ## Load profile and bashrc for bash login sessions (e.g. via ssh)
 
+# bs-* Linux hosts (see hosts/hostnames/bs.sh): /etc/profile has already made
+# TMOUT=1800 readonly, which this shell cannot undo. Replace it with a non-login
+# shell started without TMOUT, which claims TMOUT=0 itself. Done first so the
+# rest of the chain runs only once, in the new shell (it gets PATH, cargo and bun
+# from ~/.bashrc/~/.profile). Only for interactive terminal sessions, not
+# `bash -lc cmd` or scp. The non-login shell never reads this file, so no loop.
+case "$HOSTNAME" in
+    bs*)
+        if [[ $- == *i* ]] && [ -t 0 ] && [ -z "$BASH_EXECUTION_STRING" ] \
+            && [ "${TMOUT:-0}" != 0 ] && readonly -p | grep -q ' TMOUT='; then
+            exec env -u TMOUT "$BASH"
+        fi ;;
+esac
+
 # ~/.bashrc sources ~/.profile itself, so sourcing it covers both. Skip it when
 # /etc/profile already did (SUSE does for login shells) -- otherwise every SSH
 # login runs .profile 3x and .bashrc 2x.
@@ -12,10 +26,3 @@ fi
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-
-# hosts/hostnames/bs.sh: this login shell inherited a readonly TMOUT from
-# /etc/profile. Replace it with a non-login shell that starts without TMOUT.
-# Only for interactive terminal sessions, not `bash -lc cmd` or scp.
-if [ -n "$DOTFILES_TMOUT_REEXEC" ] && [[ $- == *i* ]] && [ -t 0 ] && [ -z "$BASH_EXECUTION_STRING" ]; then
-    exec env -u TMOUT "$BASH"
-fi
