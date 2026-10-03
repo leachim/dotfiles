@@ -133,13 +133,13 @@ open. Linux hosts (HPC, bsse) get no extra restrictions.
 
 - Claude Code: `claude/install.sh` copies `claude/managed-settings.macos.json` to
   `/Library/Application Support/ClaudeCode/managed-settings.json` (sudo; re-run
-  the installer after editing it). It sandboxes Bash with no unsandboxed fallback
-  and adds the `bin/claude-write-guard` hook, which blocks Edit/Write outside the
-  project directory, the temp dirs and this project's memory -- the sandbox does
-  not cover the file tools. ssh cannot pass the sandbox proxy, so inside Claude
-  GitHub ssh remotes are rewritten to HTTPS with `gh` as credential helper;
-  other ssh remotes do not work from Claude on macOS. Directories added with
-  `/add-dir` are blocked by the hook too.
+  the installer after editing it). It sandboxes Bash: writes only in the project
+  and temp dirs, reads in `~` only from the project and `sandbox.filesystem`'s
+  allow-list. The sandbox does not cover the file tools, so the
+  `bin/claude-write-guard` hook applies the same rules to them. GitHub ssh
+  remotes are rewritten to HTTPS with `gh` as credential helper, because ssh
+  cannot pass the sandbox proxy; other ssh remotes do not work from Claude on
+  macOS. The file also carries iTerm2's Claude Code status hooks.
 - Codex: its `:workspace`-based permission profile limits writes to the workspace
   and temp dirs on both platforms. On macOS, `codex/install.sh` also copies
   `codex/requirements.macos.toml` to `/etc/codex/requirements.toml` (sudo),
@@ -149,7 +149,7 @@ open. Linux hosts (HPC, bsse) get no extra restrictions.
 - pi has no permission system either. `pi/extensions/guard.ts`, linked into
   `~/.pi/agent/extensions/`, restates the rules the other agents enforce on
   Linux: `.secrets` unreadable, writes outside the working directory and
-  destructive commands (`rm -r`, force-push, `gh pr close/merge`, `srun`) need
+  destructive commands (`rm -r`, force-push, `gh pr close/merge`, `srun`/`sbatch`) need
   confirmation, `sudo`/host control refused. Like opencode's, these are text
   checks, not a sandbox.
 

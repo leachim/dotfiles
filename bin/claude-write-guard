@@ -1,17 +1,28 @@
 #!/bin/bash
 #
-# Claude Code PreToolUse hook: block Edit/Write/NotebookEdit outside the project.
+# Claude Code PreToolUse hook: confine the file tools the way the sandbox
+# confines Bash. The sandbox covers Bash only; Read/Edit/Write/Grep/Glob run in
+# Claude's own process and are unaffected by it. Wired up by
+# claude/managed-settings.macos.json, so this runs on macOS only and parses JSON
+# with plutil rather than jq. The installed managed settings call this file by
+# name: renaming it blocks every file tool until the installer is re-run.
 #
-# The sandbox confines Bash only; the file tools run in Claude's own process and
-# are unaffected by it. Wired up by claude/managed-settings.macos.json, so this
-# runs on macOS only and parses JSON with plutil rather than jq.
+# Writes: allowed in the directory Claude was started in (and the current one,
+# which differs inside a worktree), the temp dirs, and this project's memory and
+# the plan files. Files that run code outside the sandbox (git hooks/config,
+# Claude settings, IDE configs, shell rc files) are blocked even there.
 #
-# Allowed: the directory Claude was started in (and the current one, which
-# differs inside a worktree), the temp dirs, and this project's memory and the
-# plan files. Paths are resolved through symlinks, so ~/.claude/settings.json
-# (-> ~/.dotfiles) is editable only from ~/.dotfiles. Within those, the paths the
-# sandbox write-protects for Bash (git hooks/config, Claude settings, shell rc
-# files) are blocked too. Fails closed: anything unexpected exits 2.
+# Reads: everything outside $HOME is readable, except searches rooted above it.
+# Inside $HOME only the write roots above and the sandbox's allowRead list from
+# the installed managed settings, minus its narrower denyRead entries -- so Bash
+# and the file tools see the same home.
+#
+# Paths are normalised (.. collapsed) the way Claude Code does, then resolved
+# through symlinks, so ~/.claude/settings.json (-> ~/.dotfiles) is reachable only
+# from ~/.dotfiles. Fails closed: anything unexpected exits 2.
+
+# CLAUDE_GUARD_SETTINGS points at another settings file, for testing.
+MANAGED=${CLAUDE_GUARD_SETTINGS:-"/Library/Application Support/ClaudeCode/managed-settings.json"}
 
 block () {
     echo "Blocked: $1" >&2
@@ -24,49 +35,138 @@ field () {
     printf '%s' "$input" | /usr/bin/plutil -extract "$1" raw -o - - 2>/dev/null
 }
 
-path=$(field tool_input.file_path) || path=$(field tool_input.notebook_path) ||
-    block "could not read a file path from the hook input"
+tool=$(field tool_name) || block "could not read tool_name from the hook input"
 cwd=$(field cwd) || block "could not read cwd from the hook input"
 project=${CLAUDE_PROJECT_DIR:-$cwd}
 
+case "$tool" in
+    Edit | Write | MultiEdit) mode=write; path=$(field tool_input.file_path) ;;
+    NotebookEdit) mode=write; path=$(field tool_input.notebook_path) ;;
+    Read) mode=read; path=$(field tool_input.file_path) ;;
+    Grep) mode=read; path=$(field tool_input.path) || path=$cwd ;;
+    Glob)
+        mode=read
+        path=$(field tool_input.path) || path=$cwd
+        # The search starts at the pattern's non-glob prefix.
+        pattern=$(field tool_input.pattern)
+        prefix=${pattern%%[*?[{]*}
+        [ "$prefix" = "$pattern" ] || prefix=${prefix%/*}
+        case "$prefix" in
+            /* | "~" | "~/"*) path=$prefix ;;
+            ?*) path="$path/$prefix" ;;
+        esac
+        ;;
+    *) exit 0 ;;
+esac
+[ -n "$path" ] || block "could not read a path from the hook input"
+
+# Absolute, with ~ expanded and . and .. collapsed lexically. Helpers return in
+# REPLY rather than through $(...), which would fork per call.
+normalise () {
+    local p=$1 out= part parts
+    case "$p" in
+        "~") p=$HOME ;;
+        "~/"*) p="$HOME/${p#"~/"}" ;;
+        /*) ;;
+        *) p="$cwd/$p" ;;
+    esac
+    IFS=/ read -ra parts <<< "$p"
+    for part in "${parts[@]}"; do
+        case "$part" in
+            "" | .) ;;
+            ..) out=${out%/*} ;;
+            *) out="$out/$part" ;;
+        esac
+    done
+    REPLY=${out:-/}
+}
+
 # Resolve symlinks, dangling ones included; for a path that does not exist yet,
-# resolve its nearest existing ancestor and re-append the rest.
+# resolve its nearest existing ancestor and re-append the rest. The data-volume
+# firmlink is another spelling of the same path, so it is folded back.
 resolve () {
-    p=$1 rest= n=0
+    local p rest= n=0 t dir
+    normalise "$1"; p=$REPLY
     while :; do
         while [ -L "$p" ]; do
             n=$((n + 1))
             [ $n -gt 40 ] && block "symlink loop at $1"
             t=$(readlink "$p")
             case "$t" in
-                /*) p=$t ;;
-                *) p="$(dirname "$p")/$t" ;;
+                /*) normalise "$t" ;;
+                *) normalise "${p%/*}/$t" ;;
             esac
+            p=$REPLY
         done
         [ -e "$p" ] || [ "$p" = / ] && break
-        rest="/$(basename "$p")$rest"
-        p=$(dirname "$p")
+        rest="/${p##*/}$rest"
+        p=${p%/*}; p=${p:-/}
     done
-    printf '%s%s\n' "$(realpath "$p")" "$rest"
+    # Physical path of the existing part: of the directory itself, or of a
+    # file's parent directory.
+    if [ -d "$p" ]; then dir=$p t=; else dir=${p%/*} t="/${p##*/}"; fi
+    cd -P -- "${dir:-/}" 2>/dev/null || block "cannot resolve $1"
+    p="${PWD%/}$t$rest"
+    cd -- "$start"
+    REPLY=${p#/System/Volumes/Data}
+    REPLY=${REPLY:-/}
 }
 
-target=$(resolve "$path")
-
-case "$target" in
-    */.git/hooks/* | */.git/config | */.claude/settings.json | */.claude/settings.local.json | \
-    */.claude/commands/* | */.claude/agents/* | */.mcp.json | "$HOME"/.zshrc | "$HOME"/.zshenv | \
-    "$HOME"/.zprofile | "$HOME"/.bashrc | "$HOME"/.bash_profile | "$HOME"/.profile | "$HOME"/.gitconfig)
-        block "$path is write-protected (it can run code outside the sandbox)."
-        ;;
-esac
-
-memory="$HOME/.claude/projects/$(printf '%s' "$project" | sed 's/[^A-Za-z0-9]/-/g')"
-
-for root in "$project" "$cwd" "${TMPDIR:-/tmp}" /tmp "$memory" "$HOME/.claude/plans"; do
-    root=$(resolve "$root")
+within () {
+    resolve "$1"
     case "$target/" in
-        "$root"/*) exit 0 ;;
+        "${REPLY%/}"/*) return 0 ;;
     esac
-done
+    return 1
+}
 
-block "$path is outside the project directory ($project). Writes are confined to the directory Claude was started in."
+managed_list () {
+    /usr/bin/plutil -extract "sandbox.filesystem.$1" xml1 -o - "$MANAGED" 2>/dev/null |
+        sed -n 's|.*<string>\(.*\)</string>.*|\1|p'
+}
+
+start=$PWD
+normalise "$path"; lexical=$REPLY
+resolve "$path"; target=$REPLY
+resolve "$HOME"; home=$REPLY
+memory="$HOME/.claude/projects/${project//[^A-Za-z0-9]/-}"
+write_roots=("$project" "$cwd" "${TMPDIR:-/tmp}" /tmp "$memory" "$HOME/.claude/plans")
+
+if [ "$mode" = write ]; then
+    for p in "$lexical" "$target"; do
+        case "$p" in
+            */.git/hooks/* | */.git/config | */.claude/settings.json | */.claude/settings.local.json | \
+            */.claude/commands/* | */.claude/agents/* | */.mcp.json | */.vscode/* | */.idea/* | \
+            "$HOME"/.zshrc | "$HOME"/.zshenv | "$HOME"/.zprofile | "$HOME"/.bashrc | \
+            "$HOME"/.bash_profile | "$HOME"/.profile | "$HOME"/.gitconfig)
+                block "$path is write-protected (it can run code outside the sandbox)."
+                ;;
+        esac
+    done
+    for root in "${write_roots[@]}"; do
+        within "$root" && exit 0
+    done
+    block "$path is outside the project directory ($project). Writes are confined to the directory Claude was started in."
+fi
+
+# A search rooted at / or /Users descends into home.
+case "$home/" in
+    "${target%/}"/*) block "$path contains your home directory; search inside the project instead." ;;
+esac
+case "$target/" in
+    "$home"/*) ;;
+    *) exit 0 ;;
+esac
+for root in "${write_roots[@]}"; do
+    within "$root" && exit 0
+done
+[ -r "$MANAGED" ] || block "$MANAGED is missing, so the read allow-list is unknown."
+while IFS= read -r entry; do
+    [ "$entry" = "~" ] && continue
+    within "$entry" && block "$path is on the sandbox denyRead list."
+done <<< "$(managed_list denyRead)"
+while IFS= read -r entry; do
+    [ "$entry" = . ] && entry=$project
+    [ -n "$entry" ] && within "$entry" && exit 0
+done <<< "$(managed_list allowRead)"
+block "$path is in your home directory outside the project ($project). Reads there are limited to the project and the sandbox allowRead list."

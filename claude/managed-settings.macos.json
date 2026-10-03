@@ -13,17 +13,150 @@
     "autoAllowBashIfSandboxed": true,
     "enableWeakerNetworkIsolation": true,
     "network": {
-      "allowedDomains": ["*"]
+      "allowedDomains": [
+        "*"
+      ]
+    },
+    "filesystem": {
+      "denyRead": [
+        "~",
+        "~/.local/share/opencode",
+        "~/.cargo/credentials",
+        "~/.cargo/credentials.toml",
+        "~/.cache/huggingface"
+      ],
+      "allowRead": [
+        ".",
+        "~/.gitconfig",
+        "~/.gitignore",
+        "~/.gitconfig.local",
+        "~/.dotfiles/git",
+        "~/.config/git",
+        "~/.config/gh",
+        "~/Library/Keychains",
+        "~/.local",
+        "~/.bun",
+        "~/.cargo",
+        "~/.rustup",
+        "~/.pixi",
+        "~/.cache",
+        "~/.npm",
+        "~/.claude/shell-snapshots",
+        "~/.claude/skills",
+        "~/.claude/plugins",
+        "~/.dotfiles/claude/skills",
+        "~/.dotfiles/bin",
+        "~/.localrc",
+        "~/.secrets/pushover"
+      ]
     }
   },
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+        "matcher": "Read|Edit|Write|MultiEdit|NotebookEdit|Grep|Glob",
         "hooks": [
           {
             "type": "command",
             "command": "g=~/.dotfiles/bin/claude-write-guard; [ -r \"$g\" ] || { echo \"Blocked: write guard $g is missing\" >&2; exit 2; }; exec /bin/bash \"$g\""
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -x ~/.config/iterm2/cc-status ] && exec ~/.config/iterm2/cc-status; exit 0"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -x ~/.config/iterm2/cc-status ] && exec ~/.config/iterm2/cc-status; exit 0"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -x ~/.config/iterm2/cc-status ] && exec ~/.config/iterm2/cc-status; exit 0"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -x ~/.config/iterm2/cc-status ] && exec ~/.config/iterm2/cc-status; exit 0"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -x ~/.config/iterm2/cc-status ] && exec ~/.config/iterm2/cc-status; exit 0"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -x ~/.config/iterm2/cc-status ] && exec ~/.config/iterm2/cc-status; exit 0"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -x ~/.config/iterm2/cc-status ] && exec ~/.config/iterm2/cc-status; exit 0"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -x ~/.config/iterm2/cc-status ] && exec ~/.config/iterm2/cc-status; exit 0"
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -x ~/.config/iterm2/cc-status ] && exec ~/.config/iterm2/cc-status; exit 0"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -x ~/.config/iterm2/cc-status ] && exec ~/.config/iterm2/cc-status; exit 0"
           }
         ]
       }

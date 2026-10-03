@@ -2,8 +2,8 @@
  * Permission guard for pi, linked to ~/.pi/agent/extensions/guard.ts by
  * pi/install.sh.
  *
- * pi has no permission system of its own, so this restates the rules that
- * claude/settings.json and opencode/opencode.jsonc enforce for the other agents:
+ * pi has no permission system of its own, so this follows the rules in
+ * claude/settings.json and opencode/opencode.jsonc (kept by hand, not shared):
  * credential files are unreadable, writes outside the working directory and
  * destructive or irreversible commands need confirmation, and privilege
  * escalation and host control are refused. Without a UI (print/RPC mode),
@@ -30,11 +30,11 @@ const DENY_COMMANDS = [
 ];
 
 const ASK_COMMANDS = [
-	/\brm\s+(-[a-zA-Z]*[rR]|--recursive)/,
+	/\brm\b[^;&|]*\s(-[a-zA-Z]*[rR][a-zA-Z]*|--recursive)\b/,
 	/\brmdir\b/,
 	/\bgh\s+pr\s+(close|merge)\b/,
-	/\bgit\s+push\b.*(\s-f\b|--force)/,
-	/\bsrun\b/,
+	/\bgit\s+push\b[^;&|]*(\s-[a-zA-Z]*f[a-zA-Z]*\b|--force|\s\+\S)/,
+	/\b(srun|sbatch)\b/,
 ];
 
 // Resolve symlinks of the longest existing prefix, so a link inside the

@@ -88,12 +88,9 @@ for dir in commands agents skills; do
     echo "  Linked $src -> $dst"
 done
 
-# macOS: sandbox Bash and confine the file tools to the project directory, via
-# managed settings so the layer exists only on macOS; Linux keeps settings.json
-# alone. The file is copied, not linked: a broken managed-settings.json stops
-# Claude Code from starting, so only a copy that parses is installed, and edits
-# in this repo take effect on the next run of this script. A failed sudo only
-# warns, so script/link carries on.
+# macOS: sandbox Bash and confine the file tools to the project directory via
+# managed settings. Copied, not linked: a broken managed-settings.json stops
+# Claude Code from starting, so only a copy that parses is installed.
 if [ "$(uname -s)" = Darwin ]; then
     managed_src="$DOTFILES_CLAUDE/managed-settings.macos.json"
     managed_dst="/Library/Application Support/ClaudeCode/managed-settings.json"
@@ -102,7 +99,7 @@ if [ "$(uname -s)" = Darwin ]; then
     elif ! cmp -s "$managed_src" "$managed_dst"; then
         echo "  Installing $managed_src -> $managed_dst (sudo)"
         { sudo mkdir -p "$(dirname "$managed_dst")" &&
-          { [ ! -e "$managed_dst" ] || sudo cp "$managed_dst" "$managed_dst.backup"; } &&
+          { [ ! -e "$managed_dst" ] || [ -e "$managed_dst.backup" ] || sudo cp "$managed_dst" "$managed_dst.backup"; } &&
           sudo cp "$managed_src" "$managed_dst"; } ||
             echo "  WARNING: could not install $managed_dst; Claude Code is not sandboxed"
     fi

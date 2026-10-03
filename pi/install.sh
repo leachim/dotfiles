@@ -25,7 +25,10 @@ DOTFILES_PI="$HOME/.dotfiles/pi"
 # ~/.pi/agent/bin or ~/.local/bin, so PATH needs no change.
 if [ ! -d "$PI_DIR/install" ]; then
     echo "  Installing pi..."
-    curl -fsSL https://pi.dev/install.sh | setsid sh < /dev/null
+    installer=$(mktemp)
+    curl -fsSL https://pi.dev/install.sh -o "$installer" &&
+        setsid sh "$installer" < /dev/null
+    rm -f "$installer"
 fi
 
 link_pi () {

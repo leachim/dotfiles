@@ -164,10 +164,11 @@ opencode() (
 pi() {
     _no_sandbox_on_mac pi || return 1
     local bin
-    for bin in "$HOME/.pi/agent/bin/pi" "$HOME/.local/bin/pi" ""; do
-        [ -x "$bin" ] && break
-    done
-    if [ -z "$bin" ]; then
+    if [ -x "$HOME/.pi/agent/bin/pi" ]; then
+        bin="$HOME/.pi/agent/bin/pi"
+    elif [ -x "$HOME/.local/bin/pi" ]; then
+        bin="$HOME/.local/bin/pi"
+    else
         echo "pi: not installed; run ~/.dotfiles/pi/install.sh" >&2
         return 1
     fi
