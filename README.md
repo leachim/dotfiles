@@ -24,7 +24,8 @@ Bootstrap will prompt you for:
    - Bun (includes gemini-cli, codex, ccusage)
    - Claude Code config
    - Codex CLI config
-   - opencode config
+   - opencode config (Linux only)
+   - pi coding agent (Linux only)
    - GitHub CLI (gh)
 6. **pixi** -- optional, cross-platform
 
@@ -122,14 +123,40 @@ Each `*/install.sh` is run by `script/install` with an interactive prompt. They 
 
 ### AI coding tools
 
-Three CLIs are configured here: Claude Code (`claude/`), Codex (`codex/`) and
-opencode (`opencode/`). Each has its own `install.sh` that installs the CLI if
-missing and symlinks config out of this repo.
+Four CLIs are configured here: Claude Code (`claude/`), Codex (`codex/`),
+opencode (`opencode/`) and pi (`pi/`). Each has its own `install.sh` that installs
+the CLI if missing and symlinks config out of this repo.
 
-Claude Code and opencode share one set of instructions. `claude/CLAUDE.md` is the
-single source, linked to both `~/.claude/CLAUDE.md` and
-`~/.config/opencode/AGENTS.md`, so the personality and safety rules cannot drift
-apart. Edit that one file to change both.
+On macOS, agents may write only inside the directory they were started in, so an
+agent can edit this repo only when started in `~/.dotfiles`. Network access is
+open. Linux hosts (HPC, bsse) get no extra restrictions.
+
+- Claude Code: `claude/install.sh` copies `claude/managed-settings.macos.json` to
+  `/Library/Application Support/ClaudeCode/managed-settings.json` (sudo; re-run
+  the installer after editing it). It sandboxes Bash with no unsandboxed fallback
+  and adds the `bin/claude-write-guard` hook, which blocks Edit/Write outside the
+  project directory, the temp dirs and this project's memory -- the sandbox does
+  not cover the file tools. ssh cannot pass the sandbox proxy, so inside Claude
+  GitHub ssh remotes are rewritten to HTTPS with `gh` as credential helper;
+  other ssh remotes do not work from Claude on macOS. Directories added with
+  `/add-dir` are blocked by the hook too.
+- Codex: its `:workspace`-based permission profile limits writes to the workspace
+  and temp dirs on both platforms. On macOS, `codex/install.sh` also copies
+  `codex/requirements.macos.toml` to `/etc/codex/requirements.toml` (sudo),
+  which rejects full-access sandbox modes however codex is launched.
+- opencode and pi have no sandbox. On macOS `script/install` does not offer them,
+  their installers skip, and the shell wrappers refuse to start them.
+- pi has no permission system either. `pi/extensions/guard.ts`, linked into
+  `~/.pi/agent/extensions/`, restates the rules the other agents enforce on
+  Linux: `.secrets` unreadable, writes outside the working directory and
+  destructive commands (`rm -r`, force-push, `gh pr close/merge`, `srun`) need
+  confirmation, `sudo`/host control refused. Like opencode's, these are text
+  checks, not a sandbox.
+
+Claude Code, opencode and pi share one set of instructions. `claude/CLAUDE.md` is
+the single source, linked to `~/.claude/CLAUDE.md`,
+`~/.config/opencode/AGENTS.md` and `~/.pi/agent/AGENTS.md`, so the personality
+and safety rules cannot drift apart. Edit that one file to change all three.
 
 Only config files are linked, never whole tool directories. `~/.codex` is ~945MB
 of installed packages, auth tokens and session history, so just `config.toml` is
@@ -164,6 +191,7 @@ it to skip slow cluster module loads. It does not gate credentials — see
 | Claude Code | `claude-code_<version>_agent` | Claude Code itself; its own value wins over any `env` in settings |
 | Codex | `codex` | `codex()` wrapper, plus `shell_environment_policy` in `codex/config.toml` |
 | opencode | `opencode` | `opencode()` wrapper in `aliases/aliases.symlink` |
+| pi | `pi` | `pi()` wrapper in `aliases/aliases.symlink` |
 
 The checks test whether `AI_AGENT` is set at all, not for one specific value,
 because the tools name themselves differently. Set `AI_AGENT=0` to force the

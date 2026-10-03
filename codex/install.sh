@@ -39,3 +39,19 @@ for file in config.toml; do
     ln -s "$src" "$dst"
     echo "  Linked $src -> $dst"
 done
+
+# macOS: forbid full-access sandbox modes for every launch path (CLI flags,
+# desktop app), via managed requirements in a root-owned directory. Copied, not
+# linked, so edits in this repo take effect on the next run of this script. A
+# failed sudo only warns, so script/link carries on.
+if [ "$(uname -s)" = Darwin ]; then
+    req_src="$DOTFILES_CODEX/requirements.macos.toml"
+    req_dst=/etc/codex/requirements.toml
+    if ! cmp -s "$req_src" "$req_dst"; then
+        echo "  Installing $req_src -> $req_dst (sudo)"
+        { sudo mkdir -p /etc/codex &&
+          { [ ! -e "$req_dst" ] || sudo cp "$req_dst" "$req_dst.backup"; } &&
+          sudo cp "$req_src" "$req_dst"; } ||
+            echo "  WARNING: could not install $req_dst; codex may run unsandboxed"
+    fi
+fi

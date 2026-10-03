@@ -52,5 +52,9 @@ run_optional "Rust (rustup)"  ./rust/install.sh
 run_optional "Bun"            ./bun/install.sh
 run_optional "Claude Code config" ./claude/install.sh
 run_optional "Codex CLI config" ./codex/install.sh
-run_optional "opencode config" ./opencode/install.sh
+# No sandbox, so not offered on macOS (their installers refuse there too)
+if [ "$(uname -s)" != Darwin ]; then
+  run_optional "opencode config" ./opencode/install.sh
+  run_optional "pi coding agent" ./pi/install.sh
+fi
 run_optional "GitHub CLI (gh)" ./gh/install.sh

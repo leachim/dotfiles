@@ -1,0 +1,5 @@
+# Codex managed requirements, macOS only. codex/install.sh copies this to
+# /etc/codex/requirements.toml. Profiles with full-disk write map to the
+# danger-full-access sandbox mode and are rejected with a warning, so codex stays
+# confined to the workspace (config.toml's default_permissions) however launched.
+allowed_sandbox_modes = ["read-only", "workspace-write"]

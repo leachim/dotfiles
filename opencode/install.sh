@@ -11,6 +11,11 @@
 #
 # Backs up existing files/directories to $BACKUP_DIR or ~/.config/opencode/*.backup
 
+if [ "$(uname -s)" = Darwin ]; then
+    echo "  opencode: not supported on macOS -- it has no sandbox to confine writes to the working directory. Skipping."
+    exit 0
+fi
+
 # Install opencode binary if not present
 if ! command -v opencode > /dev/null 2>&1 && [ ! -x "$HOME/.opencode/bin/opencode" ]; then
     echo "  Installing opencode..."

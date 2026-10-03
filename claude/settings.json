@@ -66,6 +66,12 @@
     ],
     "defaultMode": "auto"
   },
+  "skillOverrides": {
+    "morning": "off",
+    "skill-creator": "off",
+    "doc-coauthoring": "off",
+    "import-memory": "off"
+  },
   "hooks": {
     "Stop": [
       {
@@ -110,7 +116,8 @@
   },
   "enabledPlugins": {
     "bio-research@synced": false,
-    "data@synced": false
+    "data@synced": false,
+    "cc-plugin-you-should-know@builtin": true
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
@@ -125,6 +132,7 @@
   "theme": "dark",
   "switchModelsOnFlag": true,
   "remoteControlAtStartup": true,
+  "crossSessionInbound": "accept",
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
@@ -167,12 +175,5 @@
       "**Org-specific CLIs**: None configured",
       "**Routine under <user>/ prefix**: SLURM job submission (`sbatch`/`srun`) requires explicit written confirmation for jobs over 4 node-hours per ~/.claude/CLAUDE.md; short debug/test runs are routine; `scancel` on shared-cluster jobs (e.g. ~/niobe) is frequent in history but destructive without confirmation"
     ]
-  },
-  "skillOverrides": {
-    "morning": "off",
-    "skill-creator": "off",
-    "doc-coauthoring": "off",
-    "import-memory": "off"
-  },
-  "crossSessionInbound": "accept"
+  }
 }

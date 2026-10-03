@@ -125,8 +125,11 @@ if [ "$(uname -s)" = "Linux" ] && command -v starship >/dev/null 2>&1; then
   success "starship"
 fi
 
-# opencode (autoupdate only fires on TUI launch, so upgrade explicitly here)
-if command -v opencode >/dev/null 2>&1; then
+# opencode (autoupdate only fires on TUI launch, so upgrade explicitly here).
+# Not on macOS, where it is unsupported.
+if [ "$(uname -s)" = Darwin ]; then
+  skip "opencode (unsupported on macOS)"
+elif command -v opencode >/dev/null 2>&1; then
   info "opencode upgrade"
   opencode upgrade
   success "opencode"

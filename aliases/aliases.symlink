@@ -133,8 +133,17 @@ secrets() {
 }
 
 # AI_AGENT names the tool driving this shell; hosts/*.sh read it to skip slow
-# cluster init. Claude Code sets its own identifier, codex and opencode do not,
-# so these wrappers name them.
+# cluster init. Claude Code sets its own identifier, codex, opencode and pi do
+# not, so these wrappers name them.
+#
+# opencode and pi have no OS sandbox, so they refuse to run on macOS, where
+# agents are confined to the directory they start in.
+_no_sandbox_on_mac () {
+    if [ "$(uname -s)" = Darwin ]; then
+        echo "$1: not supported on macOS -- it has no sandbox to confine writes to the working directory. Use claude or codex." >&2
+        return 1
+    fi
+}
 codex() {
     if [ "$PWD" = "/cluster/home" ]; then
         AI_AGENT=codex command codex -C "$HOME" "$@"
@@ -146,9 +155,24 @@ codex() {
 # opencode.jsonc reads {env:OR_OPENCODE_API_KEY}. Subshell body, so the key
 # reaches this process only.
 opencode() (
+    _no_sandbox_on_mac opencode || return 1
     secrets opencode
     AI_AGENT=opencode command opencode "$@"
 )
+
+# Runs the pi installed by pi/install.sh, never another `pi` on PATH.
+pi() {
+    _no_sandbox_on_mac pi || return 1
+    local bin
+    for bin in "$HOME/.pi/agent/bin/pi" "$HOME/.local/bin/pi" ""; do
+        [ -x "$bin" ] && break
+    done
+    if [ -z "$bin" ]; then
+        echo "pi: not installed; run ~/.dotfiles/pi/install.sh" >&2
+        return 1
+    fi
+    AI_AGENT=pi "$bin" "$@"
+}
 
 # Run Claude Code against OpenRouter via Cloudflare AI Gateway. Default model: DeepSeek V4 Pro.
 # Keys come from ~/.secrets/openrouter and ~/.secrets/cloudflare. Subshell body,

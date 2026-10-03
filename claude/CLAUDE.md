@@ -91,7 +91,7 @@ Also avoid working with a very large number of files and notify the user in thes
 Credentials live in `~/.secrets/<service>` and are exported by nothing. Load them with
 `secrets <service>` (or `secrets` for all) — see `aliases/aliases.symlink`. `~/.localrc`
 is for non-secret per-machine config only. Reads of `~/.secrets` are denied for Claude
-Code, codex and opencode; that is deliberate, not a misconfiguration. All three may read
+Code, codex, opencode and pi; that is deliberate, not a misconfiguration. All four may read
 `.env` files — job environment variables live there — but their values are credentials:
 use them in commands and job scripts, never echo them into output or send them anywhere.
 

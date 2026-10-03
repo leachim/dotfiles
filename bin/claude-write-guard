@@ -1,0 +1,72 @@
+#!/bin/bash
+#
+# Claude Code PreToolUse hook: block Edit/Write/NotebookEdit outside the project.
+#
+# The sandbox confines Bash only; the file tools run in Claude's own process and
+# are unaffected by it. Wired up by claude/managed-settings.macos.json, so this
+# runs on macOS only and parses JSON with plutil rather than jq.
+#
+# Allowed: the directory Claude was started in (and the current one, which
+# differs inside a worktree), the temp dirs, and this project's memory and the
+# plan files. Paths are resolved through symlinks, so ~/.claude/settings.json
+# (-> ~/.dotfiles) is editable only from ~/.dotfiles. Within those, the paths the
+# sandbox write-protects for Bash (git hooks/config, Claude settings, shell rc
+# files) are blocked too. Fails closed: anything unexpected exits 2.
+
+block () {
+    echo "Blocked: $1" >&2
+    exit 2
+}
+
+input=$(cat)
+
+field () {
+    printf '%s' "$input" | /usr/bin/plutil -extract "$1" raw -o - - 2>/dev/null
+}
+
+path=$(field tool_input.file_path) || path=$(field tool_input.notebook_path) ||
+    block "could not read a file path from the hook input"
+cwd=$(field cwd) || block "could not read cwd from the hook input"
+project=${CLAUDE_PROJECT_DIR:-$cwd}
+
+# Resolve symlinks, dangling ones included; for a path that does not exist yet,
+# resolve its nearest existing ancestor and re-append the rest.
+resolve () {
+    p=$1 rest= n=0
+    while :; do
+        while [ -L "$p" ]; do
+            n=$((n + 1))
+            [ $n -gt 40 ] && block "symlink loop at $1"
+            t=$(readlink "$p")
+            case "$t" in
+                /*) p=$t ;;
+                *) p="$(dirname "$p")/$t" ;;
+            esac
+        done
+        [ -e "$p" ] || [ "$p" = / ] && break
+        rest="/$(basename "$p")$rest"
+        p=$(dirname "$p")
+    done
+    printf '%s%s\n' "$(realpath "$p")" "$rest"
+}
+
+target=$(resolve "$path")
+
+case "$target" in
+    */.git/hooks/* | */.git/config | */.claude/settings.json | */.claude/settings.local.json | \
+    */.claude/commands/* | */.claude/agents/* | */.mcp.json | "$HOME"/.zshrc | "$HOME"/.zshenv | \
+    "$HOME"/.zprofile | "$HOME"/.bashrc | "$HOME"/.bash_profile | "$HOME"/.profile | "$HOME"/.gitconfig)
+        block "$path is write-protected (it can run code outside the sandbox)."
+        ;;
+esac
+
+memory="$HOME/.claude/projects/$(printf '%s' "$project" | sed 's/[^A-Za-z0-9]/-/g')"
+
+for root in "$project" "$cwd" "${TMPDIR:-/tmp}" /tmp "$memory" "$HOME/.claude/plans"; do
+    root=$(resolve "$root")
+    case "$target/" in
+        "$root"/*) exit 0 ;;
+    esac
+done
+
+block "$path is outside the project directory ($project). Writes are confined to the directory Claude was started in."
