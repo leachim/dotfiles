@@ -70,7 +70,13 @@
     "morning": "off",
     "skill-creator": "off",
     "doc-coauthoring": "off",
-    "import-memory": "off"
+    "import-memory": "off",
+    "docs": "off",
+    "docx": "off",
+    "xlsx": "off",
+    "google-workspace": "off",
+    "computer-use": "off",
+    "chrome-browser": "off"
   },
   "hooks": {
     "Stop": [

@@ -1,6 +1,6 @@
 ---
 name: blindspot
-description: Surface what I don't know about work in progress. Modes: pass, directions, interview, notes, quiz.
+description: "Surface what I don't know about work in progress. Modes: pass, directions, interview, notes, quiz."
 ---
 
 # blindspot
