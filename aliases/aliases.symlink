@@ -178,8 +178,11 @@ pi() {
 # Claude Code on the work subscription. Separate config dir, so login,
 # history and memory are its own; claude/install.sh links the same settings,
 # CLAUDE.md, skills and agents into it. First run: /login with the work account.
+# The --settings theme (claude/themes/work.json, orange prompt border) marks the
+# work account at a glance; it overrides the shared settings.json theme
+# (custom:personal, blue border).
 claude-work() {
-    CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude "$@"
+    CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude --settings '{"theme":"custom:work"}' "$@"
 }
 
 # Run Claude Code against OpenRouter via Cloudflare AI Gateway. Default model: DeepSeek V4 Pro.

@@ -1,0 +1,8 @@
+{
+  "name": "Personal",
+  "base": "dark",
+  "overrides": {
+    "promptBorder": "#5f87ff",
+    "promptBorderShimmer": "#87afff"
+  }
+}

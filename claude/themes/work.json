@@ -1,0 +1,8 @@
+{
+  "name": "Work",
+  "base": "dark",
+  "overrides": {
+    "promptBorder": "#ff8700",
+    "promptBorderShimmer": "#ffaf5f"
+  }
+}

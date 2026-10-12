@@ -129,7 +129,7 @@
   "pluginConfigs": {},
   "autoUpdatesChannel": "latest",
   "skipWorkflowUsageWarning": true,
-  "theme": "dark",
+  "theme": "custom:personal",
   "switchModelsOnFlag": true,
   "remoteControlAtStartup": true,
   "crossSessionInbound": "accept",

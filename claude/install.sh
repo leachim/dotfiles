@@ -73,8 +73,8 @@ for CLAUDE_DIR in "$HOME/.claude" "$HOME/.claude-work"; do
         echo "  Linked $src -> $dst"
     done
 
-    # Symlink directories (commands, agents, skills)
-    for dir in commands agents skills; do
+    # Symlink directories (commands, agents, skills, themes)
+    for dir in commands agents skills themes; do
         src="$DOTFILES_CLAUDE/$dir"
         dst="$CLAUDE_DIR/$dir"
 
