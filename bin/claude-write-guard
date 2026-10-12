@@ -129,14 +129,17 @@ start=$PWD
 normalise "$path"; lexical=$REPLY
 resolve "$path"; target=$REPLY
 resolve "$HOME"; home=$REPLY
-memory="$HOME/.claude/projects/${project//[^A-Za-z0-9]/-}"
-write_roots=("$project" "$cwd" "${TMPDIR:-/tmp}" /tmp "$memory" "$HOME/.claude/plans")
+config_dir=${CLAUDE_CONFIG_DIR:-$HOME/.claude}
+memory="$config_dir/projects/${project//[^A-Za-z0-9]/-}"
+write_roots=("$project" "$cwd" "${TMPDIR:-/tmp}" /tmp "$memory" "$config_dir/plans")
 
 if [ "$mode" = write ]; then
     for p in "$lexical" "$target"; do
         case "$p" in
             */.git/hooks/* | */.git/config | */.claude/settings.json | */.claude/settings.local.json | \
-            */.claude/commands/* | */.claude/agents/* | */.mcp.json | */.vscode/* | */.idea/* | \
+            */.claude/commands/* | */.claude/agents/* | \
+            */.claude-work/settings.json | */.claude-work/settings.local.json | \
+            */.claude-work/commands/* | */.claude-work/agents/* | */.mcp.json | */.vscode/* | */.idea/* | \
             "$HOME"/.zshrc | "$HOME"/.zshenv | "$HOME"/.zprofile | "$HOME"/.bashrc | \
             "$HOME"/.bash_profile | "$HOME"/.profile | "$HOME"/.gitconfig)
                 block "$path is write-protected (it can run code outside the sandbox)."

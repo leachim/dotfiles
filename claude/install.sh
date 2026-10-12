@@ -10,17 +10,15 @@ if ! command -v claude > /dev/null 2>&1; then
     curl -fsSL https://cli.claude.ai/install.sh | sh
 fi
 
-CLAUDE_DIR="$HOME/.claude"
 DOTFILES_CLAUDE="$HOME/.dotfiles/claude"
-
-mkdir -p "$CLAUDE_DIR"
 
 backup_claude_item () {
     local item=$1
     if [ -n "$BACKUP_DIR" ]; then
-        mkdir -p "$BACKUP_DIR/claude"
-        mv "$item" "$BACKUP_DIR/claude/$(basename "$item")"
-        echo "  Backed up $item to $BACKUP_DIR/claude/"
+        bdir="$BACKUP_DIR/$(basename "$(dirname "$item")" | sed 's/^\.//')"
+        mkdir -p "$bdir"
+        mv "$item" "$bdir/$(basename "$item")"
+        echo "  Backed up $item to $bdir/"
     else
         mv "$item" "${item}.backup"
         echo "  Backed up $item to ${item}.backup"
@@ -46,46 +44,53 @@ absorb_and_link () {
     fi
 }
 
-# Symlink files
-for file in CLAUDE.md settings.json; do
-    src="$DOTFILES_CLAUDE/$file"
-    dst="$CLAUDE_DIR/$file"
+# One config dir per account: ~/.claude (personal) and ~/.claude-work (work,
+# used by the `claude-work` wrapper via CLAUDE_CONFIG_DIR). Both get the same
+# tracked config; logins, history and memory stay separate.
+for CLAUDE_DIR in "$HOME/.claude" "$HOME/.claude-work"; do
+    mkdir -p "$CLAUDE_DIR"
 
-    if [ ! -f "$src" ]; then
-        continue
-    fi
+    # Symlink files
+    for file in CLAUDE.md settings.json; do
+        src="$DOTFILES_CLAUDE/$file"
+        dst="$CLAUDE_DIR/$file"
 
-    if [ "$file" = settings.json ]; then
-        absorb_and_link "$src" "$dst"
-    fi
+        if [ ! -f "$src" ]; then
+            continue
+        fi
 
-    if [ -L "$dst" ]; then
-        rm "$dst"
-    elif [ -f "$dst" ]; then
-        backup_claude_item "$dst"
-    fi
+        if [ "$file" = settings.json ]; then
+            absorb_and_link "$src" "$dst"
+        fi
 
-    ln -s "$src" "$dst"
-    echo "  Linked $src -> $dst"
-done
+        if [ -L "$dst" ]; then
+            rm "$dst"
+        elif [ -f "$dst" ]; then
+            backup_claude_item "$dst"
+        fi
 
-# Symlink directories (commands, agents, skills)
-for dir in commands agents skills; do
-    src="$DOTFILES_CLAUDE/$dir"
-    dst="$CLAUDE_DIR/$dir"
+        ln -s "$src" "$dst"
+        echo "  Linked $src -> $dst"
+    done
 
-    if [ ! -d "$src" ]; then
-        continue
-    fi
+    # Symlink directories (commands, agents, skills)
+    for dir in commands agents skills; do
+        src="$DOTFILES_CLAUDE/$dir"
+        dst="$CLAUDE_DIR/$dir"
 
-    if [ -L "$dst" ]; then
-        rm "$dst"
-    elif [ -d "$dst" ]; then
-        backup_claude_item "$dst"
-    fi
+        if [ ! -d "$src" ]; then
+            continue
+        fi
 
-    ln -s "$src" "$dst"
-    echo "  Linked $src -> $dst"
+        if [ -L "$dst" ]; then
+            rm "$dst"
+        elif [ -d "$dst" ]; then
+            backup_claude_item "$dst"
+        fi
+
+        ln -s "$src" "$dst"
+        echo "  Linked $src -> $dst"
+    done
 done
 
 # macOS: sandbox Bash and confine the file tools to the project directory via

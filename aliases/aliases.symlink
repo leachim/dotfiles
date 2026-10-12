@@ -175,6 +175,13 @@ pi() {
     AI_AGENT=pi "$bin" "$@"
 }
 
+# Claude Code on the work subscription. Separate config dir, so login,
+# history and memory are its own; claude/install.sh links the same settings,
+# CLAUDE.md, skills and agents into it. First run: /login with the work account.
+claude-work() {
+    CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude "$@"
+}
+
 # Run Claude Code against OpenRouter via Cloudflare AI Gateway. Default model: DeepSeek V4 Pro.
 # Keys come from ~/.secrets/openrouter and ~/.secrets/cloudflare. Subshell body,
 # so they reach this process only.

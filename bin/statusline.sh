@@ -3,7 +3,7 @@
 # Claude Code statusline. Runs on both macOS and the Linux clusters, so every
 # external tool here is either POSIX or probed for both GNU and BSD spellings.
 
-CACHE="$HOME/.claude/statusline_blocks_cache.json"
+CACHE="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/statusline_blocks_cache.json"
 CACHE_MAX_AGE=60
 
 # ccusage is a bun global; it is not always on PATH when Claude Code spawns us.
