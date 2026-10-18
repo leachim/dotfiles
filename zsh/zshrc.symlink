@@ -1,9 +1,10 @@
 # Fig pre block. Keep at the top of this file.
 #[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && . "$HOME/.fig/shell/zshrc.pre.zsh"
 
-# Euler exports TMOUT, which ends a shell left idle at the prompt. A TMOUT
-# inherited from the environment is not readonly in zsh, so drop it here.
-unset TMOUT 2>/dev/null
+# Euler exports TMOUT, which ends a shell left idle at the prompt. One inherited
+# from the environment can be unset; unsetting a readonly one (bs-* hosts claim
+# TMOUT=0 that way) would abort this file.
+[[ ${(t)TMOUT} == *readonly* ]] || unset TMOUT
 
 # shortcut to this dotfiles path is $DOTFILES
 export DOTFILES=$HOME/.dotfiles

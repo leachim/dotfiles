@@ -16,8 +16,9 @@ if [ "$(uname -s)" = Darwin ]; then
     exit 0
 fi
 
-# Install opencode binary if not present
-if ! command -v opencode > /dev/null 2>&1 && [ ! -x "$HOME/.opencode/bin/opencode" ]; then
+# Install opencode binary if not present. DOTFILES_LINK_ONLY (set by
+# script/link) skips this and only links config.
+if [ -z "$DOTFILES_LINK_ONLY" ] && ! command -v opencode > /dev/null 2>&1 && [ ! -x "$HOME/.opencode/bin/opencode" ]; then
     echo "  Installing opencode..."
     curl -fsSL https://opencode.ai/install | sh
 fi

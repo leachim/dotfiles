@@ -34,10 +34,9 @@ alias gls='git ls-tree -r HEAD'
 alias gp="git push"
 alias gac='git add -A && git commit -m'
 alias glog='git glog'
-# for bash and zsh without oh-my-zsh; its git plugin has its own versions
-alias gl >/dev/null 2>&1 || alias gl='git pull --prune'
-alias gca >/dev/null 2>&1 || alias gca='git commit -a'
-alias gco >/dev/null 2>&1 || alias gco='git checkout'
+alias gl='git pull --prune'
+alias gca='git commit -a'
+alias gco='git checkout'
 alias gpa="git push --all && git push --tags"
 alias gt="git tag -l --sort=v:refname"
 alias gu="git pull"

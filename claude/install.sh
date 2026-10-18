@@ -4,8 +4,9 @@
 #
 # Backs up existing files/directories to $DOTFILES_BACKUP_DIR or ~/.claude/*.backup
 
-# Install claude binary if not present
-if ! command -v claude > /dev/null 2>&1; then
+# Install claude binary if not present. DOTFILES_LINK_ONLY (set by script/link)
+# skips this and only links config.
+if [ -z "$DOTFILES_LINK_ONLY" ] && ! command -v claude > /dev/null 2>&1; then
     echo "  Installing Claude Code CLI..."
     curl -fsSL https://cli.claude.ai/install.sh | sh
 fi

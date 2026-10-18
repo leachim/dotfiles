@@ -33,10 +33,11 @@ Bootstrap will prompt you for:
 
 After pulling on a machine that is already set up, run `script/link`. It refreshes
 the `*.symlink` files and re-runs the claude/codex/opencode config linkers, so new
-files in this repo (a new skill, a new config) get linked. It is idempotent,
-non-interactive, and installs no packages.
+files in this repo (a new skill, a new config) get linked. It is idempotent and
+installs no packages. On macOS it also refreshes the Claude Code and codex managed
+sandbox settings, and asks for sudo when the tracked copy has changed.
 
-Run `script/update` to update an existing installation. It refreshes symlinks, then
+Run `script/update` to update an existing installation. It runs `script/link`, then
 updates whatever it finds installed: Homebrew, rustup and cargo binaries, vim/nvim
 plugins, Oh My Zsh, starship (Linux) and pixi. Anything absent is skipped, so it is
 safe on every host.

@@ -11,9 +11,12 @@ cd "$(dirname "$0")"/..
 info "refreshing *.symlink"
 link_dotfiles
 
-# Per-tool config linking. Each installer is idempotent and only links what the
-# host already has; claude/install.sh also folds back a settings.json that was
-# replaced by a regular file.
+# Per-tool config linking. Each installer is idempotent; with DOTFILES_LINK_ONLY
+# it installs no binaries and only links config. claude/install.sh also folds
+# back a settings.json that was replaced by a regular file. On macOS the claude
+# and codex installers refresh the managed sandbox settings, which asks for
+# sudo when the tracked copy has changed.
+export DOTFILES_LINK_ONLY=1
 for installer in claude codex opencode; do
   script="$DOTFILES_ROOT/$installer/install.sh"
   [ -f "$script" ] || continue

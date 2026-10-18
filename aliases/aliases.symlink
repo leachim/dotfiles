@@ -10,10 +10,10 @@ use_shared_history() {
     setopt share_history
     setopt inc_append_history
   elif [ -n "$BASH_VERSION" ]; then
-    # Bash-specific shared history
+    # Bash-specific shared history. bashrc's PROMPT_COMMAND already runs
+    # `history -a; history -n`, which syncs through whichever HISTFILE is set.
     export HISTFILE=~/.bash_history
     shopt -s histappend
-    PROMPT_COMMAND="history -a; history -n"
   fi
 }
 
@@ -27,7 +27,6 @@ use_separate_history() {
     # Bash-specific separate history
     export HISTFILE="$HOME/.bash_history_$$"
     shopt -u histappend
-    PROMPT_COMMAND=""
   fi
 }
 

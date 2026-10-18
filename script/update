@@ -7,11 +7,7 @@ set -e
 cd "$(dirname "$0")"/..
 . script/lib.sh
 
-# Only the *.symlink files; script/link also runs the per-tool installers,
-# which can install binaries and prompt for sudo.
-info "refreshing symlinks"
-link_dotfiles
-success "symlinks"
+script/link
 
 # Homebrew
 if command -v brew >/dev/null 2>&1; then
