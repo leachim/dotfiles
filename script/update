@@ -61,6 +61,8 @@ fi
 # Oh My Zsh
 if [ -d "$HOME/.oh-my-zsh" ] && command -v zsh >/dev/null 2>&1; then
   info "oh-my-zsh update"
+  # On NFS homes fetch appends to a stale FETCH_HEAD; the pull then sees several merge heads
+  rm -f "$HOME/.oh-my-zsh/.git/FETCH_HEAD"
   env ZSH="$HOME/.oh-my-zsh" zsh "$HOME/.oh-my-zsh/tools/upgrade.sh"
   success "oh-my-zsh"
 else
@@ -94,9 +96,14 @@ fi
 
 # Pixi
 if command -v pixi >/dev/null 2>&1; then
-  info "pixi self-update"
-  pixi self-update
-  success "pixi"
+  # The NFS home is shared across architectures; skip a pixi built for another one
+  if pixi --version >/dev/null 2>&1; then
+    info "pixi self-update"
+    pixi self-update
+    success "pixi"
+  else
+    skip "pixi ($(command -v pixi) does not run on $(uname -m))"
+  fi
 else
   skip "pixi (not installed)"
 fi
