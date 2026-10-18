@@ -12,8 +12,9 @@ else
   export PATH="$BUN_INSTALL/bin:$PATH"
 fi
 
-# Symlink bun as node so packages with #!/usr/bin/env node shebangs work
-if [ ! -e "$HOME/.bun/bin/node" ]; then
+# Symlink bun as node so packages with #!/usr/bin/env node shebangs work, but
+# only on hosts without a real node; ~/.bun/bin would otherwise shadow nvm's.
+if [ ! -e "$HOME/.bun/bin/node" ] && ! command -v node >/dev/null 2>&1; then
   echo "  node: symlinking to bun"
   ln -s "$HOME/.bun/bin/bun" "$HOME/.bun/bin/node"
 fi

@@ -384,8 +384,9 @@ j() {
 ###       SERVICES      ###
 ###########################
 
-alias latest="ls -ltr | tail -n 1 | awk '{print $NF}'"
-alias latest2="ls -ltr | tail -n 2 | head -n 1 | awk '{print $NF}'"
+# name of the newest / second-newest entry in the current directory: vim $(latest)
+latest() { command ls -t | head -n 1; }
+latest2() { command ls -t | sed -n 2p; }
 
 
 ## Latex, Markdown & PDF viewer
