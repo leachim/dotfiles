@@ -385,8 +385,6 @@ j() {
 ###########################
 
 # name of the newest / second-newest entry in the current directory: vim $(latest)
-# (unalias: these used to be aliases, which break a re-source in an old shell)
-unalias latest latest2 2>/dev/null
 latest() { command ls -t | head -n 1; }
 latest2() { command ls -t | sed -n 2p; }
 

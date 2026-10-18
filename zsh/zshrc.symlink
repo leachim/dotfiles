@@ -32,12 +32,6 @@ do
   source $file
 done
 
-# load everything but the path, completion, skim and zsh/config.zsh files
-for file in ${${${${config_files:#*/path.zsh}:#*/completion.zsh}:#*/skim-key-bindings.zsh}:#$DOTFILES/zsh/config.zsh}
-do
-  source $file
-done
-
 # Completion functions have to be on fpath before compinit runs
 fpath=($DOTFILES/functions $fpath)
 autoload -U $DOTFILES/functions/*(:t)
@@ -48,7 +42,9 @@ HIST_STAMPS="dd/mm/yyyy"
 plugins=(git history-substring-search shrink-path)
 
 # oh-my-zsh runs compinit itself, so only run it here when oh-my-zsh is absent.
-# Either way it has to come before the completion.zsh files, which use compdef.
+# Either way it comes before the repo's own files, so their options, aliases
+# and functions override oh-my-zsh's, and before completion.zsh, which uses
+# compdef.
 if [ -f $ZSH/oh-my-zsh.sh ]; then
   source $ZSH/oh-my-zsh.sh
 else
@@ -56,8 +52,11 @@ else
   compinit
 fi
 
-# After oh-my-zsh, whose lib/ sets options of its own, so these always win
-source $DOTFILES/zsh/config.zsh
+# load everything but the path, completion, and skim files
+for file in ${${${config_files:#*/path.zsh}:#*/completion.zsh}:#*/skim-key-bindings.zsh}
+do
+  source $file
+done
 
 for file in ${(M)config_files:#*/completion.zsh}
 do
