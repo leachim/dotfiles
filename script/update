@@ -35,7 +35,7 @@ fi
 # Cargo-installed binaries
 if command -v cargo >/dev/null 2>&1; then
   info "cargo install-update"
-  cargo install-update -a
+  cargo install-update -a --locked
   success "cargo binaries"
 else
   skip "cargo (not installed)"

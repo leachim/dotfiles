@@ -12,8 +12,8 @@ else
     . "$HOME/.cargo/env"
 fi
 
-cargo install cargo-update zoxide bat fd-find eza git-delta
-cargo install skim --no-default-features --features cli
+cargo install --locked cargo-update zoxide bat fd-find eza git-delta
+cargo install --locked skim --no-default-features --features cli
 
 # Install skim shell integration (key-bindings for Ctrl-R, etc.)
 mkdir -p "$HOME/.skim/shell"
