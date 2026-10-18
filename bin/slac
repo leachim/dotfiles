@@ -1,20 +1,31 @@
 #!/bin/bash
 # Send notifications via Slack Bot API (ephemeral messages)
-# Requires: SLACK_BOT_TOKEN, SLACK_CHANNEL, SLACK_USER_ID in ~/.localrc
+#
+# SLACK_BOT_TOKEN, SLACK_CHANNEL and SLACK_USER_ID are read from
+# ~/.secrets/slack at call time; override the location with SLACK_CREDENTIALS.
+# Pre-set env vars win.
+
+SLACK_CREDENTIALS="${SLACK_CREDENTIALS:-$HOME/.secrets/slack}"
 
 if [ -z "$SLACK_BOT_TOKEN" ] || [ -z "$SLACK_CHANNEL" ] || [ -z "$SLACK_USER_ID" ]; then
-    echo "Error: SLACK_BOT_TOKEN, SLACK_CHANNEL, and SLACK_USER_ID must be set" >&2
+    if [ -r "$SLACK_CREDENTIALS" ]; then
+        . "$SLACK_CREDENTIALS"
+    fi
+fi
+
+if [ -z "$SLACK_BOT_TOKEN" ] || [ -z "$SLACK_CHANNEL" ] || [ -z "$SLACK_USER_ID" ]; then
+    echo "Error: SLACK_BOT_TOKEN, SLACK_CHANNEL and SLACK_USER_ID must be set (looked in $SLACK_CREDENTIALS)" >&2
     exit 1
 fi
 
 usage() {
-    echo "Usage: sling [exit_status] [runtime_secs] [message]"
-    echo "       sling [message]"
+    echo "Usage: slac [exit_status] [runtime_secs] [message]"
+    echo "       slac [message]"
     echo ""
     echo "Examples:"
-    echo "  sling 0 120              # success after 2min"
-    echo "  sling 1 60 'build broke' # failure after 1min with message"
-    echo "  sling 'deploy finished'  # plain message"
+    echo "  slac 0 120              # success after 2min"
+    echo "  slac 1 60 'build broke' # failure after 1min with message"
+    echo "  slac 'deploy finished'  # plain message"
     exit 1
 }
 
@@ -63,14 +74,13 @@ else
     FULL_MESSAGE="$LOCATION $STATUS_TEXT"
 fi
 
+# Form-encoded rather than hand-built JSON, so quotes and newlines in the
+# message need no escaping.
 RESPONSE=$(curl -s -X POST "https://slack.com/api/chat.postEphemeral" \
   -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d "{
-    \"channel\": \"$SLACK_CHANNEL\",
-    \"user\": \"$SLACK_USER_ID\",
-    \"text\": \"$FULL_MESSAGE\"
-  }")
+  --data-urlencode "channel=$SLACK_CHANNEL" \
+  --data-urlencode "user=$SLACK_USER_ID" \
+  --data-urlencode "text=$FULL_MESSAGE")
 
 if echo "$RESPONSE" | grep -q '"ok":true'; then
     echo "sent"

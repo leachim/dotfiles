@@ -92,7 +92,7 @@ fi
 
 # Get repo info
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;91m\]\u\[\033[01;37m\] at \[\033[01;33m\]\h\[\033[01;37m\]:\[\033[01;34m\]\w\[\033[00m\]$(__git_ps1 " \[\033[01;32m\][%s]")\[\033[00m\]\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;91m\]\u\[\033[01;37m\] at \[\033[01;33m\]\h\[\033[01;37m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
     PS2="> "
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
@@ -143,20 +143,6 @@ if [ -z "${DOTFILES_DISABLE_BASH_COMPLETION:-}" ] && ! shopt -oq posix; then
 fi
 
 
-# Prompt
-# --------------------------------------------------------------------
-### git-prompt
-GIT_PS1_SHOWDIRTYSTATE=1
-GIT_PS1_SHOWSTASHSTATE=1
-GIT_PS1_SHOWUNTRACKEDFILES=1
-GIT_PS1_SHOWUPSTREAM="auto"
-GIT_PS1_SHOWCOLORHINTS=1
-__git_ps1() { :;}
-if [ -f ~/.dotfiles/files/git-prompt.sh ]; then
-    source ~/.dotfiles/files/git-prompt.sh
-fi
-
-
 # Bash use vi style keybindings (must come before bind commands)
 set -o vi
 
@@ -202,19 +188,6 @@ if [ -f ~/.skim/shell/key-bindings.bash ]; then
     complete -r ssh ping 2>/dev/null
     source ~/.skim/shell/key-bindings.bash
 fi
-
-# Profile already loaded above (before interactive guard)
-
-# Source aliases again in case profile didn't load them (belt and suspenders)
-if [ -f ~/.aliases ]; then
-    source ~/.aliases
-fi
-
-if [ -f ~/.gitaliases ]; then
-    source ~/.gitaliases
-fi
-
-
 
 # Source global definitions. A hosts/ file (sourced via ~/.profile at the top of
 # this file) may have claimed a variable that a /etc/profile.d script insists on

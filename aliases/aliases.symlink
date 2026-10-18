@@ -90,8 +90,6 @@ alias newest_ls="ls -lh --sort date -r --color=always | head -25"
 alias cpfile="rsync --progress"
 alias recently_changed='find . -newerct "15 minute ago" -print'
 recently_changed_x() { find . -newerct "$1 minute ago" -print; }
-
-tailwatch() { watch -n 1 "tail $(ls -lA -t | head -n 1)"; }
 alias brd="bash runDocker.sh"
 alias dun="du -chs | sort -h"
 alias dfn="df -Tha --total"
@@ -267,16 +265,16 @@ function wttr () {
     # change Paris to your default location
     curl -s -S -H "Accept-Language: en" wttr.in/"${1:-London}" | head -q -n -3 ; }
 alias weather="curl -s -S http://wttr.in/London | head -q -n -3"
-function daily-quote () {
-  source ~/.dotfiles/common/quotes.dec
-  n_quotes=${#quotearray[@]}+1
-  rand=$(($RANDOM%$n_quotes))
-  echo ${quotearray[$rand]} ; }
 alias clock="date | cut -d ' ' -f 4"
 
 # sleep with human-readable durations: sleep 8hr, sleep 1hr 30min 10s
+# Arguments without a unit (sleep 5, sleep 0.1) go to the real sleep unchanged.
 sleepx() {
   local total=0 arg
+  case "$*" in
+    *[a-zA-Z]*) ;;
+    *) command sleep "$@"; return ;;
+  esac
   for arg in "$@"; do
     local num="${arg%%[a-zA-Z]*}"
     local unit="${arg##*[0-9]}"
@@ -300,7 +298,6 @@ alias daily-cal="ncal -A 1 -M -b -w"
     #alias doremi="apt-mark showhold && sudo apt update && sudo apt upgrade && echo \"\" && weather && echo \"Tage im Mai: $(datediff 05/01/2024)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
 #fi
 
-alias daily-info="weather && daily-cal && daily-quote"
 alias ugit="git pull origin master && git submodule update --recursive"
 function ugit-iterate () { for i in */ ; do cd $i; pwd -P; ugit; echo ""; cd ..; done ; }
 alias timestamp="date +%Y_%m_%d-%H_%M"
@@ -618,22 +615,13 @@ mcheck-zerowidth () { grep "$(printf %b '\u200b')" $1 ; }
 ### Helper functions                  ###
 #########################################
 
-function pdhist () {
-    source ~/.dotfiles/common/.per-directory-history.zsh ;
-}
-
+# which history zsh/per-directory-history.zsh is searching (toggle with ^G)
 function pdstate () {
-    if [ -z "$_per_directory_history_is_global" ]; then
-        echo "GLOBAL";
-        exit 0;
-    fi
-    if $(echo "$_per_directory_history_is_global"); then
-        echo "GLOBAL";
-        exit 0;
-    else
+    if [ "$_per_directory_history_is_global" = false ]; then
         echo "LOCAL"
-        exit 0;
-    fi ;
+    else
+        echo "GLOBAL"
+    fi
 }
 
 function countdown () {
@@ -704,7 +692,6 @@ web-wgetPDF () { wget -A pdf -p -E -k -K -np $1 ; }
 alias web-wanip='dig +short myip.opendns.com @resolver1.opendns.com'
 alias web-ip="curl ifconfig.me/ip"
 web-quHOST () { host $1 | rev | cut -d " " -f1 | rev; }
-web-quCountrybyIP () { curl ipinfo.io/$1 2&>/dev/null | grep -Po '"country":.*?[^\\]",' | perl -pe 's/"country"://; s/^"//; s/",$//; s/"//; s/^\s+//' ; }
 
 
 ###########################
@@ -735,9 +722,6 @@ alias proxywork="ssh desktop -D 8079 -N -C"
 alias proxyrstudio="ssh -Y -N -L localhost:8787:localhost:8787 -L localhost:8001:localhost:8001 desktop"
 alias proxyjupyter="ssh -Y -N -L localhost:8785:localhost:8888 desktop"
 alias proxyrdocker="ssh -N -L localhost:8786:localhost:8786 desktop"
-
-# copy only bam files
-alias m-rsync-bam="rsync -zarvP --prune-empty-dirs --include='*/\' --include='*.bam' --exclude='*'"
 
 ################################
 ###  BACKUP & System updates ###

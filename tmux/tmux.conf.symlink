@@ -22,7 +22,7 @@ set -ga terminal-overrides ",*256col*:Tc"
 set -ga terminal-overrides ",xterm-256color:Tc"
 
 # Enable RGB color if running in xterm(1)
-set -s terminal-overrides ",xterm*:Tc"
+set -sa terminal-overrides ",xterm*:Tc"
 
 # Default shell according to system in use
 set-option -g default-shell "$SHELL"
@@ -244,8 +244,10 @@ set -g status-right "#[fg=brightred]#S #I:#P#{?#{@pane_name}, (#{@pane_name}),} 
 #set -g status-right-length 150
 #set -g status-right "#(ccusage statusline)  #[fg=brightred]#S #I:#P #[fg=yellow]:: %d %b %Y #[fg=green]:: %H:%M "
 
-# clear screen alternative
+# C-l and C-k switch panes (below), so prefix + key sends them to the shell:
+# clear screen, and zsh's kill-line
 bind C-l send-keys 'C-l'
+bind C-k send-keys 'C-k'
 
 # Smart pane switching with awareness of Vim splits.
 # See: https://github.com/christoomey/vim-tmux-navigator

@@ -36,7 +36,8 @@ usage() {
 
 MESSAGE="${1:-$DEFAULT_MESSAGE}"
 TITLE="${2:-$DEFAULT_TITLE}"
-shift 2 2>/dev/null
+[ $# -gt 0 ] && shift
+[ $# -gt 0 ] && shift
 
 PRIORITY=0
 DEVICE="$DEFAULT_DEVICES"

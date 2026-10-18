@@ -10,6 +10,7 @@
 #   claude-op / opencode /      each names the services its tool needs, in a
 #   gemini-api                    subshell
 #   bin/push                    reads ~/.secrets/pushover directly
+#   bin/slac                    reads ~/.secrets/slack directly
 
 # The one exception is PUSHOVER_ALERTS below: it is a credential, but it lives
 # here because the tools that must send alerts cannot read ~/.secrets.

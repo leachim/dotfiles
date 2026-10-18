@@ -4,19 +4,8 @@
 
 set -e
 
-cd "$(dirname $0)"/..
-
-info () {
-  printf "\r  [ \033[00;34m..\033[0m ] $1\n"
-}
-
-user () {
-  printf "\r  [ \033[0;33m??\033[0m ] $1\n"
-}
-
-success () {
-  printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
-}
+cd "$(dirname "$0")"/..
+. script/lib.sh
 
 # Prompt to run an installer
 # Usage: run_optional "description" "path/to/install.sh"
@@ -33,10 +22,7 @@ run_optional () {
   echo ''
   if [ "$answer" = "y" ] || [ "$answer" = "Y" ]; then
     info "installing ${name}"
-    # Execute directly so each installer's own shebang is honoured; several are
-    # bash and use bashisms that dash mis-parses. Fall back to bash (never sh)
-    # if the exec bit did not survive the clone.
-    if [ -x "$script" ]; then "$script"; else bash "$script"; fi
+    run_installer "$script"
     success "${name} installed"
   else
     success "skipped ${name}"

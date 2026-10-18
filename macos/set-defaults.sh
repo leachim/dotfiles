@@ -35,9 +35,6 @@ defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
 # Automatically quit printer app once the print jobs complete
 defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 
-# Disable the "Are you sure you want to open this application?" dialog
-defaults write com.apple.LaunchServices LSQuarantine -bool false
-
 # Display ASCII control characters using caret notation in standard text views
 defaults write NSGlobalDomain NSTextShowsControlCharacters -bool true
 

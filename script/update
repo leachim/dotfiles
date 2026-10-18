@@ -5,58 +5,9 @@
 set -e
 
 cd "$(dirname "$0")"/..
+. script/lib.sh
 
-info () {
-  printf "\r  [ \033[00;34m..\033[0m ] $1\n"
-}
-
-success () {
-  printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
-}
-
-skip () {
-  printf "\r\033[2K  [ \033[00;33m--\033[0m ] $1\n"
-}
-
-# Refresh symlinks
-info "refreshing symlinks"
-DOTFILES_ROOT="$(cd "$(dirname "$0")/.." && pwd -P)"
-BACKUP_DIR="$HOME/.dotfiles_backup/$(date +%Y%m%d_%H%M%S)"
-
-backup_file () {
-  local file=$1
-  if [ -e "$file" ] || [ -L "$file" ]; then
-    mkdir -p "$BACKUP_DIR"
-    local basename=$(basename "$file")
-    mv "$file" "$BACKUP_DIR/$basename"
-    success "backed up $file to $BACKUP_DIR/$basename"
-  fi
-}
-
-link_file () {
-  local src=$1 dst=$2
-  if [ -L "$dst" ]; then
-    local currentSrc="$(readlink "$dst")"
-    if [ "$currentSrc" == "$src" ]; then
-      return  # already correct, silent skip
-    fi
-    backup_file "$dst"
-  elif [ -f "$dst" ] || [ -d "$dst" ]; then
-    backup_file "$dst"
-  fi
-  ln -s "$src" "$dst"
-  success "linked $(basename "$src")"
-}
-
-for src in $(find -H "$DOTFILES_ROOT" -maxdepth 2 -name '*.symlink' -not -path '*.git*'); do
-  dst="$HOME/.$(basename "${src%.*}")"
-  link_file "$src" "$dst"
-done
-
-if [ -d "$BACKUP_DIR" ]; then
-  info "replaced configs backed up to $BACKUP_DIR"
-fi
-success "symlinks"
+script/link
 
 # Homebrew
 if command -v brew >/dev/null 2>&1; then

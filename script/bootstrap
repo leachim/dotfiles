@@ -3,33 +3,11 @@
 # bootstrap installs things.
 
 cd "$(dirname "$0")/.."
-DOTFILES_ROOT=$(pwd -P)
+. script/lib.sh
 
 set -e
 
-# Shared backup directory for this run -- all replaced configs go here
-BACKUP_DIR="$HOME/.dotfiles_backup/$(date +%Y%m%d_%H%M%S)"
-export BACKUP_DIR
-
 echo ''
-
-info () {
-  printf "\r  [ \033[00;34m..\033[0m ] $1\n"
-}
-
-user () {
-  printf "\r  [ \033[0;33m??\033[0m ] $1\n"
-}
-
-success () {
-  printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
-}
-
-fail () {
-  printf "\r\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
-  echo ''
-  exit
-}
 
 setup_gitconfig () {
   if ! [ -f git/gitconfig.local.symlink ]
@@ -53,50 +31,6 @@ setup_gitconfig () {
   fi
 }
 
-
-backup_file () {
-  local file=$1
-  if [ -e "$file" ] || [ -L "$file" ]; then
-    mkdir -p "$BACKUP_DIR"
-    local basename=$(basename "$file")
-    mv "$file" "$BACKUP_DIR/$basename"
-    success "backed up $file to $BACKUP_DIR/$basename"
-  fi
-}
-
-link_file () {
-  local src=$1 dst=$2
-
-  if [ -L "$dst" ]; then
-    local currentSrc="$(readlink "$dst")"
-    if [ "$currentSrc" == "$src" ]; then
-      success "already linked $dst"
-      return
-    fi
-    # Existing symlink points elsewhere -- back it up
-    backup_file "$dst"
-  elif [ -f "$dst" ] || [ -d "$dst" ]; then
-    # Existing real file/dir -- back it up
-    backup_file "$dst"
-  fi
-
-  ln -s "$src" "$dst"
-  success "linked $src to $dst"
-}
-
-install_dotfiles () {
-  info 'installing dotfiles'
-
-  for src in $(find -H "$DOTFILES_ROOT" -maxdepth 2 -name '*.symlink' -not -path '*.git*')
-  do
-    dst="$HOME/.$(basename "${src%.*}")"
-    link_file "$src" "$dst"
-  done
-
-  if [ -d "$BACKUP_DIR" ]; then
-    info "existing configs backed up to $BACKUP_DIR"
-  fi
-}
 
 setup_pixi () {
   user ' - Do you want to install pixi? [y/N]'
@@ -144,7 +78,8 @@ setup_localrc () {
 setup_gitconfig
 setup_localrc
 setup_host_role
-install_dotfiles
+info 'installing dotfiles'
+link_dotfiles
 
 # If we're on a Mac, let's install and setup homebrew.
 if [ "$(uname -s)" == "Darwin" ]

@@ -1,7 +1,7 @@
 # sup yarn
 # https://yarnpkg.com
+#
+# Yarn v1's default global bin dir. Not `yarn global bin`: that starts node on
+# every shell.
 
-if (( $+commands[yarn] ))
-then
-  export PATH="$PATH:`yarn global bin`"
-fi
+[[ -d $HOME/.yarn/bin ]] && path+=($HOME/.yarn/bin)
