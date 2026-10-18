@@ -260,7 +260,7 @@ Plug 'ekalinin/Dockerfile.vim'
 "Plugin 'kien/ctrlp.vim' -> replaced by fzf
 "Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } -> replaced
 "by skim
-Plug 'skim-rs/skim', { 'dir': '~/.skim', 'do': './install' }
+Plug 'skim-rs/skim', { 'dir': '~/.skim' }  " sk binary comes from cargo
 Plug 'mileszs/ack.vim'
 
 " git integration

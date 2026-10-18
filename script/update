@@ -59,12 +59,12 @@ else
 fi
 
 # Oh My Zsh
-if [ -d "$HOME/.oh-my-zsh" ]; then
+if [ -d "$HOME/.oh-my-zsh" ] && command -v zsh >/dev/null 2>&1; then
   info "oh-my-zsh update"
-  env ZSH="$HOME/.oh-my-zsh" sh "$HOME/.oh-my-zsh/tools/upgrade.sh"
+  env ZSH="$HOME/.oh-my-zsh" zsh "$HOME/.oh-my-zsh/tools/upgrade.sh"
   success "oh-my-zsh"
 else
-  skip "oh-my-zsh (not installed)"
+  skip "oh-my-zsh (oh-my-zsh or zsh not installed)"
 fi
 
 # Starship (Linux only — macOS handled by brew upgrade)
