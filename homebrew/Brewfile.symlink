@@ -4,6 +4,7 @@ tap 'homebrew/bundle'
 # CLI tools
 brew 'awscli'
 brew 'bash'
+# cliclick is needed for close notification shortcut on mac
 brew 'cliclick'
 brew 'coreutils'
 brew 'curl'
