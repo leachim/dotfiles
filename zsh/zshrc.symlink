@@ -1,16 +1,9 @@
 # Fig pre block. Keep at the top of this file.
 #[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && . "$HOME/.fig/shell/zshrc.pre.zsh"
 
-# Euler exports TMOUT, which ends a shell left idle at the prompt. Replace this
-# shell with one started without it; the marker stops a loop should something
-# set TMOUT again in the new shell.
-if [[ -n "$TMOUT" && "$TMOUT" != 0 && -z "$DOTFILES_TMOUT_REEXEC" ]]; then
-  if [[ -o login ]]; then
-    exec env -u TMOUT DOTFILES_TMOUT_REEXEC=1 zsh -l
-  else
-    exec env -u TMOUT DOTFILES_TMOUT_REEXEC=1 zsh
-  fi
-fi
+# Euler exports TMOUT, which ends a shell left idle at the prompt. A TMOUT
+# inherited from the environment is not readonly in zsh, so drop it here.
+unset TMOUT 2>/dev/null
 
 # shortcut to this dotfiles path is $DOTFILES
 export DOTFILES=$HOME/.dotfiles
@@ -39,11 +32,15 @@ do
   source $file
 done
 
-# load everything but the path, completion, and skim files
-for file in ${${${config_files:#*/path.zsh}:#*/completion.zsh}:#*/skim-key-bindings.zsh}
+# load everything but the path, completion, skim and zsh/config.zsh files
+for file in ${${${${config_files:#*/path.zsh}:#*/completion.zsh}:#*/skim-key-bindings.zsh}:#$DOTFILES/zsh/config.zsh}
 do
   source $file
 done
+
+# Completion functions have to be on fpath before compinit runs
+fpath=($DOTFILES/functions $fpath)
+autoload -U $DOTFILES/functions/*(:t)
 
 export ZSH=$HOME/.oh-my-zsh
 
@@ -54,12 +51,13 @@ plugins=(git history-substring-search shrink-path)
 # Either way it has to come before the completion.zsh files, which use compdef.
 if [ -f $ZSH/oh-my-zsh.sh ]; then
   source $ZSH/oh-my-zsh.sh
-  # its lib/history.zsh turns sharing on; zsh/config.zsh keeps sessions separate
-  setopt NO_SHARE_HISTORY
 else
   autoload -U compinit
   compinit
 fi
+
+# After oh-my-zsh, whose lib/ sets options of its own, so these always win
+source $DOTFILES/zsh/config.zsh
 
 for file in ${(M)config_files:#*/completion.zsh}
 do

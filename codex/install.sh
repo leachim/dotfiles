@@ -2,7 +2,7 @@
 #
 # Codex CLI — symlink safe global configuration
 #
-# Backs up existing files/directories to $BACKUP_DIR or ~/.codex/*.backup
+# Backs up existing files/directories to $DOTFILES_BACKUP_DIR or ~/.codex/*.backup
 
 CODEX_DIR="$HOME/.codex"
 DOTFILES_CODEX="$HOME/.dotfiles/codex"
@@ -11,10 +11,10 @@ mkdir -p "$CODEX_DIR"
 
 backup_codex_item () {
     local item=$1
-    if [ -n "$BACKUP_DIR" ]; then
-        mkdir -p "$BACKUP_DIR/codex"
-        mv "$item" "$BACKUP_DIR/codex/$(basename "$item")"
-        echo "  Backed up $item to $BACKUP_DIR/codex/"
+    if [ -n "$DOTFILES_BACKUP_DIR" ]; then
+        mkdir -p "$DOTFILES_BACKUP_DIR/codex"
+        mv "$item" "$DOTFILES_BACKUP_DIR/codex/$(basename "$item")"
+        echo "  Backed up $item to $DOTFILES_BACKUP_DIR/codex/"
     else
         mv "$item" "${item}.backup"
         echo "  Backed up $item to ${item}.backup"

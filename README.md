@@ -36,7 +36,7 @@ the `*.symlink` files and re-runs the claude/codex/opencode config linkers, so n
 files in this repo (a new skill, a new config) get linked. It is idempotent,
 non-interactive, and installs no packages.
 
-Run `script/update` to update an existing installation. It runs `script/link`, then
+Run `script/update` to update an existing installation. It refreshes symlinks, then
 updates whatever it finds installed: Homebrew, rustup and cargo binaries, vim/nvim
 plugins, Oh My Zsh, starship (Linux) and pixi. Anything absent is skipped, so it is
 safe on every host.

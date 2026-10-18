@@ -8,7 +8,11 @@ PUSHOVER_CREDENTIALS="${PUSHOVER_CREDENTIALS:-$HOME/.secrets/pushover}"
 
 if [ -z "$PUSHOVER_API_TOKEN" ] || [ -z "$PUSHOVER_USER_KEY" ]; then
     if [ -r "$PUSHOVER_CREDENTIALS" ]; then
+        # push-alert presets the user key (the Alerts group); keep it
+        _token=$PUSHOVER_API_TOKEN _user=$PUSHOVER_USER_KEY
         . "$PUSHOVER_CREDENTIALS"
+        PUSHOVER_API_TOKEN=${_token:-$PUSHOVER_API_TOKEN}
+        PUSHOVER_USER_KEY=${_user:-$PUSHOVER_USER_KEY}
     fi
 fi
 

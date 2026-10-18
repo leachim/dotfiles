@@ -40,19 +40,7 @@ alias '~'='cd ~'                 # ~ alone goes home
 # Combine multiline commands into one in history
 shopt -s cmdhist
 
-## History
-function use_shared_history() {
-  export HISTFILE=~/.bash_history
-  shopt -s histappend
-  PROMPT_COMMAND="history -a; history -n"
-}
-
-function use_separate_history() {
-  export HISTFILE="$HOME/.bash_history_$$"
-  shopt -u histappend
-  PROMPT_COMMAND=""
-}
-
+## History (use_shared_history / use_separate_history are in aliases.symlink)
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTSIZE=50000
 HISTFILESIZE=100000

@@ -9,7 +9,7 @@
 # Global instructions (AGENTS.md) are linked to claude/CLAUDE.md so the
 # personality and safety rules stay in one place across both tools.
 #
-# Backs up existing files/directories to $BACKUP_DIR or ~/.config/opencode/*.backup
+# Backs up existing files/directories to $DOTFILES_BACKUP_DIR or ~/.config/opencode/*.backup
 
 if [ "$(uname -s)" = Darwin ]; then
     echo "  opencode: not supported on macOS -- it has no sandbox to confine writes to the working directory. Skipping."
@@ -29,10 +29,10 @@ mkdir -p "$OPENCODE_DIR"
 
 backup_opencode_item () {
     item=$1
-    if [ -n "$BACKUP_DIR" ]; then
-        mkdir -p "$BACKUP_DIR/opencode"
-        mv "$item" "$BACKUP_DIR/opencode/$(basename "$item")"
-        echo "  Backed up $item to $BACKUP_DIR/opencode/"
+    if [ -n "$DOTFILES_BACKUP_DIR" ]; then
+        mkdir -p "$DOTFILES_BACKUP_DIR/opencode"
+        mv "$item" "$DOTFILES_BACKUP_DIR/opencode/$(basename "$item")"
+        echo "  Backed up $item to $DOTFILES_BACKUP_DIR/opencode/"
     else
         mv "$item" "${item}.backup"
         echo "  Backed up $item to ${item}.backup"

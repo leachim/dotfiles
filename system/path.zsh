@@ -15,6 +15,10 @@ path=(/usr/local/bin /usr/local/sbin $path)
 # ground and the Intel brew prefix.
 [[ -d /opt/homebrew/bin ]] && path=(/opt/homebrew/bin /opt/homebrew/sbin $path)
 
+# Completions for brew and brew-installed tools. macOS /bin/zsh only knows the
+# Intel prefix (/usr/local/share/zsh/site-functions).
+[[ -d /opt/homebrew/share/zsh/site-functions ]] && fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+
 path=("$DOTFILES/bin" $path)
 
 export MANPATH="/usr/local/man:$MANPATH"

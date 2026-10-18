@@ -8,7 +8,7 @@
 # restates the rules the other agents enforce. pi has no sandbox either, so it
 # is not installed on macOS.
 #
-# Backs up existing files to $BACKUP_DIR or ~/.pi/agent/*.backup
+# Backs up existing files to $DOTFILES_BACKUP_DIR or ~/.pi/agent/*.backup
 
 if [ "$(uname -s)" = Darwin ]; then
     echo "  pi: not supported on macOS -- it has no sandbox to confine writes to the working directory. Skipping."
@@ -39,10 +39,10 @@ link_pi () {
     if [ -L "$dst" ]; then
         rm "$dst"
     elif [ -e "$dst" ]; then
-        if [ -n "$BACKUP_DIR" ]; then
-            mkdir -p "$BACKUP_DIR/pi"
-            mv "$dst" "$BACKUP_DIR/pi/$(basename "$dst")"
-            echo "  Backed up $dst to $BACKUP_DIR/pi/"
+        if [ -n "$DOTFILES_BACKUP_DIR" ]; then
+            mkdir -p "$DOTFILES_BACKUP_DIR/pi"
+            mv "$dst" "$DOTFILES_BACKUP_DIR/pi/$(basename "$dst")"
+            echo "  Backed up $dst to $DOTFILES_BACKUP_DIR/pi/"
         else
             mv "$dst" "$dst.backup"
             echo "  Backed up $dst to $dst.backup"

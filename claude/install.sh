@@ -2,7 +2,7 @@
 #
 # Claude Code — install binary + symlink configuration
 #
-# Backs up existing files/directories to $BACKUP_DIR or ~/.claude/*.backup
+# Backs up existing files/directories to $DOTFILES_BACKUP_DIR or ~/.claude/*.backup
 
 # Install claude binary if not present
 if ! command -v claude > /dev/null 2>&1; then
@@ -14,8 +14,8 @@ DOTFILES_CLAUDE="$HOME/.dotfiles/claude"
 
 backup_claude_item () {
     local item=$1
-    if [ -n "$BACKUP_DIR" ]; then
-        bdir="$BACKUP_DIR/$(basename "$(dirname "$item")" | sed 's/^\.//')"
+    if [ -n "$DOTFILES_BACKUP_DIR" ]; then
+        bdir="$DOTFILES_BACKUP_DIR/$(basename "$(dirname "$item")" | sed 's/^\.//')"
         mkdir -p "$bdir"
         mv "$item" "$bdir/$(basename "$item")"
         echo "  Backed up $item to $bdir/"

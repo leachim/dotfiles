@@ -32,6 +32,11 @@ alias grv="git remote -v"
 alias gls='git ls-tree -r HEAD'
 
 alias gp="git push"
+alias gl='git pull --prune'
+alias gca='git commit -a'
+alias gco='git checkout'
+alias gac='git add -A && git commit -m'
+alias glog="git log --graph --pretty=format:'%Cred%h%Creset %an: %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset' --abbrev-commit --date=relative"
 alias gpa="git push --all && git push --tags"
 alias gt="git tag -l --sort=v:refname"
 alias gu="git pull"

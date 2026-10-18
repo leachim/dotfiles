@@ -9,7 +9,11 @@ SLACK_CREDENTIALS="${SLACK_CREDENTIALS:-$HOME/.secrets/slack}"
 
 if [ -z "$SLACK_BOT_TOKEN" ] || [ -z "$SLACK_CHANNEL" ] || [ -z "$SLACK_USER_ID" ]; then
     if [ -r "$SLACK_CREDENTIALS" ]; then
+        _token=$SLACK_BOT_TOKEN _channel=$SLACK_CHANNEL _user=$SLACK_USER_ID
         . "$SLACK_CREDENTIALS"
+        SLACK_BOT_TOKEN=${_token:-$SLACK_BOT_TOKEN}
+        SLACK_CHANNEL=${_channel:-$SLACK_CHANNEL}
+        SLACK_USER_ID=${_user:-$SLACK_USER_ID}
     fi
 fi
 
