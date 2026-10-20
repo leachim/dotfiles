@@ -1,0 +1,21 @@
+#!/bin/bash
+# Put the last line of the previous command's output on the prompt, ready to
+# run with Enter. Meant for the "claude --resume <id>" line Claude prints on exit:
+#   $ pprestart      ->   $ claude --resume <id>
+#
+# Reads the pane via tmux, so it only works inside tmux. Assumes a single-line
+# prompt: the line above the one pprestart was typed on is taken as output.
+
+[ -n "$TMUX" ] || { echo "pprestart: not inside tmux" >&2; exit 1; }
+
+# -J joins wrapped lines, so a long command survives a narrow pane.
+line=$(tmux capture-pane -p -J -t "$TMUX_PANE" -S -200 |
+  awk '{ sub(/^[[:space:]]+/, ""); sub(/[[:space:]]+$/, "") }
+       NF { lines[++n] = $0 }
+       END { if (n >= 2) print lines[n-1] }')
+
+[ -n "$line" ] || { echo "pprestart: no previous output line found" >&2; exit 1; }
+
+# Type it only once the prompt is back: keys arriving while this script runs
+# would be echoed by the tty and then drawn a second time by readline.
+( sleep 0.2; tmux send-keys -t "$TMUX_PANE" -l -- "$line" ) >/dev/null 2>&1 &

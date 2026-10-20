@@ -132,6 +132,9 @@ defaults write com.apple.terminal StringEncodings -array 4
 # Don't display the annoying prompt when quitting iTerm
 defaults write com.googlecode.iterm2 PromptOnQuit -bool false
 
+# Let OSC 52 set the clipboard (tmux copy and ppcopy over SSH)
+defaults write com.googlecode.iterm2 AllowClipboardAccess -bool true
+
 ###############################################################################
 # Activity Monitor                                                            #
 ###############################################################################

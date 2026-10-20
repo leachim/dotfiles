@@ -1,0 +1,19 @@
+#!/bin/bash
+# Copy stdin (or the given files) to the local Mac clipboard, also over SSH.
+#   cat file | ppcopy    or    ppcopy file
+#
+# macOS: pbcopy. Inside tmux: load-buffer -w, which forwards the buffer to the
+# attached terminal via OSC 52 (needs set-clipboard on, see tmux.conf). Plain
+# SSH without tmux: emit OSC 52 directly to the terminal.
+
+if command -v pbcopy >/dev/null 2>&1; then
+  cat "$@" | pbcopy
+  exit
+fi
+
+if [ -n "$TMUX" ]; then
+  cat "$@" | tmux load-buffer -w -
+  exit
+fi
+
+printf '\033]52;c;%s\a' "$(cat "$@" | base64 | tr -d '\n')" > /dev/tty
