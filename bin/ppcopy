@@ -3,15 +3,19 @@
 #   cat file | ppcopy    or    ppcopy file
 #
 # macOS: pbcopy. Inside tmux: load-buffer -w, which forwards the buffer to the
-# attached terminal via OSC 52 (needs set-clipboard on, see tmux.conf). Plain
-# SSH without tmux: emit OSC 52 directly to the terminal.
+# attached terminal via OSC 52 (needs set-clipboard on, see tmux.conf). Otherwise
+# emit OSC 52 directly to the terminal; this also covers an srun shell inside
+# tmux, where $TMUX is set but the server's socket is on the login node, since
+# tmux forwards an OSC 52 written into a pane.
+
+[ $# -gt 0 ] || [ ! -t 0 ] || { echo "usage: cmd | ppcopy   or   ppcopy file" >&2; exit 1; }
 
 if command -v pbcopy >/dev/null 2>&1; then
   cat "$@" | pbcopy
   exit
 fi
 
-if [ -n "$TMUX" ]; then
+if [ -n "$TMUX" ] && tmux has-session 2>/dev/null; then
   cat "$@" | tmux load-buffer -w -
   exit
 fi

@@ -1,0 +1,33 @@
+#!/bin/bash
+# Copy the last line of the previous command's output to the clipboard. Meant for
+# the "claude --resume <id>" line Claude prints on exit:
+#   $ pplast      ->   clipboard: claude --resume <id>
+#
+# Reads the pane via tmux, so it only works inside tmux. Assumes a single-line
+# prompt: the line above the one pplast was typed on is taken as output.
+#
+# In an srun shell on a compute node, $TMUX is inherited but its socket only
+# accepts connections on the login node running the server, so the pane is read
+# over ssh to $SLURM_SUBMIT_HOST instead (~2s).
+
+[ -n "$TMUX" ] || { echo "pplast: not inside tmux" >&2; exit 1; }
+
+# -J joins wrapped lines, so a long command survives a narrow pane.
+args=(capture-pane -p -J -t "$TMUX_PANE" -S -200)
+if tmux has-session 2>/dev/null; then
+  pane=$(tmux "${args[@]}")
+elif [ -n "$SLURM_SUBMIT_HOST" ]; then
+  pane=$(ssh -o BatchMode=yes -o ConnectTimeout=5 "$SLURM_SUBMIT_HOST" \
+    "$(command -v tmux)" -S "${TMUX%%,*}" "${args[@]}")
+else
+  echo "pplast: tmux server not reachable from $(hostname -s)" >&2; exit 1
+fi
+
+line=$(printf '%s\n' "$pane" |
+  awk '{ sub(/^[[:space:]]+/, ""); sub(/[[:space:]]+$/, "") }
+       NF { lines[++n] = $0 }
+       END { if (n >= 2) print lines[n-1] }')
+
+[ -n "$line" ] || { echo "pplast: no previous output line found" >&2; exit 1; }
+
+printf '%s' "$line" | ppcopy && echo "copied: $line" >&2
