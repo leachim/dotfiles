@@ -1,112 +1,264 @@
 #!/usr/bin/env bash
 #
-# Update all dependencies that don't require root access.
+# Update all dependencies that don't require root access. Only upgrades what is
+# already installed; script/install installs new tools.
 
 set -e
 
 cd "$(dirname "$0")"/..
 . script/lib.sh
 
-script/link
+# Run one update in a subshell under set -e: a failing command ends that update
+# but not the ones after it. set -e is ignored inside if/&&/||, even when set
+# again in a subshell, so the call is plain with set +e around it.
+failed=()
+step () {
+  local name=$1 rc
+  shift
+  set +e
+  ( set -e; "$@" )
+  rc=$?
+  set -e
+  if [ "$rc" -ne 0 ]; then
+    failed+=("$name")
+    printf "\r\033[2K  [\033[0;31mFAIL\033[0m] %s (exit %s), continuing\n" "$name" "$rc"
+  fi
+}
 
 # Homebrew
-if command -v brew >/dev/null 2>&1; then
-  info "brew update && upgrade"
-  brew update --quiet
-  brew upgrade
-  brew cleanup
-  success "homebrew"
-else
-  skip "homebrew (not installed)"
-fi
+update_brew () {
+  if command -v brew >/dev/null 2>&1; then
+    info "brew update && upgrade"
+    brew update --quiet
+    brew upgrade
+    brew cleanup
+    success "homebrew"
+  else
+    skip "homebrew (not installed)"
+  fi
+}
 
 # Rust toolchain
-if [ -f "$HOME/.cargo/env" ]; then
-  . "$HOME/.cargo/env"
-fi
-if command -v rustup >/dev/null 2>&1; then
-  info "rustup update"
-  rustup update
-  success "rustup"
-else
-  skip "rustup (not installed)"
-fi
+update_rustup () {
+  if command -v rustup >/dev/null 2>&1; then
+    info "rustup update"
+    rustup update
+    success "rustup"
+  else
+    skip "rustup (not installed)"
+  fi
+}
 
 # Cargo-installed binaries
-if command -v cargo >/dev/null 2>&1; then
-  info "cargo install-update"
-  cargo install-update -a --locked
-  success "cargo binaries"
-else
-  skip "cargo (not installed)"
-fi
+update_cargo () {
+  if command -v cargo >/dev/null 2>&1; then
+    info "cargo install-update"
+    cargo install-update -a --locked
+    success "cargo binaries"
+  else
+    skip "cargo (not installed)"
+  fi
+}
 
-# Vim plugins
-if command -v vim >/dev/null 2>&1 && [ -f "$HOME/.vim/autoload/plug.vim" ]; then
-  info "vim +PlugUpdate"
-  vim +PlugUpdate +qall
-  success "vim plugins"
-else
-  skip "vim plugins (vim or plug.vim not found)"
-fi
+# skim shell integration. With the vim plugin, ~/.skim is vim-plug's clone of
+# skim and PlugUpdate updates it; writing into it would leave the clone dirty and
+# break that pull. Otherwise rust/install.sh downloaded the file once, so refetch
+# it from the release matching the sk that cargo just updated.
+update_skim_bindings () {
+  local bindings="$HOME/.skim/shell/key-bindings.bash" version
+  if [ -d "$HOME/.skim/.git" ]; then
+    skip "skim key-bindings (~/.skim is updated with the vim plugins)"
+  elif [ -f "$bindings" ] && command -v sk >/dev/null 2>&1; then
+    version=$(sk --version | awk '{ print $2 }')
+    [ -n "$version" ]
+    info "skim key-bindings ($version)"
+    curl -fsSL -o "$bindings.tmp" \
+      "https://raw.githubusercontent.com/skim-rs/skim/v$version/shell/key-bindings.bash"
+    mv "$bindings.tmp" "$bindings"
+    success "skim key-bindings"
+  else
+    skip "skim key-bindings (sk or $bindings not found)"
+  fi
+}
 
-if command -v nvim >/dev/null 2>&1 && [ -f "$HOME/.local/share/nvim/site/autoload/plug.vim" ]; then
-  info "nvim +PlugUpdate"
-  nvim +PlugUpdate +qall
-  success "nvim plugins"
-else
-  skip "nvim plugins (nvim or plug.vim not found)"
-fi
+# vim-plug and its plugins. vim and nvim share ~/.vim/plugged (see vimrc), so
+# one PlugUpdate covers both; each has its own plug.vim, refreshed the way
+# vim/install.sh downloads it.
+update_vim_plugins () {
+  local vim_plug="$HOME/.vim/autoload/plug.vim"
+  local nvim_plug="$HOME/.local/share/nvim/site/autoload/plug.vim"
+  local plug
+  for plug in "$vim_plug" "$nvim_plug"; do
+    if [ -f "$plug" ]; then
+      info "vim-plug ($plug)"
+      curl -fsSL -o "$plug.tmp" https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+      mv "$plug.tmp" "$plug"
+    fi
+  done
+  # --sync so that +qall waits for the update to finish
+  if command -v nvim >/dev/null 2>&1 && [ -f "$nvim_plug" ]; then
+    info "nvim +PlugUpdate"
+    # The vimrc directly, as vim/install.sh does: nvim would read the untracked
+    # ~/.config/nvim/init.vim
+    nvim --headless -u "$DOTFILES_ROOT/vim/vimrc.symlink" +'PlugUpdate --sync' +qall
+    success "vim plugins"
+  elif command -v vim >/dev/null 2>&1 && [ -f "$vim_plug" ]; then
+    info "vim +PlugUpdate"
+    vim +'PlugUpdate --sync' +qall
+    success "vim plugins"
+  else
+    skip "vim plugins (vim/nvim or plug.vim not found)"
+  fi
+}
 
 # Oh My Zsh
-if [ -d "$HOME/.oh-my-zsh" ] && command -v zsh >/dev/null 2>&1; then
-  info "oh-my-zsh update"
-  # On NFS homes fetch appends to a stale FETCH_HEAD; the pull then sees several merge heads
-  rm -f "$HOME/.oh-my-zsh/.git/FETCH_HEAD"
-  env ZSH="$HOME/.oh-my-zsh" zsh "$HOME/.oh-my-zsh/tools/upgrade.sh"
-  success "oh-my-zsh"
-else
-  skip "oh-my-zsh (oh-my-zsh or zsh not installed)"
-fi
+update_omz () {
+  if [ -d "$HOME/.oh-my-zsh" ] && command -v zsh >/dev/null 2>&1; then
+    info "oh-my-zsh update"
+    # On NFS homes fetch appends to a stale FETCH_HEAD; the pull then sees several merge heads
+    rm -f "$HOME/.oh-my-zsh/.git/FETCH_HEAD"
+    env ZSH="$HOME/.oh-my-zsh" zsh "$HOME/.oh-my-zsh/tools/upgrade.sh"
+    success "oh-my-zsh"
+  else
+    skip "oh-my-zsh (oh-my-zsh or zsh not installed)"
+  fi
+}
+
+# Tmux plugins (TPM updates itself too, as it is listed as a plugin)
+update_tpm () {
+  local tpm="$HOME/.tmux/plugins/tpm"
+  if [ -x "$tpm/bin/update_plugins" ] && command -v tmux >/dev/null 2>&1; then
+    info "tmux plugins update"
+    # Same stale FETCH_HEAD problem as oh-my-zsh
+    rm -f "$HOME"/.tmux/plugins/*/.git/FETCH_HEAD
+    "$tpm/bin/update_plugins" all
+    success "tmux plugins"
+  else
+    skip "tmux plugins (tmux or TPM not installed)"
+  fi
+}
 
 # Starship (Linux only — macOS handled by brew upgrade)
-if [ "$(uname -s)" = "Linux" ] && command -v starship >/dev/null 2>&1; then
-  info "starship update"
-  # starship's installer exits 1 if --bin-dir does not already exist
-  mkdir -p "$HOME/.local/bin"
-  curl -sS https://starship.rs/install.sh | sh -s -- -y --bin-dir "$HOME/.local/bin"
-  success "starship"
-fi
+update_starship () {
+  if [ "$(uname -s)" = "Linux" ] && command -v starship >/dev/null 2>&1; then
+    info "starship update"
+    # starship's installer exits 1 if --bin-dir does not already exist
+    mkdir -p "$HOME/.local/bin"
+    curl -sS https://starship.rs/install.sh | sh -s -- -y --bin-dir "$HOME/.local/bin"
+    success "starship"
+  fi
+}
 
 # opencode (autoupdate only fires on TUI launch, so upgrade explicitly here).
 # Not on macOS, where it is unsupported.
-if [ "$(uname -s)" = Darwin ]; then
-  skip "opencode (unsupported on macOS)"
-elif command -v opencode >/dev/null 2>&1; then
-  info "opencode upgrade"
-  opencode upgrade
-  success "opencode"
-elif [ -x "$HOME/.opencode/bin/opencode" ]; then
-  info "opencode upgrade"
-  "$HOME/.opencode/bin/opencode" upgrade
-  success "opencode"
-else
-  skip "opencode (not installed)"
-fi
+update_opencode () {
+  if [ "$(uname -s)" = Darwin ]; then
+    skip "opencode (unsupported on macOS)"
+  elif command -v opencode >/dev/null 2>&1; then
+    info "opencode upgrade"
+    opencode upgrade
+    success "opencode"
+  elif [ -x "$HOME/.opencode/bin/opencode" ]; then
+    info "opencode upgrade"
+    "$HOME/.opencode/bin/opencode" upgrade
+    success "opencode"
+  else
+    skip "opencode (not installed)"
+  fi
+}
+
+# pi, only the managed install pi/install.sh sets up (found the way the pi()
+# wrapper in aliases finds it). Not on macOS, where it is unsupported.
+update_pi () {
+  local bin
+  if [ "$(uname -s)" = Darwin ]; then
+    skip "pi (unsupported on macOS)"
+    return
+  elif [ ! -d "$HOME/.pi/agent/install" ]; then
+    skip "pi (not installed)"
+    return
+  elif [ -x "$HOME/.pi/agent/bin/pi" ]; then
+    bin="$HOME/.pi/agent/bin/pi"
+  elif [ -x "$HOME/.local/bin/pi" ]; then
+    bin="$HOME/.local/bin/pi"
+  else
+    skip "pi (no binary in ~/.pi/agent/bin or ~/.local/bin)"
+    return
+  fi
+  info "pi update"
+  "$bin" update < /dev/null
+  success "pi"
+}
 
 # Pixi
-if command -v pixi >/dev/null 2>&1; then
-  # The NFS home is shared across architectures; skip a pixi built for another one
-  if pixi --version >/dev/null 2>&1; then
-    info "pixi self-update"
-    pixi self-update
-    success "pixi"
+update_pixi () {
+  if command -v pixi >/dev/null 2>&1; then
+    # The NFS home is shared across architectures; skip a pixi built for another one
+    if pixi --version >/dev/null 2>&1; then
+      info "pixi self-update"
+      pixi self-update
+      success "pixi"
+    else
+      skip "pixi ($(command -v pixi) does not run on $(uname -m))"
+    fi
   else
-    skip "pixi ($(command -v pixi) does not run on $(uname -m))"
+    skip "pixi (not installed)"
   fi
-else
-  skip "pixi (not installed)"
+}
+
+# Bun and its global packages (bun/packages.txt, Codex among them). --latest
+# because the recorded caret ranges would otherwise pin 0.x packages to a minor.
+update_bun () {
+  local global_dir="${BUN_INSTALL_GLOBAL_DIR:-$HOME/.bun/install/global}"
+  if ! command -v bun >/dev/null 2>&1; then
+    skip "bun (not installed)"
+  elif ! bun --version >/dev/null 2>&1; then
+    # The NFS home is shared across architectures; skip a bun built for another one
+    skip "bun ($(command -v bun) does not run on $(uname -m))"
+  else
+    info "bun upgrade"
+    bun upgrade
+    # bun/install.sh writes this package.json; without it bun adopts ~/package.json
+    if [ -f "$global_dir/package.json" ]; then
+      info "bun update -g --latest"
+      # From $HOME, as in bun/install.sh: bun walks up from the cwd for a package.json
+      (cd "$HOME" && bun update -g --latest)
+    else
+      skip "bun global packages ($global_dir/package.json not found)"
+    fi
+    success "bun"
+  fi
+}
+
+# GitHub CLI on Linux (macOS handled by brew upgrade)
+update_gh () {
+  export DOTFILES_UPGRADE=1
+  run_installer "$DOTFILES_ROOT/gh/install.sh"
+}
+
+step "symlinks" script/link
+
+# Sourced here, not in a step, so that rustup and cargo find it
+if [ -f "$HOME/.cargo/env" ]; then
+  . "$HOME/.cargo/env"
 fi
 
+step "homebrew" update_brew
+step "rustup" update_rustup
+step "cargo binaries" update_cargo
+step "skim key-bindings" update_skim_bindings
+step "vim plugins" update_vim_plugins
+step "oh-my-zsh" update_omz
+step "tmux plugins" update_tpm
+step "starship" update_starship
+step "opencode" update_opencode
+step "pi" update_pi
+step "pixi" update_pixi
+step "bun" update_bun
+step "gh" update_gh
+
 echo ""
+if [ ${#failed[@]} -gt 0 ]; then
+  fail "failed: ${failed[*]}"
+fi
 success "all updates complete"

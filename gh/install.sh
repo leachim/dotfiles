@@ -2,6 +2,9 @@
 #
 # Install GitHub CLI (gh) on Linux using precompiled binaries.
 # On macOS, gh is installed via Homebrew (Brewfile), so this is a no-op.
+#
+# With DOTFILES_UPGRADE (set by script/update) it instead replaces the gh in
+# ~/.local/bin with the latest release, and installs nothing if there is none.
 
 set -e
 
@@ -10,16 +13,39 @@ if [ "$(uname -s)" = "Darwin" ]; then
   exit 0
 fi
 
-if command -v gh &> /dev/null; then
+# Install location
+GH_INSTALL_DIR="$HOME/.local"
+
+if [ -n "$DOTFILES_UPGRADE" ]; then
+  if [ ! -x "$GH_INSTALL_DIR/bin/gh" ]; then
+    echo "  gh: not installed in $GH_INSTALL_DIR/bin, skipping"
+    exit 0
+  fi
+  # The NFS home is shared across architectures; leave a gh built for another one
+  if ! GH_CURRENT=$("$GH_INSTALL_DIR/bin/gh" --version 2>/dev/null); then
+    echo "  gh: $GH_INSTALL_DIR/bin/gh does not run on $(uname -m), skipping"
+    exit 0
+  fi
+  GH_CURRENT=$(echo "$GH_CURRENT" | awk 'NR == 1 { print $3 }')
+elif command -v gh &> /dev/null; then
   echo "  gh: already installed"
   exit 0
 fi
 
-echo "  gh: installing GitHub CLI for Linux (precompiled binary)"
+# Latest release, read from the redirect of releases/latest (no API rate limit)
+GH_VERSION=$(curl -fsSLI -o /dev/null -w '%{url_effective}' https://github.com/cli/cli/releases/latest)
+GH_VERSION=${GH_VERSION##*/v}
+case "$GH_VERSION" in
+  ''|*/*) echo "  gh: could not determine the latest release"; exit 1 ;;
+esac
 
-# Install location
-GH_INSTALL_DIR="$HOME/.local"
-GH_VERSION="2.62.0"  # Update this to the latest version as needed
+if [ "$GH_CURRENT" = "$GH_VERSION" ]; then
+  echo "  gh: $GH_VERSION is the latest"
+  exit 0
+fi
+
+echo "  gh: installing GitHub CLI $GH_VERSION for Linux (precompiled binary)"
+
 ARCH=$(uname -m)
 
 # Map architecture names
