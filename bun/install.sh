@@ -21,6 +21,11 @@ fi
 
 # Global packages from packages.txt
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# bun finds its global root by walking up from the global dir to the nearest
+# package.json; without one there it adopts ~/package.json and installs into ~
+BUN_GLOBAL_DIR="${BUN_INSTALL_GLOBAL_DIR:-$HOME/.bun/install/global}"
+mkdir -p "$BUN_GLOBAL_DIR"
+[ -f "$BUN_GLOBAL_DIR/package.json" ] || echo '{}' > "$BUN_GLOBAL_DIR/package.json"
 # Run global installs from $HOME to prevent bun's upward package.json
 # traversal from walking into non-standard parent directories (e.g. /cluster/home/)
 while IFS= read -r pkg || [ -n "$pkg" ]; do
