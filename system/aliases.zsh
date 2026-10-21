@@ -3,10 +3,10 @@
 #   `brew install coreutils`
 if command -v gls &>/dev/null
 then
-  alias ls="gls -F --color"
-  alias l="gls -lAh --color"
-  alias ll="gls -l --color"
-  alias la='gls -A --color'
+  alias ls="command gls -F --color"
+  alias l="command gls -lAh --color"
+  alias ll="command gls -l --color"
+  alias la='command gls -A --color'
 fi
 
 # Use python3 as python if python is not available
