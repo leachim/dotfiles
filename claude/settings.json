@@ -37,7 +37,6 @@
       "Bash(wget:*)",
       "Bash(whereis:*)",
       "Bash(which:*)",
-      "MCP(context7:*)",
       "WebFetch(domain:raw.githubusercontent.com)"
     ],
     "deny": [
@@ -79,7 +78,13 @@
     "computer-use": "off",
     "chrome-browser": "off",
     "pdf": "off",
-    "pptx": "off"
+    "pptx": "off",
+    "anthropic-skills:pdf": "off",
+    "anthropic-skills:pptx": "off",
+    "anthropic-skills:docs": "off",
+    "anthropic-skills:docx": "off",
+    "anthropic-skills:xlsx": "off",
+    "anthropic-skills:google-workspace": "off"
   },
   "hooks": {
     "Stop": [
