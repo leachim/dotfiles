@@ -254,6 +254,17 @@ update_bun () {
   fi
 }
 
+# chrome-headless-shell, moved to the current stable build by its installer
+update_chrome_headless_shell () {
+  if [ -d "$HOME/.local/share/chrome-headless-shell" ]; then
+    info "chrome-headless-shell"
+    run_installer "$DOTFILES_ROOT/chrome/install.sh"
+    success "chrome-headless-shell"
+  else
+    skip "chrome-headless-shell (not installed)"
+  fi
+}
+
 # GitHub CLI on Linux (macOS handled by brew upgrade)
 update_gh () {
   export DOTFILES_UPGRADE=1
@@ -280,6 +291,7 @@ step "pi" update_pi
 step "pixi" update_pixi
 step "uv" update_uv
 step "bun" update_bun
+step "chrome-headless-shell" update_chrome_headless_shell
 step "gh" update_gh
 
 echo ""

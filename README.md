@@ -22,6 +22,7 @@ Bootstrap will prompt you for:
    - Starship prompt
    - Rust (via rustup)
    - Bun and the global packages in bun/packages.txt
+   - chrome-headless-shell (needs Bun)
    - Claude Code config
    - Codex CLI config
    - opencode config (Linux only)
@@ -53,6 +54,7 @@ re-run the optional installers -- use `script/install` for those.
 ├── autocompletion/    Shell completion scripts
 ├── bash/              Bash config (bash_profile, bashrc)
 ├── bin/               Executables added to $PATH (dot, utilities)
+├── chrome/            chrome-headless-shell installer (bin/chrome-headless-shell runs it)
 ├── claude/            Claude Code config (CLAUDE.md, settings.json)
 ├── codex/             Codex CLI config (config.toml)
 ├── opencode/          opencode config (opencode.jsonc, agents, commands)

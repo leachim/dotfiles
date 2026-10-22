@@ -1,0 +1,24 @@
+#!/bin/bash
+# chrome-headless-shell as installed by chrome/install.sh.
+#
+#   chrome-headless-shell --dump-dom file:///path/page.html
+#   chrome-headless-shell --screenshot=out.png --window-size=1280,800 http://localhost:8000
+#
+# --single-process --no-zygote let it run inside Claude Code's macOS sandbox,
+# which denies the Mach service registration Chrome's child processes rely on.
+# Remote sites do not load through the sandbox proxy; local files and localhost do.
+
+case "$(uname -s)-$(uname -m)" in
+  Darwin-arm64) platform=mac_arm ;;
+  Darwin-x86_64) platform=mac ;;
+  Linux-x86_64) platform=linux ;;
+  *) echo "chrome-headless-shell: no build for $(uname -s) $(uname -m)" >&2; exit 1 ;;
+esac
+
+bin=$(ls -d "$HOME/.local/share/chrome-headless-shell/chrome-headless-shell/$platform"-*/chrome-headless-shell-*/chrome-headless-shell 2>/dev/null | tail -1)
+if [ -z "$bin" ]; then
+  echo "chrome-headless-shell: not installed, run chrome/install.sh" >&2
+  exit 1
+fi
+
+exec "$bin" --single-process --no-zygote "$@"
