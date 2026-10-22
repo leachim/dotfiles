@@ -6,7 +6,8 @@
 #
 # --single-process --no-zygote let it run inside Claude Code's macOS sandbox,
 # which denies the Mach service registration Chrome's child processes rely on.
-# Remote sites do not load through the sandbox proxy; local files and localhost do.
+# Remote sites do not load through the sandbox proxy, which needs credentials
+# --proxy-server cannot carry; use chrome-fetch for those.
 
 case "$(uname -s)-$(uname -m)" in
   Darwin-arm64) platform=mac_arm ;;

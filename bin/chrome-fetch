@@ -1,0 +1,142 @@
+#!/usr/bin/env python3
+"""Load a URL in chrome-headless-shell and print its text or DOM, or save a screenshot.
+
+    chrome-fetch https://example.com
+    chrome-fetch --dom https://example.com
+    chrome-fetch --screenshot out.png --window-size 1280,800 https://example.com
+
+Chrome is driven over --remote-debugging-pipe, so no port is opened. Proxy
+credentials in HTTPS_PROXY (as set by Claude Code's sandbox) are answered
+through the DevTools protocol, which --proxy-server cannot carry.
+"""
+import argparse
+import base64
+import fcntl
+import json
+import os
+import select
+import subprocess
+import sys
+import time
+import urllib.parse
+
+
+class Chrome:
+    def __init__(self, args, timeout):
+        to_chrome_r, self.to_chrome = os.pipe()
+        self.from_chrome, from_chrome_w = os.pipe()
+        # Chrome expects its pipe ends on fds 3 and 4. Move them above that range
+        # first: dup2(fd, fd) is a no-op that would leave O_CLOEXEC set.
+        hi_r = fcntl.fcntl(to_chrome_r, fcntl.F_DUPFD, 100)
+        hi_w = fcntl.fcntl(from_chrome_w, fcntl.F_DUPFD, 100)
+
+        def child():
+            os.dup2(hi_r, 3)
+            os.dup2(hi_w, 4)
+
+        wrapper = os.path.join(os.path.dirname(os.path.realpath(__file__)), "chrome-headless-shell")
+        self.proc = subprocess.Popen(
+            [wrapper, "--remote-debugging-pipe", *args, "about:blank"],
+            preexec_fn=child, close_fds=False,
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        )
+        for fd in (to_chrome_r, from_chrome_w, hi_r, hi_w):
+            os.close(fd)
+        self.deadline = time.monotonic() + timeout
+        self.buf = b""
+        self.next_id = 0
+        self.handlers = {}
+
+    def send(self, method, params=None, session=None):
+        self.next_id += 1
+        msg = {"id": self.next_id, "method": method, "params": params or {}}
+        if session:
+            msg["sessionId"] = session
+        os.write(self.to_chrome, json.dumps(msg).encode() + b"\0")
+        return self.next_id
+
+    def recv(self):
+        while b"\0" not in self.buf:
+            left = self.deadline - time.monotonic()
+            if left <= 0 or not select.select([self.from_chrome], [], [], left)[0]:
+                sys.exit("chrome-fetch: timed out")
+            chunk = os.read(self.from_chrome, 65536)
+            if not chunk:
+                sys.exit("chrome-fetch: chrome exited")
+            self.buf += chunk
+        msg, self.buf = self.buf.split(b"\0", 1)
+        msg = json.loads(msg)
+        if msg.get("method") in self.handlers:
+            self.handlers[msg["method"]](msg.get("params", {}), msg.get("sessionId"))
+        return msg
+
+    def call(self, method, params=None, session=None):
+        id = self.send(method, params, session)
+        while True:
+            msg = self.recv()
+            if msg.get("id") == id:
+                if "error" in msg:
+                    sys.exit(f"chrome-fetch: {method}: {msg['error'].get('message')}")
+                return msg["result"]
+
+    def wait_for(self, method):
+        while self.recv().get("method") != method:
+            pass
+
+    def close(self):
+        self.proc.kill()
+        self.proc.wait()
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Load a URL in chrome-headless-shell.")
+    parser.add_argument("url")
+    out = parser.add_mutually_exclusive_group()
+    out.add_argument("--dom", action="store_true", help="print the serialised DOM instead of the text")
+    out.add_argument("--screenshot", metavar="FILE", help="save a PNG of the viewport instead")
+    parser.add_argument("--window-size", default="1280,800", help="viewport as W,H (default: 1280,800)")
+    parser.add_argument("--timeout", type=float, default=30, help="seconds to wait in total (default: 30)")
+    args = parser.parse_args()
+
+    flags = [f"--window-size={args.window_size}"]
+    proxy = urllib.parse.urlsplit(os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy") or "")
+    if proxy.hostname:
+        flags.append(f"--proxy-server={proxy.scheme}://{proxy.hostname}:{proxy.port}")
+
+    chrome = Chrome(flags, args.timeout)
+    try:
+        target = chrome.call("Target.createTarget", {"url": "about:blank"})["targetId"]
+        session = chrome.call("Target.attachToTarget", {"targetId": target, "flatten": True})["sessionId"]
+
+        if proxy.username:
+            credentials = {
+                "response": "ProvideCredentials",
+                "username": urllib.parse.unquote(proxy.username),
+                "password": urllib.parse.unquote(proxy.password or ""),
+            }
+            chrome.handlers["Fetch.authRequired"] = lambda p, s: chrome.send(
+                "Fetch.continueWithAuth", {"requestId": p["requestId"], "authChallengeResponse": credentials}, s)
+            chrome.handlers["Fetch.requestPaused"] = lambda p, s: chrome.send(
+                "Fetch.continueRequest", {"requestId": p["requestId"]}, s)
+            chrome.call("Fetch.enable", {"handleAuthRequests": True}, session)
+
+        chrome.call("Page.enable", {}, session)
+        nav = chrome.call("Page.navigate", {"url": args.url}, session)
+        if nav.get("errorText"):
+            sys.exit(f"chrome-fetch: {args.url}: {nav['errorText']}")
+        chrome.wait_for("Page.loadEventFired")
+
+        if args.screenshot:
+            data = chrome.call("Page.captureScreenshot", {"format": "png"}, session)["data"]
+            with open(args.screenshot, "wb") as f:
+                f.write(base64.b64decode(data))
+        else:
+            expr = "document.documentElement.outerHTML" if args.dom else "document.body.innerText"
+            result = chrome.call("Runtime.evaluate", {"expression": expr, "returnByValue": True}, session)
+            print(result["result"].get("value", ""))
+    finally:
+        chrome.close()
+
+
+if __name__ == "__main__":
+    main()
