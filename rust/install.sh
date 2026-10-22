@@ -12,7 +12,11 @@ else
     . "$HOME/.cargo/env"
 fi
 
-cargo install --locked cargo-update zoxide bat fd-find eza git-delta
+# Vendored OpenSSL: hosts without pkg-config or OpenSSL headers can't build it
+# otherwise. The config entry keeps the feature when install-update rebuilds it.
+cargo install --locked cargo-update --features vendored-openssl
+cargo install-update-config cargo-update --feature vendored-openssl
+cargo install --locked zoxide bat fd-find eza git-delta
 cargo install --locked skim --no-default-features --features cli
 
 # Install skim shell integration (key-bindings for Ctrl-R, etc.)
