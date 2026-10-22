@@ -21,7 +21,7 @@ Bootstrap will prompt you for:
    - Vim/Neovim plugins (vim-plug)
    - Starship prompt
    - Rust (via rustup)
-   - Bun (includes gemini-cli, codex, ccusage)
+   - Bun and the global packages in bun/packages.txt
    - Claude Code config
    - Codex CLI config
    - opencode config (Linux only)
@@ -38,9 +38,8 @@ installs no packages. On macOS it also refreshes the Claude Code and codex manag
 sandbox settings, and asks for sudo when the tracked copy has changed.
 
 Run `script/update` to update an existing installation. It runs `script/link`, then
-updates whatever it finds installed: Homebrew, rustup and cargo binaries, vim/nvim
-plugins, Oh My Zsh, starship (Linux) and pixi. Anything absent is skipped, so it is
-safe on every host.
+updates each tool it finds installed (the `step` lines at the end of the script list
+them). Anything absent is skipped, so it is safe on every host.
 
 `dot` is narrower and macOS-only: it applies the macOS defaults from
 `macos/set-defaults.sh` and runs `brew update` plus the Brewfile. It does not

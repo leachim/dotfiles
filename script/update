@@ -206,6 +206,30 @@ update_pixi () {
   fi
 }
 
+# uv, the Pythons it manages (latest patch of each installed minor version) and
+# its tools. self update only works for the standalone installer, which leaves
+# this receipt; a uv from brew or pip is updated by that instead.
+update_uv () {
+  if ! command -v uv >/dev/null 2>&1; then
+    skip "uv (not installed)"
+    return
+  elif ! uv --version >/dev/null 2>&1; then
+    # The NFS home is shared across architectures; skip a uv built for another one
+    skip "uv ($(command -v uv) does not run on $(uname -m))"
+    return
+  fi
+  # First, so that a uv too old for the commands below can still update itself
+  if [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/uv/uv-receipt.json" ]; then
+    info "uv self update"
+    uv self update
+  fi
+  info "uv python upgrade"
+  uv python upgrade
+  info "uv tool upgrade --all"
+  uv tool upgrade --all
+  success "uv"
+}
+
 # Bun and its global packages (bun/packages.txt, Codex among them). --latest
 # because the recorded caret ranges would otherwise pin 0.x packages to a minor.
 update_bun () {
@@ -254,6 +278,7 @@ step "starship" update_starship
 step "opencode" update_opencode
 step "pi" update_pi
 step "pixi" update_pixi
+step "uv" update_uv
 step "bun" update_bun
 step "gh" update_gh
 

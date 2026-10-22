@@ -181,6 +181,7 @@ pi() {
 claude-work() {
     CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude --settings '{"theme":"custom:work"}' "$@"
 }
+alias cclaude="claude-work"
 
 # Run Claude Code against OpenRouter via Cloudflare AI Gateway. Default model: DeepSeek V4 Pro.
 # Keys come from ~/.secrets/openrouter and ~/.secrets/cloudflare. Subshell body,

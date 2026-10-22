@@ -1,4 +1,4 @@
 @google/gemini-cli
 @openai/codex
 @aisuite/chub
-ccusage@latest
+ccusage

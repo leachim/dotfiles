@@ -30,13 +30,8 @@ mkdir -p "$BUN_GLOBAL_DIR"
 # traversal from walking into non-standard parent directories (e.g. /cluster/home/)
 while IFS= read -r pkg || [ -n "$pkg" ]; do
   [ -z "$pkg" ] && continue
-  name=$(echo "$pkg" | sed 's|.*/||')
-  if command -v "$name" >/dev/null 2>&1; then
-    echo "  $name: already installed"
-  else
-    echo "  $name: installing globally"
-    (cd "$HOME" && bun install -g "$pkg")
-  fi
+  echo "  $pkg: installing globally"
+  (cd "$HOME" && bun install -g "$pkg")
 done < "$SCRIPT_DIR/packages.txt"
 
 exit 0
