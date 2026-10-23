@@ -332,12 +332,12 @@ set -g window-active-style      'bg=#0d1b2a'
 set -g pane-border-style        'bg=#0d1b2a,fg=#1d3f60'
 set -g pane-active-border-style 'bg=#0d1b2a,fg=#4a7ab0'
 set -g status-style             'bg=#152d45,fg=#dde3ea'
-%elif "#{m:*bs-slogin*,#{host}}"
-set -g window-style             'bg=#2a0e0e'
-set -g window-active-style      'bg=#2a0e0e'
-set -g pane-border-style        'bg=#2a0e0e,fg=#561d1d'
-set -g pane-active-border-style 'bg=#2a0e0e,fg=#b04a4a'
-set -g status-style             'bg=#3f1616,fg=#eadddd'
+%elif "#{&&:#{m:bs*,#{host}},#{!=:#{m:bs-mbpas*,#{host}},1}}"
+set -g window-style             'bg=#241616'
+set -g window-active-style      'bg=#241616'
+set -g pane-border-style        'bg=#241616,fg=#4a2c2c'
+set -g pane-active-border-style 'bg=#241616,fg=#a06a6a'
+set -g status-style             'bg=#362424,fg=#e6e0e0'
 %elif "#{m:*daint*,#{host}}"
 set -g window-style             'bg=#0f2116'
 set -g window-active-style      'bg=#0f2116'
