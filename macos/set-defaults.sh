@@ -38,9 +38,6 @@ defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 # Display ASCII control characters using caret notation in standard text views
 defaults write NSGlobalDomain NSTextShowsControlCharacters -bool true
 
-# Set Help Viewer windows to non-floating mode
-defaults write com.apple.helpviewer DevMode -bool true
-
 # Disable smart dashes as they're annoying when typing code
 defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 
