@@ -64,7 +64,7 @@ re-run the optional installers -- use `script/install` for those.
 ├── git/               Git config, aliases, completion
 ├── homebrew/          Brewfile and install script
 ├── hosts/             Role-specific config (mac.sh, linux-desktop.sh, hpc.sh)
-├── macos/             macOS defaults and software updates
+├── macos/             macOS defaults, software updates, iTerm2 profile
 ├── bun/               Bun runtime, gemini-cli, codex, ccusage
 ├── ruby/              Ruby/RVM config
 ├── rust/              Rust install via rustup
