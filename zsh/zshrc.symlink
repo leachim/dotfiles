@@ -157,3 +157,6 @@ add-zsh-hook precmd __reset_mouse_reporting
 
 # opencode (installed per-machine by opencode/install.sh)
 [ -d "$HOME/.opencode/bin" ] && export PATH="$HOME/.opencode/bin:$PATH"
+
+# bun completions
+[ -s "/Users/michaes/.bun/_bun" ] && source "/Users/michaes/.bun/_bun"
