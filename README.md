@@ -66,7 +66,7 @@ re-run the optional installers -- use `script/install` for those.
 ├── hosts/             Role-specific config (mac.sh, linux-desktop.sh, hpc.sh)
 ├── macos/             macOS defaults, software updates, iTerm2 profile
 ├── bun/               Bun runtime, gemini-cli, codex, ccusage
-├── pixi/              pixi install and PATH
+├── pixi/              pixi installer
 ├── ruby/              Ruby/RVM config
 ├── rust/              Rust install via rustup
 ├── script/            Bootstrap, install, update, link

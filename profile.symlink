@@ -41,6 +41,7 @@ if [ -f ~/.profile_hosts ]; then
     source ~/.profile_hosts
 fi
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+[ -d "$HOME/.pixi/bin" ] && PATH="$PATH:$HOME/.pixi/bin"
 
 # Load NVM for non-interactive shells
 export NVM_DIR="$HOME/.config/nvm"

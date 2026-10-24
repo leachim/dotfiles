@@ -228,8 +228,6 @@ fi
 [ -f ~/.localrc ] && source ~/.localrc
 
 
-[ -d "$HOME/.pixi/bin" ] && export PATH="$HOME/.pixi/bin:$PATH"
-
 export NVM_DIR="$HOME/.config/nvm"
 # ~/.profile (sourced above) already loaded nvm and put the default node on PATH
 if ! command -v nvm >/dev/null 2>&1; then
