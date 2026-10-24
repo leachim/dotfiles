@@ -42,6 +42,9 @@ if [ -f ~/.profile_hosts ]; then
 fi
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 [ -d "$HOME/.pixi/bin" ] && PATH="$PATH:$HOME/.pixi/bin"
+# Go module cache and `go install` binaries; a hosts/ file may set GOPATH first
+export GOPATH="${GOPATH:-$HOME/.local/share/go}"
+[ -d "$GOPATH/bin" ] && PATH="$GOPATH/bin:$PATH"
 
 # Load NVM for non-interactive shells
 export NVM_DIR="$HOME/.config/nvm"

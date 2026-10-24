@@ -205,10 +205,6 @@ esac
 export BUN_INSTALL="$HOME/.bun"
 [ -d "$BUN_INSTALL" ] && export PATH="$BUN_INSTALL/bin:$PATH"
 
-# Go
-export GOPATH="$HOME/.local/share/go"
-export PATH="$GOPATH/bin:$PATH"
-
 # Disable starship in vscode terminal
 if [[ "$TERM_PROGRAM" == "vscode" ]]; then
     STARSHIP_DISABLE="true"
