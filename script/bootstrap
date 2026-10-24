@@ -32,24 +32,6 @@ setup_gitconfig () {
 }
 
 
-setup_pixi () {
-  user ' - Do you want to install pixi? [y/N]'
-  read -n 1 install_pixi
-  echo ''
-  if [ "$install_pixi" == "y" ] || [ "$install_pixi" == "Y" ]
-  then
-    info "installing pixi"
-    if bash "$DOTFILES_ROOT/script/pixi-setup"
-    then
-      success "pixi installed"
-    else
-      fail "error installing pixi"
-    fi
-  else
-    success "skipped pixi"
-  fi
-}
-
 setup_host_role () {
   if ! [ -f "$DOTFILES_ROOT/host_role" ]
   then
@@ -94,12 +76,6 @@ then
   else
     fail "error installing dependencies"
   fi
-fi
-
-# Optional: install pixi
-if ! [ -d "$HOME/.pixi" ]
-then
-  setup_pixi
 fi
 
 # Optional tool installation (rust, starship, claude, oh-my-zsh, etc.)

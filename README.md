@@ -27,8 +27,8 @@ Bootstrap will prompt you for:
    - Codex CLI config
    - opencode config (Linux only)
    - pi coding agent (Linux only)
+   - pixi
    - GitHub CLI (gh)
-6. **pixi** -- optional, cross-platform
 
 ## Updating
 
@@ -66,9 +66,10 @@ re-run the optional installers -- use `script/install` for those.
 ├── hosts/             Role-specific config (mac.sh, linux-desktop.sh, hpc.sh)
 ├── macos/             macOS defaults, software updates, iTerm2 profile
 ├── bun/               Bun runtime, gemini-cli, codex, ccusage
+├── pixi/              pixi install and PATH
 ├── ruby/              Ruby/RVM config
 ├── rust/              Rust install via rustup
-├── script/            Bootstrap, install, pixi-setup
+├── script/            Bootstrap, install, update, link
 ├── starship/          Starship prompt config
 ├── system/            Environment, PATH, keys, aliases (*.zsh)
 ├── tmux/              Tmux configuration
@@ -214,7 +215,7 @@ Available roles:
 
 | Role | Platform | Purpose |
 |------|----------|---------|
-| `mac` | macOS | pixi PATH, macOS-specific setup |
+| `mac` | macOS | macOS-specific setup |
 | `linux-desktop` | Linux | Wayland/Sway desktop session |
 | `hpc` | Linux | HPC cluster paths |
 

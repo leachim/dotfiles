@@ -36,6 +36,7 @@ run_optional "Tmux plugins (TPM)" ./tmux/install.sh
 run_optional "Starship prompt" ./starship/install.sh
 run_optional "Rust (rustup)"  ./rust/install.sh
 run_optional "Bun"            ./bun/install.sh
+run_optional "pixi"           ./pixi/install.sh
 run_optional "chrome-headless-shell" ./chrome/install.sh
 run_optional "Claude Code config" ./claude/install.sh
 run_optional "Codex CLI config" ./codex/install.sh

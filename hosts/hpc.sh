@@ -61,8 +61,3 @@ if [ -z "$AI_AGENT" ] || [ "$AI_AGENT" = "0" ]; then
     fi
 
 fi
-
-# Add pixi to path if present
-if [ -d "$HOME/.pixi/bin" ]; then
-    PATH="$PATH:$HOME/.pixi/bin"
-fi

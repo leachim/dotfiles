@@ -7,7 +7,6 @@ alias clusterquota='lfs quota -h -g fmlab'
 # Cluster-specific paths
 export PATH="$HOME/.local/bin:$PATH"
 export PATH=$HOME/cuda/bin:$HOME/.claude/local:$HOME/mmseqs2/bin:$PATH
-export PATH="$HOME/.pixi/bin:$PATH"
 export PATH="/cluster/work/bewi/members/$USER/npm-global/v22.14.0/bin:$PATH"
 export LD_LIBRARY_PATH=$HOME/cuda/lib64:$LD_LIBRARY_PATH
 export TORCH_CUDA_ARCH_LIST="8.0;8.6;8.9;9.0"
@@ -81,9 +80,4 @@ if [ -z "$AI_AGENT" ] || [ "$AI_AGENT" = "0" ]; then
         PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND;}set_starship_config"
     fi
 
-fi
-
-# Add pixi to path if present
-if [ -d "$HOME/.pixi/bin" ]; then
-    PATH="$PATH:$HOME/.pixi/bin"
 fi
