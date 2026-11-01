@@ -32,6 +32,7 @@ brew 'wget'
 # Apps (macOS only)
 cask 'codexbar' if OS.mac?
 cask 'fuse-t' if OS.mac?
+cask 'ghostty' if OS.mac?
 cask 'dorso' if OS.mac?
 cask 'qview' if OS.mac?
 cask 'openlogi' if OS.mac?
