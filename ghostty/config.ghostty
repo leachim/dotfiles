@@ -4,7 +4,7 @@
 font-family = Monaco
 font-size = 12
 
-# GitHub Dark
+# GitHub Dark, the palette of the iTerm "Dotfiles" profile
 background = #101216
 foreground = #8b949e
 bold-color = #c9d1d9
