@@ -1,46 +1,12 @@
 # Ghostty config, linked to ~/.config/ghostty/config.ghostty by ghostty/install.sh.
 # Reload with cmd+shift+, ; all options: `ghostty +show-config --default --docs`.
 
-font-family = Monaco
-font-size = 12
-
-# GitHub Dark, the palette of the iTerm "Dotfiles" profile
-background = #101216
-foreground = #8b949e
-bold-color = #c9d1d9
-cursor-color = #c9d1d9
-cursor-text = #101216
-selection-background = #3b5070
-selection-foreground = #ffffff
-palette = 0=#000000
-palette = 1=#f78166
-palette = 2=#56d364
-palette = 3=#e3b341
-palette = 4=#6ca4f8
-palette = 5=#db61a2
-palette = 6=#2b7489
-palette = 7=#ffffff
-palette = 8=#4d4d4d
-palette = 9=#f78166
-palette = 10=#56d364
-palette = 11=#e3b341
-palette = 12=#6ca4f8
-palette = 13=#db61a2
-palette = 14=#2b7489
-palette = 15=#ffffff
-
-cursor-style = block
-cursor-style-blink = false
-mouse-hide-while-typing = true
-
 # Both Option keys send Alt, for the tmux M-* and C-M-* bindings
 macos-option-as-alt = true
 
 # tmux is always the running process, so a confirmation would appear on every close.
-# Sessions outlive the window; cmd+q is ignored so quitting goes through the menu.
 confirm-close-surface = false
-keybind = super+q=ignore
 
 # Remote hosts lack the xterm-ghostty terminfo: ssh from a Ghostty shell gets
-# TERM=xterm-256color. no-cursor keeps the block cursor at the prompt.
-shell-integration-features = no-cursor,ssh-env
+# TERM=xterm-256color.
+shell-integration-features = ssh-env
