@@ -61,6 +61,7 @@ re-run the optional installers -- use `script/install` for those.
 ├── docker/            Docker aliases (*.zsh, auto-sourced)
 ├── functions/         Autoloaded zsh functions and completions
 ├── gh/                GitHub CLI installer (Linux; macOS uses Brewfile)
+├── ghostty/           Ghostty config (linked to ~/.config/ghostty)
 ├── git/               Git config, aliases, completion
 ├── homebrew/          Brewfile and install script
 ├── hosts/             Role-specific config (mac.sh, linux-desktop.sh, hpc.sh)
