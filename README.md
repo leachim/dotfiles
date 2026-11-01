@@ -65,7 +65,7 @@ re-run the optional installers -- use `script/install` for those.
 ├── git/               Git config, aliases, completion
 ├── homebrew/          Brewfile and install script
 ├── hosts/             Role-specific config (mac.sh, linux-desktop.sh, hpc.sh)
-├── macos/             macOS defaults, software updates, iTerm2 profile
+├── macos/             macOS defaults, software updates
 ├── bun/               Bun runtime, gemini-cli, codex, ccusage
 ├── pixi/              pixi installer
 ├── ruby/              Ruby/RVM config
@@ -143,7 +143,7 @@ open. Linux hosts (HPC, bsse) get no extra restrictions.
   `bin/claude-write-guard` hook applies the same rules to them. GitHub ssh
   remotes are rewritten to HTTPS with `gh` as credential helper, because ssh
   cannot pass the sandbox proxy; other ssh remotes do not work from Claude on
-  macOS. The file also carries iTerm2's Claude Code status hooks.
+  macOS.
 - Codex: its `:workspace`-based permission profile limits writes to the workspace
   and temp dirs on both platforms. On macOS, `codex/install.sh` also copies
   `codex/requirements.macos.toml` to `/etc/codex/requirements.toml` (sudo),

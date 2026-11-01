@@ -120,23 +120,11 @@ defaults write com.apple.dock wvous-tr-corner -int 12
 defaults write com.apple.dock wvous-tr-modifier -int 0
 
 ###############################################################################
-# Terminal & iTerm 2                                                          #
+# Terminal                                                                    #
 ###############################################################################
 
 # Only use UTF-8 in Terminal.app
 defaults write com.apple.terminal StringEncodings -array 4
-
-# Don't display the annoying prompt when quitting iTerm
-defaults write com.googlecode.iterm2 PromptOnQuit -bool false
-
-# Let OSC 52 set the clipboard (tmux copy and ppcopy over SSH)
-defaults write com.googlecode.iterm2 AllowClipboardAccess -bool true
-
-# "Dotfiles" profile (colours, font, keys); select it as default once in iTerm.
-# iTerm does not write Settings changes back to it: edit the JSON instead.
-mkdir -p "$HOME/Library/Application Support/iTerm2/DynamicProfiles"
-ln -sfn "$HOME/.dotfiles/macos/iterm-profile.json" \
-  "$HOME/Library/Application Support/iTerm2/DynamicProfiles/dotfiles.json"
 
 ###############################################################################
 # Activity Monitor                                                            #
