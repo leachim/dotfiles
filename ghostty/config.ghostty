@@ -7,6 +7,9 @@ macos-option-as-alt = true
 # tmux is always the running process, so a confirmation would appear on every close.
 confirm-close-surface = false
 
+cursor-style-blink = false
+
 # Remote hosts lack the xterm-ghostty terminfo: ssh from a Ghostty shell gets
-# TERM=xterm-256color.
-shell-integration-features = ssh-env
+# TERM=xterm-256color. no-cursor: the shell integration would set a blinking
+# bar at the prompt, overriding cursor-style-blink.
+shell-integration-features = no-cursor,ssh-env
