@@ -31,26 +31,18 @@ set-option -g default-shell "$SHELL"
 set-environment -g 'IGNOREEOF' 100
 
 # ----------------------
-# Copy paste - Modern OSC 52 support
+# Copy paste - OSC 52
 # -----------------------
-# OSC 52 is a terminal escape sequence that allows tmux to set the system clipboard
-# even when connected to a remote server via SSH. This works with modern terminals:
-# - iTerm2 (Mac) - Enable "Applications in terminal may access clipboard"
-# - Terminal.app (Mac) - Works by default
-# - Alacritty - Works by default
-# - WezTerm - Works by default
-# - Windows Terminal - Works by default
-#
-# When you copy text in tmux on a remote server, OSC 52 sends the clipboard data
-# through the SSH connection to your local terminal emulator, which then sets your
-# local system clipboard. No X11 forwarding or special SSH configuration needed.
+# Every tmux copy also sets the local system clipboard via OSC 52, which travels
+# through SSH and any outer tmux to the terminal. Ghostty allows OSC 52 writes by
+# default; iTerm2 needs "Applications in terminal may access clipboard".
 
-# Enable clipboard integration (OSC 52)
-# 'on' allows tmux to set clipboard AND allows apps inside tmux to use it
+# 'on' also lets apps inside tmux set the clipboard
 set -g set-clipboard on
 
-# Enable clipboard feature specifically for xterm-style terminals (iTerm2)
-set -g terminal-features 'xterm*:clipboard'
+# Adds clipboard to the default xterm* features (focus, title, cursor style);
+# matches TERM=xterm-ghostty locally and xterm-256color over SSH.
+set -as terminal-features 'xterm*:clipboard'
 
 # Mouse support
 set -g mouse on
@@ -292,9 +284,9 @@ set -g @resurrect-dir "$HOME/.local/share/tmux/resurrect/$CLUSTER_NAME"
 set -g @continuum-restore 'on'
 set -g @continuum-save-interval '10'
 
-# Mouse copy bindings (uses OSC 52 script via run-shell)
+# Mouse copy bindings. Shift+drag bypasses tmux for a native terminal selection.
 
-# Drag: select only (keep selection visible); press y or Enter to copy
+# Drag: copy on release, selection stays visible
 bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection-no-clear
 
 # Double-click: select word and copy
@@ -312,12 +304,11 @@ if-shell "uname | grep -q Darwin" \
     "bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'pbcopy'" \
     "bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel \\; run-shell 'tmux save-buffer - | bash ~/.dotfiles/bin/tmux-osc52'"
 
-# Scroll 3 lines per wheel tick (default is 5)
+# Scroll 1 line per wheel tick (default is 5)
 bind -T copy-mode-vi WheelUpPane send -N1 -X scroll-up
 bind -T copy-mode-vi WheelDownPane send -N1 -X scroll-down
 
-# Allow passthrough for terminal escape sequences (enables OSC 52, etc.)
-# Required for modern clipboard integration on tmux 3.3+
+# Pass DCS-wrapped escape sequences to the terminal; bin/tmux-osc52 relies on it
 set-option -g allow-passthrough on
 
 # Aggressive resize behavior
