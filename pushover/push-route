@@ -1,0 +1,384 @@
+#!/usr/bin/env python3
+"""push-route -- choose which of your devices receive push-alert messages.
+
+    push-route                  list the group's devices and whether each is on
+    push-route only phone       enable phone, disable your other devices
+    push-route on desktop ...   enable devices
+    push-route off phone ...    disable devices
+    push-route all              enable every device of yours in the group
+    push-route add ipad ...     add a device row to the group (enabled)
+    push-route remove ipad ...  remove a device row from the group
+    push-route setup            one row per registered device (first run)
+    push-route -n only phone    print what would change, change nothing
+
+Routing lives on Pushover's servers, in the delivery group push-alert sends to
+(PUSHOVER_ALERTS), so a change applies at once to every machine and every job
+already running. It is shared: turning a device off silences it for all
+senders. See README.md.
+"""
+
+import json
+import os
+import re
+import sys
+import urllib.error
+import urllib.parse
+import urllib.request
+
+API = "https://api.pushover.net/1"
+TIMEOUT = 20
+# Pushover device names: letters, digits, underscore, hyphen, up to 25.
+DEVICE_RE = re.compile(r"^[A-Za-z0-9_-]{1,25}$")
+WHOLE_ACCOUNT = "(all devices)"
+
+
+class RouteError(Exception):
+    """A failure to report in one line; never carries a key or token."""
+
+
+# --- credentials -----------------------------------------------------------
+
+
+def read_assignments(path, names):
+    """Values of shell-style `NAME=value` lines in `path`, without sourcing it.
+
+    Handles an `export ` prefix and one level of matching quotes; the last
+    assignment wins, as it would in a shell. A missing file reads as empty.
+    """
+    found = {}
+    try:
+        with open(path) as fh:
+            lines = fh.read().splitlines()
+    except OSError:
+        return found
+    pattern = re.compile(r"^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)=(.*)$")
+    for line in lines:
+        m = pattern.match(line)
+        if not m or m.group(1) not in names:
+            continue
+        value = m.group(2).strip()
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in "'\"":
+            value = value[1:-1]
+        found[m.group(1)] = value
+    return found
+
+
+def load_credentials(env=None, home=None):
+    """(app token, your user key, group key), environment first.
+
+    Same sources as bin/push and bin/push-alert: the token and user key from
+    ~/.secrets/pushover (or PUSHOVER_CREDENTIALS), the group key from
+    PUSHOVER_ALERTS, picked out of ~/.localrc when the environment lacks it.
+    """
+    env = os.environ if env is None else env
+    home = home or os.path.expanduser("~")
+    creds_path = env.get("PUSHOVER_CREDENTIALS") or os.path.join(
+        home, ".secrets", "pushover"
+    )
+    creds = read_assignments(creds_path, {"PUSHOVER_API_TOKEN", "PUSHOVER_USER_KEY"})
+    token = env.get("PUSHOVER_API_TOKEN") or creds.get("PUSHOVER_API_TOKEN")
+    user = env.get("PUSHOVER_USER_KEY") or creds.get("PUSHOVER_USER_KEY")
+    group = env.get("PUSHOVER_ALERTS") or read_assignments(
+        os.path.join(home, ".localrc"), {"PUSHOVER_ALERTS"}
+    ).get("PUSHOVER_ALERTS")
+    missing = [
+        name
+        for name, value in (
+            ("PUSHOVER_API_TOKEN", token),
+            ("PUSHOVER_USER_KEY", user),
+            ("PUSHOVER_ALERTS", group),
+        )
+        if not value
+    ]
+    if missing:
+        raise RouteError(
+            "missing %s (looked in the environment, %s and ~/.localrc)"
+            % (", ".join(missing), creds_path)
+        )
+    if user == group:
+        raise RouteError(
+            "PUSHOVER_USER_KEY is the group key; it must be your own user key"
+        )
+    return token, user, group
+
+
+# --- API -------------------------------------------------------------------
+
+
+class Pushover:
+    def __init__(self, token, opener=urllib.request.urlopen):
+        self.token = token
+        self.opener = opener
+
+    def call(self, path, params=None, post=False):
+        params = dict(params or {})
+        params["token"] = self.token
+        data = urllib.parse.urlencode(params)
+        if post:
+            req = urllib.request.Request(API + path, data=data.encode())
+        else:
+            req = urllib.request.Request(API + path + "?" + data)
+        try:
+            with self.opener(req, timeout=TIMEOUT) as resp:
+                body = resp.read()
+        except urllib.error.HTTPError as exc:
+            # 400 carries Pushover's own explanation; anything else is opaque.
+            body = exc.read() if exc.code == 400 else b""
+            raise RouteError(_api_message(body) or "HTTP %d from Pushover" % exc.code)
+        except urllib.error.URLError as exc:
+            raise RouteError("cannot reach Pushover: %s" % exc.reason)
+        try:
+            reply = json.loads(body.decode())
+        except ValueError:
+            raise RouteError("Pushover answered with something that is not JSON")
+        if reply.get("status") != 1:
+            raise RouteError(_api_message(body) or "Pushover refused the request")
+        return reply
+
+    def group(self, group):
+        return self.call("/groups/%s.json" % group)
+
+    def devices(self, user):
+        """Device names registered to `user` (users/validate)."""
+        return self.call("/users/validate.json", {"user": user}, post=True).get(
+            "devices", []
+        )
+
+    def member(self, group, action, user, device=None):
+        """add_user / remove_user / enable_user / disable_user.
+
+        Without a device these act on EVERY row holding the user key, so the
+        callers below always pass one, except `setup`, which means it.
+        """
+        params = {"user": user}
+        if device:
+            params["device"] = device
+        self.call("/groups/%s/%s.json" % (group, action), params, post=True)
+
+
+def _api_message(body):
+    try:
+        errors = json.loads(body.decode()).get("errors")
+    except (ValueError, AttributeError):
+        return ""
+    if isinstance(errors, list):
+        return "; ".join(str(e) for e in errors)
+    return str(errors or "")
+
+
+# --- planning (pure) -------------------------------------------------------
+
+
+def own_rows(info, user):
+    """{device or None: enabled} for the rows holding your user key."""
+    return {
+        row.get("device") or None: not row.get("disabled", False)
+        for row in info.get("users", [])
+        if row.get("user") == user
+    }
+
+
+def _check_targetable(rows):
+    if None in rows:
+        raise RouteError(
+            "the group holds you as a whole-account member, which reaches every "
+            "device and cannot be switched per device; run `push-route setup` "
+            "to replace it with one row per device"
+        )
+
+
+def _check_known(rows, devices):
+    unknown = [d for d in devices if d not in rows]
+    if unknown:
+        raise RouteError(
+            "not in the group: %s (add with `push-route add %s`)"
+            % (", ".join(unknown), " ".join(unknown))
+        )
+
+
+def plan_switch(rows, devices, enable):
+    """Actions that turn `devices` on (enable=True) or off."""
+    _check_targetable(rows)
+    _check_known(rows, devices)
+    action = "enable_user" if enable else "disable_user"
+    return [(action, d) for d in _unique(devices) if rows[d] != enable]
+
+
+def plan_only(rows, devices):
+    """Enable `devices`, disable every other row of yours."""
+    if not devices:
+        raise RouteError("`only` needs at least one device")
+    _check_targetable(rows)
+    _check_known(rows, devices)
+    wanted = set(devices)
+    plan = [("enable_user", d) for d in _unique(devices) if not rows[d]]
+    plan += [("disable_user", d) for d in sorted(rows) if d not in wanted and rows[d]]
+    return plan
+
+
+def plan_all(rows):
+    _check_targetable(rows)
+    return [("enable_user", d) for d in sorted(rows) if not rows[d]]
+
+
+def plan_add(rows, devices, registered):
+    _check_targetable(rows)
+    unregistered = [d for d in devices if d not in registered]
+    if unregistered:
+        raise RouteError(
+            "not a device on your account: %s (registered: %s)"
+            % (", ".join(unregistered), ", ".join(registered) or "none")
+        )
+    return [("add_user", d) for d in _unique(devices) if d not in rows]
+
+
+def plan_remove(rows, devices):
+    _check_targetable(rows)
+    _check_known(rows, devices)
+    return [("remove_user", d) for d in _unique(devices)]
+
+
+def plan_setup(rows, registered):
+    """One enabled row per registered device.
+
+    A whole-account row cannot be removed on its own (remove_user without a
+    device drops every row of the user), so it goes first, all rows with it,
+    and the device rows are added back; previous on/off settings are lost then.
+    """
+    if not registered:
+        raise RouteError("your account has no registered devices")
+    if None in rows:
+        return [("remove_user", None)] + [("add_user", d) for d in registered]
+    return [("add_user", d) for d in registered if d not in rows]
+
+
+def _unique(items):
+    seen = []
+    for item in items:
+        if item not in seen:
+            seen.append(item)
+    return seen
+
+
+# --- output ----------------------------------------------------------------
+
+
+def describe(info, user, registered=None):
+    rows = info.get("users", [])
+    lines = ["%s:" % (info.get("name") or "group")]
+    if not rows:
+        lines.append("  (no members -- alerts go nowhere)")
+    for row in rows:
+        state = "off" if row.get("disabled") else "on "
+        device = row.get("device") or WHOLE_ACCOUNT
+        who = "" if row.get("user") == user else "  [other member]"
+        memo = "  # %s" % row["memo"] if row.get("memo") else ""
+        lines.append("  %s  %s%s%s" % (state, device, who, memo))
+    mine = own_rows(info, user)
+    if mine and not any(mine.values()):
+        lines.append("  warning: every device of yours is off")
+    if None in mine:
+        lines.append(
+            "  note: a whole-account row reaches every device; "
+            "`push-route setup` splits it per device"
+        )
+    if registered is not None:
+        absent = [d for d in registered if d not in mine]
+        if absent and None not in mine:
+            lines.append("  not in the group: %s" % ", ".join(absent))
+    return "\n".join(lines)
+
+
+VERBS = {
+    "add_user": "add",
+    "remove_user": "remove",
+    "enable_user": "on",
+    "disable_user": "off",
+}
+
+
+def describe_plan(plan):
+    return [
+        "%s %s" % (VERBS[action], device or WHOLE_ACCOUNT + ", every row of yours")
+        for action, device in plan
+    ]
+
+
+# --- main ------------------------------------------------------------------
+
+COMMANDS = ("list", "on", "off", "only", "all", "add", "remove", "setup")
+
+
+def parse_args(argv):
+    dry_run = False
+    args = list(argv)
+    if args and args[0] in ("-h", "--help"):
+        return "help", [], False
+    if args and args[0] in ("-n", "--dry-run"):
+        dry_run = True
+        args.pop(0)
+    command = args.pop(0) if args else "list"
+    if command not in COMMANDS:
+        raise RouteError("unknown command %r (try --help)" % command)
+    takes_devices = command in ("on", "off", "only", "add", "remove")
+    if takes_devices and not args:
+        raise RouteError("`%s` needs at least one device name" % command)
+    if not takes_devices and args:
+        raise RouteError("`%s` takes no arguments" % command)
+    bad = [d for d in args if not DEVICE_RE.match(d)]
+    if bad:
+        raise RouteError("not a Pushover device name: %s" % ", ".join(bad))
+    return command, args, dry_run
+
+
+def run(argv, api=None, credentials=None, out=print):
+    command, devices, dry_run = parse_args(argv)
+    if command == "help":
+        out(__doc__.strip())
+        return 0
+    token, user, group = credentials or load_credentials()
+    api = api or Pushover(token)
+
+    info = api.group(group)
+    rows = own_rows(info, user)
+    if command == "list":
+        out(describe(info, user, api.devices(user)))
+        return 0
+
+    if command in ("on", "off"):
+        plan = plan_switch(rows, devices, enable=command == "on")
+    elif command == "only":
+        plan = plan_only(rows, devices)
+    elif command == "all":
+        plan = plan_all(rows)
+    elif command == "add":
+        plan = plan_add(rows, devices, api.devices(user))
+    elif command == "remove":
+        plan = plan_remove(rows, devices)
+    else:
+        plan = plan_setup(rows, api.devices(user))
+
+    if not plan:
+        out("nothing to change")
+        out(describe(info, user))
+        return 0
+    for line in describe_plan(plan):
+        out(("would " if dry_run else "") + line)
+    if dry_run:
+        return 0
+    for action, device in plan:
+        api.member(group, action, user, device)
+    out(describe(api.group(group), user))
+    return 0
+
+
+def main():
+    try:
+        return run(sys.argv[1:])
+    except RouteError as exc:
+        print("push-route: %s" % exc, file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
