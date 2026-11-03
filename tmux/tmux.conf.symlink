@@ -40,9 +40,10 @@ set-environment -g 'IGNOREEOF' 100
 # 'on' also lets apps inside tmux set the clipboard
 set -g set-clipboard on
 
-# Adds clipboard to the default xterm* features (focus, title, cursor style);
-# matches TERM=xterm-ghostty locally and xterm-256color over SSH.
-set -as terminal-features 'xterm*:clipboard'
+# The default terminal-features already enable clipboard for xterm*. A tmux
+# started inside a tmux pane (e.g. on a cluster via ssh) sees TERM=screen-256color,
+# which needs this entry to forward copies to the outer tmux.
+set -as terminal-features 'screen*:clipboard'
 
 # Mouse support
 set -g mouse on
@@ -284,7 +285,8 @@ set -g @resurrect-dir "$HOME/.local/share/tmux/resurrect/$CLUSTER_NAME"
 set -g @continuum-restore 'on'
 set -g @continuum-save-interval '10'
 
-# Mouse copy bindings. Shift+drag bypasses tmux for a native terminal selection.
+# Mouse copy bindings. Shift+drag (Ghostty) or Option+drag (iTerm2) bypasses tmux
+# for a native terminal selection.
 
 # Drag: copy on release, selection stays visible
 bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection-no-clear
