@@ -90,4 +90,5 @@ PROJECT=$(basename "$CWD")
 [ -n "$PROJECT" ] && MESSAGE="$MESSAGE — $PROJECT"
 [ -n "$ELAPSED" ] && MESSAGE="$MESSAGE (${ELAPSED})"
 
-exec ~/.dotfiles/bin/push "$MESSAGE" "Claude Code · $WHERE"
+# via the Alerts group, so push-route decides which devices get it
+exec ~/.dotfiles/bin/push-alert "$MESSAGE" "Claude Code · $WHERE"
