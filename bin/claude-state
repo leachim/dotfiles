@@ -10,12 +10,14 @@
 #                                                         shell/Monitor or session cron
 #                                                         is pending, else done
 #   claude-state end    SessionEnd                        drop the state file
+#   claude-state focus %PANE   tmux pane-focus-in             you looked: clear done
 #
 # Output: $STATE_DIR/<session_id> holding "<state> <since epoch> [label]", which
 # statusline.sh turns into a full-width coloured bar under the prompt.
 # States: run (turn in progress), wait (turn over, but a background shell,
 # Monitor or scheduled wakeup will resume it), ask (blocked on a prompt), done (finished,
-# your move; stays until the next prompt), idle (fresh or Esc-interrupted).
+# your move; cleared by the next prompt or by focusing its tmux pane), idle
+# (fresh, Esc-interrupted, or finished while you were on its pane).
 #
 # Esc-interrupting a turn fires no Stop hook, so the state stays "run" until the
 # next prompt or the idle_prompt notification (~60s later) resets it.
@@ -33,10 +35,24 @@ json_str() {
         sed -n 's/.*"'"$1"'"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1
 }
 
-SESSION=$(json_str session_id)
+# tmux pane -> session map, so the pane-focus-in hook can find the session.
+pane_map() { local p="${1#%}"; printf '%s/pane-%s' "$STATE_DIR" "${p//[^0-9]/}"; }
+
+if [ "$MODE" = focus ]; then
+    read -r SESSION 2>/dev/null < "$(pane_map "${2:-}")" || exit 0
+else
+    SESSION=$(json_str session_id)
+fi
 SESSION="${SESSION//[^A-Za-z0-9_-]/}"
 [ -n "$SESSION" ] || exit 0
 FILE="$STATE_DIR/$SESSION"
+
+# Is this pane the one you are on: active pane, active window, attached session?
+on_this_pane() {
+    [ -n "$TMUX" ] && [ -n "$TMUX_PANE" ] && command -v tmux >/dev/null 2>&1 || return 1
+    [ "$(tmux display -p -t "$TMUX_PANE" \
+        '#{&&:#{pane_active},#{&&:#{window_active},#{session_attached}}}' 2>/dev/null)" = 1 ]
+}
 
 read -r CUR START _ 2>/dev/null < "$FILE"
 LABEL=""
@@ -89,11 +105,14 @@ case "$MODE" in
         if [ "$(json_str hook_event_name)" = Stop ] && LABEL=$(pending_label); then
             NEW=wait
             [ "$CUR" = wait ] || START=$(date +%s)
+        elif on_this_pane; then
+            NEW=idle                    # you watched it finish; nothing to flag
         else
             NEW=done; START=$(date +%s)
         fi ;;
     end) NEW=idle ;;
-    *) echo "usage: claude-state run|resume|ask|notify|idle|end" >&2; exit 2 ;;
+    focus) [ "$CUR" = done ] || exit 0; NEW=idle ;;
+    *) echo "usage: claude-state run|resume|ask|notify|idle|end|focus" >&2; exit 2 ;;
 esac
 
 # A notification that arrives after the turn ended must not resurrect it.
@@ -101,8 +120,12 @@ case "$NEW:${CUR:-idle}" in ask:idle|ask:done) exit 0 ;; esac
 [ "$NEW" = "$CUR" ] && [ "$NEW" != wait ] && [ "$MODE" != end ] && exit 0
 
 mkdir -p "$STATE_DIR" 2>/dev/null && chmod 700 "$STATE_DIR" 2>/dev/null
+if [ -n "$TMUX_PANE" ] && [ "$MODE" != focus ]; then
+    printf '%s\n' "$SESSION" > "$(pane_map "$TMUX_PANE")"
+fi
 if [ "$MODE" = end ]; then
     rm -f "$FILE"
+    [ -n "$TMUX_PANE" ] && rm -f "$(pane_map "$TMUX_PANE")"
     find "$STATE_DIR" -maxdepth 1 -type f -mtime +2 -delete 2>/dev/null
 else
     printf '%s %s %s\n' "$NEW" "${START:-$(date +%s)}" "$LABEL" > "$FILE"
