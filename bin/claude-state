@@ -1,6 +1,6 @@
 #!/bin/bash
-# Track whether a Claude Code session is busy, so tmux and the statusline can
-# show it. Driven by hooks (see claude/settings.json):
+# Track whether a Claude Code session is busy, so the statusline can show it.
+# Driven by hooks (see claude/settings.json):
 #
 #   claude-state run    UserPromptSubmit                  turn started
 #   claude-state resume PostToolUse, PostToolUseFailure   back to run if it was ask
@@ -9,17 +9,13 @@
 #   claude-state idle   Stop, StopFailure                 turn over
 #   claude-state end    SessionEnd                        drop the state file
 #
-# Outputs:
-#   $STATE_DIR/<session_id>  "<state> <turn start epoch>", read by statusline.sh
-#   tmux window option @claude = run|ask (unset when idle), read by the
-#   window-status formats in tmux.conf; plus a per-pane border colour override.
+# Output: $STATE_DIR/<session_id> holding "<state> <turn start epoch>", which
+# statusline.sh turns into a full-width coloured bar under the prompt.
 #
 # Esc-interrupting a turn fires no Stop hook, so the state stays "run" until the
 # next prompt or the idle_prompt notification (~60s later) resets it.
 
 STATE_DIR="${XDG_RUNTIME_DIR:-/tmp}/claude-state-$(id -u)"
-RUN_BORDER=colour178     # amber
-ASK_BORDER=colour167     # red
 
 MODE="${1:-}"
 
@@ -65,17 +61,4 @@ else
     printf '%s %s\n' "$NEW" "${START:-$(date +%s)}" > "$FILE"
 fi
 
-[ -n "$TMUX" ] && [ -n "$TMUX_PANE" ] && command -v tmux >/dev/null 2>&1 || exit 0
-case "$NEW" in
-    run|ask)
-        [ "$NEW" = run ] && C=$RUN_BORDER || C=$ASK_BORDER
-        tmux set -w -t "$TMUX_PANE" @claude "$NEW" \; \
-             set -p -t "$TMUX_PANE" pane-border-style "$(tmux show -gv pane-border-style),fg=$C" \; \
-             set -p -t "$TMUX_PANE" pane-active-border-style "$(tmux show -gv pane-active-border-style),fg=$C" \
-             2>/dev/null ;;
-    idle)
-        tmux set -wu -t "$TMUX_PANE" @claude \; \
-             set -pu -t "$TMUX_PANE" pane-border-style \; \
-             set -pu -t "$TMUX_PANE" pane-active-border-style 2>/dev/null ;;
-esac
 exit 0

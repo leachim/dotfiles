@@ -87,7 +87,7 @@ fi
 # Busy state written by bin/claude-state from hooks: "<run|ask|idle> <start epoch>".
 SESSION_ID=$(extract_str "$input_lines" session_id)
 SESSION_ID=${SESSION_ID//[^A-Za-z0-9_-]/}
-STATE_SEG=""
+STATE_BG=""; STATE_LABEL=""
 STATE_FILE="${XDG_RUNTIME_DIR:-/tmp}/claude-state-$(id -u)/${SESSION_ID:-none}"
 if [ -n "$SESSION_ID" ] && read -r ST_STATE ST_START 2>/dev/null < "$STATE_FILE"; then
   case "$ST_START" in ''|*[!0-9]*) ST_START=$(date +%s) ;; esac
@@ -96,8 +96,8 @@ if [ -n "$SESSION_ID" ] && read -r ST_STATE ST_START 2>/dev/null < "$STATE_FILE"
   elif [ "$S" -ge 60 ];   then EL=$(printf '%dm%02ds' $((S/60)) $((S%60)))
   else                         EL="${S}s"; fi
   case "$ST_STATE" in
-    run) STATE_SEG='\033[1;30;43m running '"$EL"' \033[0m ' ;;
-    ask) STATE_SEG='\033[1;97;41m needs you '"$EL"' \033[0m ' ;;
+    run) STATE_BG='\033[30;43m'; STATE_LABEL="● running $EL" ;;
+    ask) STATE_BG='\033[97;41m'; STATE_LABEL="● needs you $EL" ;;
   esac
 fi
 
@@ -159,8 +159,20 @@ if [ -f "$CACHE" ]; then
   fi
 fi
 
-# Line 1
-echo -e "${STATE_SEG}${DIM}${MODEL}${RESET} | ${DIM}[$SESSION]${RESET} ${BAR_COLOR}${BAR}${RESET} ${PCT}% | ${USED_PCT} used | ${PROJ_PCT} proj | ${TIME_LEFT} left | ${DURATION}"
+# Line 1. While a turn runs or waits on you, the whole line becomes a full-width
+# coloured bar (per session, so per pane); otherwise the usual colours.
+LINE1_REST="| ${USED_PCT} used | ${PROJ_PCT} proj | ${TIME_LEFT} left | ${DURATION}"
+if [ -n "$STATE_BG" ]; then
+  PLAIN=" ${STATE_LABEL} | ${MODEL} | [$SESSION] ${BAR} ${PCT}% ${LINE1_REST}"
+  COLS=""
+  [ -n "$TMUX_PANE" ] && COLS=$(tmux display -p -t "$TMUX_PANE" '#{pane_width}' 2>/dev/null)
+  COLS=${COLS:-${COLUMNS:-0}}
+  PAD=$(( COLS - 1 - ${#PLAIN} ))
+  [ "$PAD" -gt 0 ] 2>/dev/null && PLAIN="$PLAIN$(printf "%${PAD}s" "")"
+  printf '%b%s%b\n' "$STATE_BG" "$PLAIN" "$RESET"
+else
+  echo -e "${DIM}${MODEL}${RESET} | ${DIM}[$SESSION]${RESET} ${BAR_COLOR}${BAR}${RESET} ${PCT}% ${LINE1_REST}"
+fi
 
 # Line 2: ccusage with model and (time left) stripped. ccusage prints its input
 # validation errors on stdout, not stderr, so a payload it rejects would spill a
