@@ -89,7 +89,7 @@ SESSION_ID=$(extract_str "$input_lines" session_id)
 SESSION_ID=${SESSION_ID//[^A-Za-z0-9_-]/}
 STATE_BG=""; STATE_LABEL=""
 STATE_FILE="${XDG_RUNTIME_DIR:-/tmp}/claude-state-$(id -u)/${SESSION_ID:-none}"
-if [ -n "$SESSION_ID" ] && read -r ST_STATE ST_START 2>/dev/null < "$STATE_FILE"; then
+if [ -n "$SESSION_ID" ] && read -r ST_STATE ST_START ST_LABEL 2>/dev/null < "$STATE_FILE"; then
   case "$ST_START" in ''|*[!0-9]*) ST_START=$(date +%s) ;; esac
   S=$(( $(date +%s) - ST_START ))
   if   [ "$S" -ge 3600 ]; then EL=$(printf '%dh%02dm' $((S/3600)) $((S%3600/60)))
@@ -98,6 +98,8 @@ if [ -n "$SESSION_ID" ] && read -r ST_STATE ST_START 2>/dev/null < "$STATE_FILE"
   case "$ST_STATE" in
     run) STATE_BG='\033[30;43m'; STATE_LABEL="● running $EL" ;;
     ask) STATE_BG='\033[97;41m'; STATE_LABEL="● needs you $EL" ;;
+    wait) STATE_BG='\033[30;43m'; STATE_LABEL="◷ background $EL${ST_LABEL:+: $ST_LABEL}" ;;
+    done) STATE_BG='\033[97;41m'; STATE_LABEL="✔ finished $EL ago" ;;
   esac
 fi
 

@@ -6,11 +6,16 @@
 #   claude-state resume PostToolUse, PostToolUseFailure   back to run if it was ask
 #   claude-state ask    PreToolUse AskUserQuestion|ExitPlanMode
 #   claude-state notify Notification                      ask or idle, by notification_type
-#   claude-state idle   Stop, StopFailure                 turn over
+#   claude-state idle   Stop, StopFailure                 turn over: wait if the Stop
+#                                                         payload lists background tasks
+#                                                         or session crons, else done
 #   claude-state end    SessionEnd                        drop the state file
 #
-# Output: $STATE_DIR/<session_id> holding "<state> <turn start epoch>", which
+# Output: $STATE_DIR/<session_id> holding "<state> <since epoch> [label]", which
 # statusline.sh turns into a full-width coloured bar under the prompt.
+# States: run (turn in progress), wait (turn over, but background work or a
+# scheduled wakeup will resume it), ask (blocked on a prompt), done (finished,
+# your move; stays until the next prompt), idle (fresh or Esc-interrupted).
 #
 # Esc-interrupting a turn fires no Stop hook, so the state stays "run" until the
 # next prompt or the idle_prompt notification (~60s later) resets it.
@@ -33,7 +38,36 @@ SESSION="${SESSION//[^A-Za-z0-9_-]/}"
 [ -n "$SESSION" ] || exit 0
 FILE="$STATE_DIR/$SESSION"
 
-read -r CUR START 2>/dev/null < "$FILE"
+read -r CUR START _ 2>/dev/null < "$FILE"
+LABEL=""
+
+# Turn ended: is anything still going to wake this session?
+pending_label() {
+    local flat
+    flat=$(printf '%s' "$INPUT" | tr -d ' \n\t')
+    case "$flat" in
+        *'"background_tasks":[{'*|*'"session_crons":[{'*) ;;
+        *) return 1 ;;
+    esac
+    # Summarise for display; jq is missing on CSCS login nodes, python3 is not.
+    if command -v python3 >/dev/null 2>&1; then
+        printf '%s' "$INPUT" | python3 -I -c '
+import json, sys
+d = json.load(sys.stdin)
+tasks, crons = d.get("background_tasks") or [], d.get("session_crons") or []
+parts = []
+if tasks:
+    desc = " ".join((tasks[0].get("description") or tasks[0].get("type") or "task").split())
+    parts.append(desc[:60] + ("..." if len(desc) > 60 else ""))
+    if len(tasks) > 1:
+        parts.append("+%d more" % (len(tasks) - 1))
+if crons:
+    parts.append("%d wakeup%s" % (len(crons), "s" if len(crons) > 1 else ""))
+print(", ".join(parts))
+' 2>/dev/null && return 0
+    fi
+    echo "background work"
+}
 
 case "$MODE" in
     run)    NEW=run; START=$(date +%s) ;;
@@ -42,23 +76,32 @@ case "$MODE" in
     notify)
         case "$(json_str notification_type)" in
             permission_prompt|elicitation_dialog) NEW=ask ;;
-            idle_prompt)                          NEW=idle ;;
+            # Only clears a stale run (Esc-interrupt fires no Stop); a session
+            # waiting on background work also sits at an idle prompt.
+            idle_prompt) [ "$CUR" = run ] || exit 0; NEW=idle ;;
             *)                                    exit 0 ;;
         esac ;;
-    idle|end) NEW=idle ;;
+    idle)
+        if [ "$(json_str hook_event_name)" = Stop ] && LABEL=$(pending_label); then
+            NEW=wait
+            [ "$CUR" = wait ] || START=$(date +%s)
+        else
+            NEW=done; START=$(date +%s)
+        fi ;;
+    end) NEW=idle ;;
     *) echo "usage: claude-state run|resume|ask|notify|idle|end" >&2; exit 2 ;;
 esac
 
 # A notification that arrives after the turn ended must not resurrect it.
-[ "$NEW" = ask ] && [ "${CUR:-idle}" = idle ] && exit 0
-[ "$NEW" = "$CUR" ] && [ "$MODE" != end ] && exit 0
+case "$NEW:${CUR:-idle}" in ask:idle|ask:done) exit 0 ;; esac
+[ "$NEW" = "$CUR" ] && [ "$NEW" != wait ] && [ "$MODE" != end ] && exit 0
 
 mkdir -p "$STATE_DIR" 2>/dev/null && chmod 700 "$STATE_DIR" 2>/dev/null
 if [ "$MODE" = end ]; then
     rm -f "$FILE"
     find "$STATE_DIR" -maxdepth 1 -type f -mtime +2 -delete 2>/dev/null
 else
-    printf '%s %s\n' "$NEW" "${START:-$(date +%s)}" > "$FILE"
+    printf '%s %s %s\n' "$NEW" "${START:-$(date +%s)}" "$LABEL" > "$FILE"
 fi
 
 exit 0
