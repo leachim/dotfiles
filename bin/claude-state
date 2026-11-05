@@ -6,15 +6,15 @@
 #   claude-state resume PostToolUse, PostToolUseFailure   back to run if it was ask
 #   claude-state ask    PreToolUse AskUserQuestion|ExitPlanMode
 #   claude-state notify Notification                      ask or idle, by notification_type
-#   claude-state idle   Stop, StopFailure                 turn over: wait if the Stop
-#                                                         payload lists background tasks
-#                                                         or session crons, else done
+#   claude-state idle   Stop, StopFailure                 turn over: wait if a background
+#                                                         shell/Monitor or session cron
+#                                                         is pending, else done
 #   claude-state end    SessionEnd                        drop the state file
 #
 # Output: $STATE_DIR/<session_id> holding "<state> <since epoch> [label]", which
 # statusline.sh turns into a full-width coloured bar under the prompt.
-# States: run (turn in progress), wait (turn over, but background work or a
-# scheduled wakeup will resume it), ask (blocked on a prompt), done (finished,
+# States: run (turn in progress), wait (turn over, but a background shell,
+# Monitor or scheduled wakeup will resume it), ask (blocked on a prompt), done (finished,
 # your move; stays until the next prompt), idle (fresh or Esc-interrupted).
 #
 # Esc-interrupting a turn fires no Stop hook, so the state stays "run" until the
@@ -41,32 +41,36 @@ FILE="$STATE_DIR/$SESSION"
 read -r CUR START _ 2>/dev/null < "$FILE"
 LABEL=""
 
-# Turn ended: is anything still going to wake this session?
+# Turn ended: is a watched job still going to wake this session? Counts
+# background shells, Monitors and scheduled wakeups (session_crons); background
+# subagents and workflows do not count. Prints a label and succeeds if so.
 pending_label() {
-    local flat
-    flat=$(printf '%s' "$INPUT" | tr -d ' \n\t')
-    case "$flat" in
-        *'"background_tasks":[{'*|*'"session_crons":[{'*) ;;
-        *) return 1 ;;
-    esac
-    # Summarise for display; jq is missing on CSCS login nodes, python3 is not.
+    # Decide and summarise in python3 (jq is missing on CSCS login nodes).
     if command -v python3 >/dev/null 2>&1; then
         printf '%s' "$INPUT" | python3 -I -c '
 import json, sys
 d = json.load(sys.stdin)
-tasks, crons = d.get("background_tasks") or [], d.get("session_crons") or []
+tasks = [t for t in d.get("background_tasks") or [] if t.get("type") in ("shell", "monitor")]
+crons = d.get("session_crons") or []
+if not tasks and not crons:
+    sys.exit(1)
 parts = []
 if tasks:
-    desc = " ".join((tasks[0].get("description") or tasks[0].get("type") or "task").split())
+    desc = " ".join((tasks[0].get("description") or tasks[0].get("type")).split())
     parts.append(desc[:60] + ("..." if len(desc) > 60 else ""))
     if len(tasks) > 1:
         parts.append("+%d more" % (len(tasks) - 1))
 if crons:
     parts.append("%d wakeup%s" % (len(crons), "s" if len(crons) > 1 else ""))
 print(", ".join(parts))
-' 2>/dev/null && return 0
+' 2>/dev/null
+        return
     fi
-    echo "background work"
+    # No python3: match the flat JSON.
+    case "$(printf '%s' "$INPUT" | tr -d ' \n\t')" in
+        *'"type":"shell"'*|*'"type":"monitor"'*|*'"session_crons":[{'*) echo "background job" ;;
+        *) return 1 ;;
+    esac
 }
 
 case "$MODE" in
