@@ -1,0 +1,81 @@
+#!/bin/bash
+# Track whether a Claude Code session is busy, so tmux and the statusline can
+# show it. Driven by hooks (see claude/settings.json):
+#
+#   claude-state run    UserPromptSubmit                  turn started
+#   claude-state resume PostToolUse, PostToolUseFailure   back to run if it was ask
+#   claude-state ask    PreToolUse AskUserQuestion|ExitPlanMode
+#   claude-state notify Notification                      ask or idle, by notification_type
+#   claude-state idle   Stop, StopFailure                 turn over
+#   claude-state end    SessionEnd                        drop the state file
+#
+# Outputs:
+#   $STATE_DIR/<session_id>  "<state> <turn start epoch>", read by statusline.sh
+#   tmux window option @claude = run|ask (unset when idle), read by the
+#   window-status formats in tmux.conf; plus a per-pane border colour override.
+#
+# Esc-interrupting a turn fires no Stop hook, so the state stays "run" until the
+# next prompt or the idle_prompt notification (~60s later) resets it.
+
+STATE_DIR="${XDG_RUNTIME_DIR:-/tmp}/claude-state-$(id -u)"
+RUN_BORDER=colour178     # amber
+ASK_BORDER=colour167     # red
+
+MODE="${1:-}"
+
+INPUT=""
+[ -t 0 ] || INPUT=$(cat)
+
+# jq is not on every host (CSCS login nodes); sed works on the flat fields we need.
+json_str() {
+    printf '%s' "$INPUT" | tr -d '\n' |
+        sed -n 's/.*"'"$1"'"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1
+}
+
+SESSION=$(json_str session_id)
+SESSION="${SESSION//[^A-Za-z0-9_-]/}"
+[ -n "$SESSION" ] || exit 0
+FILE="$STATE_DIR/$SESSION"
+
+read -r CUR START 2>/dev/null < "$FILE"
+
+case "$MODE" in
+    run)    NEW=run; START=$(date +%s) ;;
+    resume) [ "$CUR" = ask ] || exit 0; NEW=run ;;
+    ask)    NEW=ask ;;
+    notify)
+        case "$(json_str notification_type)" in
+            permission_prompt|elicitation_dialog) NEW=ask ;;
+            idle_prompt)                          NEW=idle ;;
+            *)                                    exit 0 ;;
+        esac ;;
+    idle|end) NEW=idle ;;
+    *) echo "usage: claude-state run|resume|ask|notify|idle|end" >&2; exit 2 ;;
+esac
+
+# A notification that arrives after the turn ended must not resurrect it.
+[ "$NEW" = ask ] && [ "${CUR:-idle}" = idle ] && exit 0
+[ "$NEW" = "$CUR" ] && [ "$MODE" != end ] && exit 0
+
+mkdir -p "$STATE_DIR" 2>/dev/null && chmod 700 "$STATE_DIR" 2>/dev/null
+if [ "$MODE" = end ]; then
+    rm -f "$FILE"
+    find "$STATE_DIR" -maxdepth 1 -type f -mtime +2 -delete 2>/dev/null
+else
+    printf '%s %s\n' "$NEW" "${START:-$(date +%s)}" > "$FILE"
+fi
+
+[ -n "$TMUX" ] && [ -n "$TMUX_PANE" ] && command -v tmux >/dev/null 2>&1 || exit 0
+case "$NEW" in
+    run|ask)
+        [ "$NEW" = run ] && C=$RUN_BORDER || C=$ASK_BORDER
+        tmux set -w -t "$TMUX_PANE" @claude "$NEW" \; \
+             set -p -t "$TMUX_PANE" pane-border-style "$(tmux show -gv pane-border-style),fg=$C" \; \
+             set -p -t "$TMUX_PANE" pane-active-border-style "$(tmux show -gv pane-active-border-style),fg=$C" \
+             2>/dev/null ;;
+    idle)
+        tmux set -wu -t "$TMUX_PANE" @claude \; \
+             set -pu -t "$TMUX_PANE" pane-border-style \; \
+             set -pu -t "$TMUX_PANE" pane-active-border-style 2>/dev/null ;;
+esac
+exit 0

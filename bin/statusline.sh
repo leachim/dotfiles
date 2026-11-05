@@ -84,10 +84,35 @@ else
   DURATION="${D_MINS}m spent"
 fi
 
-# ccusage statusline
+# Busy state written by bin/claude-state from hooks: "<run|ask|idle> <start epoch>".
+SESSION_ID=$(extract_str "$input_lines" session_id)
+SESSION_ID=${SESSION_ID//[^A-Za-z0-9_-]/}
+STATE_SEG=""
+STATE_FILE="${XDG_RUNTIME_DIR:-/tmp}/claude-state-$(id -u)/${SESSION_ID:-none}"
+if [ -n "$SESSION_ID" ] && read -r ST_STATE ST_START 2>/dev/null < "$STATE_FILE"; then
+  case "$ST_START" in ''|*[!0-9]*) ST_START=$(date +%s) ;; esac
+  S=$(( $(date +%s) - ST_START ))
+  if   [ "$S" -ge 3600 ]; then EL=$(printf '%dh%02dm' $((S/3600)) $((S%3600/60)))
+  elif [ "$S" -ge 60 ];   then EL=$(printf '%dm%02ds' $((S/60)) $((S%60)))
+  else                         EL="${S}s"; fi
+  case "$ST_STATE" in
+    run) STATE_SEG='\033[1;30;43m running '"$EL"' \033[0m ' ;;
+    ask) STATE_SEG='\033[1;97;41m needs you '"$EL"' \033[0m ' ;;
+  esac
+fi
+
+# ccusage statusline. refreshInterval re-runs this script every few seconds and
+# ccusage rescans the transcripts each time, so reuse its line for a while.
 CCUSAGE_LINE=""
+CC_CACHE="${XDG_RUNTIME_DIR:-/tmp}/claude-state-$(id -u)/ccusage-${SESSION_ID:-none}"
 if [ -n "$CCUSAGE" ]; then
-  CCUSAGE_LINE=$(printf '%s' "$input" | $TIMEOUT $CCUSAGE statusline 2>/dev/null || true)
+  if [ -f "$CC_CACHE" ] && [ $(( $(date +%s) - $(file_mtime "$CC_CACHE") )) -lt 20 ]; then
+    CCUSAGE_LINE=$(cat "$CC_CACHE")
+  else
+    CCUSAGE_LINE=$(printf '%s' "$input" | $TIMEOUT $CCUSAGE statusline 2>/dev/null || true)
+    mkdir -p "$(dirname "$CC_CACHE")" 2>/dev/null && chmod 700 "$(dirname "$CC_CACHE")" 2>/dev/null
+    printf '%s\n' "$CCUSAGE_LINE" > "$CC_CACHE" 2>/dev/null
+  fi
 fi
 
 # Block budget: refresh cache if stale
@@ -135,7 +160,7 @@ if [ -f "$CACHE" ]; then
 fi
 
 # Line 1
-echo -e "${DIM}${MODEL}${RESET} | ${DIM}[$SESSION]${RESET} ${BAR_COLOR}${BAR}${RESET} ${PCT}% | ${USED_PCT} used | ${PROJ_PCT} proj | ${TIME_LEFT} left | ${DURATION}"
+echo -e "${STATE_SEG}${DIM}${MODEL}${RESET} | ${DIM}[$SESSION]${RESET} ${BAR_COLOR}${BAR}${RESET} ${PCT}% | ${USED_PCT} used | ${PROJ_PCT} proj | ${TIME_LEFT} left | ${DURATION}"
 
 # Line 2: ccusage with model and (time left) stripped. ccusage prints its input
 # validation errors on stdout, not stderr, so a payload it rejects would spill a
