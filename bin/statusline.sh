@@ -96,9 +96,9 @@ if [ -n "$SESSION_ID" ] && read -r ST_STATE ST_START ST_LABEL 2>/dev/null < "$ST
   elif [ "$S" -ge 60 ];   then EL=$(printf '%dm%02ds' $((S/60)) $((S%60)))
   else                         EL="${S}s"; fi
   case "$ST_STATE" in
-    run) STATE_BG='\033[30;43m'; STATE_LABEL="● running $EL" ;;
+    # run (actively working) keeps the normal colours on purpose.
     ask) STATE_BG='\033[97;41m'; STATE_LABEL="● needs you $EL" ;;
-    wait) STATE_BG='\033[30;43m'; STATE_LABEL="◷ background $EL${ST_LABEL:+: $ST_LABEL}" ;;
+    wait) STATE_BG='\033[30;43m'; STATE_LABEL="◷ waiting $EL${ST_LABEL:+ on: $ST_LABEL}" ;;
     done) STATE_BG='\033[97;41m'; STATE_LABEL="✔ finished $EL ago" ;;
   esac
 fi
@@ -161,8 +161,8 @@ if [ -f "$CACHE" ]; then
   fi
 fi
 
-# Line 1. While a turn runs or waits on you, the whole line becomes a full-width
-# coloured bar (per session, so per pane); otherwise the usual colours.
+# Line 1. Full-width bar (per session, so per pane): amber while the session waits
+# on background work that will resume it, red when it is your move.
 LINE1_REST="| ${USED_PCT} used | ${PROJ_PCT} proj | ${TIME_LEFT} left | ${DURATION}"
 if [ -n "$STATE_BG" ]; then
   PLAIN=" ${STATE_LABEL} | ${MODEL} | [$SESSION] ${BAR} ${PCT}% ${LINE1_REST}"
