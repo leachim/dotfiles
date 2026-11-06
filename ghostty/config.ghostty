@@ -16,3 +16,10 @@ copy-on-select = clipboard
 # TERM=xterm-256color. no-cursor: the shell integration would set a blinking
 # bar at the prompt, overriding cursor-style-blink.
 shell-integration-features = no-cursor,ssh-env
+
+# No keyboard shortcuts close tabs/windows or quit (closes are unconfirmed, see above).
+keybind = super+q=unbind
+keybind = super+w=unbind
+keybind = super+alt+w=unbind
+keybind = super+shift+w=unbind
+keybind = super+alt+shift+w=unbind
