@@ -12,7 +12,7 @@ set -g display-time 5000
 # focus events enabled for terminals that support them
 set -g focus-events on
 # Focusing a pane clears the red "finished" bar of a Claude session in it (bin/claude-state)
-set-hook -g pane-focus-in 'run-shell -b "~/.dotfiles/bin/claude-state focus #{pane_id} </dev/null"'
+set-hook -g pane-focus-in 'run-shell -b "~/.dotfiles/bin/claude-state focus #{pane_id} #{socket_path} </dev/null"'
 
 # Use vim bindings
 setw -g mode-keys vi

@@ -10,7 +10,7 @@
 #                                                         shell/Monitor or session cron
 #                                                         is pending, else done
 #   claude-state end    SessionEnd                        drop the state file
-#   claude-state focus %PANE   tmux pane-focus-in             you looked: clear done
+#   claude-state focus %PANE SOCKET  tmux pane-focus-in       you looked: clear done
 #
 # Output: $STATE_DIR/<session_id> holding "<state> <since epoch> [label]", which
 # statusline.sh turns into a full-width coloured bar under the prompt.
@@ -22,8 +22,13 @@
 #
 # Esc-interrupting a turn fires no Stop hook, so the state stays "run" until the
 # next prompt or the idle_prompt notification (~60s later) resets it.
+#
+# STATE_DIR lives in $HOME, not XDG_RUNTIME_DIR: Claude often runs inside
+# `srun --pty` on a compute node while the tmux server (and its focus hook) runs
+# on the login node, and only the home filesystem is visible to both.
+# Keep in sync with statusline.sh.
 
-STATE_DIR="${XDG_RUNTIME_DIR:-/tmp}/claude-state-$(id -u)"
+STATE_DIR="$HOME/.cache/claude-state"
 
 MODE="${1:-}"
 
@@ -37,10 +42,15 @@ json_str() {
 }
 
 # tmux pane -> session map, so the pane-focus-in hook can find the session.
-pane_map() { local p="${1#%}"; printf '%s/pane-%s' "$STATE_DIR" "${p//[^0-9]/}"; }
+# Keyed by tmux socket too: pane ids repeat across servers (one per login node).
+pane_map() {
+    local p="${1#%}" k
+    k=$(printf '%s' "$2" | cksum | cut -d' ' -f1)
+    printf '%s/pane-%s-%s' "$STATE_DIR" "$k" "${p//[^0-9]/}"
+}
 
 if [ "$MODE" = focus ]; then
-    read -r SESSION 2>/dev/null < "$(pane_map "${2:-}")" || exit 0
+    read -r SESSION 2>/dev/null < "$(pane_map "${2:-}" "${3:-}")" || exit 0
 else
     SESSION=$(json_str session_id)
 fi
@@ -113,11 +123,11 @@ case "$NEW:${CUR:-idle}" in ask:idle|ask:done) exit 0 ;; esac
 
 mkdir -p "$STATE_DIR" 2>/dev/null && chmod 700 "$STATE_DIR" 2>/dev/null
 if [ -n "$TMUX_PANE" ] && [ "$MODE" != focus ]; then
-    printf '%s\n' "$SESSION" > "$(pane_map "$TMUX_PANE")"
+    printf '%s\n' "$SESSION" > "$(pane_map "$TMUX_PANE" "${TMUX%%,*}")"
 fi
 if [ "$MODE" = end ]; then
     rm -f "$FILE"
-    [ -n "$TMUX_PANE" ] && rm -f "$(pane_map "$TMUX_PANE")"
+    [ -n "$TMUX_PANE" ] && rm -f "$(pane_map "$TMUX_PANE" "${TMUX%%,*}")"
     find "$STATE_DIR" -maxdepth 1 -type f -mtime +2 -delete 2>/dev/null
 else
     printf '%s %s %s\n' "$NEW" "${START:-$(date +%s)}" "$LABEL" > "$FILE"
