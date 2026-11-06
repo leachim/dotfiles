@@ -9,6 +9,9 @@ confirm-close-surface = false
 
 cursor-style-blink = false
 
+# A native selection (Shift+drag past tmux) goes straight to the system clipboard.
+copy-on-select = clipboard
+
 # Remote hosts lack the xterm-ghostty terminfo: ssh from a Ghostty shell gets
 # TERM=xterm-256color. no-cursor: the shell integration would set a blinking
 # bar at the prompt, overriding cursor-style-blink.
