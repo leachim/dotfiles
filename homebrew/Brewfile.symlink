@@ -37,7 +37,6 @@ cask 'dorso' if OS.mac?
 cask 'qview' if OS.mac?
 cask 'openlogi' if OS.mac?
 cask 'posturr' if OS.mac?
-cask 'alt-tab' if OS.mac?
 cask 'vorssaint' if OS.mac?
 
 # Spokenly is installed from the Mac App Store (MAS receipt, app.spokenly).
