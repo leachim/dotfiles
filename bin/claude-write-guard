@@ -18,7 +18,7 @@
 # and the file tools see the same home.
 #
 # Paths are normalised (.. collapsed) the way Claude Code does, then resolved
-# through symlinks, so ~/.claude/settings.json (-> ~/.dotfiles) is reachable only
+# through symlinks, so ~/.claude/CLAUDE.md (-> ~/.dotfiles) is reachable only
 # from ~/.dotfiles. Fails closed: anything unexpected exits 2.
 
 # CLAUDE_GUARD_SETTINGS points at another settings file, for testing.

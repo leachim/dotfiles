@@ -55,7 +55,7 @@ re-run the optional installers -- use `script/install` for those.
 ├── bash/              Bash config (bash_profile, bashrc)
 ├── bin/               Executables added to $PATH (dot, utilities)
 ├── chrome/            chrome-headless-shell installer (bin/chrome-headless-shell, bin/chrome-fetch)
-├── claude/            Claude Code config (CLAUDE.md, settings.json)
+├── claude/            Claude Code config (CLAUDE.md, settings.json, accounts/ seeds)
 ├── codex/             Codex CLI config (config.toml)
 ├── opencode/          opencode config (opencode.jsonc, agents, commands)
 ├── docker/            Docker aliases (*.zsh, auto-sourced)

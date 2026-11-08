@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Claude Code — install binary + symlink configuration
+# Claude Code — install binary + link/merge configuration
 #
 # Backs up existing files/directories to $DOTFILES_BACKUP_DIR or ~/.claude/*.backup
 
@@ -26,42 +26,74 @@ backup_claude_item () {
     fi
 }
 
-# settings.json is symlinked, so UI changes land in the repo and show up in
-# `git diff`. The whole file is tracked, machine-specific keys included (model,
-# effortLevel, theme, enabledPlugins, autoMode) -- expect those to churn between
-# machines.
-#
-# Claude Code may rewrite settings.json with a temp-file+rename, replacing the
-# symlink with a regular file. When that has happened, copy it back into the repo
-# and re-link rather than backing it up and discarding it. Re-run this script to
-# reattach.
-absorb_and_link () {
-    src=$1
-    dst=$2
-    if [ ! -L "$dst" ] && [ -f "$dst" ]; then
-        cp "$dst" "$src"
-        echo "  Absorbed $dst into $src (it had been replaced by a regular file)"
-        rm "$dst"
+# settings.json is a regular file per config dir, merged from two tracked layers:
+#   claude/settings.json            shared keys: permissions, hooks, env, autoMode, ...
+#   claude/accounts/<account>.json  seed for the account keys listed below
+# Claude Code writes UI choices (/model, effort, /theme, /plugin) into the config
+# dir's settings.json, and the two accounts do not see the same models, so those
+# keys live per account rather than in one symlinked file. The merge keeps the
+# account keys (and any key the UI added that the repo does not know) and
+# refreshes the shared keys from the repo. A shared key changed through the UI
+# therefore does not reach the repo: the merge reports the drift, backs the old
+# file up and lets the repo win -- copy wanted changes into claude/settings.json.
+ACCOUNT_KEYS='["model","effortLevel","modelSettings","theme","enabledPlugins","pluginConfigs"]'
+
+merge_settings () {
+    local shared=$1 seed=$2 dst=$3 cur tmp drift extra
+    if ! command -v jq > /dev/null 2>&1; then
+        echo "  WARNING: jq not found; $dst left as is"
+        return
     fi
+    if [ -L "$dst" ]; then
+        # Old layout: a symlink to the shared file, whose account keys are the
+        # personal ones. Start every account from its seed instead.
+        rm "$dst"
+        cur=$seed
+    elif [ -f "$dst" ]; then
+        cur=$dst
+    else
+        cur=$seed
+    fi
+    # Shared keys minus the account keys, then every key of the current file
+    # that the shared layer does not define.
+    tmp=$(mktemp)
+    jq -n --argjson keys "$ACCOUNT_KEYS" --slurpfile shared "$shared" --slurpfile cur "$cur" '
+        ($shared[0] | with_entries(select(.key as $k | $keys | index($k) | not))) as $s
+        | $s + (($cur[0] // {}) | with_entries(select(.key as $k | $s | has($k) | not)))' > "$tmp" || { rm -f "$tmp"; return 1; }
+    drift=$(jq -r -n --argjson keys "$ACCOUNT_KEYS" --slurpfile shared "$shared" --slurpfile cur "$cur" '
+        ($shared[0] | with_entries(select(.key as $k | $keys | index($k) | not))) as $s
+        | [($cur[0] // {}) | to_entries[] | select(.key as $k | ($s | has($k)) and ($s[$k] != .value)) | .key] | join(" ")')
+    extra=$(jq -r -n --argjson keys "$ACCOUNT_KEYS" --slurpfile shared "$shared" --slurpfile cur "$cur" '
+        ($shared[0] | with_entries(select(.key as $k | $keys | index($k) | not))) as $s
+        | [($cur[0] // {}) | to_entries[] | select(.key as $k | ($s | has($k) | not) and (($keys | index($k)) | not)) | .key] | join(" ")')
+    if [ -n "$drift" ]; then
+        echo "  $dst differs from $shared in: $drift (repo wins; edit claude/settings.json to keep them)"
+        [ "$cur" = "$dst" ] && backup_claude_item "$dst"
+    fi
+    [ -n "$extra" ] && echo "  $dst keeps keys the repo does not have: $extra"
+    mv "$tmp" "$dst"
+    chmod 600 "$dst"
+    echo "  Merged $shared + $seed -> $dst"
 }
 
 # One config dir per account: ~/.claude (personal) and ~/.claude-work (work,
 # used by the `claude-work` wrapper via CLAUDE_CONFIG_DIR). Both get the same
-# tracked config; logins, history and memory stay separate.
-for CLAUDE_DIR in "$HOME/.claude" "$HOME/.claude-work"; do
+# tracked config; logins, history, memory and the account keys of settings.json
+# stay separate.
+for entry in "$HOME/.claude:personal" "$HOME/.claude-work:work"; do
+    CLAUDE_DIR=${entry%:*}
+    ACCOUNT=${entry##*:}
     mkdir -p "$CLAUDE_DIR"
 
+    merge_settings "$DOTFILES_CLAUDE/settings.json" "$DOTFILES_CLAUDE/accounts/$ACCOUNT.json" "$CLAUDE_DIR/settings.json"
+
     # Symlink files
-    for file in CLAUDE.md settings.json; do
+    for file in CLAUDE.md; do
         src="$DOTFILES_CLAUDE/$file"
         dst="$CLAUDE_DIR/$file"
 
         if [ ! -f "$src" ]; then
             continue
-        fi
-
-        if [ "$file" = settings.json ]; then
-            absorb_and_link "$src" "$dst"
         fi
 
         if [ -L "$dst" ]; then

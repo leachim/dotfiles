@@ -1,0 +1,17 @@
+{
+  "model": "claude-fable-5-1[1m]",
+  "effortLevel": "high",
+  "modelSettings": {
+    "claude-fable-5-1": {
+      "effortLevel": "xhigh"
+    },
+    "claude-opus-5-5": {
+      "effortLevel": "high"
+    }
+  },
+  "theme": "custom:work",
+  "enabledPlugins": {
+    "cc-plugin-you-should-know@builtin": true
+  },
+  "pluginConfigs": {}
+}

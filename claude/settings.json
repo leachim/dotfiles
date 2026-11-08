@@ -70,7 +70,6 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opus",
   "skillOverrides": {
     "morning": "off",
     "skill-creator": "off",
@@ -201,25 +200,9 @@
     "padding": 0,
     "refreshInterval": 5
   },
-  "enabledPlugins": {
-    "bio-research@synced": false,
-    "data@synced": false,
-    "cc-plugin-you-should-know@builtin": true
-  },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "high",
-  "modelSettings": {
-    "claude-fable-5-1": {
-      "effortLevel": "high"
-    },
-    "claude-opus-5-5": {
-      "effortLevel": "high"
-    }
-  },
-  "pluginConfigs": {},
   "autoUpdatesChannel": "latest",
   "skipWorkflowUsageWarning": true,
-  "theme": "custom:personal",
   "editorMode": "vim",
   "switchModelsOnFlag": true,
   "remoteControlAtStartup": true,

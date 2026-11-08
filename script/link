@@ -12,8 +12,8 @@ info "refreshing *.symlink"
 link_dotfiles
 
 # Per-tool config linking. Each installer is idempotent; with DOTFILES_LINK_ONLY
-# it installs no binaries and only links config. claude/install.sh also folds
-# back a settings.json that was replaced by a regular file. On macOS the claude
+# it installs no binaries and only links config. claude/install.sh also merges
+# the shared settings.json into each account's config dir. On macOS the claude
 # and codex installers refresh the managed sandbox settings, which asks for
 # sudo when the tracked copy has changed.
 export DOTFILES_LINK_ONLY=1
