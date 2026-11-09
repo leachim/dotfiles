@@ -67,7 +67,7 @@ echo
 echo "## reads inside \$HOME"
 probe ok     "read ~/.bun"               ~/.bun            'ls ~/.bun'
 probe ok     "read ~/.config/gh"         ~/.config/gh      'ls ~/.config/gh'
-probe ok     "read ~/.gitconfig"         ~/.gitconfig      'cat ~/.gitconfig'
+probe ok     "git reads its global config" ~/.dotfiles/git/gitconfig.symlink 'git config init.defaultBranch'
 probe denied "read ~/.secrets"           ~/.secrets        'ls ~/.secrets'
 probe denied "read ~/.ssh"               ~/.ssh            'ls ~/.ssh'
 probe denied "read ~/.codex/auth.json"   ~/.codex/auth.json 'cat ~/.codex/auth.json'
@@ -92,7 +92,9 @@ else
     probe denied "write \$HOME, -c default_permissions" - 'echo x > ~/codex-sandbox-check.$$'
     flags=(-c 'sandbox_mode="danger-full-access"')
     probe denied "write \$HOME, -c sandbox_mode"        - 'echo x > ~/codex-sandbox-check.$$'
-    flags=(-P ':danger-full-access')
+    # Without --include-managed-config `-P` is a debugging tool that bypasses
+    # requirements on purpose; it is not an agent path (seatbelt does not nest).
+    flags=(-P ':danger-full-access' --include-managed-config)
     probe denied "write \$HOME, -P :danger-full-access" - 'echo x > ~/codex-sandbox-check.$$'
     flags=()
     o='approval_policy="on-request"'

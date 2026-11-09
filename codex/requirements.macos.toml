@@ -48,15 +48,14 @@ glob_scan_max_depth = 4
 "~" = "deny"
 "/Volumes" = "deny"
 # Readable inside $HOME: the allowRead list of claude/managed-settings.macos.json,
-# with Claude's own directories swapped for codex's.
-"~/.gitconfig" = "read"
-"~/.gitignore" = "read"
-"~/.gitconfig.local" = "read"
+# with Claude's own directories swapped for codex's. Symlinks in $HOME such as
+# ~/.gitconfig or ~/.localrc cannot be reopened: codex canonicalizes read paths
+# to their targets, so the link itself stays denied. git gets its config through
+# GIT_CONFIG_GLOBAL in [shell_environment_policy.set] instead.
 "~/.dotfiles/git" = "read"
 "~/.dotfiles/bin" = "read"
 "~/.config/git" = "read"
 "~/.config/gh" = "read"
-"~/.localrc" = "read"
 "~/Library/Keychains" = "read"
 "~/.local" = "read"
 "~/.local/share/opencode" = "deny"

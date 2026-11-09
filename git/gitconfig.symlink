@@ -1,6 +1,8 @@
-# Local/private config goes in the include
+# Local/private config goes in the include. It and excludesfile name the
+# dotfiles copies rather than the ~ symlinks, so a sandboxed git that reaches
+# this file through GIT_CONFIG_GLOBAL (codex/config.toml) can read them.
 [include]
-        path = ~/.gitconfig.local
+        path = ~/.dotfiles/git/gitconfig.local.symlink
 [alias]
         co = checkout
         count   = !git shortlog -sn
@@ -31,7 +33,7 @@
         changed = yellow bold
         untracked = red bold
 [core]
-        excludesfile = ~/.gitignore
+        excludesfile = ~/.dotfiles/git/gitignore.symlink
         editor = vim
         whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol,blank-at-eof,blank-at-eol
         pager = command -v delta >/dev/null && exec delta || exec less

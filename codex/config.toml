@@ -21,14 +21,22 @@ model_reasoning_effort = "high"
 default_permissions = "confined"
 approval_policy = { granular = { sandbox_approval = false, request_permissions = false, rules = true, mcp_elicitations = true, skill_approval = true } }
 
-# Mark shells codex spawns as agent-driven, so hosts/*.sh skip slow cluster init.
-# The codex() wrapper in aliases/aliases.symlink sets this too; this covers codex
-# started elsewhere. The GIT_CONFIG_* entries are the two ~/.gitconfig settings
-# a sandboxed git needs when it cannot read ~/.gitconfig itself (same as the
-# env block of claude/managed-settings.macos.json): clone over https and
-# authenticate through gh, since ~/.ssh is unreadable.
-[shell_environment_policy]
-set = { AI_AGENT = "codex", GIT_CONFIG_COUNT = "2", GIT_CONFIG_KEY_0 = "url.https://github.com/.insteadOf", GIT_CONFIG_VALUE_0 = "git@github.com:", GIT_CONFIG_KEY_1 = "credential.https://github.com.helper", GIT_CONFIG_VALUE_1 = "!gh auth git-credential" }
+# AI_AGENT marks shells codex spawns as agent-driven, so hosts/*.sh skip slow
+# cluster init; the codex() wrapper in aliases/aliases.symlink sets it too, this
+# covers codex started elsewhere. ~/.gitconfig is a symlink inside the denied
+# $HOME and git aborts on a global config it cannot access, so GIT_CONFIG_GLOBAL
+# sends it to the dotfiles copy, whose include and excludes name dotfiles paths
+# as well. The GIT_CONFIG_* pair (the env block of
+# claude/managed-settings.macos.json) adds what the sandbox needs on top: clone
+# over https and authenticate through gh, since ~/.ssh is unreadable.
+[shell_environment_policy.set]
+AI_AGENT = "codex"
+GIT_CONFIG_GLOBAL = "/Users/michaes/.dotfiles/git/gitconfig.symlink"
+GIT_CONFIG_COUNT = "2"
+GIT_CONFIG_KEY_0 = "url.https://github.com/.insteadOf"
+GIT_CONFIG_VALUE_0 = "git@github.com:"
+GIT_CONFIG_KEY_1 = "credential.https://github.com.helper"
+GIT_CONFIG_VALUE_1 = "!gh auth git-credential"
 
 # Trusted projects. Entries are per-machine; ones whose path does not exist on
 # the current host are simply inert, so the union across machines is harmless.
