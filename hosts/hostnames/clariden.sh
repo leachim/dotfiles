@@ -24,6 +24,11 @@ if [ -z "$AI_AGENT" ] || [ "$AI_AGENT" = "0" ]; then
     }
 fi
 
+# Codex without its background app-server daemon: the daemon's socket is in
+# node-local /tmp but its state is in the NFS $HOME shared by all login nodes of
+# both clusters, so switching nodes leaves it stale and codex refuses to start.
+CODEX_NO_DAEMON=1
+
 # Podman-based container runtime (no Docker daemon on Clariden)
 # AWS_ACCOUNT is an ECR registry account id, set in ~/.localrc.
 aws-login() { aws ecr get-login-password | podman login --username AWS --password-stdin "$AWS_ACCOUNT" ; }

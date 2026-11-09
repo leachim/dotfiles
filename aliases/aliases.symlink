@@ -141,7 +141,10 @@ _no_sandbox_on_mac () {
         return 1
     fi
 }
+# CODEX_NO_DAEMON=1 (set in hosts/hostnames/*.sh) runs without the shared
+# background app-server.
 codex() {
+    set -- ${CODEX_NO_DAEMON:+--no-daemon} "$@"
     if [ "$PWD" = "/cluster/home" ]; then
         AI_AGENT=codex command codex -C "$HOME" "$@"
     else
