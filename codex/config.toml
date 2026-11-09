@@ -1,23 +1,23 @@
 # Codex CLI configuration.
 #
-# Symlinked to ~/.codex/config.toml by codex/install.sh. Codex edits this file
-# in place and preserves comments, so its own additions (project trust levels,
-# model migration notices, TUI counters) land here and show up as repo diffs.
-# Only config.toml is tracked -- the rest of ~/.codex is auth, session history
-# and ~850MB of installed packages, none of which belong in git.
+# Symlinked to ~/.codex/config.toml by codex/install.sh on macOS; Linux hosts
+# get config.linux.toml instead. Codex edits this file in place and preserves
+# comments, so its own additions (project trust levels, model migration
+# notices, TUI counters) land here and show up as repo diffs. Only the config
+# is tracked -- the rest of ~/.codex is auth, session history and ~850MB of
+# installed packages, none of which belong in git.
 
 model = "gpt-6.1-sol"
 model_reasoning_effort = "high"
 
-# Sandbox. Same boundary as claude/managed-settings.macos.json: commands write
-# the workspace and the temp dirs, read everything outside $HOME, and inside
-# $HOME only the tool and config directories listed in the profile below.
-# Sandbox mode alone does not do this: every mode permits reads outside the
-# workspace. Prompts that would run a command outside the sandbox, or widen the
-# sandbox mid-session, are auto-rejected, so there is no escape hatch; the
-# remaining prompt kinds (command rules, MCP elicitations, skill scripts) stay
-# interactive. codex/requirements.macos.toml pins the choice of profile and of
-# approval policy however codex is launched.
+# Sandbox. The confined profile is defined in codex/requirements.macos.toml,
+# installed root-owned at /etc/codex/requirements.toml, so no codex session
+# can widen it; that file also pins this selection and the approval policy
+# however codex is launched. Without it codex refuses to start
+# ("default_permissions requires a `[permissions]` table"): run
+# codex/install.sh. Prompts that would run a command outside the sandbox, or
+# widen the sandbox mid-session, are auto-rejected, so there is no escape
+# hatch; command rules, MCP elicitations and skill scripts still prompt.
 default_permissions = "confined"
 approval_policy = { granular = { sandbox_approval = false, request_permissions = false, rules = true, mcp_elicitations = true, skill_approval = true } }
 
@@ -29,74 +29,6 @@ approval_policy = { granular = { sandbox_approval = false, request_permissions =
 # authenticate through gh, since ~/.ssh is unreadable.
 [shell_environment_policy]
 set = { AI_AGENT = "codex", GIT_CONFIG_COUNT = "2", GIT_CONFIG_KEY_0 = "url.https://github.com/.insteadOf", GIT_CONFIG_VALUE_0 = "git@github.com:", GIT_CONFIG_KEY_1 = "credential.https://github.com.helper", GIT_CONFIG_VALUE_1 = "!gh auth git-credential" }
-
-[permissions.confined]
-description = "Workspace writes; reads outside $HOME and in listed $HOME dirs; no escalation."
-extends = ":workspace"
-
-[permissions.confined.filesystem]
-# Paths must be absolute, ~/-relative, or :-prefixed -- codex rejects bare globs.
-# More specific entries override broader ones, so a read grant reopens part of
-# the $HOME deny and a nested deny closes part of a read grant.
-#
-# Linux sandboxing (bubblewrap) cannot evaluate `**` live, so codex pre-expands
-# deny globs at sandbox startup and needs a depth cap; macOS seatbelt matches
-# live and ignores it. 4 covers ~/.secrets/* and a .secrets directory up to
-# three levels below $HOME; anything deeper is not denied.
-glob_scan_max_depth = 4
-":root" = "read"
-"~" = "deny"
-"/Volumes" = "deny"
-# Readable inside $HOME: the allowRead list of claude/managed-settings.macos.json,
-# with Claude's own directories swapped for codex's.
-"~/.gitconfig" = "read"
-"~/.gitignore" = "read"
-"~/.gitconfig.local" = "read"
-"~/.dotfiles/git" = "read"
-"~/.dotfiles/bin" = "read"
-"~/.config/git" = "read"
-"~/.config/gh" = "read"
-"~/.localrc" = "read"
-"~/Library/Keychains" = "read"
-"~/.local" = "read"
-"~/.local/share/opencode" = "deny"
-"~/.bun" = "read"
-"~/.cargo" = "read"
-"~/.cargo/credentials" = "deny"
-"~/.cargo/credentials.toml" = "deny"
-"~/.rustup" = "read"
-"~/.pixi" = "read"
-"~/.cache" = "read"
-"~/.cache/huggingface" = "deny"
-"~/.npm" = "read"
-"~/.codex/skills" = "read"
-# .secrets anywhere under $HOME, including inside the directories above and
-# inside a workspace that lives under $HOME. .env is deliberately NOT denied:
-# job environment variables live there and the agents need to wire them into
-# job scripts. Real credentials belong in ~/.secrets, which stays unreadable.
-# Same call as claude/settings.json.
-"~/**/.secrets" = "deny"
-"~/**/.secrets.*" = "deny"
-"~/**/.secrets/**" = "deny"
-
-[permissions.confined.filesystem.":workspace_roots"]
-# :workspace keeps .git read-only, which turns every git commit into an
-# escalation request; with escalation off it would be impossible. Hooks and
-# config stay read-only, as in bin/claude-write-guard: they run code outside
-# the sandbox.
-".git" = "write"
-".git/hooks" = "read"
-".git/config" = "read"
-# Workspaces outside $HOME (cluster scratch, /Volumes) get the same .secrets rule.
-"**/.secrets" = "deny"
-"**/.secrets.*" = "deny"
-"**/.secrets/**" = "deny"
-
-[permissions.confined.network]
-# Direct access, no domain proxy; claude allows every domain as well. With the
-# network on, git push and package installs run inside the sandbox instead of
-# asking to leave it.
-enabled = true
 
 # Trusted projects. Entries are per-machine; ones whose path does not exist on
 # the current host are simply inert, so the union across machines is harmless.

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Codex sandbox check -- probes the boundary codex/config.toml describes.
+# Codex sandbox check -- probes the boundary codex/requirements.macos.toml describes.
 #
 # Each probe runs a shell command under `codex sandbox` from a scratch git
 # repository and compares the outcome with what the confined profile promises.
@@ -16,7 +16,18 @@ trap 'rm -rf "$ws"' EXIT
 cd "$ws" || exit 1
 git init -q . || exit 1
 
+echo "codex $(codex --version 2> /dev/null | tail -1) · workspace $ws"
+
+# Every probe below reads as "denied" when codex itself cannot start (a
+# requirements file it cannot parse) or cannot reach seatbelt (nested sandbox).
+if ! err=$(codex sandbox -- /usr/bin/true 2>&1); then
+    echo "codex cannot run a sandboxed command:"
+    printf '%s\n' "$err" | sed 's/^/  /'
+    exit 1
+fi
+
 fails=0
+flags=()   # extra `codex sandbox` arguments for the probes that follow
 
 # probe <ok|denied> <label> <path that must exist, or -> <command>
 # A probe whose precondition path is missing is skipped: `ls` on a missing
@@ -25,19 +36,18 @@ probe () {
     local expect=$1 label=$2 need=$3 got
     shift 3
     if [ "$need" != - ] && [ ! -e "${need/#\~/$HOME}" ]; then
-        printf 'SKIP  %-28s (%s does not exist)\n' "$label" "$need"
+        printf 'SKIP  %-36s (%s does not exist)\n' "$label" "$need"
         return
     fi
-    if codex sandbox -- /bin/sh -c "$*" > /dev/null 2>&1; then got=ok; else got=denied; fi
+    if codex sandbox ${flags[@]+"${flags[@]}"} -- /bin/sh -c "$*" > /dev/null 2>&1; then got=ok; else got=denied; fi
     if [ "$got" = "$expect" ]; then
-        printf 'PASS  %-28s %s\n' "$label" "$got"
+        printf 'PASS  %-36s %s\n' "$label" "$got"
     else
-        printf 'FAIL  %-28s expected %s, got %s\n' "$label" "$expect" "$got"
+        printf 'FAIL  %-36s expected %s, got %s\n' "$label" "$expect" "$got"
         fails=$((fails + 1))
     fi
 }
 
-echo "codex $(codex --version 2> /dev/null | tail -1) · workspace $ws"
 echo
 echo "## effective sandbox (codex doctor)"
 codex doctor 2> /dev/null | sed -n '/^  . sandbox /,/^  . sandbox .*probe/p'
@@ -71,18 +81,27 @@ echo "## network"
 probe ok     "https to github.com"       -                 'curl -sSf -o /dev/null --max-time 20 https://github.com'
 echo
 echo "## requirements (/etc/codex/requirements.toml)"
+# A launch that asks for more than the allowlists permit must leave the
+# boundary in place: codex keeps the required profile, or drops to read-only
+# when full access was requested, and warns at startup.
 if [ ! -f /etc/codex/requirements.toml ]; then
     echo "FAIL  requirements file missing: run codex/install.sh"
     fails=$((fails + 1))
 else
-    for o in 'default_permissions=":danger-full-access"' 'sandbox_mode="danger-full-access"' 'approval_policy="on-request"'; do
-        if codex doctor -c "$o" 2> /dev/null | grep -q 'disallowed by requirements'; then
-            printf 'PASS  %-28s rejected\n' "-c $o"
-        else
-            printf 'FAIL  %-28s accepted\n' "-c $o"
-            fails=$((fails + 1))
-        fi
-    done
+    flags=(-c 'default_permissions=":danger-full-access"')
+    probe denied "write \$HOME, -c default_permissions" - 'echo x > ~/codex-sandbox-check.$$'
+    flags=(-c 'sandbox_mode="danger-full-access"')
+    probe denied "write \$HOME, -c sandbox_mode"        - 'echo x > ~/codex-sandbox-check.$$'
+    flags=(-P ':danger-full-access')
+    probe denied "write \$HOME, -P :danger-full-access" - 'echo x > ~/codex-sandbox-check.$$'
+    flags=()
+    o='approval_policy="on-request"'
+    if codex doctor -c "$o" 2>&1 | grep -q 'disallowed by requirements'; then
+        printf 'PASS  %-36s rejected\n' "-c $o"
+    else
+        printf 'FAIL  %-36s accepted\n' "-c $o"
+        fails=$((fails + 1))
+    fi
 fi
 echo
 if [ "$fails" -eq 0 ]; then echo "all probes passed"; else echo "$fails probe(s) failed"; fi
