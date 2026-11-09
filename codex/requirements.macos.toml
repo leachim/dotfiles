@@ -1,5 +1,41 @@
 # Codex managed requirements, macOS only. codex/install.sh copies this to
-# /etc/codex/requirements.toml. Profiles with full-disk write map to the
-# danger-full-access sandbox mode and are rejected with a warning, so codex stays
-# confined to the workspace (config.toml's default_permissions) however launched.
-allowed_sandbox_modes = ["read-only", "workspace-write"]
+# /etc/codex/requirements.toml; root-owned, so no codex session can edit it.
+# It pins what codex/config.toml selects however codex is launched (CLI flags,
+# --yolo, the desktop app's permission picker): only the confined profile and
+# read-only are selectable, so full access is rejected, and only approval
+# policies that cannot run a command outside the sandbox are allowed. When a
+# launch asks for something else codex falls back to these values and warns.
+default_permissions = "confined"
+allowed_approval_policies = ["granular", "never"]
+
+[allowed_permission_profiles]
+confined = true
+":read-only" = true
+
+# Credential stores, denied in every profile and un-weakenable from config.toml.
+# The confined profile already denies all of $HOME; this list is what holds if
+# that profile is edited or codex falls back to another one. Its presence also
+# makes codex refuse full-access permissions outright.
+[permissions.filesystem]
+deny_read = [
+  "~/.secrets",
+  "~/.secrets.*",
+  "~/**/.secrets",
+  "~/**/.secrets.*",
+  "~/**/*.secrets",
+  "~/.ssh",
+  "~/.gnupg",
+  "~/.aws",
+  "~/.codex/auth.json",
+  "~/.claude/.credentials.json",
+  "~/.cargo/credentials",
+  "~/.cargo/credentials.toml",
+  "~/.cache/huggingface/token",
+  "~/.local/share/opencode",
+  "/Volumes",
+  "~/Library/Safari",
+  "~/Library/Cookies",
+  "~/Library/Containers/com.apple.Safari",
+  "~/Library/Mail",
+  "~/Library/Containers/com.apple.mail",
+]

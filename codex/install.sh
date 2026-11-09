@@ -40,8 +40,8 @@ for file in config.toml; do
     echo "  Linked $src -> $dst"
 done
 
-# macOS: forbid full-access sandbox modes for every launch path (CLI flags,
-# desktop app) via managed requirements.
+# macOS: pin the permission profile, approval policy and credential deny list
+# for every launch path (CLI flags, --yolo, desktop app) via managed requirements.
 if [ "$(uname -s)" = Darwin ]; then
     req_src="$DOTFILES_CODEX/requirements.macos.toml"
     req_dst=/etc/codex/requirements.toml
