@@ -139,7 +139,8 @@ open. Linux hosts (HPC, bsse) get no extra restrictions.
   `/Library/Application Support/ClaudeCode/managed-settings.json` (sudo; re-run
   the installer after editing it). It sandboxes Bash: writes only in the project
   and temp dirs, reads in `~` only from the project and `sandbox.filesystem`'s
-  allow-list. The sandbox does not cover the file tools, so the
+  allow-list, and nothing from its deny-list (mounted volumes, Safari and Apple
+  Mail data). The sandbox does not cover the file tools, so the
   `bin/claude-write-guard` hook applies the same rules to them. GitHub ssh
   remotes are rewritten to HTTPS with `gh` as credential helper, because ssh
   cannot pass the sandbox proxy; other ssh remotes do not work from Claude on

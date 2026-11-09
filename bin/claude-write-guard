@@ -12,10 +12,11 @@
 # the plan files. Files that run code outside the sandbox (git hooks/config,
 # Claude settings, IDE configs, shell rc files) are blocked even there.
 #
-# Reads: everything outside $HOME is readable, except searches rooted above it.
-# Inside $HOME only the write roots above and the sandbox's allowRead list from
-# the installed managed settings, minus its narrower denyRead entries -- so Bash
-# and the file tools see the same home.
+# Reads: the sandbox's denyRead list from the installed managed settings is
+# blocked everywhere (mounted volumes, for one), and so are searches rooted
+# above $HOME. Outside $HOME everything else is readable. Inside $HOME only the
+# write roots above and the sandbox's allowRead list -- so Bash and the file
+# tools see the same filesystem.
 #
 # Paths are normalised (.. collapsed) the way Claude Code does, then resolved
 # through symlinks, so ~/.claude/CLAUDE.md (-> ~/.dotfiles) is reachable only
@@ -152,22 +153,24 @@ if [ "$mode" = write ]; then
     block "$path is outside the project directory ($project). Writes are confined to the directory Claude was started in."
 fi
 
-# A search rooted at / or /Users descends into home.
+# A search rooted at / or /Users descends into home. The prefix goes through a
+# variable: "${target%/}"/* inline never matches when the expansion is empty.
+above=${target%/}
 case "$home/" in
-    "${target%/}"/*) block "$path contains your home directory; search inside the project instead." ;;
-esac
-case "$target/" in
-    "$home"/*) ;;
-    *) exit 0 ;;
+    "$above"/*) block "$path contains your home directory; search inside the project instead." ;;
 esac
 for root in "${write_roots[@]}"; do
     within "$root" && exit 0
 done
-[ -r "$MANAGED" ] || block "$MANAGED is missing, so the read allow-list is unknown."
+[ -r "$MANAGED" ] || block "$MANAGED is missing, so the read deny-list is unknown."
 while IFS= read -r entry; do
     [ "$entry" = "~" ] && continue
     within "$entry" && block "$path is on the sandbox denyRead list."
 done <<< "$(managed_list denyRead)"
+case "$target/" in
+    "$home"/*) ;;
+    *) exit 0 ;;
+esac
 while IFS= read -r entry; do
     [ "$entry" = . ] && entry=$project
     [ -n "$entry" ] && within "$entry" && exit 0

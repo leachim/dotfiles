@@ -20,6 +20,12 @@
     "filesystem": {
       "denyRead": [
         "~",
+        "/Volumes",
+        "~/Library/Safari",
+        "~/Library/Cookies",
+        "~/Library/Containers/com.apple.Safari",
+        "~/Library/Mail",
+        "~/Library/Containers/com.apple.mail",
         "~/.local/share/opencode",
         "~/.cargo/credentials",
         "~/.cargo/credentials.toml",
