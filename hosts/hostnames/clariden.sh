@@ -29,6 +29,13 @@ fi
 # both clusters, so switching nodes leaves it stale and codex refuses to start.
 CODEX_NO_DAEMON=1
 
+# Per-host codex SQLite DBs. They run in WAL mode, whose -shm index is mmap'd and
+# not coherent across NFS clients, so a second host opening the shared
+# ~/.codex/state_5.sqlite fails with SQLITE_PROTOCOL ("locking protocol").
+# Auth, config and session rollouts stay shared in ~/.codex.
+export CODEX_SQLITE_HOME="$HOME/.codex/sqlite/$(hostname -s)"
+[ -d "$CODEX_SQLITE_HOME" ] || mkdir -p "$CODEX_SQLITE_HOME"
+
 # Podman-based container runtime (no Docker daemon on Clariden)
 # AWS_ACCOUNT is an ECR registry account id, set in ~/.localrc.
 aws-login() { aws ecr get-login-password | podman login --username AWS --password-stdin "$AWS_ACCOUNT" ; }
