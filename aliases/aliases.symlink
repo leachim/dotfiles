@@ -166,8 +166,14 @@ opencode() (
 # the same CLAUDE.md, skills and agents. First run: /login with the work
 # account. Its seed theme custom:work (claude/themes/work.json, orange prompt
 # border) marks the work account at a glance; personal is custom:personal (blue).
+# The work org's flags leave Mythos out of /model although the API serves it, so
+# add it as a custom picker entry; the default model is unchanged.
 claude-work() {
-    CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude "$@"
+    CLAUDE_CONFIG_DIR="$HOME/.claude-work" \
+    ANTHROPIC_CUSTOM_MODEL_OPTION="claude-mythos-5-1" \
+    ANTHROPIC_CUSTOM_MODEL_OPTION_NAME="Mythos 5.1" \
+    ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION="Mythos 5.1 (not listed for the work org by default)" \
+        claude "$@"
 }
 alias cclaude="claude-work"
 
