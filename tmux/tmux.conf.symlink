@@ -11,8 +11,13 @@ set -g display-time 5000
 
 # focus events enabled for terminals that support them
 set -g focus-events on
-# Focusing a pane clears the red "finished" bar of a Claude session in it (bin/claude-state)
+# Focusing a pane clears the red "finished" bar of a Claude session in it (bin/claude-state).
+# pane-focus-in only fires while tmux marks the client focused, which a lost focus
+# report over SSH breaks; the pane/window change hooks fire regardless.
 set-hook -g pane-focus-in 'run-shell -b "~/.dotfiles/bin/claude-state focus #{pane_id} #{socket_path} </dev/null"'
+set-hook -g window-pane-changed 'run-shell -b "~/.dotfiles/bin/claude-state focus #{pane_id} #{socket_path} </dev/null"'
+set-hook -g session-window-changed 'run-shell -b "~/.dotfiles/bin/claude-state focus #{pane_id} #{socket_path} </dev/null"'
+set-hook -g client-session-changed 'run-shell -b "~/.dotfiles/bin/claude-state focus #{pane_id} #{socket_path} </dev/null"'
 
 # Use vim bindings
 setw -g mode-keys vi

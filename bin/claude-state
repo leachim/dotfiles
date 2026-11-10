@@ -10,7 +10,9 @@
 #                                                         shell/Monitor or session cron
 #                                                         is pending, else done
 #   claude-state end    SessionEnd                        drop the state file
-#   claude-state focus %PANE SOCKET  tmux pane-focus-in       you looked: clear done
+#   claude-state focus %PANE SOCKET  tmux pane-focus-in, window-pane-changed,
+#                                    session-window-changed, client-session-changed
+#                                                         you looked: clear done
 #
 # Output: $STATE_DIR/<session_id> holding "<state> <since epoch> [label]", which
 # statusline.sh turns into a full-width coloured bar under the prompt.
