@@ -130,6 +130,14 @@ done
 # managed settings. Copied, not linked: a broken managed-settings.json stops
 # Claude Code from starting, so only a copy that parses is installed.
 if [ "$(uname -s)" = Darwin ]; then
+    gitcfg_src="$HOME/.dotfiles/git/gitconfig.sandbox"
+    gitcfg_dst="/Library/Application Support/ClaudeCode/gitconfig"
+    if ! cmp -s "$gitcfg_src" "$gitcfg_dst"; then
+        echo "  Installing $gitcfg_src -> $gitcfg_dst (sudo)"
+        { sudo mkdir -p "$(dirname "$gitcfg_dst")" && sudo cp "$gitcfg_src" "$gitcfg_dst"; } ||
+            echo "  WARNING: could not install $gitcfg_dst; git fails inside the sandbox"
+    fi
+
     managed_src="$DOTFILES_CLAUDE/managed-settings.macos.json"
     managed_dst="/Library/Application Support/ClaudeCode/managed-settings.json"
     if ! /usr/bin/plutil -convert xml1 -o /dev/null "$managed_src" 2>/dev/null; then

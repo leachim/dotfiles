@@ -41,6 +41,14 @@ fi
 # desktop app) via managed requirements. A requirements file codex cannot load
 # stops every launch, so the install is checked and undone if codex rejects it.
 if [ "$(uname -s)" = Darwin ]; then
+    gitcfg_src="$HOME/.dotfiles/git/gitconfig.sandbox"
+    gitcfg_dst=/etc/codex/gitconfig
+    if ! cmp -s "$gitcfg_src" "$gitcfg_dst"; then
+        echo "  Installing $gitcfg_src -> $gitcfg_dst (sudo)"
+        { sudo mkdir -p /etc/codex && sudo cp "$gitcfg_src" "$gitcfg_dst"; } ||
+            echo "  WARNING: could not install $gitcfg_dst; git fails inside the sandbox"
+    fi
+
     req_src="$DOTFILES_CODEX/requirements.macos.toml"
     req_dst=/etc/codex/requirements.toml
     if ! cmp -s "$req_src" "$req_dst"; then

@@ -1,6 +1,6 @@
 # Local/private config goes in the include. It and excludesfile name the
 # dotfiles copies rather than the ~ symlinks, so a sandboxed git that reaches
-# this file through GIT_CONFIG_GLOBAL (codex/config.toml) can read them.
+# this file through GIT_CONFIG_GLOBAL (git/gitconfig.sandbox) can read them.
 [include]
         path = ~/.dotfiles/git/gitconfig.local.symlink
 [alias]

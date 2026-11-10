@@ -1,0 +1,6 @@
+# Global git config for sandboxed agents. ~/.gitconfig sits inside the denied
+# $HOME, so claude/install.sh and codex/install.sh copy this file next to their
+# managed settings and point GIT_CONFIG_GLOBAL at the copy. git expands ~ in
+# include paths, so the copy names no user and never goes stale.
+[include]
+	path = ~/.dotfiles/git/gitconfig.symlink

@@ -51,7 +51,7 @@ glob_scan_max_depth = 4
 # with Claude's own directories swapped for codex's. Symlinks in $HOME such as
 # ~/.gitconfig or ~/.localrc cannot be reopened: codex canonicalizes read paths
 # to their targets, so the link itself stays denied. git gets its config through
-# GIT_CONFIG_GLOBAL in [shell_environment_policy.set] instead.
+# GIT_CONFIG_GLOBAL in [shell_environment_policy.set] instead (git/gitconfig.sandbox).
 "~/.dotfiles/git" = "read"
 "~/.dotfiles/bin" = "read"
 "~/.config/git" = "read"
