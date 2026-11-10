@@ -1,0 +1,24 @@
+#!/bin/bash
+# Install the host CUDA toolkit (nvcc, nsys, ncu) onto iopsstor scratch. Idempotent: re-run after a
+# 14-day purge. Containers see it through mu-base.toml's iopsstor mount; hosts/hpc.sh puts bin/ on PATH.
+# Login-node safe: single-threaded download + extract, no GPU needed (--toolkit skips the driver).
+set -euo pipefail
+VER=12.9.1
+DRV=575.57.08
+ROOT=/iopsstor/scratch/cscs/mschneider/tools
+PREFIX=$ROOT/cuda-12.9
+RUN=cuda_${VER}_${DRV}_linux_sbsa.run
+URL=https://developer.download.nvidia.com/compute/cuda/$VER/local_installers/$RUN
+
+if [ -x "$PREFIX/bin/nvcc" ] && [ "${1:-}" != "--force" ]; then
+  echo "already installed: $("$PREFIX/bin/nvcc" --version | tail -1)"; exit 0
+fi
+DL=$ROOT/.dl; mkdir -p "$DL" "$PREFIX"
+if [ ! -f "$DL/$RUN" ]; then
+  curl -fL --retry 3 -o "$DL/$RUN.part" "$URL"
+  mv -f "$DL/$RUN.part" "$DL/$RUN"
+fi
+sh "$DL/$RUN" --silent --toolkit --toolkitpath="$PREFIX" --no-man-page --override --tmpdir="$DL"
+rm -f "$DL/$RUN"
+"$PREFIX/bin/nvcc" --version | tail -1
+ls "$PREFIX/bin/nsys" "$PREFIX/bin/ncu" 2>/dev/null || ls -d "$PREFIX"/nsight-*

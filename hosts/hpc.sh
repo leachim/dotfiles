@@ -9,7 +9,7 @@ ulimit -c 0 2>/dev/null || true
 
 # Cluster-specific paths
 export PATH="$HOME/.local/bin:$PATH"
-export PATH=$HOME/cuda/bin:$HOME/.claude/local:$PATH
+export PATH=/iopsstor/scratch/cscs/mschneider/tools/cuda-12.9/bin:$HOME/.claude/local:$PATH
 export XDG_CONFIG_HOME="$HOME/.config"
 
 # uv cache off $HOME. On CSCS/Alps $HOME is /vast (50 GB quota) and the uv cache
