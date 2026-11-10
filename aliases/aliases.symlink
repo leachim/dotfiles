@@ -162,13 +162,19 @@ opencode() (
 
 # Claude Code on the personal subscription. Its /model picker leaves Fable 5.2
 # out although the API serves it, so add it as a custom entry the same way
-# claude-work adds Mythos; the default model is unchanged. Other wrappers call
-# `command claude` so this entry does not leak into them.
+# claude-work adds Mythos; the default model is unchanged. Only for the personal
+# config dir: Claude Code's Bash tool snapshots this function, so a nested
+# `claude` inside a claude-work session must keep the inherited Mythos entry.
+# The vars are inherited by child processes; claude-op strips them.
 claude() {
-    ANTHROPIC_CUSTOM_MODEL_OPTION="claude-fable-5-2" \
-    ANTHROPIC_CUSTOM_MODEL_OPTION_NAME="Fable 5.2" \
-    ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION="Fable 5.2 (not listed for the personal account by default)" \
-        command claude "$@"
+    case "${CLAUDE_CONFIG_DIR:-$HOME/.claude}" in
+        "$HOME/.claude"|"$HOME/.claude/")
+            ANTHROPIC_CUSTOM_MODEL_OPTION="claude-fable-5-2" \
+            ANTHROPIC_CUSTOM_MODEL_OPTION_NAME="Fable 5.2" \
+            ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION="Fable 5.2 (not listed for the personal account by default)" \
+                command claude "$@" ;;
+        *)  command claude "$@" ;;
+    esac
 }
 
 # Claude Code on the work subscription. Separate config dir, so login, history,
@@ -248,7 +254,12 @@ EOF
 
     echo "→ claude-code | OpenRouter via Cloudflare AI Gateway | $model" >&2
 
+    # -u: drop a custom picker entry inherited from a claude/claude-work session;
+    # its Anthropic model ID would be sent to OpenRouter.
     exec env \
+    -u ANTHROPIC_CUSTOM_MODEL_OPTION \
+    -u ANTHROPIC_CUSTOM_MODEL_OPTION_NAME \
+    -u ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION \
     ANTHROPIC_BASE_URL="https://gateway.ai.cloudflare.com/v1/$CF_ACCOUNT_ID/$CF_GATEWAY_NAME/openrouter" \
     ANTHROPIC_AUTH_TOKEN="$OR_API_KEY" \
     ANTHROPIC_CUSTOM_HEADERS="cf-aig-authorization: Bearer $CF_TOKEN" \
@@ -257,7 +268,7 @@ EOF
     ANTHROPIC_DEFAULT_SONNET_MODEL="$model" \
     ANTHROPIC_DEFAULT_HAIKU_MODEL="${ANTHROPIC_DEFAULT_HAIKU_MODEL:-deepseek/deepseek-v4-flash}" \
     CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 \
-    command claude "$@"
+    claude "$@"
 )
 
 
