@@ -1,5 +1,6 @@
 {
   "env": {
+    "GIT_CONFIG_GLOBAL": "/Users/michaes/.dotfiles/git/gitconfig.symlink",
     "GIT_CONFIG_COUNT": "2",
     "GIT_CONFIG_KEY_0": "url.https://github.com/.insteadOf",
     "GIT_CONFIG_VALUE_0": "git@github.com:",

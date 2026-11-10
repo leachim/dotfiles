@@ -5,8 +5,8 @@
 #
 # Claude's sandbox wraps each Bash command of a session, so this runs inside a
 # session: ask Claude to run ./claude/sandbox-test.sh, or start it from the
-# Bash tool yourself. In a plain terminal nothing is sandboxed and the script
-# stops. Bash probes run as plain commands and classify by error text, because
+# Bash tool yourself. In a plain terminal or a ! command nothing is sandboxed
+# and the script stops. Bash probes run as plain commands and classify by error text, because
 # a denied path fails the existence check exactly like a missing one. The file
 # tools (Read, Edit, Write, Grep, Glob) bypass the sandbox and are confined by
 # the PreToolUse hook instead, so that hook is fed synthetic tool calls.
@@ -15,8 +15,8 @@
 
 set -u
 
-if [ -z "${CLAUDE_CODE_ENTRYPOINT:-}" ]; then
-    echo "not inside a Claude Code session: nothing is sandboxed here"
+if [ -z "${SANDBOX_RUNTIME:-}" ]; then
+    echo "not inside Claude's Bash sandbox (plain terminal or a ! command): nothing to probe"
     exit 2
 fi
 
@@ -98,10 +98,10 @@ ws=$(mktemp -d "${TMPDIR:-/tmp}/claude-sandbox-test.XXXXXX") || exit 1
 trap 'rm -rf "$ws"' EXIT
 GIT_CONFIG_GLOBAL=/dev/null git init -q "$ws" || exit 1
 probe ok     "git commit in \$TMPDIR"    "cd '$ws' && git -c user.name=t -c user.email=t@t commit -q --allow-empty -m t"
-# Hooks and .git/config run code outside the sandbox; the file-tool guard
-# blocks them, and so does the codex profile for shell commands.
-probe denied "write .git/hooks"          "cd '$ws' && echo x > .git/hooks/claude-sandbox-test"
-probe denied "write .git/config"         "cd '$ws' && GIT_CONFIG_GLOBAL=/dev/null git config probe.key value"
+# Hooks and .git/config of the workspace run code outside the sandbox when
+# git runs unsandboxed there; the sandbox write-protects the workspace's copies.
+probe denied "write .git/hooks"          'f=.git/hooks/claude-sandbox-test.$$; echo x > "$f" && rm "$f"'
+probe denied "write .git/config"         ': >> .git/config'
 echo
 echo "## Bash reads outside \$HOME"
 probe ok     "read /etc/hosts"           'cat /etc/hosts'
