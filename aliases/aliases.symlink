@@ -170,9 +170,9 @@ opencode() (
 # add it as a custom picker entry; the default model is unchanged.
 claude-work() {
     CLAUDE_CONFIG_DIR="$HOME/.claude-work" \
-    ANTHROPIC_CUSTOM_MODEL_OPTION="claude-mythos-5-1" \
-    ANTHROPIC_CUSTOM_MODEL_OPTION_NAME="Mythos 5.1" \
-    ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION="Mythos 5.1 (not listed for the work org by default)" \
+    ANTHROPIC_CUSTOM_MODEL_OPTION="claude-mythos-5-2" \
+    ANTHROPIC_CUSTOM_MODEL_OPTION_NAME="Mythos 5.2" \
+    ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION="Mythos 5.2 (not listed for the work org by default)" \
         claude "$@"
 }
 alias cclaude="claude-work"
