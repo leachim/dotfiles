@@ -160,6 +160,17 @@ opencode() (
     AI_AGENT=opencode command opencode "$@"
 )
 
+# Claude Code on the personal subscription. Its /model picker leaves Fable 5.2
+# out although the API serves it, so add it as a custom entry the same way
+# claude-work adds Mythos; the default model is unchanged. Other wrappers call
+# `command claude` so this entry does not leak into them.
+claude() {
+    ANTHROPIC_CUSTOM_MODEL_OPTION="claude-fable-5-2" \
+    ANTHROPIC_CUSTOM_MODEL_OPTION_NAME="Fable 5.2" \
+    ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION="Fable 5.2 (not listed for the personal account by default)" \
+        command claude "$@"
+}
+
 # Claude Code on the work subscription. Separate config dir, so login, history,
 # memory and the account keys of settings.json (model, effort, theme, plugins)
 # are its own; claude/install.sh merges the shared settings into it and links
@@ -173,7 +184,7 @@ claude-work() {
     ANTHROPIC_CUSTOM_MODEL_OPTION="claude-mythos-5-2" \
     ANTHROPIC_CUSTOM_MODEL_OPTION_NAME="Mythos 5.2" \
     ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION="Mythos 5.2 (not listed for the work org by default)" \
-        claude "$@"
+        command claude "$@"
 }
 alias cclaude="claude-work"
 
@@ -246,7 +257,7 @@ EOF
     ANTHROPIC_DEFAULT_SONNET_MODEL="$model" \
     ANTHROPIC_DEFAULT_HAIKU_MODEL="${ANTHROPIC_DEFAULT_HAIKU_MODEL:-deepseek/deepseek-v4-flash}" \
     CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 \
-    claude "$@"
+    command claude "$@"
 )
 
 
