@@ -36,6 +36,11 @@ if [ -f "$src" ]; then
     echo "  Linked $src -> $dst"
 fi
 
+# Print the diff a sudo install applies: installed copy (or nothing) -> tracked copy
+show_install_diff () {
+    if [ -e "$2" ]; then diff -u "$2" "$1"; else diff -u /dev/null "$1"; fi | sed 's/^/    /'
+}
+
 # macOS: the sandbox profile, the choice of profile and approval policy, and
 # the credential deny list, pinned for every launch path (CLI flags, --yolo,
 # desktop app) via managed requirements. A requirements file codex cannot load
@@ -45,6 +50,7 @@ if [ "$(uname -s)" = Darwin ]; then
     gitcfg_dst=/etc/codex/gitconfig
     if ! cmp -s "$gitcfg_src" "$gitcfg_dst"; then
         echo "  Installing $gitcfg_src -> $gitcfg_dst (sudo)"
+        show_install_diff "$gitcfg_src" "$gitcfg_dst"
         { sudo mkdir -p /etc/codex && sudo cp "$gitcfg_src" "$gitcfg_dst"; } ||
             echo "  WARNING: could not install $gitcfg_dst; git fails inside the sandbox"
     fi
@@ -53,6 +59,7 @@ if [ "$(uname -s)" = Darwin ]; then
     req_dst=/etc/codex/requirements.toml
     if ! cmp -s "$req_src" "$req_dst"; then
         echo "  Installing $req_src -> $req_dst (sudo)"
+        show_install_diff "$req_src" "$req_dst"
         if { sudo mkdir -p /etc/codex &&
              { [ ! -e "$req_dst" ] || [ -e "$req_dst.backup" ] || sudo cp "$req_dst" "$req_dst.backup"; } &&
              sudo cp "$req_src" "$req_dst"; }; then

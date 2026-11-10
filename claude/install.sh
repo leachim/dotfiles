@@ -126,6 +126,11 @@ for entry in "$HOME/.claude:personal" "$HOME/.claude-work:work"; do
     done
 done
 
+# Print the diff a sudo install applies: installed copy (or nothing) -> tracked copy
+show_install_diff () {
+    if [ -e "$2" ]; then diff -u "$2" "$1"; else diff -u /dev/null "$1"; fi | sed 's/^/    /'
+}
+
 # macOS: sandbox Bash and confine the file tools to the project directory via
 # managed settings. Copied, not linked: a broken managed-settings.json stops
 # Claude Code from starting, so only a copy that parses is installed.
@@ -134,6 +139,7 @@ if [ "$(uname -s)" = Darwin ]; then
     gitcfg_dst="/Library/Application Support/ClaudeCode/gitconfig"
     if ! cmp -s "$gitcfg_src" "$gitcfg_dst"; then
         echo "  Installing $gitcfg_src -> $gitcfg_dst (sudo)"
+        show_install_diff "$gitcfg_src" "$gitcfg_dst"
         { sudo mkdir -p "$(dirname "$gitcfg_dst")" && sudo cp "$gitcfg_src" "$gitcfg_dst"; } ||
             echo "  WARNING: could not install $gitcfg_dst; git fails inside the sandbox"
     fi
@@ -144,6 +150,7 @@ if [ "$(uname -s)" = Darwin ]; then
         echo "  WARNING: $managed_src does not parse; managed settings not installed"
     elif ! cmp -s "$managed_src" "$managed_dst"; then
         echo "  Installing $managed_src -> $managed_dst (sudo)"
+        show_install_diff "$managed_src" "$managed_dst"
         { sudo mkdir -p "$(dirname "$managed_dst")" &&
           { [ ! -e "$managed_dst" ] || [ -e "$managed_dst.backup" ] || sudo cp "$managed_dst" "$managed_dst.backup"; } &&
           sudo cp "$managed_src" "$managed_dst"; } ||

@@ -36,7 +36,7 @@ After pulling on a machine that is already set up, run `script/link`. It refresh
 the `*.symlink` files and re-runs the claude/codex/opencode/ghostty config linkers, so new
 files in this repo (a new skill, a new config) get linked. It is idempotent and
 installs no packages. On macOS it also refreshes the Claude Code and codex managed
-sandbox settings, and asks for sudo when the tracked copy has changed.
+sandbox settings: when the tracked copy has changed it prints the diff and asks for sudo.
 
 Run `script/update` to update an existing installation. It runs `script/link`, then
 updates each tool it finds installed (the `step` lines at the end of the script list
