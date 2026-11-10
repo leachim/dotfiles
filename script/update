@@ -189,29 +189,6 @@ update_opencode () {
   fi
 }
 
-# pi, only the managed install pi/install.sh sets up (found the way the pi()
-# wrapper in aliases finds it). Not on macOS, where it is unsupported.
-update_pi () {
-  local bin
-  if [ "$(uname -s)" = Darwin ]; then
-    skip "pi (unsupported on macOS)"
-    return
-  elif [ ! -d "$HOME/.pi/agent/install" ]; then
-    skip "pi (not installed)"
-    return
-  elif [ -x "$HOME/.pi/agent/bin/pi" ]; then
-    bin="$HOME/.pi/agent/bin/pi"
-  elif [ -x "$HOME/.local/bin/pi" ]; then
-    bin="$HOME/.local/bin/pi"
-  else
-    skip "pi (no binary in ~/.pi/agent/bin or ~/.local/bin)"
-    return
-  fi
-  info "pi update"
-  "$bin" update < /dev/null
-  success "pi"
-}
-
 # Pixi
 update_pixi () {
   if command -v pixi >/dev/null 2>&1; then
@@ -310,7 +287,6 @@ step "tmux plugins" update_tpm
 step "starship" update_starship
 step "claude" update_claude
 step "opencode" update_opencode
-step "pi" update_pi
 step "pixi" update_pixi
 step "uv" update_uv
 step "bun" update_bun

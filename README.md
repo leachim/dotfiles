@@ -27,14 +27,13 @@ Bootstrap will prompt you for:
    - Claude Code config
    - Codex CLI config
    - opencode config (Linux only)
-   - pi coding agent (Linux only)
    - pixi
    - GitHub CLI (gh)
 
 ## Updating
 
 After pulling on a machine that is already set up, run `script/link`. It refreshes
-the `*.symlink` files and re-runs the claude/codex/opencode/pi/ghostty config linkers, so new
+the `*.symlink` files and re-runs the claude/codex/opencode/ghostty config linkers, so new
 files in this repo (a new skill, a new config) get linked. It is idempotent and
 installs no packages. On macOS it also refreshes the Claude Code and codex managed
 sandbox settings, and asks for sudo when the tracked copy has changed.
@@ -129,8 +128,8 @@ Each `*/install.sh` is run by `script/install` with an interactive prompt. They 
 
 ### AI coding tools
 
-Four CLIs are configured here: Claude Code (`claude/`), Codex (`codex/`),
-opencode (`opencode/`) and pi (`pi/`). Each has its own `install.sh` that installs
+Three CLIs are configured here: Claude Code (`claude/`), Codex (`codex/`) and
+opencode (`opencode/`). Each has its own `install.sh` that installs
 the CLI if missing and symlinks config out of this repo.
 
 On macOS, agents may write only inside the directory they were started in, so an
@@ -151,19 +150,13 @@ open. Linux hosts (HPC, bsse) get no extra restrictions.
   and temp dirs on both platforms. On macOS, `codex/install.sh` also copies
   `codex/requirements.macos.toml` to `/etc/codex/requirements.toml` (sudo),
   which rejects full-access sandbox modes however codex is launched.
-- opencode and pi have no sandbox. On macOS `script/install` does not offer them,
-  their installers skip, and the shell wrappers refuse to start them.
-- pi has no permission system either. `pi/extensions/guard.ts`, linked into
-  `~/.pi/agent/extensions/`, restates the rules the other agents enforce on
-  Linux: `.secrets` unreadable, writes outside the working directory and
-  destructive commands (`rm -r`, force-push, `gh pr close/merge`, `srun`/`sbatch`) need
-  confirmation, `sudo`/host control refused. Like opencode's, these are text
-  checks, not a sandbox.
+- opencode has no sandbox. On macOS `script/install` does not offer it, its
+  installer skips, and the shell wrapper refuses to start it.
 
-Claude Code, opencode and pi share one set of instructions. `claude/CLAUDE.md` is
-the single source, linked to `~/.claude/CLAUDE.md`,
-`~/.config/opencode/AGENTS.md` and `~/.pi/agent/AGENTS.md`, so the personality
-and safety rules cannot drift apart. Edit that one file to change all three.
+Claude Code and opencode share one set of instructions. `claude/CLAUDE.md` is
+the single source, linked to `~/.claude/CLAUDE.md` and
+`~/.config/opencode/AGENTS.md`, so the personality and safety rules cannot drift
+apart. Edit that one file to change both.
 
 Only config files are linked, never whole tool directories. `~/.codex` is ~945MB
 of installed packages, auth tokens and session history, so just `config.toml` is
@@ -198,7 +191,6 @@ it to skip slow cluster module loads. It does not gate credentials — see
 | Claude Code | `claude-code_<version>_agent` | Claude Code itself; its own value wins over any `env` in settings |
 | Codex | `codex` | `codex()` wrapper, plus `shell_environment_policy` in `codex/config.toml` |
 | opencode | `opencode` | `opencode()` wrapper in `aliases/aliases.symlink` |
-| pi | `pi` | `pi()` wrapper in `aliases/aliases.symlink` |
 
 The checks test whether `AI_AGENT` is set at all, not for one specific value,
 because the tools name themselves differently. Set `AI_AGENT=0` to force the
