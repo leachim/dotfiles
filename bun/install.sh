@@ -2,7 +2,6 @@
 #
 # Bun runtime + global packages
 
-# Check if bun is already installed
 if command -v bun >/dev/null 2>&1; then
   echo "  bun: already installed ($(bun --version))"
 else
@@ -10,6 +9,8 @@ else
   curl -fsSL https://bun.sh/install | bash
   export BUN_INSTALL="$HOME/.bun"
   export PATH="$BUN_INSTALL/bin:$PATH"
+  # The pipeline's status is bash's, which hides a failed download
+  bun --version >/dev/null || exit 1
 fi
 
 # Symlink bun as node so packages with #!/usr/bin/env node shebangs work, but
@@ -28,10 +29,11 @@ mkdir -p "$BUN_GLOBAL_DIR"
 [ -f "$BUN_GLOBAL_DIR/package.json" ] || echo '{}' > "$BUN_GLOBAL_DIR/package.json"
 # Run global installs from $HOME to prevent bun's upward package.json
 # traversal from walking into non-standard parent directories (e.g. /cluster/home/)
+rc=0
 while IFS= read -r pkg || [ -n "$pkg" ]; do
   [ -z "$pkg" ] && continue
   echo "  $pkg: installing globally"
-  (cd "$HOME" && bun install -g "$pkg")
+  (cd "$HOME" && bun install -g "$pkg") || { echo "  $pkg: failed"; rc=1; }
 done < "$SCRIPT_DIR/packages.txt"
 
-exit 0
+exit $rc

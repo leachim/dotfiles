@@ -20,6 +20,8 @@ case "$(uname -s)-$(uname -m)" in
     ;;
 esac
 
+# A bun installed earlier in the same script/install run is not on PATH yet
+[ -d "$HOME/.bun/bin" ] && PATH="$HOME/.bun/bin:$PATH"
 if ! command -v bunx >/dev/null 2>&1; then
   echo "  chrome-headless-shell: needs bun (bun/install.sh)"
   exit 1

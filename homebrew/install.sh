@@ -1,24 +1,20 @@
 #!/bin/sh
 #
-# Homebrew
-#
-# This installs some of the common dependencies needed (or at least desired)
-# using Homebrew.
+# Homebrew and the packages in the Brewfile
 
-# Check for Homebrew
-if test ! "$(which brew)"
-then
+set -e
+
+# A fresh install is not on PATH yet
+if ! command -v brew >/dev/null 2>&1; then
   echo "  Installing Homebrew for you."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  for brew in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+    if [ -x "$brew" ]; then
+      eval "$("$brew" shellenv)"
+      break
+    fi
+  done
 fi
 
-if test "$(which brew)"
-then
-  # Update Homebrew recipes
-  brew update
-
-  # Install all our dependencies with bundle (See Brewfile)
-  brew bundle --file="$HOME/.Brewfile" --verbose
-fi
-
-exit 0
+brew update
+brew bundle --file="$HOME/.Brewfile" --verbose

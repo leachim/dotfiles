@@ -8,7 +8,7 @@
 # skips this and only links config.
 if [ -z "$DOTFILES_LINK_ONLY" ] && ! command -v claude > /dev/null 2>&1; then
     echo "  Installing Claude Code CLI..."
-    curl -fsSL https://cli.claude.ai/install.sh | sh
+    curl -fsSL https://claude.ai/install.sh | bash
 fi
 
 DOTFILES_CLAUDE="$HOME/.dotfiles/claude"

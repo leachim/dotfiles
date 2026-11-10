@@ -17,7 +17,7 @@ link_dotfiles
 # and codex installers refresh the managed sandbox settings, which asks for
 # sudo when the tracked copy has changed.
 export DOTFILES_LINK_ONLY=1
-for installer in claude codex opencode ghostty; do
+for installer in claude codex opencode pi ghostty; do
   script="$DOTFILES_ROOT/$installer/install.sh"
   [ -f "$script" ] || continue
   info "$installer config"

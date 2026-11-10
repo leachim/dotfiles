@@ -8,15 +8,16 @@ set -e
 cd "$(dirname "$0")"/..
 . script/lib.sh
 
-# Run one update in a subshell under set -e: a failing command ends that update
-# but not the ones after it. set -e is ignored inside if/&&/||, even when set
+# Run one update in a subshell under set -e and pipefail (so a failed download
+# piped into sh counts): a failing command ends that update but not the ones
+# after it. set -e is ignored inside if/&&/||, even when set
 # again in a subshell, so the call is plain with set +e around it.
 failed=()
 step () {
   local name=$1 rc
   shift
   set +e
-  ( set -e; "$@" )
+  ( set -e -o pipefail; "$@" )
   rc=$?
   set -e
   if [ "$rc" -ne 0 ]; then
@@ -51,12 +52,14 @@ update_rustup () {
 
 # Cargo-installed binaries
 update_cargo () {
-  if command -v cargo >/dev/null 2>&1; then
+  if ! command -v cargo >/dev/null 2>&1; then
+    skip "cargo (not installed)"
+  elif ! cargo install-update --version >/dev/null 2>&1; then
+    skip "cargo binaries (cargo-update not installed; rust/install.sh adds it)"
+  else
     info "cargo install-update"
     cargo install-update -a --locked
     success "cargo binaries"
-  else
-    skip "cargo (not installed)"
   fi
 }
 
@@ -138,14 +141,33 @@ update_tpm () {
   fi
 }
 
-# Starship (Linux only — macOS handled by brew upgrade)
+# Starship, only the copy starship/install.sh puts in ~/.local/bin on Linux
+# (macOS: brew upgrade). Reinstalling over a cargo or distro starship would add
+# a second one that shadows it.
 update_starship () {
-  if [ "$(uname -s)" = "Linux" ] && command -v starship >/dev/null 2>&1; then
+  if [ "$(uname -s)" = "Linux" ] && [ "$(command -v starship)" = "$HOME/.local/bin/starship" ]; then
     info "starship update"
     # starship's installer exits 1 if --bin-dir does not already exist
     mkdir -p "$HOME/.local/bin"
     curl -sS https://starship.rs/install.sh | sh -s -- -y --bin-dir "$HOME/.local/bin"
     success "starship"
+  else
+    skip "starship (no ~/.local/bin install on Linux; macOS uses brew)"
+  fi
+}
+
+# Claude Code's native install updates itself in the background when it runs;
+# this catches up hosts where it has not run for a while.
+update_claude () {
+  if ! command -v claude >/dev/null 2>&1; then
+    skip "claude (not installed)"
+  elif ! claude --version >/dev/null 2>&1; then
+    # The NFS home is shared across architectures; skip a claude built for another one
+    skip "claude ($(command -v claude) does not run on $(uname -m))"
+  else
+    info "claude update"
+    claude update
+    success "claude"
   fi
 }
 
@@ -286,6 +308,7 @@ step "vim plugins" update_vim_plugins
 step "oh-my-zsh" update_omz
 step "tmux plugins" update_tpm
 step "starship" update_starship
+step "claude" update_claude
 step "opencode" update_opencode
 step "pi" update_pi
 step "pixi" update_pixi

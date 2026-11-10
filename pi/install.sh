@@ -22,8 +22,9 @@ DOTFILES_PI="$HOME/.dotfiles/pi"
 # `command -v pi` could match an unrelated pi. It runs without a terminal
 # (setsid) so it neither offers to edit the shell rc files, which are tracked
 # here, nor starts pi when done. The pi() wrapper finds the binary in
-# ~/.pi/agent/bin or ~/.local/bin, so PATH needs no change.
-if [ ! -d "$PI_DIR/install" ]; then
+# ~/.pi/agent/bin or ~/.local/bin, so PATH needs no change. DOTFILES_LINK_ONLY
+# (set by script/link) skips this and only links config.
+if [ -z "$DOTFILES_LINK_ONLY" ] && [ ! -d "$PI_DIR/install" ]; then
     echo "  Installing pi..."
     installer=$(mktemp)
     curl -fsSL https://pi.dev/install.sh -o "$installer" &&

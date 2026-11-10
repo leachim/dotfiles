@@ -11,4 +11,5 @@ fi
 # RUNZSH=no: don't launch zsh at end of install
 RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc
 
-exit 0
+# A failed download runs an empty script, which succeeds
+[ -d "$HOME/.oh-my-zsh" ]

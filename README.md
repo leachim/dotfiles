@@ -21,6 +21,7 @@ Bootstrap will prompt you for:
    - Vim/Neovim plugins (vim-plug)
    - Starship prompt
    - Rust (via rustup)
+   - uv
    - Bun and the global packages in bun/packages.txt
    - chrome-headless-shell (needs Bun)
    - Claude Code config
@@ -33,7 +34,7 @@ Bootstrap will prompt you for:
 ## Updating
 
 After pulling on a machine that is already set up, run `script/link`. It refreshes
-the `*.symlink` files and re-runs the claude/codex/opencode config linkers, so new
+the `*.symlink` files and re-runs the claude/codex/opencode/pi/ghostty config linkers, so new
 files in this repo (a new skill, a new config) get linked. It is idempotent and
 installs no packages. On macOS it also refreshes the Claude Code and codex managed
 sandbox settings, and asks for sudo when the tracked copy has changed.
@@ -74,6 +75,7 @@ re-run the optional installers -- use `script/install` for those.
 ├── starship/          Starship prompt config
 ├── system/            Environment, PATH, keys, aliases (*.zsh)
 ├── tmux/              Tmux configuration
+├── uv/                uv installer
 ├── vim/               Vim/Neovim config and plugin installer
 ├── xcode/             Xcode aliases
 ├── yarn/              Yarn PATH setup
