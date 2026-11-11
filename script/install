@@ -35,6 +35,12 @@ run_optional () {
   fi
 }
 
+# Brewfile packages and casks (macOS). script/bootstrap already ran it via
+# bin/dot and sets DOTFILES_BREW_DONE, so it is only offered on a direct run.
+if [ "$(uname -s)" = Darwin ] && [ -z "$DOTFILES_BREW_DONE" ]; then
+  run_optional "Homebrew packages (Brewfile)" ./homebrew/install.sh
+fi
+
 # Optional components
 run_optional "Oh My Zsh"      ./zsh/install.sh
 run_optional "Vim plugins"    ./vim/install.sh

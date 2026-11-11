@@ -73,6 +73,7 @@ then
   if bash bin/dot 2>&1 | while read -r data; do info "$data"; done; [ "${PIPESTATUS[0]}" -eq 0 ]
   then
     success "dependencies installed"
+    export DOTFILES_BREW_DONE=1
   else
     brew_failed=1
     printf "\r\033[2K  [\033[0;31mFAIL\033[0m] %s\n" "error installing dependencies, continuing"

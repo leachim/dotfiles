@@ -17,6 +17,7 @@ Bootstrap will prompt you for:
 3. **Symlinks** -- all `*.symlink` files get linked into `$HOME`
 4. **Homebrew** -- installs Homebrew and Brewfile packages (macOS only)
 5. **Optional software** -- each prompted individually:
+   - Homebrew packages (Brewfile, macOS) -- offered when `script/install` is run on its own
    - Oh My Zsh
    - Vim/Neovim plugins (vim-plug)
    - Starship prompt
@@ -44,7 +45,9 @@ them). Anything absent is skipped, so it is safe on every host.
 
 `dot` is narrower and macOS-only: it applies the macOS defaults from
 `macos/set-defaults.sh` and runs `brew update` plus the Brewfile. It does not
-re-run the optional installers -- use `script/install` for those.
+re-run the optional installers -- use `script/install` for those. On macOS
+`script/install` also offers the Brewfile, so a cask added there gets installed;
+`script/update` only upgrades what is already installed.
 
 ## Repository Structure
 
