@@ -20,6 +20,7 @@ Bootstrap will prompt you for:
    - Homebrew packages (Brewfile, macOS) -- offered when `script/install` is run on its own
    - Oh My Zsh
    - Vim/Neovim plugins (vim-plug)
+   - Tmux plugins (TPM)
    - Starship prompt
    - Rust (via rustup)
    - uv
@@ -27,6 +28,7 @@ Bootstrap will prompt you for:
    - chrome-headless-shell (needs Bun)
    - Claude Code config
    - Codex CLI config
+   - Ghostty config (links ~/.config/ghostty; the app comes from the Brewfile)
    - opencode config (Linux only)
    - pixi
    - GitHub CLI (gh)
