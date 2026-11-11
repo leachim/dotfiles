@@ -1,4 +1,4 @@
-"set nocompatible
+set nocompatible
 
 " Enable syntax processing and highlighting
 syntax enable
@@ -334,7 +334,7 @@ if (has("termguicolors"))
     set termguicolors
 endif
 
-colorscheme OceanicNext
+silent! colorscheme OceanicNext  " missing until PlugInstall has run
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Shortcuts
