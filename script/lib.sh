@@ -14,18 +14,19 @@ skip ()    { printf "\r\033[2K  [ \033[00;33m--\033[0m ] %s\n" "$1"; }
 fail ()    { printf "\r\033[2K  [\033[0;31mFAIL\033[0m] %s\n\n" "$1"; exit 1; }
 
 # Link src to dst. Anything already at dst that is not that link is moved to
-# $DOTFILES_BACKUP_DIR first.
+# $DOTFILES_BACKUP_DIR first. Exits on failure.
 link_file () {
   local src=$1 dst=$2
   if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$src" ]; then
     return
   fi
   if [ -e "$dst" ] || [ -L "$dst" ]; then
-    mkdir -p "$DOTFILES_BACKUP_DIR"
-    mv "$dst" "$DOTFILES_BACKUP_DIR/$(basename "$dst")"
+    mkdir -p "$DOTFILES_BACKUP_DIR" &&
+      mv "$dst" "$DOTFILES_BACKUP_DIR/$(basename "$dst")" ||
+      fail "could not back up $dst"
     success "backed up $dst to $DOTFILES_BACKUP_DIR"
   fi
-  ln -s "$src" "$dst"
+  ln -s "$src" "$dst" || fail "could not link $src to $dst"
   success "linked $src to $dst"
 }
 
