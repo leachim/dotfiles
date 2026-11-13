@@ -1,3 +1,5 @@
+hs.autoLaunch(true)
+
 -- alt+space: dismiss notifications. Stacks get "Clear All", single alerts "Close".
 local function closeNotifications()
   local nc = hs.application.get("com.apple.notificationcenterui")
