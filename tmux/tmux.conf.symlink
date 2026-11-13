@@ -298,11 +298,20 @@ set -g @continuum-save-interval '10'
 # Drag: copy on release, selection stays visible
 bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection-no-clear
 
+# Double-click words split only on whitespace, quotes, brackets and | , ;
+# so paths, URLs and host:port select whole.
+set -g word-separators " \"'`()[]{}<>|,;"
+
 # Double-click: select word and copy
-bind-key -T root DoubleClick1Pane select-pane -t = \; if-shell -F "#{||:#{pane_in_mode},#{mouse_any_flag}}" { send-keys -M } { copy-mode -H ; send-keys -X select-word ; send-keys -X copy-selection-and-cancel ; run-shell "tmux save-buffer - | bash ~/.dotfiles/bin/tmux-osc52" }
+bind-key -T root DoubleClick1Pane select-pane -t = \; if-shell -F "#{||:#{pane_in_mode},#{mouse_any_flag}}" { send-keys -M } { copy-mode -H ; send-keys -X select-word ; send-keys -X copy-selection-and-cancel }
 
 # Triple-click: select line and copy
-bind-key -T root TripleClick1Pane select-pane -t = \; if-shell -F "#{||:#{pane_in_mode},#{mouse_any_flag}}" { send-keys -M } { copy-mode -H ; send-keys -X select-line ; send-keys -X copy-selection-and-cancel ; run-shell "tmux save-buffer - | bash ~/.dotfiles/bin/tmux-osc52" }
+bind-key -T root TripleClick1Pane select-pane -t = \; if-shell -F "#{||:#{pane_in_mode},#{mouse_any_flag}}" { send-keys -M } { copy-mode -H ; send-keys -X select-line ; send-keys -X copy-selection-and-cancel }
+
+# Right-click: paste the system clipboard (no trackpad middle click on macOS)
+if-shell 'uname | grep -q Darwin' {
+  bind-key -T root MouseDown3Pane select-pane -t = \; if-shell -F "#{||:#{pane_in_mode},#{mouse_any_flag}}" { send-keys -M } { run-shell "pbpaste | tmux load-buffer -b clipboard -" ; paste-buffer -p -b clipboard }
+}
 
 # Initialize TPM (must be last line of plugin config)
 run '~/.tmux/plugins/tpm/tpm'
