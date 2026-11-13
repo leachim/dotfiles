@@ -29,6 +29,7 @@ Bootstrap will prompt you for:
    - Claude Code config
    - Codex CLI config
    - Ghostty config (links ~/.config/ghostty; the app comes from the Brewfile)
+   - Hammerspoon config (links ~/.hammerspoon/init.lua; macOS only, the app comes from the Brewfile)
    - opencode config (Linux only)
    - pixi
    - GitHub CLI (gh)
@@ -36,7 +37,7 @@ Bootstrap will prompt you for:
 ## Updating
 
 After pulling on a machine that is already set up, run `script/link`. It refreshes
-the `*.symlink` files and re-runs the claude/codex/opencode/ghostty config linkers, so new
+the `*.symlink` files and re-runs the claude/codex/opencode/ghostty/hammerspoon config linkers, so new
 files in this repo (a new skill, a new config) get linked. It is idempotent and
 installs no packages. On macOS it also refreshes the Claude Code and codex managed
 sandbox settings: when the tracked copy has changed it prints the diff and asks for sudo.
@@ -67,6 +68,7 @@ re-run the optional installers -- use `script/install` for those. On macOS
 ├── functions/         Autoloaded zsh functions and completions
 ├── gh/                GitHub CLI installer (Linux; macOS uses Brewfile)
 ├── ghostty/           Ghostty config (linked to ~/.config/ghostty)
+├── hammerspoon/       Hammerspoon config (init.lua linked into ~/.hammerspoon)
 ├── git/               Git config, aliases, completion
 ├── homebrew/          Brewfile and install script
 ├── hosts/             Role-specific config (mac.sh, linux-desktop.sh, hpc.sh)
