@@ -92,6 +92,10 @@ Every job must be reproducible from files on disk, not from a Claude session.
 
 Login nodes are shared: never run tests, data processing or any other compute on them at
 a parallelism that loads the node — keep worker/job counts low, and move anything heavier to a SLURM job.
+Never run anything on a login node that may use more than 16 GB of RAM (loading models,
+large arrays or dataframes, vLLM, embedding or feature computation); run it under SLURM or
+ask first. All of my processes on a node share one cgroup memory limit: one runaway process
+freezes every session, tmux pane and new SSH login on that node.
 Avoid operations that create, list or process more than ~10k files; if one is unavoidable,
 tell the user before starting.
 
