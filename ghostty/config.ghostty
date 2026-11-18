@@ -26,3 +26,6 @@ keybind = super+w=unbind
 keybind = super+alt+w=unbind
 keybind = super+shift+w=unbind
 keybind = super+alt+shift+w=unbind
+
+keybind = alt+tab=goto_window:next
+keybind = alt+shift+tab=goto_window:previous
