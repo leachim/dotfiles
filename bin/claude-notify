@@ -87,7 +87,7 @@ fi
 CWD=$(json_str cwd)
 CWD="${CWD:-$PWD}"
 PROJECT=$(basename "$CWD")
-[ -n "$PROJECT" ] && MESSAGE="$MESSAGE — $PROJECT"
+[ -n "$PROJECT" ] && MESSAGE="$PROJECT — $MESSAGE"
 [ -n "$ELAPSED" ] && MESSAGE="$MESSAGE (${ELAPSED})"
 
 # via the Alerts group, so push-route decides which devices get it
