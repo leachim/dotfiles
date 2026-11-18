@@ -12,14 +12,13 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH=/iopsstor/scratch/cscs/mschneider/tools/cuda-12.9/bin:$HOME/.claude/local:$PATH
 export XDG_CONFIG_HOME="$HOME/.config"
 
-# uv cache off $HOME. On CSCS/Alps $HOME is /vast (50 GB quota) and the uv cache
-# alone reached 5.6 GB / 11% of it. Scratch has no practical size limit; the cache
-# is fully regenerable, so a scratch purge costs a re-download, nothing more.
-# Guarded on the directory: this file is shared with other clusters (Euler etc.)
-# where /iopsstor does not exist, and there uv keeps its default ~/.cache/uv.
-if [ -d /iopsstor/scratch/cscs/"$USER" ]; then
-    export UV_CACHE_DIR="/iopsstor/scratch/cscs/$USER/CACHE/uv"
-fi
+# uv cache ON $HOME, deliberately (2026-11-18). With the cache on scratch, uv could
+# not hardlink across filesystems and copied every wheel into each venv: 11 venvs
+# took 37 GB / 300k inodes of the 50 GB / 500k /vast quota. Cache and venvs on the
+# same filesystem share files via hardlinks (~15 GB deduplicated). Deleting cache
+# entries frees nothing while a venv still links them, so `uv cache prune` is safe.
+export UV_CACHE_DIR="$HOME/.cache/uv"
+export UV_LINK_MODE=hardlink
 
 # GPU
 alias nsmi="nvidia-smi"
