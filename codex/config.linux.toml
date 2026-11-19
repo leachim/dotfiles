@@ -46,8 +46,7 @@ extends = ":workspace"
 # path cannot be masked (on the clusters ~/.cache/huggingface links to scratch,
 # so only its token files are listed, and those are skipped while absent), and
 # `**` is pre-expanded at sandbox startup down to glob_scan_max_depth. 4 covers
-# a .secrets directory up to three levels below $HOME; anything deeper is not
-# denied. Paths that do not exist are skipped, so the list can name credentials
+# *secret* names up to four levels below $HOME; anything deeper is not denied. Paths that do not exist are skipped, so the list can name credentials
 # a host does not have.
 glob_scan_max_depth = 4
 ":root" = "read"
@@ -71,13 +70,26 @@ glob_scan_max_depth = 4
 "~/.mozilla" = "deny"
 "~/.bash_history" = "deny"
 "~/.zsh_history" = "deny"
-# .secrets anywhere under $HOME, ~/.secrets itself included. .env is
-# deliberately NOT denied: job environment variables live there and the agents
-# need to wire them into job scripts. Real credentials belong in ~/.secrets,
-# which stays unreadable. Same call as claude/settings.json.
-"~/**/.secrets" = "deny"
-"~/**/.secrets.*" = "deny"
-"~/**/.secrets/**" = "deny"
+# Any file or directory with "secret" in its name under $HOME, ~/.secrets
+# included. Globs are case-sensitive, `*` does not match a leading dot, and a
+# glob-matched directory hides nothing below it without the `/**` form, hence
+# twelve patterns. A symlink whose name matches
+# breaks sandbox startup -- bwrap cannot mask it. .env is deliberately NOT
+# denied: job environment variables live there and the agents need to wire
+# them into job scripts. Real credentials belong in ~/.secrets, which stays
+# unreadable.
+"~/**/*secret*" = "deny"
+"~/**/*Secret*" = "deny"
+"~/**/*SECRET*" = "deny"
+"~/**/.*secret*" = "deny"
+"~/**/.*Secret*" = "deny"
+"~/**/.*SECRET*" = "deny"
+"~/**/secret*/**" = "deny"
+"~/**/Secret*/**" = "deny"
+"~/**/SECRET*/**" = "deny"
+"~/**/.secret*/**" = "deny"
+"~/**/.Secret*/**" = "deny"
+"~/**/.SECRET*/**" = "deny"
 
 [permissions.confined.filesystem.":workspace_roots"]
 # :workspace keeps .git read-only, which turns every git commit into an
@@ -87,10 +99,19 @@ glob_scan_max_depth = 4
 ".git" = "write"
 ".git/hooks" = "read"
 ".git/config" = "read"
-# Workspaces outside $HOME (cluster scratch, /Volumes) get the same .secrets rule.
-"**/.secrets" = "deny"
-"**/.secrets.*" = "deny"
-"**/.secrets/**" = "deny"
+# Workspaces outside $HOME (cluster scratch, /Volumes) get the same rule.
+"**/*secret*" = "deny"
+"**/*Secret*" = "deny"
+"**/*SECRET*" = "deny"
+"**/.*secret*" = "deny"
+"**/.*Secret*" = "deny"
+"**/.*SECRET*" = "deny"
+"**/secret*/**" = "deny"
+"**/Secret*/**" = "deny"
+"**/SECRET*/**" = "deny"
+"**/.secret*/**" = "deny"
+"**/.Secret*/**" = "deny"
+"**/.SECRET*/**" = "deny"
 
 [permissions.confined.network]
 # Direct access, no domain proxy; claude allows every domain as well. With the
