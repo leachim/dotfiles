@@ -29,7 +29,9 @@ confined = true
 # workspace and the temp dirs, read everything outside $HOME, and inside $HOME
 # only the tool and config directories listed. Sandbox modes alone do not do
 # this: every mode permits reads outside the workspace. config.linux.toml
-# carries a copy for hosts without a requirements layer; keep the two in step.
+# cannot copy this profile -- codex's bubblewrap backend does not reopen reads
+# under a denied "~" -- and carries a credential deny-list instead; keep the
+# deny entries of the two in step.
 [permissions.confined]
 description = "Workspace writes; reads outside $HOME and in listed $HOME dirs; no escalation."
 extends = ":workspace"

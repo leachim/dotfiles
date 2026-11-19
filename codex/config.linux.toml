@@ -7,11 +7,14 @@
 model = "gpt-6.1-sol"
 model_reasoning_effort = "high"
 
-# Sandbox. Same boundary as claude/managed-settings.macos.json: commands write
-# the workspace and the temp dirs, read everything outside $HOME, and inside
-# $HOME only the tool and config directories listed in the profile below. The
-# profile is a copy of the one in requirements.macos.toml; keep the two in
-# step. There is no root-owned requirements layer without root, so nothing
+# Sandbox. Commands write the workspace and the temp dirs and read everything
+# except the credential paths denied in the profile below. This is a deny-list,
+# weaker than the $HOME allow-list of requirements.macos.toml: codex's Linux
+# backend (bubblewrap, checked on 0.170.0) never binds "read" grants under a
+# denied "~" back in, so with "~" = "deny" $HOME is an empty read-only tmpfs,
+# every deny mask inside it fails ("bwrap: Can't mkdir parents"), and codex
+# cannot even re-exec its own helper from ~/.config/nvm. Revisit when that
+# changes. There is no root-owned requirements layer without root, so nothing
 # pins this selection against CLI overrides here. Prompts that would run a
 # command outside the sandbox, or widen the sandbox mid-session, are
 # auto-rejected; command rules, MCP elicitations and skill scripts still
@@ -24,10 +27,6 @@ approval_policy = { granular = { sandbox_approval = false, request_permissions =
 # covers codex started elsewhere. The GIT_CONFIG_* pair (the env block of
 # claude/managed-settings.macos.json) gives a sandboxed git what it needs: clone
 # over https and authenticate through gh, since ~/.ssh is unreadable.
-# GIT_CONFIG_GLOBAL is not set here: ~/.gitconfig is a symlink inside the denied
-# $HOME and git aborts on a global config it cannot access, but values are
-# literal and the cluster home path is machine-specific. Until it names
-# <home>/.dotfiles/git/gitconfig.symlink, git fails inside the sandbox.
 [shell_environment_policy.set]
 AI_AGENT = "codex"
 GIT_CONFIG_COUNT = "2"
@@ -37,49 +36,45 @@ GIT_CONFIG_KEY_1 = "credential.https://github.com.helper"
 GIT_CONFIG_VALUE_1 = "!gh auth git-credential"
 
 [permissions.confined]
-description = "Workspace writes; reads outside $HOME and in listed $HOME dirs; no escalation."
+description = "Workspace writes; reads everywhere except credential paths; no escalation."
 extends = ":workspace"
 
 [permissions.confined.filesystem]
 # Paths must be absolute, ~/-relative, or :-prefixed -- codex rejects bare globs.
-# More specific entries override broader ones, so a read grant reopens part of
-# the $HOME deny and a nested deny closes part of a read grant.
 #
-# Linux sandboxing (bubblewrap) cannot evaluate `**` live, so codex pre-expands
-# deny globs at sandbox startup and needs a depth cap; macOS seatbelt matches
-# live and ignores it. 4 covers ~/.secrets/* and a .secrets directory up to
-# three levels below $HOME; anything deeper is not denied.
+# bubblewrap masks each deny with a mount, which has two limits: a symlinked
+# path cannot be masked (on the clusters ~/.cache/huggingface links to scratch,
+# so only its token files are listed, and those are skipped while absent), and
+# `**` is pre-expanded at sandbox startup down to glob_scan_max_depth. 4 covers
+# a .secrets directory up to three levels below $HOME; anything deeper is not
+# denied. Paths that do not exist are skipped, so the list can name credentials
+# a host does not have.
 glob_scan_max_depth = 4
 ":root" = "read"
-"~" = "deny"
 "/Volumes" = "deny"
-# Readable inside $HOME: the allowRead list of claude/managed-settings.macos.json,
-# with Claude's own directories swapped for codex's. Symlinks in $HOME such as
-# ~/.gitconfig or ~/.localrc cannot be reopened: codex canonicalizes read paths
-# to their targets, so the link itself stays denied. git gets its config through
-# GIT_CONFIG_GLOBAL in [shell_environment_policy.set] instead.
-"~/.dotfiles/git" = "read"
-"~/.dotfiles/bin" = "read"
-"~/.config/git" = "read"
-"~/.config/gh" = "read"
-"~/Library/Keychains" = "read"
-"~/.local" = "read"
+"~/.ssh" = "deny"
+"~/.gnupg" = "deny"
+"~/.aws" = "deny"
+"~/.netrc" = "deny"
+"~/.git-credentials" = "deny"
+"~/.pypirc" = "deny"
+"~/.docker/config.json" = "deny"
+"~/.kube" = "deny"
+"~/.config/gcloud" = "deny"
+"~/.codex/auth.json" = "deny"
+"~/.claude/.credentials.json" = "deny"
 "~/.local/share/opencode" = "deny"
-"~/.bun" = "read"
-"~/.cargo" = "read"
 "~/.cargo/credentials" = "deny"
 "~/.cargo/credentials.toml" = "deny"
-"~/.rustup" = "read"
-"~/.pixi" = "read"
-"~/.cache" = "read"
-"~/.cache/huggingface" = "deny"
-"~/.npm" = "read"
-"~/.codex/skills" = "read"
-# .secrets anywhere under $HOME, including inside the directories above and
-# inside a workspace that lives under $HOME. .env is deliberately NOT denied:
-# job environment variables live there and the agents need to wire them into
-# job scripts. Real credentials belong in ~/.secrets, which stays unreadable.
-# Same call as claude/settings.json.
+"~/.cache/huggingface/token" = "deny"
+"~/.cache/huggingface/stored_tokens" = "deny"
+"~/.mozilla" = "deny"
+"~/.bash_history" = "deny"
+"~/.zsh_history" = "deny"
+# .secrets anywhere under $HOME, ~/.secrets itself included. .env is
+# deliberately NOT denied: job environment variables live there and the agents
+# need to wire them into job scripts. Real credentials belong in ~/.secrets,
+# which stays unreadable. Same call as claude/settings.json.
 "~/**/.secrets" = "deny"
 "~/**/.secrets.*" = "deny"
 "~/**/.secrets/**" = "deny"
@@ -102,3 +97,12 @@ glob_scan_max_depth = 4
 # network on, git push and package installs run inside the sandbox instead of
 # asking to leave it.
 enabled = true
+
+[tui]
+screen_reader_detection_done = true
+
+[tui.model_availability_nux]
+"gpt-6.1-sol" = 2
+
+[projects."/users/mschneider/trialanderror"]
+trust_level = "trusted"
