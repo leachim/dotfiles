@@ -4,7 +4,7 @@
 # external tool here is either POSIX or probed for both GNU and BSD spellings.
 #
 # Line 1: model+effort | context bar | 5h and 7d rate limits | prompt cache
-# Line 2: vim mode | cwd | git branch@commit, dirty, ahead/behind | open PR |
+# Line 2: cwd | git branch@commit, dirty, ahead/behind | open PR |
 #         session name and duration
 
 # timeout(1) is GNU; on macOS it arrives as gtimeout unless coreutils' gnubin
@@ -173,14 +173,6 @@ if [ "${#SHOWN}" -gt 30 ]; then
   SHOWN="…/$(basename "$(dirname "$CWD")")/$(basename "$CWD")"
 fi
 LINE2="${CYAN}${SHOWN}${RESET}"
-
-# Vim mode replaces Claude Code's own indicator (hideVimModeIndicator).
-case "$(extract_str "$(obj vim)" mode)" in
-  NORMAL)        LINE2="\033[30;44m NOR ${RESET} $LINE2" ;;
-  INSERT)        LINE2="\033[30;42m INS ${RESET} $LINE2" ;;
-  "VISUAL LINE") LINE2="\033[30;45m V-L ${RESET} $LINE2" ;;
-  VISUAL)        LINE2="\033[30;45m VIS ${RESET} $LINE2" ;;
-esac
 
 if GS=$($TIMEOUT git --no-optional-locks -C "$CWD" status --porcelain=v2 --branch -uno 2>/dev/null); then
   OID=$(printf '%s\n' "$GS" | sed -n 's/^# branch\.oid //p' | cut -c1-7)
