@@ -3,7 +3,8 @@
 # Claude Code statusline. Runs on both macOS and the Linux clusters, so every
 # external tool here is either POSIX or probed for both GNU and BSD spellings.
 #
-# One line: model+effort | context bar | 5h and 7d rate limits | prompt cache.
+# One line: model+effort | context bar | 5h and 7d rate limits | prompt cache,
+# with a coloured state bar above it while the session waits, asks or is done.
 # Path, git branch and session name sit at the end of the prompt footer
 # (claude/mods/footer-git, via bin/claude-footer); the open PR is the footer's
 # own badge.
@@ -158,17 +159,14 @@ width() { local t=${1//◷/}; echo $(( 2 * ${#1} - ${#t} )); }
 
 LINE="${DIM}${MODEL}${RESET} ${BAR_COLOR}${BAR}${RESET} ${PCT}%${LIMITS}${CACHE}"
 
-# Full-width bar (per session, so per pane): amber while the session waits on
-# background work that will resume it, red when it is your move. The label
-# pushes the line past narrow panes; cut the end rather than wrap.
+# Full-width bar (per session, so per pane) on its own line above the stats:
+# amber while the session waits on background work that will resume it, red
+# when it is your move. A long wait label is cut at the pane edge, not wrapped.
 if [ -n "$STATE_BG" ]; then
-  PLAIN=" ${STATE_LABEL} | $(strip "$LINE")"
-  while [ "$(width "$PLAIN")" -ge "$COLS" ] && [ "${PLAIN% | *}" != "$PLAIN" ]; do
-    PLAIN="${PLAIN% | *}"
-  done
+  PLAIN=" ${STATE_LABEL}"
+  while [ "$(width "$PLAIN")" -ge "$COLS" ]; do PLAIN="${PLAIN%?}"; done
   PAD=$(( COLS - 1 - $(width "$PLAIN") ))
   [ "$PAD" -gt 0 ] && PLAIN="$PLAIN$(printf "%${PAD}s" "")"
   printf '%b%s%b\n' "$STATE_BG" "$PLAIN" "$RESET"
-else
-  printf '%b\n' "$LINE"
 fi
+printf '%b\n' "$LINE"
