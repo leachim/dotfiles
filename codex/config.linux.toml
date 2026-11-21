@@ -4,7 +4,7 @@
 # file in place and preserves comments, so its own additions (project trust
 # levels, model migration notices, TUI counters) land here as repo diffs.
 
-model = "gpt-6.1-sol"
+model = "gpt-6.2-astra"
 model_reasoning_effort = "high"
 
 # Sandbox. Commands write the workspace and the temp dirs and read everything
@@ -123,7 +123,7 @@ enabled = true
 screen_reader_detection_done = true
 
 [tui.model_availability_nux]
-"gpt-6.1-sol" = 2
+"gpt-6.1-sol" = 4
 
 [projects."/users/mschneider/trialanderror"]
 trust_level = "trusted"

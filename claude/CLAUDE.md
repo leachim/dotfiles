@@ -55,6 +55,8 @@ clarity and name the omission in a clause.
   needs confirmation, and so does `git stash`.
 - When commenting on a GitHub PR, prefix the comment saying you are doing this on behalf
   of michael.
+- Never commit `handoff.md` unless I explicitly ask for it. Editing it is fine; leave the
+  changes uncommitted and say so.
 
 Allowed without asking — standing permission, it does not expire at the end of a message:
 - `git commit`, following the rules above.
@@ -138,6 +140,12 @@ Code, codex, opencode and pi; that is deliberate, not a misconfiguration. The on
 is `~/.secrets/pushover`, which `push-alert` reads inside Claude's macOS sandbox. All four may read
 `.env` files — job environment variables live there — but their values are credentials:
 use them in commands and job scripts, never echo them into output or send them anywhere.
+
+# Contacting people
+
+Never contact anyone — authors, maintainers, support, mailing lists, issue trackers, or any other
+person or organisation, by email, message, GitHub issue/comment or any other channel — unless I have
+explicitly approved it.
 
 # Notifications
 
