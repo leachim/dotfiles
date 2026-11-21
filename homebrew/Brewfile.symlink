@@ -37,6 +37,7 @@ cask 'posturr' if OS.mac?
 cask 'vorssaint' if OS.mac?
 cask 'maccy' if OS.mac?
 cask 'hammerspoon' if OS.mac?
+cask 'skim' if OS.mac?
 
 # Spokenly is installed from the Mac App Store (MAS receipt, app.spokenly).
 # Do NOT add 'cask spokenly' - the cask is a different, direct-download build
