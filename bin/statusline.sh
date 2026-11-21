@@ -3,9 +3,9 @@
 # Claude Code statusline. Runs on both macOS and the Linux clusters, so every
 # external tool here is either POSIX or probed for both GNU and BSD spellings.
 #
-# One line: model+effort | context bar | 5h and 7d rate limits | prompt cache |
-# session name where it fits. Path and git sit at the end of the prompt footer
-# (claude/mods/footer-git); the open PR is the footer's own badge.
+# One line: session name (shortened to fit) | model+effort | context bar |
+# 5h and 7d rate limits | prompt cache. Path and git sit at the end of the prompt
+# footer (claude/mods/footer-git); the open PR is the footer's own badge.
 
 input=$(cat)
 flat=$(printf '%s' "$input" | tr -d '\n')
@@ -53,7 +53,6 @@ NOW=$(date +%s)
 SESSION=$(extract_str "$input_lines" session_name)
 [ -z "$SESSION" ] && SESSION=$(extract_str "$input_lines" session_id | cut -c1-8)
 SESSION=${SESSION:-?}
-[ "${#SESSION}" -gt 18 ] && SESSION="${SESSION:0:17}…"
 MODEL=$(extract_str "$input_lines" display_name)
 MODEL=${MODEL:-?}
 EFFORT=$(extract_str "$(obj effort)" level)
@@ -142,10 +141,15 @@ COLS=${COLS:-${COLUMNS:-0}}
 
 strip() { printf '%b' "$1" | sed $'s/\033\\[[0-9;]*m//g'; }
 
+# The session name goes first and takes what the rest leaves, down to 6 columns.
 LINE="${DIM}${MODEL}${RESET} ${BAR_COLOR}${BAR}${RESET} ${PCT}%${LIMITS}${CACHE}"
-WITH_SESSION="$LINE | ${DIM}[$SESSION]${RESET}"
-PLAIN=$(strip "$WITH_SESSION")
-[ "${#PLAIN}" -lt "$COLS" ] && LINE=$WITH_SESSION
+PLAIN=$(strip "$LINE")
+ROOM=$(( COLS - 1 - ${#PLAIN} - 3 ))
+[ "$ROOM" -gt 18 ] && ROOM=18
+if [ "$ROOM" -ge 6 ]; then
+  [ "${#SESSION}" -gt "$ROOM" ] && SESSION="${SESSION:0:ROOM-1}…"
+  LINE="${DIM}${SESSION}${RESET} | $LINE"
+fi
 
 # Full-width bar (per session, so per pane): amber while the session waits on
 # background work that will resume it, red when it is your move. The label
