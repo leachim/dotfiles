@@ -39,7 +39,7 @@ fmt_dur() {
   else                          printf '%dm' $((s/60)); fi
 }
 
-GREEN='\033[32m'; YELLOW='\033[33m'; RED='\033[31m'
+GREEN='\033[32m'; YELLOW='\033[33m'; ORANGE='\033[38;5;208m'; RED='\033[31m'
 DIM='\033[2m'; RESET='\033[0m'
 
 # threshold_color <pct> -> green/yellow/red at 70 and 90
@@ -72,8 +72,9 @@ BAR=$(printf "%${FILLED}s" | tr ' ' '#')$(printf "%${EMPTY}s" | tr ' ' '-')
 
 # Rate limits: subscribers only, and only after the session's first API reply.
 # Each shows the share of the limit still left, then the time left (◷): 5h until
-# its reset, 7d as a share of the week. 7d turns yellow once the limit left
-# falls more than 5 points below the week left. Colours follow usage: yellow/red at 70/90% used.
+# its reset, 7d as a share of the week. Both turn orange at 20% left and red at
+# 10%; 5h is yellow from 30%, 7d once the limit left falls more than 5 points
+# below the week left.
 LIMITS=""
 FIVE=$(obj five_hour)
 F_PCT=$(extract_num "$FIVE" used_percentage)
@@ -81,7 +82,9 @@ if [ -n "$F_PCT" ]; then
   F_RESET=$(extract_num "$FIVE" resets_at)
   F_LEFT=""
   [ -n "$F_RESET" ] && [ "$F_RESET" -gt "$NOW" ] && F_LEFT=" ◷ $(fmt_dur $((F_RESET - NOW)))"
-  LIMITS="$LIMITS | $(threshold_color "$F_PCT")5h $((100 - F_PCT))%${RESET}${F_LEFT}"
+  F_COLOR=$(threshold_color "$F_PCT")
+  [ "$F_PCT" -ge 80 ] && [ "$F_PCT" -lt 90 ] && F_COLOR="$ORANGE"
+  LIMITS="$LIMITS | ${F_COLOR}5h $((100 - F_PCT))%${RESET}${F_LEFT}"
 fi
 WEEK=$(obj seven_day)
 W_PCT=$(extract_num "$WEEK" used_percentage)
@@ -93,6 +96,7 @@ if [ -n "$W_PCT" ]; then
     W_LEFT=" ◷ ${LEFT}%"
     [ $((100 - W_PCT)) -lt $((LEFT - 5)) ] && W_COLOR="$YELLOW"
   fi
+  [ "$W_PCT" -ge 80 ] && W_COLOR="$ORANGE"
   [ "$W_PCT" -ge 90 ] && W_COLOR="$RED"
   LIMITS="$LIMITS | ${W_COLOR}7d $((100 - W_PCT))%${RESET}${W_LEFT}"
 fi
