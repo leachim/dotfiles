@@ -1,0 +1,35 @@
+#!/bin/bash
+#
+# Path and git state for the end of Claude Code's footer row, printed by the
+# footer-git mod (claude/mods/footer-git): "~/.dotfiles main@b40cce9* ↑2".
+#
+#   claude-footer <dir>
+#
+# -uno skips the untracked-file scan, the slow part on big trees and network
+# filesystems; "*" means tracked changes only.
+
+CWD=${1:-$PWD}
+
+SHOWN=$CWD
+case "$SHOWN" in "$HOME"|"$HOME"/*) SHOWN="~${SHOWN#"$HOME"}" ;; esac
+[ "${#SHOWN}" -gt 20 ] && SHOWN="…/$(basename "$CWD")"
+OUT=$SHOWN
+
+TIMEOUT=""
+if command -v timeout >/dev/null 2>&1; then TIMEOUT="timeout 2"
+elif command -v gtimeout >/dev/null 2>&1; then TIMEOUT="gtimeout 2"; fi
+
+if GS=$($TIMEOUT git --no-optional-locks -C "$CWD" status --porcelain=v2 --branch -uno 2>/dev/null); then
+  OID=$(printf '%s\n' "$GS" | sed -n 's/^# branch\.oid //p' | cut -c1-7)
+  HEAD_NAME=$(printf '%s\n' "$GS" | sed -n 's/^# branch\.head //p')
+  [ "$HEAD_NAME" = "(detached)" ] && HEAD_NAME=""
+  OUT="$OUT ${HEAD_NAME}@${OID}"
+  printf '%s\n' "$GS" | grep -q '^[^#]' && OUT="$OUT*"
+  AB=$(printf '%s\n' "$GS" | sed -n 's/^# branch\.ab //p')
+  AHEAD=${AB%% *}; AHEAD=${AHEAD#+}
+  BEHIND=${AB##* }; BEHIND=${BEHIND#-}
+  [ -n "$AHEAD" ] && [ "$AHEAD" != 0 ] && OUT="$OUT ↑$AHEAD"
+  [ -n "$BEHIND" ] && [ "$BEHIND" != 0 ] && OUT="$OUT ↓$BEHIND"
+fi
+
+printf '%s\n' "$OUT"

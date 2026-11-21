@@ -3,18 +3,9 @@
 # Claude Code statusline. Runs on both macOS and the Linux clusters, so every
 # external tool here is either POSIX or probed for both GNU and BSD spellings.
 #
-# Line 1: model+effort | context bar | 5h and 7d rate limits | prompt cache
-# Line 2: cwd | git branch@commit, dirty, ahead/behind | open PR |
-#         session name and duration
-
-# timeout(1) is GNU; on macOS it arrives as gtimeout unless coreutils' gnubin
-# is on PATH. Empty means "run without a time limit".
-TIMEOUT=""
-if command -v timeout >/dev/null 2>&1; then
-  TIMEOUT="timeout 2"
-elif command -v gtimeout >/dev/null 2>&1; then
-  TIMEOUT="gtimeout 2"
-fi
+# One line: model+effort | context bar | 5h and 7d rate limits | prompt cache |
+# session name where it fits. Path and git sit at the end of the prompt footer
+# (claude/mods/footer-git); the open PR is the footer's own badge.
 
 input=$(cat)
 flat=$(printf '%s' "$input" | tr -d '\n')
@@ -47,7 +38,7 @@ fmt_dur() {
   else                          printf '%dm' $((s/60)); fi
 }
 
-GREEN='\033[32m'; YELLOW='\033[33m'; RED='\033[31m'; CYAN='\033[36m'
+GREEN='\033[32m'; YELLOW='\033[33m'; RED='\033[31m'
 DIM='\033[2m'; RESET='\033[0m'
 
 # threshold_color <pct> -> green/yellow/red at 70 and 90
@@ -62,7 +53,6 @@ NOW=$(date +%s)
 SESSION=$(extract_str "$input_lines" session_name)
 [ -z "$SESSION" ] && SESSION=$(extract_str "$input_lines" session_id | cut -c1-8)
 SESSION=${SESSION:-?}
-# Lines are budgeted to ~85 columns (half a 13" screen); titles can be long.
 [ "${#SESSION}" -gt 18 ] && SESSION="${SESSION:0:17}…"
 MODEL=$(extract_str "$input_lines" display_name)
 MODEL=${MODEL:-?}
@@ -79,9 +69,6 @@ PCT=${PCT:-0}
 BAR_COLOR=$(threshold_color "$PCT")
 FILLED=$((PCT * 10 / 100)); EMPTY=$((10 - FILLED))
 BAR=$(printf "%${FILLED}s" | tr ' ' '#')$(printf "%${EMPTY}s" | tr ' ' '-')
-
-DURATION_MS=$(extract_num "$input_lines" total_duration_ms)
-DURATION="$(fmt_dur $(( ${DURATION_MS:-0} / 1000 )))"
 
 # Rate limits: subscribers only, and only after the session's first API reply.
 # 5h shows time to reset; 7d shows how much of the week has elapsed, so usage
@@ -146,60 +133,29 @@ if [ -n "$SESSION_ID" ] && read -r ST_STATE ST_START ST_LABEL 2>/dev/null < "$ST
   esac
 fi
 
-# Line 1. Full-width bar (per session, so per pane): amber while the session waits
-# on background work that will resume it, red when it is your move.
-LINE1="${DIM}${MODEL}${RESET} ${BAR_COLOR}${BAR}${RESET} ${PCT}%${LIMITS}${CACHE}"
+# Pane width: tmux's when inside it, else what Claude Code sets; 85 (half a
+# 13" screen) when neither says.
+COLS=""
+[ -n "$TMUX_PANE" ] && COLS=$(tmux display -p -t "$TMUX_PANE" '#{pane_width}' 2>/dev/null)
+COLS=${COLS:-${COLUMNS:-0}}
+[ "$COLS" -gt 0 ] 2>/dev/null || COLS=85
+
+strip() { printf '%b' "$1" | sed $'s/\033\\[[0-9;]*m//g'; }
+
+LINE="${DIM}${MODEL}${RESET} ${BAR_COLOR}${BAR}${RESET} ${PCT}%${LIMITS}${CACHE}"
+WITH_SESSION="$LINE | ${DIM}[$SESSION]${RESET}"
+PLAIN=$(strip "$WITH_SESSION")
+[ "${#PLAIN}" -lt "$COLS" ] && LINE=$WITH_SESSION
+
+# Full-width bar (per session, so per pane): amber while the session waits on
+# background work that will resume it, red when it is your move. The label
+# pushes the line past narrow panes; cut the end rather than wrap.
 if [ -n "$STATE_BG" ]; then
-  # The label pushes line 1 past narrow panes; cut the tail rather than wrap.
-  PLAIN=" ${STATE_LABEL} | $(printf '%b' "$LINE1" | sed $'s/\033\\[[0-9;]*m//g')"
-  COLS=""
-  [ -n "$TMUX_PANE" ] && COLS=$(tmux display -p -t "$TMUX_PANE" '#{pane_width}' 2>/dev/null)
-  COLS=${COLS:-${COLUMNS:-0}}
-  [ "$COLS" -gt 1 ] 2>/dev/null && [ "${#PLAIN}" -ge "$COLS" ] && PLAIN="${PLAIN:0:COLS-1}"
+  PLAIN=" ${STATE_LABEL} | $(strip "$LINE")"
+  [ "${#PLAIN}" -ge "$COLS" ] && PLAIN="${PLAIN:0:COLS-1}" && PLAIN="${PLAIN% | *}"
   PAD=$(( COLS - 1 - ${#PLAIN} ))
-  [ "$PAD" -gt 0 ] 2>/dev/null && PLAIN="$PLAIN$(printf "%${PAD}s" "")"
+  [ "$PAD" -gt 0 ] && PLAIN="$PLAIN$(printf "%${PAD}s" "")"
   printf '%b%s%b\n' "$STATE_BG" "$PLAIN" "$RESET"
 else
-  printf '%b\n' "$LINE1"
+  printf '%b\n' "$LINE"
 fi
-
-# Line 2: cwd, git, PR. -uno skips the untracked-file scan, the slow part on
-# big trees and network filesystems; "dirty" means tracked changes only.
-CWD=$(extract_str "$input_lines" current_dir)
-CWD=${CWD:-$PWD}
-SHOWN=$CWD
-case "$SHOWN" in "$HOME"|"$HOME"/*) SHOWN="~${SHOWN#"$HOME"}" ;; esac
-if [ "${#SHOWN}" -gt 30 ]; then
-  SHOWN="…/$(basename "$(dirname "$CWD")")/$(basename "$CWD")"
-fi
-LINE2="${CYAN}${SHOWN}${RESET}"
-
-if GS=$($TIMEOUT git --no-optional-locks -C "$CWD" status --porcelain=v2 --branch -uno 2>/dev/null); then
-  OID=$(printf '%s\n' "$GS" | sed -n 's/^# branch\.oid //p' | cut -c1-7)
-  HEAD_NAME=$(printf '%s\n' "$GS" | sed -n 's/^# branch\.head //p')
-  [ "$HEAD_NAME" = "(detached)" ] && HEAD_NAME=""
-  GIT="${HEAD_NAME}@${OID}"
-  printf '%s\n' "$GS" | grep -q '^[^#]' && GIT="$GIT${YELLOW}*${RESET}"
-  AB=$(printf '%s\n' "$GS" | sed -n 's/^# branch\.ab //p')
-  AHEAD=${AB%% *}; AHEAD=${AHEAD#+}
-  BEHIND=${AB##* }; BEHIND=${BEHIND#-}
-  [ -n "$AHEAD" ] && [ "$AHEAD" != 0 ] && GIT="$GIT ↑$AHEAD"
-  [ -n "$BEHIND" ] && [ "$BEHIND" != 0 ] && GIT="$GIT ↓$BEHIND"
-  LINE2="$LINE2 ${GREEN}${GIT}${RESET}"
-fi
-
-PR=$(obj pr)
-PR_NUM=$(extract_num "$PR" number)
-if [ -n "$PR_NUM" ]; then
-  case "$(extract_str "$PR" review_state)" in
-    approved)          PR_STATE=" ${GREEN}✓${RESET}" ;;
-    changes_requested) PR_STATE=" ${RED}✗${RESET}" ;;
-    pending)           PR_STATE=" …" ;;
-    draft)             PR_STATE=" draft" ;;
-    *)                 PR_STATE="" ;;
-  esac
-  LINE2="$LINE2 | PR #${PR_NUM}${PR_STATE}"
-fi
-LINE2="$LINE2 | ${DIM}[$SESSION] ${DURATION}${RESET}"
-
-printf '%b\n' "$LINE2"

@@ -1,0 +1,6 @@
+{
+  "name": "footer-git",
+  "version": "0.1.0",
+  "description": "Working directory and git branch@commit at the end of the prompt footer",
+  "types": "./types/index.d.ts"
+}
