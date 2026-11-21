@@ -3,8 +3,9 @@
 # Claude Code statusline. Runs on both macOS and the Linux clusters, so every
 # external tool here is either POSIX or probed for both GNU and BSD spellings.
 #
-# Line 1: model+effort | session | context bar | 5h and 7d rate limits | duration
-# Line 2: cwd | git branch@commit, dirty, ahead/behind | open PR
+# Line 1: model+effort | session | context bar | 5h and 7d rate limits |
+#         prompt cache | duration
+# Line 2: vim mode | cwd | git branch@commit, dirty, ahead/behind | open PR
 
 # timeout(1) is GNU; on macOS it arrives as gtimeout unless coreutils' gnubin
 # is on PATH. Empty means "run without a time limit".
@@ -106,6 +107,24 @@ if [ -n "$W_PCT" ]; then
   LIMITS="$LIMITS | ${W_COLOR}7d ${W_PCT}%${RESET}${W_PACE}"
 fi
 
+# Prompt cache: time until the cached prefix goes cold, and once cold, the
+# tokens the next message re-sends (they count against the limits above).
+# prompt_cache has nested objects, so read its keys from the whole payload;
+# none of them occur elsewhere.
+CACHE=""
+if printf '%s\n' "$input_lines" | grep -q '"caching_observed"[[:space:]]*:[[:space:]]*true'; then
+  C_EXP=$(extract_num "$input_lines" expires_at)
+  if printf '%s\n' "$input_lines" | grep -q '"warm"[[:space:]]*:[[:space:]]*true' \
+     && [ -n "$C_EXP" ] && [ "$C_EXP" -gt "$NOW" ]; then
+    C_LEFT=$((C_EXP - NOW))
+    C_COLOR="$DIM"; [ "$C_LEFT" -lt 300 ] && C_COLOR="$YELLOW"
+    CACHE=" | ${C_COLOR}cache $(fmt_dur "$C_LEFT")${RESET}"
+  else
+    C_TOK=$(extract_num "$input_lines" recache_tokens_if_cold)
+    CACHE=" | ${RED}cache cold${C_TOK:+ +$((C_TOK / 1000))k}${RESET}"
+  fi
+fi
+
 # Busy state written by bin/claude-state from hooks: "<run|ask|idle> <start epoch>".
 SESSION_ID=$(extract_str "$input_lines" session_id)
 SESSION_ID=${SESSION_ID//[^A-Za-z0-9_-]/}
@@ -127,7 +146,7 @@ fi
 
 # Line 1. Full-width bar (per session, so per pane): amber while the session waits
 # on background work that will resume it, red when it is your move.
-LINE1="${DIM}${MODEL}${RESET} | ${DIM}[$SESSION]${RESET} ${BAR_COLOR}${BAR}${RESET} ${PCT}%${LIMITS} | ${DURATION}"
+LINE1="${DIM}${MODEL}${RESET} | ${DIM}[$SESSION]${RESET} ${BAR_COLOR}${BAR}${RESET} ${PCT}%${LIMITS}${CACHE} | ${DURATION}"
 if [ -n "$STATE_BG" ]; then
   PLAIN=" ${STATE_LABEL} | $(printf '%b' "$LINE1" | sed $'s/\033\\[[0-9;]*m//g')"
   COLS=""
@@ -150,6 +169,14 @@ if [ "${#SHOWN}" -gt 40 ]; then
   SHOWN="…/$(basename "$(dirname "$CWD")")/$(basename "$CWD")"
 fi
 LINE2="${CYAN}${SHOWN}${RESET}"
+
+# Vim mode replaces Claude Code's own indicator (hideVimModeIndicator).
+case "$(extract_str "$(obj vim)" mode)" in
+  NORMAL)        LINE2="\033[30;44m NOR ${RESET} $LINE2" ;;
+  INSERT)        LINE2="\033[30;42m INS ${RESET} $LINE2" ;;
+  "VISUAL LINE") LINE2="\033[30;45m V-L ${RESET} $LINE2" ;;
+  VISUAL)        LINE2="\033[30;45m VIS ${RESET} $LINE2" ;;
+esac
 
 if GS=$($TIMEOUT git --no-optional-locks -C "$CWD" status --porcelain=v2 --branch -uno 2>/dev/null); then
   OID=$(printf '%s\n' "$GS" | sed -n 's/^# branch\.oid //p' | cut -c1-7)

@@ -199,7 +199,8 @@
     "type": "command",
     "command": "~/.dotfiles/bin/statusline.sh",
     "padding": 0,
-    "refreshInterval": 5
+    "refreshInterval": 5,
+    "hideVimModeIndicator": true
   },
   "alwaysThinkingEnabled": true,
   "autoUpdatesChannel": "latest",
