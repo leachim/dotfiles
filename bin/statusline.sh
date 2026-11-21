@@ -71,7 +71,7 @@ FILLED=$((PCT * 10 / 100)); EMPTY=$((10 - FILLED))
 BAR=$(printf "%${FILLED}s" | tr ' ' '#')$(printf "%${EMPTY}s" | tr ' ' '-')
 
 # Rate limits: subscribers only, and only after the session's first API reply.
-# 5h shows time to reset; 7d shows how much of the week is left (◷), yellow
+# 5h shows time to reset (◷); 7d how much of the week is left (◷), yellow
 # once usage outruns the time gone.
 LIMITS=""
 FIVE=$(obj five_hour)
@@ -79,7 +79,7 @@ F_PCT=$(extract_num "$FIVE" used_percentage)
 if [ -n "$F_PCT" ]; then
   F_RESET=$(extract_num "$FIVE" resets_at)
   F_LEFT=""
-  [ -n "$F_RESET" ] && [ "$F_RESET" -gt "$NOW" ] && F_LEFT=" $(fmt_dur $((F_RESET - NOW)))"
+  [ -n "$F_RESET" ] && [ "$F_RESET" -gt "$NOW" ] && F_LEFT=" ◷ $(fmt_dur $((F_RESET - NOW)))"
   LIMITS="$LIMITS | $(threshold_color "$F_PCT")5h ${F_PCT}%${RESET}${F_LEFT}"
 fi
 WEEK=$(obj seven_day)
