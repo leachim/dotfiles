@@ -3,9 +3,10 @@
 # Claude Code statusline. Runs on both macOS and the Linux clusters, so every
 # external tool here is either POSIX or probed for both GNU and BSD spellings.
 #
-# One line: session name (shortened to fit) | model+effort | context bar |
-# 5h and 7d rate limits | prompt cache. Path and git sit at the end of the prompt
-# footer (claude/mods/footer-git); the open PR is the footer's own badge.
+# One line: model+effort | context bar | 5h and 7d rate limits | prompt cache.
+# Path, git branch and session name sit at the end of the prompt footer
+# (claude/mods/footer-git, via bin/claude-footer); the open PR is the footer's
+# own badge.
 
 input=$(cat)
 flat=$(printf '%s' "$input" | tr -d '\n')
@@ -70,8 +71,8 @@ FILLED=$((PCT * 10 / 100)); EMPTY=$((10 - FILLED))
 BAR=$(printf "%${FILLED}s" | tr ' ' '#')$(printf "%${EMPTY}s" | tr ' ' '-')
 
 # Rate limits: subscribers only, and only after the session's first API reply.
-# 5h shows time to reset; 7d shows how much of the week is left, yellow once
-# usage outruns the time gone.
+# 5h shows time to reset; 7d shows how much of the week is left (◷), yellow
+# once usage outruns the time gone.
 LIMITS=""
 FIVE=$(obj five_hour)
 F_PCT=$(extract_num "$FIVE" used_percentage)
@@ -88,7 +89,7 @@ if [ -n "$W_PCT" ]; then
   W_LEFT=""; W_COLOR="$GREEN"
   if [ -n "$W_RESET" ] && [ "$W_RESET" -gt "$NOW" ]; then
     LEFT=$(( (W_RESET - NOW) * 100 / 604800 ))
-    W_LEFT=" ${LEFT}% left"
+    W_LEFT=" ◷${LEFT}%"
     [ "$W_PCT" -gt $((100 - LEFT)) ] && W_COLOR="$YELLOW"
   fi
   [ "$W_PCT" -ge 90 ] && W_COLOR="$RED"
@@ -116,6 +117,13 @@ fi
 # Busy state written by bin/claude-state from hooks: "<run|ask|idle> <start epoch>".
 SESSION_ID=$(extract_str "$input_lines" session_id)
 SESSION_ID=${SESSION_ID//[^A-Za-z0-9_-]/}
+
+# Only the status line is told the session name; bin/claude-footer reads it here.
+NAME_FILE="$HOME/.cache/claude-state/${SESSION_ID}.name"
+if [ -n "$SESSION_ID" ] && [ "$(cat "$NAME_FILE" 2>/dev/null)" != "$SESSION" ]; then
+  mkdir -p "${NAME_FILE%/*}" 2>/dev/null && chmod 700 "${NAME_FILE%/*}" 2>/dev/null
+  printf '%s\n' "$SESSION" > "$NAME_FILE" 2>/dev/null
+fi
 STATE_BG=""; STATE_LABEL=""
 STATE_FILE="$HOME/.cache/claude-state/${SESSION_ID:-none}"
 if [ -n "$SESSION_ID" ] && read -r ST_STATE ST_START ST_LABEL 2>/dev/null < "$STATE_FILE"; then
@@ -141,15 +149,7 @@ COLS=${COLS:-${COLUMNS:-0}}
 
 strip() { printf '%b' "$1" | sed $'s/\033\\[[0-9;]*m//g'; }
 
-# The session name goes first and takes what the rest leaves, down to 6 columns.
 LINE="${DIM}${MODEL}${RESET} ${BAR_COLOR}${BAR}${RESET} ${PCT}%${LIMITS}${CACHE}"
-PLAIN=$(strip "$LINE")
-ROOM=$(( COLS - 1 - ${#PLAIN} - 3 ))
-[ "$ROOM" -gt 18 ] && ROOM=18
-if [ "$ROOM" -ge 6 ]; then
-  [ "${#SESSION}" -gt "$ROOM" ] && SESSION="${SESSION:0:ROOM-1}…"
-  LINE="${DIM}${SESSION}${RESET} | $LINE"
-fi
 
 # Full-width bar (per session, so per pane): amber while the session waits on
 # background work that will resume it, red when it is your move. The label

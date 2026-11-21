@@ -128,7 +128,7 @@ if [ -n "$TMUX_PANE" ] && [ "$MODE" != focus ]; then
     printf '%s\n' "$SESSION" > "$(pane_map "$TMUX_PANE" "${TMUX%%,*}")"
 fi
 if [ "$MODE" = end ]; then
-    rm -f "$FILE"
+    rm -f "$FILE" "$FILE.name"
     [ -n "$TMUX_PANE" ] && rm -f "$(pane_map "$TMUX_PANE" "${TMUX%%,*}")"
     find "$STATE_DIR" -maxdepth 1 -type f -mtime +2 -delete 2>/dev/null
 else

@@ -1,7 +1,7 @@
 import { atom, read, update } from 'claude-code'
 import type { Register } from 'claude-code'
 
-// What bin/claude-footer printed last: "~/.dotfiles main@b40cce9* ↑2".
+// What bin/claude-footer printed last: "~/.dotfiles main · darwin-test".
 const tail = atom({ plugin: 'footer-git', key: 'tail' } as const, '')
 
 export const register: Register = on => {
@@ -9,9 +9,9 @@ export const register: Register = on => {
     const started = await next(e)
 
     const refresh = async () => {
-      const cwd = await $.session.cwd()
+      const [cwd, id] = await Promise.all([$.session.cwd(), $.session.id()])
       const ran = await $.process.run(
-        ['bash', '-c', 'exec "$HOME/.dotfiles/bin/claude-footer" "$1"', '_', cwd],
+        ['bash', '-c', 'exec "$HOME/.dotfiles/bin/claude-footer" "$1" "$2"', '_', cwd, id],
         { timeoutMs: 5000 },
       )
       const text = ran.exitCode === 0 ? ran.stdout.trim() : ''
