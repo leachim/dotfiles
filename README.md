@@ -73,7 +73,7 @@ re-run the optional installers -- use `script/install` for those. On macOS
 ├── homebrew/          Brewfile and install script
 ├── hosts/             Role-specific config (mac.sh, linux-desktop.sh, hpc.sh)
 ├── macos/             macOS defaults, software updates, iTerm2 profile
-├── bun/               Bun runtime, gemini-cli, codex, ccusage
+├── bun/               Bun runtime, gemini-cli, codex
 ├── pixi/              pixi installer
 ├── ruby/              Ruby/RVM config
 ├── rust/              Rust install via rustup

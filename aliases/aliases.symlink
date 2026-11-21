@@ -79,8 +79,6 @@ alias cdp="cd -P"
 alias pp="pwd -P"
 ppb() { cd "$(dirname "$(pwd -P)")"; }
 alias rf="readlink -f"
-alias ccu="ccusage blocks --live --offline --compact"
-alias qqccu="watch -n 30 -d \"ccusage blocks --live --offline --no-color --compact \| tail -n 15 \""
 alias pack="tar -zcvf"
 alias pingg="ping 8.8.8.8"
 alias agenda="gcalcli agenda"

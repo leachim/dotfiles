@@ -2,30 +2,24 @@
 #
 # Claude Code statusline. Runs on both macOS and the Linux clusters, so every
 # external tool here is either POSIX or probed for both GNU and BSD spellings.
-
-CACHE="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/statusline_blocks_cache.json"
-CACHE_MAX_AGE=60
-
-# ccusage is a bun global; it is not always on PATH when Claude Code spawns us.
-CCUSAGE=$(command -v ccusage 2>/dev/null)
-if [ -z "$CCUSAGE" ] && [ -x "$HOME/.bun/bin/ccusage" ]; then
-  CCUSAGE="$HOME/.bun/bin/ccusage"
-fi
+#
+# Line 1: model+effort | session | context bar | 5h and 7d rate limits | duration
+# Line 2: cwd | git branch@commit, dirty, ahead/behind | open PR
 
 # timeout(1) is GNU; on macOS it arrives as gtimeout unless coreutils' gnubin
 # is on PATH. Empty means "run without a time limit".
 TIMEOUT=""
 if command -v timeout >/dev/null 2>&1; then
-  TIMEOUT="timeout 10"
+  TIMEOUT="timeout 2"
 elif command -v gtimeout >/dev/null 2>&1; then
-  TIMEOUT="gtimeout 10"
+  TIMEOUT="gtimeout 2"
 fi
 
 input=$(cat)
+flat=$(printf '%s' "$input" | tr -d '\n')
 
 # Parse JSON without jq. BSD grep has no -P, so instead of a PCRE lookbehind we
-# break the blob into one field per line and take the first match, which is the
-# same semantics the old `grep -oP ... | head -1` had.
+# break the blob into one field per line and take the first match.
 json_lines() { printf '%s' "$1" | tr '{},' '\n\n\n'; }
 input_lines=$(json_lines "$input")
 
@@ -39,49 +33,77 @@ extract_str() {
 extract_num() {
   printf '%s\n' "$1" | sed -n 's/.*"'"$2"'"[[:space:]]*:[[:space:]]*\([0-9][0-9]*\).*/\1/p' | head -1
 }
-
-# Seconds since epoch for a file, GNU then BSD.
-file_mtime() {
-  stat -c %Y "$1" 2>/dev/null || stat -f %m "$1" 2>/dev/null || echo 0
+# obj <key> -> field lines of the flat (no nested objects) object under <key>.
+obj() {
+  json_lines "$(printf '%s' "$flat" | sed -n 's/.*"'"$1"'"[[:space:]]*:[[:space:]]*{\([^}]*\)}.*/\1/p')"
 }
 
-# ISO-8601 UTC timestamp -> epoch seconds, GNU then BSD.
-to_epoch() {
-  local ts=$1 stripped
-  date -d "$ts" +%s 2>/dev/null && return
-  stripped=${ts%Z}
-  stripped=${stripped%%.*}
-  TZ=UTC date -j -f "%Y-%m-%dT%H:%M:%S" "$stripped" +%s 2>/dev/null && return
-  echo 0
+# 45s -> 0m, 7800s -> 2h10m, 280000s -> 3d5h
+fmt_dur() {
+  local s=$1
+  if   [ "$s" -ge 86400 ]; then printf '%dd%dh' $((s/86400)) $((s%86400/3600))
+  elif [ "$s" -ge 3600 ];  then printf '%dh%02dm' $((s/3600)) $((s%3600/60))
+  else                          printf '%dm' $((s/60)); fi
 }
+
+GREEN='\033[32m'; YELLOW='\033[33m'; RED='\033[31m'; CYAN='\033[36m'
+DIM='\033[2m'; RESET='\033[0m'
+
+# threshold_color <pct> -> green/yellow/red at 70 and 90
+threshold_color() {
+  if   [ "$1" -ge 90 ]; then printf '%s' "$RED"
+  elif [ "$1" -ge 70 ]; then printf '%s' "$YELLOW"
+  else                       printf '%s' "$GREEN"; fi
+}
+
+NOW=$(date +%s)
 
 SESSION=$(extract_str "$input_lines" session_name)
 [ -z "$SESSION" ] && SESSION=$(extract_str "$input_lines" session_id | cut -c1-8)
 SESSION=${SESSION:-?}
 MODEL=$(extract_str "$input_lines" display_name)
 MODEL=${MODEL:-?}
-PCT=$(extract_num "$input_lines" used_percentage | cut -d. -f1)
+EFFORT=$(extract_str "$(obj effort)" level)
+[ -n "$EFFORT" ] && MODEL="$MODEL $EFFORT"
+
+# Only context_window's own used_percentage: rate_limits.* reuse the key, and
+# before the first API reply the context value is null, so a first-numeric-match
+# search would fall through to the five-hour rate limit.
+CTX_LINES=$(json_lines "$(printf '%s' "$flat" | sed -n 's/.*"context_window"//p' | sed 's/"rate_limits".*//')")
+PCT=$(printf '%s\n' "$CTX_LINES" | grep -m1 '"used_percentage"' \
+  | sed -n 's/.*:[[:space:]]*\([0-9][0-9]*\).*/\1/p')
 PCT=${PCT:-0}
-DURATION_MS=$(extract_num "$input_lines" total_duration_ms | cut -d. -f1)
-DURATION_MS=${DURATION_MS:-0}
-
-# Colors
-GREEN='\033[32m'; YELLOW='\033[33m'; RED='\033[31m'; DIM='\033[2m'; RESET='\033[0m'
-
-if [ "$PCT" -ge 90 ] 2>/dev/null; then BAR_COLOR="$RED"
-elif [ "$PCT" -ge 70 ] 2>/dev/null; then BAR_COLOR="$YELLOW"
-else BAR_COLOR="$GREEN"; fi
-
+BAR_COLOR=$(threshold_color "$PCT")
 FILLED=$((PCT * 10 / 100)); EMPTY=$((10 - FILLED))
 BAR=$(printf "%${FILLED}s" | tr ' ' '#')$(printf "%${EMPTY}s" | tr ' ' '-')
 
-# Duration in h m format, omit 0h
-TOTAL_SECS=$((DURATION_MS / 1000))
-D_HRS=$((TOTAL_SECS / 3600)); D_MINS=$(( (TOTAL_SECS % 3600) / 60 ))
-if [ "$D_HRS" -gt 0 ]; then
-  DURATION="${D_HRS}h ${D_MINS}m spent"
-else
-  DURATION="${D_MINS}m spent"
+DURATION_MS=$(extract_num "$input_lines" total_duration_ms)
+DURATION="$(fmt_dur $(( ${DURATION_MS:-0} / 1000 ))) spent"
+
+# Rate limits: subscribers only, and only after the session's first API reply.
+# 5h shows time to reset; 7d shows how much of the week has elapsed, so usage
+# ahead of that pace stands out.
+LIMITS=""
+FIVE=$(obj five_hour)
+F_PCT=$(extract_num "$FIVE" used_percentage)
+if [ -n "$F_PCT" ]; then
+  F_RESET=$(extract_num "$FIVE" resets_at)
+  F_LEFT=""
+  [ -n "$F_RESET" ] && [ "$F_RESET" -gt "$NOW" ] && F_LEFT=" $(fmt_dur $((F_RESET - NOW)))"
+  LIMITS="$LIMITS | $(threshold_color "$F_PCT")5h ${F_PCT}%${RESET}${F_LEFT}"
+fi
+WEEK=$(obj seven_day)
+W_PCT=$(extract_num "$WEEK" used_percentage)
+if [ -n "$W_PCT" ]; then
+  W_RESET=$(extract_num "$WEEK" resets_at)
+  W_PACE=""; W_COLOR="$GREEN"
+  if [ -n "$W_RESET" ] && [ "$W_RESET" -gt "$NOW" ]; then
+    PACE=$(( (604800 - (W_RESET - NOW)) * 100 / 604800 ))
+    W_PACE=" (pace ${PACE}%)"
+    [ "$W_PCT" -gt "$PACE" ] && W_COLOR="$YELLOW"
+  fi
+  [ "$W_PCT" -ge 90 ] && W_COLOR="$RED"
+  LIMITS="$LIMITS | ${W_COLOR}7d ${W_PCT}%${RESET}${W_PACE}"
 fi
 
 # Busy state written by bin/claude-state from hooks: "<run|ask|idle> <start epoch>".
@@ -90,8 +112,8 @@ SESSION_ID=${SESSION_ID//[^A-Za-z0-9_-]/}
 STATE_BG=""; STATE_LABEL=""
 STATE_FILE="$HOME/.cache/claude-state/${SESSION_ID:-none}"
 if [ -n "$SESSION_ID" ] && read -r ST_STATE ST_START ST_LABEL 2>/dev/null < "$STATE_FILE"; then
-  case "$ST_START" in ''|*[!0-9]*) ST_START=$(date +%s) ;; esac
-  S=$(( $(date +%s) - ST_START ))
+  case "$ST_START" in ''|*[!0-9]*) ST_START=$NOW ;; esac
+  S=$(( NOW - ST_START ))
   if   [ "$S" -ge 3600 ]; then EL=$(printf '%dh%02dm' $((S/3600)) $((S%3600/60)))
   elif [ "$S" -ge 60 ];   then EL=$(printf '%dm%02ds' $((S/60)) $((S%60)))
   else                         EL="${S}s"; fi
@@ -103,69 +125,11 @@ if [ -n "$SESSION_ID" ] && read -r ST_STATE ST_START ST_LABEL 2>/dev/null < "$ST
   esac
 fi
 
-# ccusage statusline. refreshInterval re-runs this script every few seconds and
-# ccusage rescans the transcripts each time, so reuse its line for a while.
-CCUSAGE_LINE=""
-CC_CACHE="${XDG_RUNTIME_DIR:-/tmp}/claude-state-$(id -u)/ccusage-${SESSION_ID:-none}"
-if [ -n "$CCUSAGE" ]; then
-  if [ -f "$CC_CACHE" ] && [ $(( $(date +%s) - $(file_mtime "$CC_CACHE") )) -lt 20 ]; then
-    CCUSAGE_LINE=$(cat "$CC_CACHE")
-  else
-    CCUSAGE_LINE=$(printf '%s' "$input" | $TIMEOUT $CCUSAGE statusline 2>/dev/null || true)
-    mkdir -p "$(dirname "$CC_CACHE")" 2>/dev/null && chmod 700 "$(dirname "$CC_CACHE")" 2>/dev/null
-    printf '%s\n' "$CCUSAGE_LINE" > "$CC_CACHE" 2>/dev/null
-  fi
-fi
-
-# Block budget: refresh cache if stale
-USED_PCT="?"
-PROJ_PCT="?"
-NOW=$(date +%s)
-if [ -f "$CACHE" ]; then
-  CACHE_AGE=$((NOW - $(file_mtime "$CACHE")))
-else
-  CACHE_AGE=$((CACHE_MAX_AGE + 1))
-fi
-
-if [ -n "$CCUSAGE" ] && [ "$CACHE_AGE" -gt "$CACHE_MAX_AGE" ]; then
-  mkdir -p "$(dirname "$CACHE")"
-  (tmp=$(mktemp "${CACHE}.XXXXXX") || exit 0
-   if $TIMEOUT $CCUSAGE blocks --active --token-limit max --json > "$tmp" 2>/dev/null; then
-     mv "$tmp" "$CACHE"
-   else
-     rm -f "$tmp"
-   fi) &
-fi
-
-TIME_LEFT="?"
-if [ -f "$CACHE" ]; then
-  CACHE_LINES=$(json_lines "$(cat "$CACHE")")
-  TOTAL_TOKENS=$(extract_num "$CACHE_LINES" totalTokens)
-  LIMIT=$(extract_num "$CACHE_LINES" limit)
-  PROJ_TOKENS=$(extract_num "$CACHE_LINES" projectedUsage)
-  if [ -n "$LIMIT" ] && [ "$LIMIT" -gt 0 ] 2>/dev/null; then
-    [ -n "$TOTAL_TOKENS" ] && USED_PCT="$((TOTAL_TOKENS * 100 / LIMIT))%"
-    [ -n "$PROJ_TOKENS" ] && PROJ_PCT="$((PROJ_TOKENS * 100 / LIMIT))%"
-  fi
-  # Compute time left from block endTime in UTC
-  END_TIME=$(extract_str "$CACHE_LINES" endTime)
-  if [ -n "$END_TIME" ]; then
-    END_EPOCH=$(to_epoch "$END_TIME")
-    NOW_UTC=$(date -u +%s)
-    REMAIN_S=$((END_EPOCH - NOW_UTC))
-    if [ "$REMAIN_S" -gt 0 ]; then
-      TIME_LEFT="$((REMAIN_S / 3600))h $((REMAIN_S % 3600 / 60))m"
-    else
-      TIME_LEFT="0m"
-    fi
-  fi
-fi
-
 # Line 1. Full-width bar (per session, so per pane): amber while the session waits
 # on background work that will resume it, red when it is your move.
-LINE1_REST="| ${USED_PCT} used | ${PROJ_PCT} proj | ${TIME_LEFT} left | ${DURATION}"
+LINE1="${DIM}${MODEL}${RESET} | ${DIM}[$SESSION]${RESET} ${BAR_COLOR}${BAR}${RESET} ${PCT}%${LIMITS} | ${DURATION}"
 if [ -n "$STATE_BG" ]; then
-  PLAIN=" ${STATE_LABEL} | ${MODEL} | [$SESSION] ${BAR} ${PCT}% ${LINE1_REST}"
+  PLAIN=" ${STATE_LABEL} | $(printf '%b' "$LINE1" | sed $'s/\033\\[[0-9;]*m//g')"
   COLS=""
   [ -n "$TMUX_PANE" ] && COLS=$(tmux display -p -t "$TMUX_PANE" '#{pane_width}' 2>/dev/null)
   COLS=${COLS:-${COLUMNS:-0}}
@@ -173,12 +137,39 @@ if [ -n "$STATE_BG" ]; then
   [ "$PAD" -gt 0 ] 2>/dev/null && PLAIN="$PLAIN$(printf "%${PAD}s" "")"
   printf '%b%s%b\n' "$STATE_BG" "$PLAIN" "$RESET"
 else
-  echo -e "${DIM}${MODEL}${RESET} | ${DIM}[$SESSION]${RESET} ${BAR_COLOR}${BAR}${RESET} ${PCT}% ${LINE1_REST}"
+  printf '%b\n' "$LINE1"
 fi
 
-# Line 2: ccusage with model and (time left) stripped. ccusage prints its input
-# validation errors on stdout, not stderr, so a payload it rejects would spill a
-# multi-line blob into the statusline -- keep one line and drop known errors.
-if [ -n "$CCUSAGE_LINE" ] && ! printf '%s' "$CCUSAGE_LINE" | grep -q 'Invalid input format'; then
-  printf '%s\n' "$CCUSAGE_LINE" | head -1 | sed 's/^[^|]*| //; s/ ([^)]*left)//'
+# Line 2: cwd, git, PR. -uno skips the untracked-file scan, the slow part on
+# big trees and network filesystems; "dirty" means tracked changes only.
+CWD=$(extract_str "$input_lines" current_dir)
+CWD=${CWD:-$PWD}
+SHOWN=$CWD
+case "$SHOWN" in "$HOME"|"$HOME"/*) SHOWN="~${SHOWN#"$HOME"}" ;; esac
+if [ "${#SHOWN}" -gt 40 ]; then
+  SHOWN="…/$(basename "$(dirname "$CWD")")/$(basename "$CWD")"
 fi
+LINE2="${CYAN}${SHOWN}${RESET}"
+
+if GS=$($TIMEOUT git --no-optional-locks -C "$CWD" status --porcelain=v2 --branch -uno 2>/dev/null); then
+  OID=$(printf '%s\n' "$GS" | sed -n 's/^# branch\.oid //p' | cut -c1-7)
+  HEAD_NAME=$(printf '%s\n' "$GS" | sed -n 's/^# branch\.head //p')
+  [ "$HEAD_NAME" = "(detached)" ] && HEAD_NAME=""
+  GIT="${HEAD_NAME}@${OID}"
+  printf '%s\n' "$GS" | grep -q '^[^#]' && GIT="$GIT${YELLOW}*${RESET}"
+  AB=$(printf '%s\n' "$GS" | sed -n 's/^# branch\.ab //p')
+  AHEAD=${AB%% *}; AHEAD=${AHEAD#+}
+  BEHIND=${AB##* }; BEHIND=${BEHIND#-}
+  [ -n "$AHEAD" ] && [ "$AHEAD" != 0 ] && GIT="$GIT ↑$AHEAD"
+  [ -n "$BEHIND" ] && [ "$BEHIND" != 0 ] && GIT="$GIT ↓$BEHIND"
+  LINE2="$LINE2 ${GREEN}${GIT}${RESET}"
+fi
+
+PR=$(obj pr)
+PR_NUM=$(extract_num "$PR" number)
+if [ -n "$PR_NUM" ]; then
+  PR_STATE=$(extract_str "$PR" review_state)
+  LINE2="$LINE2 | PR #${PR_NUM}${PR_STATE:+ ${PR_STATE//_/ }}"
+fi
+
+printf '%b\n' "$LINE2"
