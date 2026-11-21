@@ -89,7 +89,7 @@ if [ -n "$W_PCT" ]; then
   W_LEFT=""; W_COLOR="$GREEN"
   if [ -n "$W_RESET" ] && [ "$W_RESET" -gt "$NOW" ]; then
     LEFT=$(( (W_RESET - NOW) * 100 / 604800 ))
-    W_LEFT=" ◷${LEFT}%"
+    W_LEFT=" ◷ ${LEFT}%"
     [ "$W_PCT" -gt $((100 - LEFT)) ] && W_COLOR="$YELLOW"
   fi
   [ "$W_PCT" -ge 90 ] && W_COLOR="$RED"
