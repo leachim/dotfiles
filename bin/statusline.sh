@@ -153,6 +153,8 @@ COLS=${COLS:-${COLUMNS:-0}}
 [ "$COLS" -gt 0 ] 2>/dev/null || COLS=85
 
 strip() { printf '%b' "$1" | sed $'s/\033\\[[0-9;]*m//g'; }
+# Columns a plain string takes: terminals draw ◷ two wide.
+width() { local t=${1//◷/}; echo $(( 2 * ${#1} - ${#t} )); }
 
 LINE="${DIM}${MODEL}${RESET} ${BAR_COLOR}${BAR}${RESET} ${PCT}%${LIMITS}${CACHE}"
 
@@ -161,8 +163,10 @@ LINE="${DIM}${MODEL}${RESET} ${BAR_COLOR}${BAR}${RESET} ${PCT}%${LIMITS}${CACHE}
 # pushes the line past narrow panes; cut the end rather than wrap.
 if [ -n "$STATE_BG" ]; then
   PLAIN=" ${STATE_LABEL} | $(strip "$LINE")"
-  [ "${#PLAIN}" -ge "$COLS" ] && PLAIN="${PLAIN:0:COLS-1}" && PLAIN="${PLAIN% | *}"
-  PAD=$(( COLS - 1 - ${#PLAIN} ))
+  while [ "$(width "$PLAIN")" -ge "$COLS" ] && [ "${PLAIN% | *}" != "$PLAIN" ]; do
+    PLAIN="${PLAIN% | *}"
+  done
+  PAD=$(( COLS - 1 - $(width "$PLAIN") ))
   [ "$PAD" -gt 0 ] && PLAIN="$PLAIN$(printf "%${PAD}s" "")"
   printf '%b%s%b\n' "$STATE_BG" "$PLAIN" "$RESET"
 else
