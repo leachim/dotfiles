@@ -71,8 +71,9 @@ FILLED=$((PCT * 10 / 100)); EMPTY=$((10 - FILLED))
 BAR=$(printf "%${FILLED}s" | tr ' ' '#')$(printf "%${EMPTY}s" | tr ' ' '-')
 
 # Rate limits: subscribers only, and only after the session's first API reply.
-# 5h shows time to reset (◷); 7d how much of the week is left (◷), yellow
-# once usage outruns the time gone.
+# Each shows the share of the limit still left, then the time left (◷): 5h until
+# its reset, 7d as a share of the week. 7d turns yellow once less of the limit
+# than of the week is left. Colours follow usage: yellow/red at 70/90% used.
 LIMITS=""
 FIVE=$(obj five_hour)
 F_PCT=$(extract_num "$FIVE" used_percentage)
@@ -80,7 +81,7 @@ if [ -n "$F_PCT" ]; then
   F_RESET=$(extract_num "$FIVE" resets_at)
   F_LEFT=""
   [ -n "$F_RESET" ] && [ "$F_RESET" -gt "$NOW" ] && F_LEFT=" ◷ $(fmt_dur $((F_RESET - NOW)))"
-  LIMITS="$LIMITS | $(threshold_color "$F_PCT")5h ${F_PCT}%${RESET}${F_LEFT}"
+  LIMITS="$LIMITS | $(threshold_color "$F_PCT")5h $((100 - F_PCT))%${RESET}${F_LEFT}"
 fi
 WEEK=$(obj seven_day)
 W_PCT=$(extract_num "$WEEK" used_percentage)
@@ -93,7 +94,7 @@ if [ -n "$W_PCT" ]; then
     [ "$W_PCT" -gt $((100 - LEFT)) ] && W_COLOR="$YELLOW"
   fi
   [ "$W_PCT" -ge 90 ] && W_COLOR="$RED"
-  LIMITS="$LIMITS | ${W_COLOR}7d ${W_PCT}%${RESET}${W_LEFT}"
+  LIMITS="$LIMITS | ${W_COLOR}7d $((100 - W_PCT))%${RESET}${W_LEFT}"
 fi
 
 # Prompt cache: time until the cached prefix goes cold, and once cold, the
