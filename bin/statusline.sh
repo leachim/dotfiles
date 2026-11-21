@@ -3,9 +3,9 @@
 # Claude Code statusline. Runs on both macOS and the Linux clusters, so every
 # external tool here is either POSIX or probed for both GNU and BSD spellings.
 #
-# Line 1: model+effort | session | context bar | 5h and 7d rate limits |
-#         prompt cache | duration
-# Line 2: vim mode | cwd | git branch@commit, dirty, ahead/behind | open PR
+# Line 1: model+effort | context bar | 5h and 7d rate limits | prompt cache
+# Line 2: vim mode | cwd | git branch@commit, dirty, ahead/behind | open PR |
+#         session name and duration
 
 # timeout(1) is GNU; on macOS it arrives as gtimeout unless coreutils' gnubin
 # is on PATH. Empty means "run without a time limit".
@@ -62,6 +62,8 @@ NOW=$(date +%s)
 SESSION=$(extract_str "$input_lines" session_name)
 [ -z "$SESSION" ] && SESSION=$(extract_str "$input_lines" session_id | cut -c1-8)
 SESSION=${SESSION:-?}
+# Lines are budgeted to ~85 columns (half a 13" screen); titles can be long.
+[ "${#SESSION}" -gt 18 ] && SESSION="${SESSION:0:17}…"
 MODEL=$(extract_str "$input_lines" display_name)
 MODEL=${MODEL:-?}
 EFFORT=$(extract_str "$(obj effort)" level)
@@ -79,7 +81,7 @@ FILLED=$((PCT * 10 / 100)); EMPTY=$((10 - FILLED))
 BAR=$(printf "%${FILLED}s" | tr ' ' '#')$(printf "%${EMPTY}s" | tr ' ' '-')
 
 DURATION_MS=$(extract_num "$input_lines" total_duration_ms)
-DURATION="$(fmt_dur $(( ${DURATION_MS:-0} / 1000 ))) spent"
+DURATION="$(fmt_dur $(( ${DURATION_MS:-0} / 1000 )))"
 
 # Rate limits: subscribers only, and only after the session's first API reply.
 # 5h shows time to reset; 7d shows how much of the week has elapsed, so usage
@@ -100,7 +102,7 @@ if [ -n "$W_PCT" ]; then
   W_PACE=""; W_COLOR="$GREEN"
   if [ -n "$W_RESET" ] && [ "$W_RESET" -gt "$NOW" ]; then
     PACE=$(( (604800 - (W_RESET - NOW)) * 100 / 604800 ))
-    W_PACE=" (pace ${PACE}%)"
+    W_PACE=" pace ${PACE}%"
     [ "$W_PCT" -gt "$PACE" ] && W_COLOR="$YELLOW"
   fi
   [ "$W_PCT" -ge 90 ] && W_COLOR="$RED"
@@ -146,12 +148,14 @@ fi
 
 # Line 1. Full-width bar (per session, so per pane): amber while the session waits
 # on background work that will resume it, red when it is your move.
-LINE1="${DIM}${MODEL}${RESET} | ${DIM}[$SESSION]${RESET} ${BAR_COLOR}${BAR}${RESET} ${PCT}%${LIMITS}${CACHE} | ${DURATION}"
+LINE1="${DIM}${MODEL}${RESET} ${BAR_COLOR}${BAR}${RESET} ${PCT}%${LIMITS}${CACHE}"
 if [ -n "$STATE_BG" ]; then
+  # The label pushes line 1 past narrow panes; cut the tail rather than wrap.
   PLAIN=" ${STATE_LABEL} | $(printf '%b' "$LINE1" | sed $'s/\033\\[[0-9;]*m//g')"
   COLS=""
   [ -n "$TMUX_PANE" ] && COLS=$(tmux display -p -t "$TMUX_PANE" '#{pane_width}' 2>/dev/null)
   COLS=${COLS:-${COLUMNS:-0}}
+  [ "$COLS" -gt 1 ] 2>/dev/null && [ "${#PLAIN}" -ge "$COLS" ] && PLAIN="${PLAIN:0:COLS-1}"
   PAD=$(( COLS - 1 - ${#PLAIN} ))
   [ "$PAD" -gt 0 ] 2>/dev/null && PLAIN="$PLAIN$(printf "%${PAD}s" "")"
   printf '%b%s%b\n' "$STATE_BG" "$PLAIN" "$RESET"
@@ -165,7 +169,7 @@ CWD=$(extract_str "$input_lines" current_dir)
 CWD=${CWD:-$PWD}
 SHOWN=$CWD
 case "$SHOWN" in "$HOME"|"$HOME"/*) SHOWN="~${SHOWN#"$HOME"}" ;; esac
-if [ "${#SHOWN}" -gt 40 ]; then
+if [ "${#SHOWN}" -gt 30 ]; then
   SHOWN="…/$(basename "$(dirname "$CWD")")/$(basename "$CWD")"
 fi
 LINE2="${CYAN}${SHOWN}${RESET}"
@@ -195,8 +199,15 @@ fi
 PR=$(obj pr)
 PR_NUM=$(extract_num "$PR" number)
 if [ -n "$PR_NUM" ]; then
-  PR_STATE=$(extract_str "$PR" review_state)
-  LINE2="$LINE2 | PR #${PR_NUM}${PR_STATE:+ ${PR_STATE//_/ }}"
+  case "$(extract_str "$PR" review_state)" in
+    approved)          PR_STATE=" ${GREEN}✓${RESET}" ;;
+    changes_requested) PR_STATE=" ${RED}✗${RESET}" ;;
+    pending)           PR_STATE=" …" ;;
+    draft)             PR_STATE=" draft" ;;
+    *)                 PR_STATE="" ;;
+  esac
+  LINE2="$LINE2 | PR #${PR_NUM}${PR_STATE}"
 fi
+LINE2="$LINE2 | ${DIM}[$SESSION] ${DURATION}${RESET}"
 
 printf '%b\n' "$LINE2"
