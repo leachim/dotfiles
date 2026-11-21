@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# rwatch — keep a local copy of a remote file, re-downloading whenever it changes.
+#
+#   rwatch [-e] [-n SECONDS] host:/path/to/file [local_dest]
+#
+#   -n SECONDS  poll interval (default 5)
+#   -e          event-driven via inotifywait on the remote (instant, Linux only).
+#               Does NOT see writes made from other machines on NFS/Lustre/GPFS,
+#               e.g. a SLURM job writing to scratch — use polling for those.
+#
+# SSH connections are multiplexed, so each poll reuses one authenticated session.
+set -uo pipefail
+
+interval=5 events=0
+while getopts "en:" opt; do
+  case $opt in
+    e) events=1 ;;
+    n) interval=$OPTARG ;;
+    *) sed -n '3,10p' "$0" >&2; exit 2 ;;
+  esac
+done
+shift $((OPTIND - 1))
+src=${1:?usage: rwatch [-e] [-n SECONDS] host:/path/to/file [local_dest]}
+dest=${2:-.}
+[[ $src == *:* ]] || { echo "rwatch: source must be host:path" >&2; exit 2; }
+
+host=${src%%:*}
+rpath=${src#*:}
+name=$(basename "$rpath")
+[[ -d $dest ]] && local_file="$dest/$name" || local_file=$dest
+
+ssh_opts=(-o ControlMaster=auto -o "ControlPath=$HOME/.ssh/cm-%C" -o ControlPersist=10m
+          -o ServerAliveInterval=30)
+rsync_ssh="ssh ${ssh_opts[*]}"
+
+fetch() {
+  local before after
+  before=$(stat -f %m "$local_file" 2>/dev/null || echo none)
+  rsync -az -e "$rsync_ssh" "$src" "$dest" || return 1
+  after=$(stat -f %m "$local_file" 2>/dev/null || echo none)
+  [[ $before == "$after" ]] || echo "$(date +%T) updated $local_file"
+}
+
+if (( events )); then
+  dir=$(dirname "$rpath")
+  dir=${dir#\~/}; [[ $dir == "~" ]] && dir=.   # ssh commands start in $HOME
+  ssh "${ssh_opts[@]}" "$host" command -v inotifywait >/dev/null \
+    || { echo "rwatch: inotifywait not found on $host; drop -e to poll" >&2; exit 1; }
+  while true; do
+    fetch
+    # Watch the directory, not the file: editors and many tools replace files by rename.
+    ssh "${ssh_opts[@]}" "$host" \
+      "inotifywait -m -q -e close_write,moved_to --format %f $(printf %q "$dir")" |
+      while IFS= read -r f; do [[ $f == "$name" ]] && fetch; done
+    echo "$(date +%T) connection lost, retrying in ${interval}s" >&2
+    sleep "$interval"
+  done
+else
+  while true; do
+    fetch || echo "$(date +%T) fetch failed, retrying" >&2
+    sleep "$interval"
+  done
+fi
