@@ -72,8 +72,8 @@ BAR=$(printf "%${FILLED}s" | tr ' ' '#')$(printf "%${EMPTY}s" | tr ' ' '-')
 
 # Rate limits: subscribers only, and only after the session's first API reply.
 # Each shows the share of the limit still left, then the time left (◷): 5h until
-# its reset, 7d as a share of the week. 7d turns yellow once less of the limit
-# than of the week is left. Colours follow usage: yellow/red at 70/90% used.
+# its reset, 7d as a share of the week. 7d turns yellow once the limit left
+# falls more than 5 points below the week left. Colours follow usage: yellow/red at 70/90% used.
 LIMITS=""
 FIVE=$(obj five_hour)
 F_PCT=$(extract_num "$FIVE" used_percentage)
@@ -91,7 +91,7 @@ if [ -n "$W_PCT" ]; then
   if [ -n "$W_RESET" ] && [ "$W_RESET" -gt "$NOW" ]; then
     LEFT=$(( (W_RESET - NOW) * 100 / 604800 ))
     W_LEFT=" ◷ ${LEFT}%"
-    [ "$W_PCT" -gt $((100 - LEFT)) ] && W_COLOR="$YELLOW"
+    [ $((100 - W_PCT)) -lt $((LEFT - 5)) ] && W_COLOR="$YELLOW"
   fi
   [ "$W_PCT" -ge 90 ] && W_COLOR="$RED"
   LIMITS="$LIMITS | ${W_COLOR}7d $((100 - W_PCT))%${RESET}${W_LEFT}"
