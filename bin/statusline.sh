@@ -3,7 +3,7 @@
 # Claude Code statusline. Runs on both macOS and the Linux clusters, so every
 # external tool here is either POSIX or probed for both GNU and BSD spellings.
 #
-# One line: model+effort | context bar | 5h and 7d rate limits | prompt cache,
+# One line: model+effort | context bar | session cost | 5h and 7d rate limits | prompt cache,
 # with a coloured state bar above it while the session waits, asks or is done.
 # Path, git branch and session name sit at the end of the prompt footer
 # (claude/mods/footer-git, via bin/claude-footer); the open PR is the footer's
@@ -77,6 +77,10 @@ BAR=$(printf "%${FILLED}s" | tr ' ' '#')$(printf "%${EMPTY}s" | tr ' ' '-')
 # 10%; 5h is yellow from 30%, 7d once the limit left falls more than 5 points
 # below the week left.
 LIMITS=""
+# Session cost at API prices: what this session has spent so far, the
+# per-session share of the limits below.
+COST=$(obj cost | sed -n 's/.*"total_cost_usd"[[:space:]]*:[[:space:]]*\([0-9.eE+-]*\).*/\1/p' | head -1)
+[ -n "$COST" ] && LIMITS=" | ${DIM}$(LC_NUMERIC=C printf '$%.2f' "$COST" 2>/dev/null)${RESET}"
 FIVE=$(obj five_hour)
 F_PCT=$(extract_num "$FIVE" used_percentage)
 if [ -n "$F_PCT" ]; then
