@@ -7,15 +7,6 @@
 
 [[ "$(uname)" == "Darwin" ]] && return 0
 
-# CUDA toolkit (overrides hpc.sh generic cuda). Bump this one line to switch versions.
-export CUDA_HOME=$HOME/cuda-13.3
-export CUDNN_PATH=$CUDA_HOME
-export CPLUS_INCLUDE_PATH=$CUDA_HOME/include:$CPLUS_INCLUDE_PATH
-export CPATH=$CUDA_HOME/include:$CPATH
-export LIBRARY_PATH=$CUDA_HOME/lib64:$LIBRARY_PATH
-export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
-export PATH=$CUDA_HOME/bin:$PATH
-
 # MMSEQ
 export PATH=$HOME/mmseqs/bin:$PATH
 
