@@ -3,7 +3,7 @@
 # Claude Code statusline. Runs on both macOS and the Linux clusters, so every
 # external tool here is either POSIX or probed for both GNU and BSD spellings.
 #
-# One line: model+effort | context bar | session cost | 5h and 7d rate limits | prompt cache,
+# One line: model+effort | context bar | session cost and tokens | 5h and 7d rate limits | prompt cache,
 # with a coloured state bar above it while the session waits, asks or is done.
 # Path, git branch and session name sit at the end of the prompt footer
 # (claude/mods/footer-git, via bin/claude-footer); the open PR is the footer's
@@ -77,13 +77,32 @@ BAR=$(printf "%${FILLED}s" | tr ' ' '#')$(printf "%${EMPTY}s" | tr ' ' '-')
 # 10%; 5h is yellow from 30%, 7d once the limit left falls more than 5 points
 # below the week left.
 LIMITS=""
-# This session's running totals: cost at API prices and input+output tokens.
+# This session's running totals: cost at API prices, then input (cached reads
+# and writes included) and output tokens summed over the main transcript's API
+# replies, each counted once although it spans several lines.
 COST=$(obj cost | sed -n 's/.*"total_cost_usd"[[:space:]]*:[[:space:]]*\([0-9.eE+-]*\).*/\1/p' | head -1)
-T_IN=$(extract_num "$CTX_LINES" total_input_tokens); T_OUT=$(extract_num "$CTX_LINES" total_output_tokens)
-TOK=$(( ${T_IN:-0} + ${T_OUT:-0} ))
-if   [ "$TOK" -ge 1000000 ]; then TOK=$(printf '%d.%dM' $((TOK/1000000)) $((TOK%1000000/100000)))
-elif [ "$TOK" -ge 1000 ];    then TOK="$((TOK/1000))k"; fi
-[ -n "$COST" ] && LIMITS=" | ${DIM}$(LC_NUMERIC=C printf '$%.2f' "$COST" 2>/dev/null) ${TOK} tok${RESET}"
+# 950 -> 950, 45200 -> 45k, 1234567 -> 1.2M
+fmt_tok() {
+  if   [ "$1" -ge 1000000 ]; then printf '%d.%dM' $(($1/1000000)) $(($1%1000000/100000))
+  elif [ "$1" -ge 1000 ];    then printf '%dk' $(($1/1000))
+  else                            printf '%d' "$1"; fi
+}
+TRANSCRIPT=$(extract_str "$input_lines" transcript_path)
+TOKENS=""
+if [ -r "$TRANSCRIPT" ]; then
+  read -r T_IN T_OUT < <(awk '
+    function num(u, k) { return match(u, "\"" k "\":[0-9]+") ? substr(u, RSTART + length(k) + 3, RLENGTH - length(k) - 3) + 0 : 0 }
+    /"type":"assistant"/ && match($0, /"id":"msg_[^"]*"/) {
+      id = substr($0, RSTART + 6, RLENGTH - 7)
+      if (!match($0, /"usage":\{/)) next
+      u = substr($0, RSTART)
+      in_[id] = num(u, "input_tokens") + num(u, "cache_creation_input_tokens") + num(u, "cache_read_input_tokens")
+      o = num(u, "output_tokens"); if (o > out[id]) out[id] = o
+    }
+    END { for (i in in_) { a += in_[i]; b += out[i] }; print a + 0, b + 0 }' "$TRANSCRIPT")
+  TOKENS=" ↑$(fmt_tok "${T_IN:-0}") ↓$(fmt_tok "${T_OUT:-0}")"
+fi
+[ -n "$COST" ] && LIMITS=" | ${DIM}$(LC_NUMERIC=C printf '$%.0f' "$COST" 2>/dev/null)${TOKENS}${RESET}"
 FIVE=$(obj five_hour)
 F_PCT=$(extract_num "$FIVE" used_percentage)
 if [ -n "$F_PCT" ]; then
