@@ -77,10 +77,13 @@ BAR=$(printf "%${FILLED}s" | tr ' ' '#')$(printf "%${EMPTY}s" | tr ' ' '-')
 # 10%; 5h is yellow from 30%, 7d once the limit left falls more than 5 points
 # below the week left.
 LIMITS=""
-# Session cost at API prices: what this session has spent so far, the
-# per-session share of the limits below.
+# This session's running totals: cost at API prices and input+output tokens.
 COST=$(obj cost | sed -n 's/.*"total_cost_usd"[[:space:]]*:[[:space:]]*\([0-9.eE+-]*\).*/\1/p' | head -1)
-[ -n "$COST" ] && LIMITS=" | ${DIM}$(LC_NUMERIC=C printf '$%.2f' "$COST" 2>/dev/null)${RESET}"
+T_IN=$(extract_num "$CTX_LINES" total_input_tokens); T_OUT=$(extract_num "$CTX_LINES" total_output_tokens)
+TOK=$(( ${T_IN:-0} + ${T_OUT:-0} ))
+if   [ "$TOK" -ge 1000000 ]; then TOK=$(printf '%d.%dM' $((TOK/1000000)) $((TOK%1000000/100000)))
+elif [ "$TOK" -ge 1000 ];    then TOK="$((TOK/1000))k"; fi
+[ -n "$COST" ] && LIMITS=" | ${DIM}$(LC_NUMERIC=C printf '$%.2f' "$COST" 2>/dev/null) ${TOK} tok${RESET}"
 FIVE=$(obj five_hour)
 F_PCT=$(extract_num "$FIVE" used_percentage)
 if [ -n "$F_PCT" ]; then
