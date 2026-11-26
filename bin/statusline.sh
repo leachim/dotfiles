@@ -77,9 +77,12 @@ BAR=$(printf "%${FILLED}s" | tr ' ' '#')$(printf "%${EMPTY}s" | tr ' ' '-')
 # 10%; 5h is yellow from 30%, 7d once the limit left falls more than 5 points
 # below the week left.
 LIMITS=""
-# This session's running totals: cost at API prices, then input (cached reads
-# and writes included) and output tokens summed over the main transcript's API
-# replies, each counted once although it spans several lines.
+# This session's running totals: cost at API prices, then input (uncached and
+# cache writes, i.e. what a cold cache re-sends; cheap cache reads left out) and
+# output tokens summed over the main transcript's API
+# replies, each counted once although it spans several lines. Only the bytes
+# added since the last refresh are read: the offset, the totals and the last
+# reply's counts (its lines can straddle a refresh) are kept per session.
 COST=$(obj cost | sed -n 's/.*"total_cost_usd"[[:space:]]*:[[:space:]]*\([0-9.eE+-]*\).*/\1/p' | head -1)
 # 950 -> 950, 45200 -> 45k, 1234567 -> 1.2M
 fmt_tok() {
@@ -89,17 +92,44 @@ fmt_tok() {
 }
 TRANSCRIPT=$(extract_str "$input_lines" transcript_path)
 TOKENS=""
-if [ -r "$TRANSCRIPT" ]; then
-  read -r T_IN T_OUT < <(awk '
-    function num(u, k) { return match(u, "\"" k "\":[0-9]+") ? substr(u, RSTART + length(k) + 3, RLENGTH - length(k) - 3) + 0 : 0 }
-    /"type":"assistant"/ && match($0, /"id":"msg_[^"]*"/) {
-      id = substr($0, RSTART + 6, RLENGTH - 7)
-      if (!match($0, /"usage":\{/)) next
-      u = substr($0, RSTART)
-      in_[id] = num(u, "input_tokens") + num(u, "cache_creation_input_tokens") + num(u, "cache_read_input_tokens")
-      o = num(u, "output_tokens"); if (o > out[id]) out[id] = o
-    }
-    END { for (i in in_) { a += in_[i]; b += out[i] }; print a + 0, b + 0 }' "$TRANSCRIPT")
+TOK_SID=$(extract_str "$input_lines" session_id); TOK_SID=${TOK_SID//[^A-Za-z0-9_-]/}
+TOK_FILE="$HOME/.cache/claude-state/${TOK_SID:-none}.tok"
+if [ -r "$TRANSCRIPT" ] && [ -n "$TOK_SID" ]; then
+  # State: <offset> <in> <out> <last id> <last in> <last out>; reset when the
+  # file shrank (rewritten) or there is none.
+  read -r T_OFF T_IN T_OUT T_ID T_LIN T_LOUT 2>/dev/null < "$TOK_FILE"
+  SIZE=$(wc -c < "$TRANSCRIPT" | tr -d ' ')
+  case "$T_OFF$T_IN$T_OUT$T_LIN$T_LOUT" in ''|*[!0-9]*) T_OFF=0 ;; esac
+  [ "$T_OFF" -gt "$SIZE" ] && T_OFF=0
+  [ "$T_OFF" -eq 0 ] && { T_IN=0; T_OUT=0; T_ID=-; T_LIN=0; T_LOUT=0; }
+  if [ "$SIZE" -gt "$T_OFF" ]; then
+    # Byte counts need LC_ALL=C. A last line without its newline is still being
+    # written: leave it for the next refresh.
+    STATE=$(tail -c +$((T_OFF + 1)) "$TRANSCRIPT" | head -c $((SIZE - T_OFF)) | LC_ALL=C awk \
+      -v off="$T_OFF" -v size=$((SIZE - T_OFF)) -v tin="$T_IN" -v tout="$T_OUT" \
+      -v lid="$T_ID" -v lin="$T_LIN" -v lout="$T_LOUT" '
+      function num(u, k) { return match(u, "\"" k "\":[0-9]+") ? substr(u, RSTART + length(k) + 3, RLENGTH - length(k) - 3) + 0 : 0 }
+      function take(l,   id, u, o) {
+        if (l !~ /"type":"assistant"/ || !match(l, /"id":"msg_[^"]*"/)) return
+        id = substr(l, RSTART + 6, RLENGTH - 7)
+        if (!match(l, /"usage":\{/)) return
+        u = substr(l, RSTART)
+        in_[id] = num(u, "input_tokens") + num(u, "cache_creation_input_tokens")
+        o = num(u, "output_tokens"); if (o > out[id]) out[id] = o
+        lid = id
+      }
+      BEGIN { in_[lid] = lin; out[lid] = lout; tin -= lin; tout -= lout }
+      { if (n) take(prev); prev = $0; n = 1; bytes += length($0) + 1 }
+      END {
+        if (n && bytes <= size) take(prev); else if (n) bytes -= length(prev) + 1
+        for (i in in_) { tin += in_[i]; tout += out[i] }
+        print off + bytes, tin, tout, lid, in_[lid], out[lid]
+      }')
+    if [ -n "$STATE" ]; then
+      read -r T_OFF T_IN T_OUT T_ID T_LIN T_LOUT <<< "$STATE"
+      mkdir -p "${TOK_FILE%/*}" 2>/dev/null && printf '%s\n' "$STATE" > "$TOK_FILE" 2>/dev/null
+    fi
+  fi
   TOKENS=" ↑$(fmt_tok "${T_IN:-0}") ↓$(fmt_tok "${T_OUT:-0}")"
 fi
 [ -n "$COST" ] && LIMITS=" | ${DIM}$(LC_NUMERIC=C printf '$%.0f' "$COST" 2>/dev/null)${TOKENS}${RESET}"
