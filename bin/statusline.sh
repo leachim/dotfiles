@@ -3,7 +3,8 @@
 # Claude Code statusline. Runs on both macOS and the Linux clusters, so every
 # external tool here is either POSIX or probed for both GNU and BSD spellings.
 #
-# One line: model+effort | context bar | session cost and tokens | 5h and 7d rate limits | prompt cache,
+# One line: model+effort | context bar | 5h and 7d rate limits | prompt cache |
+# session cost and tokens,
 # with a coloured state bar above it while the session waits, asks or is done.
 # Path, git branch and session name sit at the end of the prompt footer
 # (claude/mods/footer-git, via bin/claude-footer); the open PR is the footer's
@@ -91,7 +92,7 @@ fmt_tok() {
   else                            printf '%d' "$1"; fi
 }
 TRANSCRIPT=$(extract_str "$input_lines" transcript_path)
-TOKENS=""
+TOKENS=""; SPEND=""
 TOK_SID=$(extract_str "$input_lines" session_id); TOK_SID=${TOK_SID//[^A-Za-z0-9_-]/}
 TOK_FILE="$HOME/.cache/claude-state/${TOK_SID:-none}.tok"
 if [ -r "$TRANSCRIPT" ] && [ -n "$TOK_SID" ]; then
@@ -132,7 +133,7 @@ if [ -r "$TRANSCRIPT" ] && [ -n "$TOK_SID" ]; then
   fi
   TOKENS=" ↑$(fmt_tok "${T_IN:-0}") ↓$(fmt_tok "${T_OUT:-0}")"
 fi
-[ -n "$COST" ] && LIMITS=" | ${DIM}$(LC_NUMERIC=C printf '$%.0f' "$COST" 2>/dev/null)${TOKENS}${RESET}"
+[ -n "$COST" ] && SPEND=" | ${DIM}$(LC_NUMERIC=C printf '$%.0f' "$COST" 2>/dev/null)${TOKENS}${RESET}"
 FIVE=$(obj five_hour)
 F_PCT=$(extract_num "$FIVE" used_percentage)
 if [ -n "$F_PCT" ]; then
@@ -213,7 +214,7 @@ strip() { printf '%b' "$1" | sed $'s/\033\\[[0-9;]*m//g'; }
 # Columns a plain string takes: terminals draw ◷ two wide.
 width() { local t=${1//◷/}; echo $(( 2 * ${#1} - ${#t} )); }
 
-LINE="${DIM}${MODEL}${RESET} ${BAR_COLOR}${BAR}${RESET} ${PCT}%${LIMITS}${CACHE}"
+LINE="${DIM}${MODEL}${RESET} ${BAR_COLOR}${BAR}${RESET} ${PCT}%${LIMITS}${CACHE}${SPEND}"
 
 # Full-width bar (per session, so per pane) on its own line above the stats:
 # amber while the session waits on background work that will resume it, red
