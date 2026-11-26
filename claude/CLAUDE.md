@@ -162,3 +162,9 @@ screen, not "job done".
 - **Plan Changes:** For significant changes, outline the approach first
 - **Test-First for Bugs:** When a bug is reported, write a failing test that reproduces it first; then fix the code; then verify the fix by showing the test passes
 - **Default to Code:** Provide concrete code edits unless explicitly asked to explain first
+
+# Writing LaTeX
+
+- One sentence per line in LaTeX source (prose, captions, footnotes): start each sentence on a new line,
+  never wrap a sentence across lines and never put two sentences on one line. Equations, environments and
+  `% comments` keep their own lines.
