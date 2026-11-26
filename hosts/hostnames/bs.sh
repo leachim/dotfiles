@@ -19,15 +19,9 @@ export PATH=$CUDA_HOME/bin:$PATH
 # MMSEQ
 export PATH=$HOME/mmseqs/bin:$PATH
 
-# GCC 12 environment (specific to bs-* Linux nodes)
-export PATH=$HOME/gcc-12/bin:$PATH
-export CC=$HOME/gcc-12/bin/gcc
-export CXX=$HOME/gcc-12/bin/g++
-
 # Compiler flags (specific to bs-* build environment)
-export CFLAGS="-I$HOME/.local/include -I$HOME/gcc-12/include"
-export CXXFLAGS="-I$HOME/gcc-12/include"
-export LDFLAGS="-L$HOME/.local/lib -L$HOME/gcc-12/lib64"
+export CFLAGS="-I$HOME/.local/include"
+export LDFLAGS="-L$HOME/.local/lib"
 export LD_LIBRARY_PATH=$HOME/.local/lib:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
 
