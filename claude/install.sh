@@ -88,7 +88,7 @@ for entry in "$HOME/.claude:personal" "$HOME/.claude-work:work"; do
     merge_settings "$DOTFILES_CLAUDE/settings.json" "$DOTFILES_CLAUDE/accounts/$ACCOUNT.json" "$CLAUDE_DIR/settings.json"
 
     # Symlink files
-    for file in CLAUDE.md; do
+    for file in CLAUDE.md keybindings.json; do
         src="$DOTFILES_CLAUDE/$file"
         dst="$CLAUDE_DIR/$file"
 
